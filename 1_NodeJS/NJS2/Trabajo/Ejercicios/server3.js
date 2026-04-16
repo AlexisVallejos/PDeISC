@@ -1,7 +1,7 @@
 const http = require('http');
 const fs   = require('fs');
 const path = require('path');
-const { transformarTexto } = require('./modules/transformer');
+const { parsearURL } = require('./modules/urlParser');
 
 const PORT = 3000;
 
@@ -23,19 +23,29 @@ const server = http.createServer((req, res) => {
   const url      = new URL(req.url, `http://localhost:${PORT}`);
   const pathname = url.pathname;
 
-  if (pathname === '/' || pathname === '/index.html') {
-    return serveFile(path.join(__dirname, 'pages', 'index.html'), res);
+  if (pathname === '/' || pathname === '/index3.html') {
+    return serveFile(path.join(__dirname, 'pages', 'index3.html'), res);
   }
 
   if (pathname.startsWith('/styles/') || pathname.startsWith('/scripts/')) {
     return serveFile(path.join(__dirname, pathname), res);
   }
 
-  if (pathname === '/api/uppercase') {
-    const texto    = url.searchParams.get('texto') || '';
-    const resultado = transformarTexto(texto);
-    res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(resultado));
+  if (pathname === '/api/parse-url') {
+    const urlParam = url.searchParams.get('url');
+    if (!urlParam) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Parámetro "url" requerido' }));
+      return;
+    }
+    try {
+      const resultado = parsearURL(urlParam);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(resultado));
+    } catch {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'URL inválida' }));
+    }
     return;
   }
 
@@ -43,4 +53,4 @@ const server = http.createServer((req, res) => {
   res.end('404 Not Found');
 });
 
-server.listen(PORT, () => console.log(`Ej.4 → http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`Ej.3 → http://localhost:${PORT}`));

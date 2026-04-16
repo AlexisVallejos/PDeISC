@@ -22,7 +22,7 @@ const server = http.createServer((req, res) => {
   const url      = new URL(req.url, `http://localhost:${PORT}`);
   const pathname = url.pathname;
 
-  if (pathname === '/' || pathname === '/index.html') {
+  if (pathname === '/' || pathname === '/index2.html') {
     return serveFile('pages/index.html', res);
   }
 
@@ -35,7 +35,7 @@ const server = http.createServer((req, res) => {
       nodeVersion: process.version,
       plataforma:  process.platform,
       uptime:      process.uptime().toFixed(2),
-      archivo:     'pages/index.html',
+      archivo:     'pages/index2.html',
       moduloFS:    'Activo ✓',
       moduloHTTP:  'Activo ✓',
     };

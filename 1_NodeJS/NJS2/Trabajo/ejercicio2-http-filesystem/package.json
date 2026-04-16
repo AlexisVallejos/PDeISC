@@ -1,9 +1,0 @@
-{
-  "name": "ejercicio2-http-filesystem",
-  "version": "1.0.0",
-  "description": "Módulos http y fs de Node.js",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  }
-}
