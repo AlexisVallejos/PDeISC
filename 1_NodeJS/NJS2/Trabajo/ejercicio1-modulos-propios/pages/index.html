@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ej. 1 — Módulos Propios</title>
+  <link rel="stylesheet" href="/styles/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Ejercicio 1</h1>
+    <span>Módulos propios de Node.js — clima &amp; cálculo</span>
+  </header>
+
+  <main>
+    <!-- Clima -->
+    <div class="card">
+      <h2>Módulo: Clima <span class="badge">./modules/clima.js</span></h2>
+      <div class="form-group">
+        <label for="ciudad">Ciudad</label>
+        <select id="ciudad">
+          <option>Buenos Aires</option>
+          <option>Cordoba</option>
+          <option>Rosario</option>
+          <option>Mendoza</option>
+          <option>Salta</option>
+        </select>
+      </div>
+      <button onclick="consultarClima()">Consultar clima</button>
+      <div id="resultadoClima" class="result hidden">
+        <div class="result-title">Pronóstico</div>
+        <div class="result-value" id="climaValor"></div>
+      </div>
+    </div>
+
+    <!-- Cálculo -->
+    <div class="card">
+      <h2>Módulo: Cálculo <span class="badge">./modules/calculo.js</span></h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="numA">Número A</label>
+          <input type="number" id="numA" value="10" />
+        </div>
+        <div class="form-group">
+          <label for="numB">Número B</label>
+          <input type="number" id="numB" value="4" />
+        </div>
+        <div class="form-group">
+          <label for="operacion">Operación</label>
+          <select id="operacion">
+            <option value="sumar">Sumar (+)</option>
+            <option value="restar">Restar (−)</option>
+            <option value="multiplicar">Multiplicar (×)</option>
+            <option value="dividir">Dividir (÷)</option>
+            <option value="potencia">Potencia (^)</option>
+            <option value="porcentaje">Porcentaje (%)</option>
+          </select>
+        </div>
+      </div>
+      <button onclick="calcular()">Calcular</button>
+      <div id="resultadoCalculo" class="result hidden">
+        <div class="result-title">Resultado</div>
+        <div class="result-value" id="calculoValor"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/scripts/main.js"></script>
+</body>
+</html>

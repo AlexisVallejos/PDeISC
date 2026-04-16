@@ -1,0 +1,9 @@
+{
+  "name": "ejercicio3-url",
+  "version": "1.0.0",
+  "description": "Módulo URL de Node.js — parseo de URLs",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

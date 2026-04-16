@@ -1,6 +1,7 @@
 const http = require('http');
+const fs   = require('fs');
 const path = require('path');
-const { leerArchivo } = require('./modules/fileLoader');
+const { transformarTexto } = require('./modules/transformer');
 
 const PORT = 3000;
 
@@ -10,10 +11,10 @@ const MIME = {
   '.js':   'application/javascript',
 };
 
-function serveFile(relPath, res) {
-  leerArchivo(relPath, (err, data) => {
+function serveFile(filePath, res) {
+  fs.readFile(filePath, (err, data) => {
     if (err) { res.writeHead(404, { 'Content-Type': 'text/plain' }); res.end('Not found'); return; }
-    res.writeHead(200, { 'Content-Type': MIME[path.extname(relPath)] || 'text/plain' });
+    res.writeHead(200, { 'Content-Type': MIME[path.extname(filePath)] || 'text/plain' });
     res.end(data);
   });
 }
@@ -23,24 +24,18 @@ const server = http.createServer((req, res) => {
   const pathname = url.pathname;
 
   if (pathname === '/' || pathname === '/index.html') {
-    return serveFile('pages/index.html', res);
+    return serveFile(path.join(__dirname, 'pages', 'index.html'), res);
   }
 
   if (pathname.startsWith('/styles/') || pathname.startsWith('/scripts/')) {
-    return serveFile(pathname.slice(1), res);
+    return serveFile(path.join(__dirname, pathname), res);
   }
 
-  if (pathname === '/api/info') {
-    const info = {
-      nodeVersion: process.version,
-      plataforma:  process.platform,
-      uptime:      process.uptime().toFixed(2),
-      archivo:     'pages/index.html',
-      moduloFS:    'Activo ✓',
-      moduloHTTP:  'Activo ✓',
-    };
+  if (pathname === '/api/uppercase') {
+    const texto    = url.searchParams.get('texto') || '';
+    const resultado = transformarTexto(texto);
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(info));
+    res.end(JSON.stringify(resultado));
     return;
   }
 
@@ -48,4 +43,4 @@ const server = http.createServer((req, res) => {
   res.end('404 Not Found');
 });
 
-server.listen(PORT, () => console.log(`Ej.2 → http://localhost:${PORT}`));
+server.listen(PORT, () => console.log(`Ej.4 → http://localhost:${PORT}`));

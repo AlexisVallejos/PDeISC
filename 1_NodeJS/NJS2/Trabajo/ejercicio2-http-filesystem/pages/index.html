@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ej. 2 — HTTP + File System</title>
+  <link rel="stylesheet" href="/styles/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Ejercicio 2</h1>
+    <span>Módulos <code>http</code> y <code>fs</code> de Node.js</span>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>¿Cómo funciona este servidor?</h2>
+      <p>
+        Este archivo HTML fue leído del disco usando el módulo
+        <span class="badge">fs</span> y entregado al navegador mediante el módulo
+        <span class="badge">http</span>.
+      </p>
+      <p>El módulo <code>fileLoader</code> encapsula toda la lógica de lectura:</p>
+      <ul class="steps">
+        <li>El servidor recibe la petición HTTP</li>
+        <li><code>fileLoader.leerArchivo()</code> lee el archivo del disco</li>
+        <li>El contenido binario se envía como respuesta con el Content-Type correcto</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>Info del servidor <span class="badge">./modules/fileLoader.js</span></h2>
+      <button onclick="obtenerInfo()">Consultar servidor</button>
+      <div id="resultadoInfo" class="result hidden">
+        <div class="result-title">Respuesta del servidor</div>
+        <div id="infoValor"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/scripts/main.js"></script>
+</body>
+</html>

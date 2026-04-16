@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ej. 4 — NPM: upper-case</title>
+  <link rel="stylesheet" href="/styles/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Ejercicio 4</h1>
+    <span>Gestión de paquetes con NPM — <code>upper-case</code></span>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Transformar texto a MAYÚSCULAS <span class="badge">./modules/transformer.js</span></h2>
+      <div class="form-group">
+        <label for="textoInput">Ingresá tu texto</label>
+        <textarea id="textoInput" placeholder="Escribí algo aquí...">hola mundo desde node.js con npm</textarea>
+      </div>
+      <button onclick="transformar()">Transformar</button>
+    </div>
+
+    <div id="resultadoUC" class="card hidden">
+      <h2>Resultado</h2>
+      <div class="result-group">
+        <div class="result-title">Original</div>
+        <div class="result-value" id="textoOriginal"></div>
+      </div>
+      <div class="result-group" style="margin-top:14px;">
+        <div class="result-title">UPPERCASE</div>
+        <div class="result-value" id="textoUppercase" style="font-size:1.3rem;font-weight:700;color:#2b6cb0;"></div>
+      </div>
+      <div class="stats" style="margin-top:16px;">
+        <span class="badge">Caracteres: <strong id="longitud"></strong></span>
+        <span class="badge">Palabras: <strong id="palabras"></strong></span>
+      </div>
+    </div>
+  </main>
+
+  <script src="/scripts/main.js"></script>
+</body>
+</html>

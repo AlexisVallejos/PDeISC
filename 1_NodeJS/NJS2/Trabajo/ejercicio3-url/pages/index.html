@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ej. 3 — Módulo URL</title>
+  <link rel="stylesheet" href="/styles/style.css" />
+</head>
+<body>
+  <header>
+    <h1>Ejercicio 3</h1>
+    <span>Módulo URL de Node.js — parseo de componentes</span>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Analizá una URL <span class="badge">./modules/urlParser.js</span></h2>
+      <div class="form-group">
+        <label for="urlInput">URL completa</label>
+        <input
+          type="text"
+          id="urlInput"
+          value="https://www.ejemplo.com:8080/ruta/pagina?nombre=Juan&edad=25&pais=Argentina#seccion1"
+          placeholder="https://..."
+        />
+      </div>
+      <button onclick="parsearURL()">Analizar</button>
+    </div>
+
+    <div id="resultadoURL" class="card hidden">
+      <h2>Componentes de la URL</h2>
+      <table id="tablaURL">
+        <thead><tr><th>Propiedad</th><th>Valor</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="/scripts/main.js"></script>
+</body>
+</html>
