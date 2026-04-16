@@ -1,3 +1,3 @@
-const { iniciarServidor } = require('./server/server');
+const { iniciarServidor } = require('./server');
 
 iniciarServidor();
