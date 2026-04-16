@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Servidor Node.js — HTTP + FS</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 48px 56px;
+      text-align: center;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      max-width: 560px;
+    }
+    h1 { color: #2d3748; font-size: 2rem; margin-bottom: 16px; }
+    p  { color: #718096; line-height: 1.7; margin-bottom: 10px; }
+    .badge {
+      display: inline-block;
+      background: #ebf8ff;
+      color: #2b6cb0;
+      border: 1px solid #bee3f8;
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 0.85rem;
+      margin: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>¡Hola desde Node.js!</h1>
+    <p>Este archivo HTML fue leído del disco y servido por un servidor HTTP puro de Node.js.</p>
+    <p>Módulos utilizados:</p>
+    <span class="badge">http</span>
+    <span class="badge">fs</span>
+    <span class="badge">path</span>
+    <p style="margin-top:20px; font-size:0.9rem; color:#a0aec0;">Puerto 3000</p>
+  </div>
+</body>
+</html>

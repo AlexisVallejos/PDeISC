@@ -1,0 +1,12 @@
+{
+  "name": "ejercicio4-npm",
+  "version": "1.0.0",
+  "description": "Ejercicio: instalar y usar paquetes NPM (upper-case)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "upper-case": "^2.0.2"
+  }
+}
