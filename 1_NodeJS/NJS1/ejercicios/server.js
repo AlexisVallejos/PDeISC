@@ -186,13 +186,17 @@ const server = http.createServer((req, res) => {
     return responderHtml(res, 200, renderLayout('Ejercicio 4: paquete upper-case', contenido));
   }
 
-  if (parsedUrl.pathname === '/acerca') {
+  if (parsedUrl.pathname === '/ejercicio5' || parsedUrl.pathname === '/acerca') {
     const contenido = `
       <article class="panel">
-        <h2>Acerca del proyecto</h2>
+        <h2>Ejercicio 5: integración final</h2>
         <p>
-          Este mini sitio integra todos los puntos pedidos: navegación, más de 5 páginas,
-          uso de módulos y servidor HTTP único para todos los ejercicios.
+          Este ejercicio está acoplado al proyecto <strong>ejercicios</strong> y funciona
+          dentro del mismo servidor principal.
+        </p>
+        <p>
+          Se cumple el requerimiento de tener un solo servidor que controle todo:
+          rutas, módulos, lectura de archivos y paquete NPM.
         </p>
       </article>
     `;

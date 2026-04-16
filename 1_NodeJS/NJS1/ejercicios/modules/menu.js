@@ -4,7 +4,7 @@ const links = [
   { href: '/http-fs', etiqueta: 'HTTP + FS' },
   { href: '/url-info', etiqueta: 'URL' },
   { href: '/npm-upper', etiqueta: 'NPM upper-case' },
-  { href: '/acerca', etiqueta: 'Acerca de' },
+  { href: '/ejercicio5', etiqueta: 'Ejercicio 5' },
 ];
 
 function renderMenu() {
