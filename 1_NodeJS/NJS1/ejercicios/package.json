@@ -1,0 +1,16 @@
+{
+  "name": "ejercicios",
+  "version": "1.0.0",
+  "description": "Ejercicios Node.js en un solo servidor",
+  "main": "app/server.js",
+  "scripts": {
+    "start": "node app/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "upper-case": "file:vendor/upper-case"
+  }
+}
