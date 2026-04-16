@@ -50,6 +50,13 @@ const htmlRoutes = {
   '/index2.html': 'index2.html',
   '/index3.html': 'index3.html',
   '/index4.html': 'index4.html',
+  '/index5.html': 'index5.html',
+  '/ejercicio5': 'index5.html',
+  '/ejercicio5/nosotros': 'ej5-nosotros.html',
+  '/ejercicio5/servicios': 'ej5-servicios.html',
+  '/ejercicio5/portafolio': 'ej5-portafolio.html',
+  '/ejercicio5/blog': 'ej5-blog.html',
+  '/ejercicio5/contacto': 'ej5-contacto.html',
 };
 
 const server = http.createServer((req, res) => {
