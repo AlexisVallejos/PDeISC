@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ej. 5 — Sitio Web Integrado</title>
+  <link rel="stylesheet" href="/styles/style5.css" />
+</head>
+<body>
+  <header>
+    <h1>Ejercicio 5 integrado en Ejercicios</h1>
+    <p>Sitio multipágina acoplado al mismo servidor único de Node.js.</p>
+    <nav>
+      <a href="/index.html">Ejercicio 1</a>
+      <a href="/index2.html">Ejercicio 2</a>
+      <a href="/index3.html">Ejercicio 3</a>
+      <a href="/index4.html">Ejercicio 4</a>
+      <a href="/ejercicio5">Inicio Ej. 5</a>
+      <a href="/ejercicio5/nosotros">Nosotros</a>
+      <a href="/ejercicio5/servicios">Servicios</a>
+      <a href="/ejercicio5/portafolio">Portafolio</a>
+      <a href="/ejercicio5/blog">Blog</a>
+      <a href="/ejercicio5/contacto">Contacto</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="card">
+      <span class="badge">Un solo servidor</span>
+      <h2>Estado</h2>
+      <p>
+        Este 5to ejercicio ya no corre en un proyecto aparte: ahora vive en
+        <strong>Trabajo/Ejercicios</strong> y lo atiende el mismo servidor de <code>server/index.js</code>.
+      </p>
+    </div>
+
+    <h2>Secciones del sitio</h2>
+    <div class="grid">
+      <article class="card"><h3>Nosotros</h3><p class="muted">Equipo y experiencia.</p></article>
+      <article class="card"><h3>Servicios</h3><p class="muted">Oferta técnica y consultoría.</p></article>
+      <article class="card"><h3>Portafolio</h3><p class="muted">Proyectos representativos.</p></article>
+      <article class="card"><h3>Blog</h3><p class="muted">Publicaciones de Node.js.</p></article>
+      <article class="card"><h3>Contacto</h3><p class="muted">Canal para mensajes.</p></article>
+    </div>
+  </main>
+</body>
+</html>
