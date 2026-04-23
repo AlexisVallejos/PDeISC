@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 
 app.enable("strict routing");
 
@@ -60,6 +60,15 @@ projects.forEach((project) => {
   app.use(route, express.static(projectPublicDir));
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`NJS3 disponible en http://localhost:${PORT}`);
+});
+
+server.on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`El puerto ${PORT} ya esta en uso. Cierra el proceso anterior o libera ese puerto.`);
+    process.exit(1);
+  }
+
+  throw error;
 });
