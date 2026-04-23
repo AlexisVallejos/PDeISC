@@ -90,20 +90,9 @@ function resizeImage() {
   message.textContent = "Tamano actualizado.";
 }
 
-window.domLab = {
-  addTitle,
-  changeTitleText,
-  changeTitleColor,
-  addImage,
-  changeImage,
-  resizeImage
-};
-
-console.log("Proyecto 1 cargado.");
-console.log("Comandos disponibles:");
-console.log("domLab.addTitle()");
-console.log("domLab.changeTitleText()");
-console.log("domLab.changeTitleColor()");
-console.log("domLab.addImage()");
-console.log("domLab.changeImage()");
-console.log("domLab.resizeImage()");
+document.getElementById("btnAddTitle").addEventListener("click", addTitle);
+document.getElementById("btnChangeText").addEventListener("click", changeTitleText);
+document.getElementById("btnChangeColor").addEventListener("click", changeTitleColor);
+document.getElementById("btnAddImage").addEventListener("click", addImage);
+document.getElementById("btnChangeImage").addEventListener("click", changeImage);
+document.getElementById("btnResizeImage").addEventListener("click", resizeImage);
