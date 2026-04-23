@@ -15,15 +15,28 @@
     </header>
 
     <section class="layout">
-      <form id="registerForm" class="panel form">
+      <form id="registerForm" class="panel form" novalidate>
         <label>
           Nombre
-          <input name="name" type="text" required placeholder="Nombre completo">
+          <input
+            name="name"
+            type="text"
+            required
+            minlength="3"
+            maxlength="50"
+            placeholder="Nombre completo"
+          >
         </label>
 
         <label>
           Mail
-          <input name="email" type="email" required placeholder="persona@mail.com">
+          <input
+            name="email"
+            type="email"
+            required
+            inputmode="email"
+            placeholder="persona@gmail.com"
+          >
         </label>
 
         <label>
@@ -55,6 +68,8 @@
           <label class="option"><input name="interests" type="checkbox" value="Diseno"> Diseno</label>
           <label class="option"><input name="interests" type="checkbox" value="Bases de datos"> Bases de datos</label>
         </fieldset>
+
+        <p id="formMessage" class="form-message" aria-live="polite"></p>
 
         <button type="submit" data-icon="OK">Mostrar registro</button>
       </form>

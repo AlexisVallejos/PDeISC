@@ -11,25 +11,25 @@
     <section class="layout">
       <section class="panel console-panel">
         <p class="eyebrow">Proyecto 1</p>
-        <h1>DOM desde Consola</h1>
+        <h1>Eventos DHTML con botones</h1>
         <p class="helper">
-          Abre la consola del navegador y ejecuta los comandos del objeto <code>domLab</code>.
+          Usa los botones para agregar y modificar el <code>H1</code> y la imagen directamente en pantalla.
         </p>
-        <ul class="command-list">
-          <li><code>domLab.addTitle()</code></li>
-          <li><code>domLab.changeTitleText()</code></li>
-          <li><code>domLab.changeTitleColor()</code></li>
-          <li><code>domLab.addImage()</code></li>
-          <li><code>domLab.changeImage()</code></li>
-          <li><code>domLab.resizeImage()</code></li>
-        </ul>
+        <div class="action-list">
+          <button id="addTitleButton" type="button" data-icon="H1">Agregar H1</button>
+          <button id="changeTitleTextButton" type="button" data-icon="TXT">Cambiar texto</button>
+          <button id="changeTitleColorButton" type="button" data-icon="CLR">Cambiar color</button>
+          <button id="addImageButton" type="button" data-icon="IMG">Agregar imagen</button>
+          <button id="changeImageButton" type="button" data-icon="SWP">Cambiar imagen</button>
+          <button id="resizeImageButton" type="button" data-icon="SZ">Cambiar tamano</button>
+        </div>
       </section>
 
       <section class="panel result" aria-live="polite">
         <div id="domArea" class="dom-area">
           <p class="empty-state">Area de trabajo</p>
         </div>
-        <p id="message" class="message">Esperando comandos desde la consola.</p>
+        <p id="message" class="message">Esperando una accion desde los botones.</p>
       </section>
     </section>
   </main>

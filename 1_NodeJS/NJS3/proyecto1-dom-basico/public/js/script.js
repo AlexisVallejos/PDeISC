@@ -1,10 +1,11 @@
 const domArea = document.getElementById("domArea");
 const message = document.getElementById("message");
 
-const colors = ["#16803c", "#c2410c", "#7c3aed", "#0f766e", "#be123c"];
+const colors = ["#c66b3d", "#16803c", "#7c3aed", "#0f766e", "#be123c"];
 const imageSources = [
   "https://picsum.photos/id/1015/640/400",
-  "https://picsum.photos/id/1039/640/400"
+  "https://picsum.photos/id/1039/640/400",
+  "https://picsum.photos/id/1043/640/400"
 ];
 const sizes = ["", "medium", "large"];
 
@@ -55,55 +56,46 @@ function getOrCreateImage() {
 
 function addTitle() {
   getOrCreateTitle();
-  message.textContent = "H1 agregado.";
+  message.textContent = 'Se agrego el componente H1 con el texto "Hola DOM".';
 }
 
 function changeTitleText() {
   const title = getOrCreateTitle();
   title.textContent = "Chau DOM";
-  message.textContent = "Texto actualizado.";
+  message.textContent = 'El texto del H1 cambio a "Chau DOM".';
 }
 
 function changeTitleColor() {
   const title = getOrCreateTitle();
   colorIndex = (colorIndex + 1) % colors.length;
   title.style.color = colors[colorIndex];
-  message.textContent = "Color actualizado.";
+  message.textContent = `El color del H1 cambio a ${colors[colorIndex]}.`;
 }
 
 function addImage() {
   getOrCreateImage();
-  message.textContent = "Imagen agregada.";
+  message.textContent = "Se agrego una imagen al escenario DOM.";
 }
 
 function changeImage() {
   const image = getOrCreateImage();
   imageIndex = (imageIndex + 1) % imageSources.length;
   image.src = imageSources[imageIndex];
-  message.textContent = "Imagen actualizada.";
+  message.textContent = "La imagen fue reemplazada por otra diferente.";
 }
 
 function resizeImage() {
   const image = getOrCreateImage();
   sizeIndex = (sizeIndex + 1) % sizes.length;
   image.className = `dom-image ${sizes[sizeIndex]}`.trim();
-  message.textContent = "Tamano actualizado.";
+
+  const sizeLabel = sizes[sizeIndex] || "normal";
+  message.textContent = `El tamano de la imagen cambio a ${sizeLabel}.`;
 }
 
-window.domLab = {
-  addTitle,
-  changeTitleText,
-  changeTitleColor,
-  addImage,
-  changeImage,
-  resizeImage
-};
-
-console.log("Proyecto 1 cargado.");
-console.log("Comandos disponibles:");
-console.log("domLab.addTitle()");
-console.log("domLab.changeTitleText()");
-console.log("domLab.changeTitleColor()");
-console.log("domLab.addImage()");
-console.log("domLab.changeImage()");
-console.log("domLab.resizeImage()");
+document.getElementById("addTitleButton").addEventListener("click", addTitle);
+document.getElementById("changeTitleTextButton").addEventListener("click", changeTitleText);
+document.getElementById("changeTitleColorButton").addEventListener("click", changeTitleColor);
+document.getElementById("addImageButton").addEventListener("click", addImage);
+document.getElementById("changeImageButton").addEventListener("click", changeImage);
+document.getElementById("resizeImageButton").addEventListener("click", resizeImage);

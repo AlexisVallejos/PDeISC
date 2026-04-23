@@ -23,6 +23,10 @@ function writeLog(text) {
   changeLog.appendChild(item);
 }
 
+function formatLogMessage(nodeNumber, attribute, previousValue, nextValue) {
+  return `Nodo ${nodeNumber} | atributo: ${attribute} | antes: ${previousValue} | despues: ${nextValue}`;
+}
+
 document.getElementById("createLinks").addEventListener("click", () => {
   linksContainer.innerHTML = "";
   changeLog.innerHTML = "";
@@ -36,7 +40,7 @@ document.getElementById("createLinks").addEventListener("click", () => {
     link.rel = "noopener noreferrer";
 
     linksContainer.appendChild(link);
-    writeLog(`Nodo ${index + 1}: atributo href creado con valor ${linkData.href}.`);
+    writeLog(formatLogMessage(index + 1, "href", "sin valor visible", linkData.href));
   });
 });
 
@@ -55,7 +59,7 @@ document.getElementById("modifyLinks").addEventListener("click", () => {
     link.setAttribute("href", nextData.href);
     link.textContent = nextData.text;
 
-    writeLog(`Nodo ${index + 1}: atributo href cambio de ${previousHref} a ${nextData.href}.`);
+    writeLog(formatLogMessage(index + 1, "href", previousHref, nextData.href));
   });
 });
 

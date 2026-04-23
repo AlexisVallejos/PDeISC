@@ -7,6 +7,7 @@
   --primary: #0d7c8f;
   --accent: #f0a432;
   --ok: #1c8a62;
+  --danger: #b63a3a;
 }
 
 * {
@@ -137,6 +138,13 @@ select:focus {
   outline: none;
 }
 
+input.invalid,
+select.invalid,
+fieldset.invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 4px rgba(182, 58, 58, 0.12);
+}
+
 .option {
   display: flex;
   align-items: center;
@@ -209,6 +217,14 @@ button:focus-visible {
 
 .empty-state {
   color: var(--muted);
+}
+
+.form-message {
+  min-height: 24px;
+  margin: -4px 0 0;
+  color: var(--danger);
+  font-size: 0.95rem;
+  font-weight: 700;
 }
 
 @media (max-width: 860px) {

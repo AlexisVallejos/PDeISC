@@ -84,8 +84,7 @@ h1 {
   line-height: 1.6;
 }
 
-.helper code,
-.command-list code {
+.helper code {
   border: 1px solid rgba(198, 107, 61, 0.18);
   border-radius: 8px;
   padding: 3px 7px;
@@ -95,32 +94,55 @@ h1 {
   font-size: 0.92rem;
 }
 
-.command-list {
+.action-list {
   display: grid;
   gap: 12px;
   margin: 4px 0 0;
-  padding: 0;
-  list-style: none;
 }
 
-.command-list li {
-  position: relative;
-  padding: 12px 14px 12px 44px;
+.action-list button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  width: 100%;
   border: 1px solid var(--line);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.72);
+  padding: 0 15px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  text-align: left;
 }
 
-.command-list li::before {
-  content: "";
-  position: absolute;
-  top: 15px;
-  left: 16px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 18px 0 0 rgba(198, 107, 61, 0.22);
+.action-list button::before {
+  content: attr(data-icon);
+  display: grid;
+  width: 38px;
+  height: 30px;
+  place-items: center;
+  border-radius: 10px;
+  background: rgba(49, 107, 91, 0.12);
+  color: var(--accent);
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.action-list button:hover,
+.action-list button:focus-visible {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #ffffff;
+  outline: none;
+}
+
+.action-list button:hover::before,
+.action-list button:focus-visible::before {
+  background: #ffffff;
+  color: var(--primary);
 }
 
 .result {
@@ -222,10 +244,6 @@ h1 {
 
   h1 {
     font-size: 2rem;
-  }
-
-  .command-list li {
-    padding-left: 40px;
   }
 
   .dom-area {
