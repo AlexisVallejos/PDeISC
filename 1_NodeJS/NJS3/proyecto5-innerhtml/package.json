@@ -1,0 +1,13 @@
+{
+  "name": "proyecto5-innerhtml",
+  "version": "1.0.0",
+  "description": "Proyecto Express para insertar contenido con innerHTML.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
+

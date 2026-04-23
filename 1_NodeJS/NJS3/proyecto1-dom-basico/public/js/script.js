@@ -53,40 +53,57 @@ function getOrCreateImage() {
   return image;
 }
 
-document.getElementById("btnAddTitle").addEventListener("click", () => {
+function addTitle() {
   getOrCreateTitle();
-  message.textContent = "Se agrego el componente H1 con el texto Hola DOM.";
-});
+  message.textContent = "H1 agregado.";
+}
 
-document.getElementById("btnChangeText").addEventListener("click", () => {
+function changeTitleText() {
   const title = getOrCreateTitle();
   title.textContent = "Chau DOM";
-  message.textContent = "Se cambio el texto del H1 a Chau DOM.";
-});
+  message.textContent = "Texto actualizado.";
+}
 
-document.getElementById("btnChangeColor").addEventListener("click", () => {
+function changeTitleColor() {
   const title = getOrCreateTitle();
   colorIndex = (colorIndex + 1) % colors.length;
   title.style.color = colors[colorIndex];
-  message.textContent = `Se cambio el color del H1 a ${colors[colorIndex]}.`;
-});
+  message.textContent = "Color actualizado.";
+}
 
-document.getElementById("btnAddImage").addEventListener("click", () => {
+function addImage() {
   getOrCreateImage();
-  message.textContent = "Se agrego una imagen al documento.";
-});
+  message.textContent = "Imagen agregada.";
+}
 
-document.getElementById("btnChangeImage").addEventListener("click", () => {
+function changeImage() {
   const image = getOrCreateImage();
   imageIndex = (imageIndex + 1) % imageSources.length;
   image.src = imageSources[imageIndex];
-  message.textContent = "Se cambio el atributo src de la imagen.";
-});
+  message.textContent = "Imagen actualizada.";
+}
 
-document.getElementById("btnResizeImage").addEventListener("click", () => {
+function resizeImage() {
   const image = getOrCreateImage();
   sizeIndex = (sizeIndex + 1) % sizes.length;
   image.className = `dom-image ${sizes[sizeIndex]}`.trim();
-  message.textContent = "Se cambio el tamano de la imagen.";
-});
+  message.textContent = "Tamano actualizado.";
+}
 
+window.domLab = {
+  addTitle,
+  changeTitleText,
+  changeTitleColor,
+  addImage,
+  changeImage,
+  resizeImage
+};
+
+console.log("Proyecto 1 cargado.");
+console.log("Comandos disponibles:");
+console.log("domLab.addTitle()");
+console.log("domLab.changeTitleText()");
+console.log("domLab.changeTitleColor()");
+console.log("domLab.addImage()");
+console.log("domLab.changeImage()");
+console.log("domLab.resizeImage()");

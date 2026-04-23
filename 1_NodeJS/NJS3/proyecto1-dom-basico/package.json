@@ -1,0 +1,13 @@
+{
+  "name": "proyecto1-dom-basico",
+  "version": "1.0.0",
+  "description": "Proyecto Express con manipulacion basica del DOM.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
+

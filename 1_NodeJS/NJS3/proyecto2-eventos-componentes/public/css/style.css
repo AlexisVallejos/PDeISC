@@ -1,18 +1,14 @@
 :root {
-  --bg: #141917;
-  --surface: rgba(25, 35, 32, 0.94);
-  --surface-alt: #1b2825;
-  --card: #f7fbfa;
-  --text: #edf8f4;
-  --ink: #16201d;
-  --muted: #9cafaa;
-  --muted-dark: #60716c;
-  --primary: #29c7a4;
-  --primary-dark: #1c9479;
-  --accent: #f6b83f;
-  --danger: #ef6f6c;
-  --border: rgba(41, 199, 164, 0.22);
-  --card-border: #d7e2de;
+  --bg: #f2f6f2;
+  --ink: #112019;
+  --muted: #617167;
+  --surface: rgba(255, 255, 255, 0.9);
+  --panel: #15382f;
+  --panel-soft: rgba(21, 56, 47, 0.92);
+  --line: #d4dfd8;
+  --primary: #2d9f7e;
+  --accent: #e4ab4c;
+  --danger: #ca6955;
 }
 
 * {
@@ -23,16 +19,15 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    linear-gradient(145deg, rgba(41, 199, 164, 0.14), transparent 34%),
-    linear-gradient(315deg, rgba(246, 184, 63, 0.12), transparent 44%),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 72px),
-    var(--bg);
-  color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+    radial-gradient(circle at top left, rgba(45, 159, 126, 0.18), transparent 26%),
+    radial-gradient(circle at right bottom, rgba(228, 171, 76, 0.18), transparent 26%),
+    linear-gradient(180deg, #f7faf7, var(--bg));
+  color: var(--ink);
+  font-family: "Trebuchet MS", Arial, sans-serif;
 }
 
 .page {
-  width: min(1080px, calc(100% - 32px));
+  width: min(1150px, calc(100% - 34px));
   margin: 0 auto;
   padding: 34px 0 42px;
 }
@@ -43,17 +38,17 @@ body {
 
 .eyebrow {
   display: inline-flex;
-  min-height: 28px;
   align-items: center;
-  margin: 0 0 10px;
-  border: 1px solid var(--border);
+  min-height: 30px;
+  margin: 0 0 12px;
   border-radius: 999px;
   padding: 0 12px;
-  background: rgba(41, 199, 164, 0.09);
+  background: rgba(45, 159, 126, 0.12);
   color: var(--primary);
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 h1,
@@ -64,36 +59,36 @@ p {
 
 h1 {
   margin-bottom: 0;
-  max-width: 760px;
-  font-size: 3.7rem;
-  line-height: 1;
+  max-width: 720px;
+  font-size: 3.9rem;
+  line-height: 0.95;
 }
 
 .subtitle {
   max-width: 640px;
-  margin: 12px 0 0;
+  margin: 14px 0 0;
   color: var(--muted);
-  font-size: 1.04rem;
-  line-height: 1.5;
+  font-size: 1.06rem;
+  line-height: 1.55;
 }
 
 .workspace {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr);
-  gap: 20px;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 22px;
   align-items: start;
 }
 
 .navigator {
   position: sticky;
-  top: 16px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
+  top: 18px;
+  border-radius: 22px;
+  padding: 24px;
   background:
-    linear-gradient(180deg, rgba(41, 199, 164, 0.1), transparent 42%),
-    var(--surface);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+    linear-gradient(180deg, rgba(45, 159, 126, 0.16), transparent 24%),
+    var(--panel-soft);
+  color: #f4f9f7;
+  box-shadow: 0 28px 58px rgba(17, 32, 25, 0.2);
 }
 
 .navigator-head {
@@ -102,16 +97,17 @@ h1 {
 
 .section-kicker {
   margin: 0 0 10px;
-  color: var(--accent);
+  color: rgba(244, 249, 247, 0.72);
   font-size: 0.78rem;
   font-weight: 800;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .navigator-head h2 {
   margin: 0;
-  color: var(--text);
-  font-size: 1.55rem;
+  color: #ffffff;
+  font-size: 1.6rem;
   line-height: 1.1;
 }
 
@@ -121,57 +117,81 @@ h1 {
 }
 
 button,
-select,
-input {
-  min-height: 46px;
-  border-radius: 6px;
+input,
+select {
+  min-height: 48px;
+  border-radius: 14px;
   font: inherit;
 }
 
 button {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
   min-width: 0;
-  border: 1px solid rgba(41, 199, 164, 0.28);
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
   cursor: pointer;
   font-weight: 800;
   padding: 0 15px;
   text-align: left;
-  overflow-wrap: anywhere;
 }
 
 button::before {
   content: attr(data-icon);
   display: grid;
-  width: 34px;
-  height: 28px;
+  width: 38px;
+  height: 32px;
   place-items: center;
-  border-radius: 6px;
-  background: rgba(41, 199, 164, 0.16);
-  color: var(--primary);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
   flex: 0 0 auto;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 900;
 }
 
 button:hover,
 button.active,
 button:focus-visible {
-  border-color: var(--accent);
-  background: var(--primary);
-  color: #08231d;
+  border-color: transparent;
+  background: #f8f6f1;
+  color: var(--panel);
   outline: none;
 }
 
 button:hover::before,
 button.active::before,
 button:focus-visible::before {
+  background: var(--accent);
+  color: #3f2a08;
+}
+
+.component button {
+  width: fit-content;
+  max-width: 100%;
+  border-color: rgba(45, 159, 126, 0.18);
+  background: rgba(45, 159, 126, 0.08);
+  color: var(--ink);
+}
+
+.component button::before {
+  background: rgba(45, 159, 126, 0.16);
+  color: var(--primary);
+}
+
+.component button:hover,
+.component button:focus-visible {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.component button:hover::before,
+.component button:focus-visible::before {
   background: #ffffff;
-  color: var(--primary-dark);
+  color: var(--primary);
 }
 
 .stage {
@@ -183,29 +203,13 @@ button:focus-visible::before {
   display: none;
   min-height: 430px;
   overflow: hidden;
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
+  border: 1px solid rgba(17, 32, 25, 0.08);
+  border-radius: 22px;
   padding: 28px;
   background:
-    linear-gradient(180deg, rgba(41, 199, 164, 0.1), transparent 34%),
-    var(--card);
-  color: var(--ink);
-  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.18);
-}
-
-.component::after {
-  content: attr(data-mode);
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  border: 1px solid rgba(41, 199, 164, 0.24);
-  border-radius: 999px;
-  padding: 6px 10px;
-  background: rgba(41, 199, 164, 0.08);
-  color: var(--primary-dark);
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0;
+    linear-gradient(180deg, rgba(45, 159, 126, 0.1), transparent 26%),
+    var(--surface);
+  box-shadow: 0 24px 50px rgba(17, 32, 25, 0.12);
 }
 
 .component.active {
@@ -214,30 +218,31 @@ button:focus-visible::before {
   align-content: start;
 }
 
-.component h2 {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 0;
-  padding-right: 88px;
-  color: var(--ink);
-  font-size: 1.55rem;
-  line-height: 1.1;
+.component::after {
+  content: attr(data-mode);
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: rgba(45, 159, 126, 0.1);
+  color: var(--primary);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
 }
 
-.component h2::before {
-  content: "";
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--primary);
-  box-shadow: 22px 0 0 var(--accent), 44px 0 0 var(--danger);
+.component h2 {
+  margin-bottom: 0;
+  padding-right: 80px;
+  font-size: 2rem;
+  line-height: 1.02;
 }
 
 .component p {
   max-width: 52ch;
   margin-bottom: 0;
-  color: var(--muted-dark);
+  color: var(--muted);
   line-height: 1.55;
 }
 
@@ -248,13 +253,12 @@ button:focus-visible::before {
 #selectText {
   display: inline-flex;
   align-items: center;
-  min-height: 48px;
+  min-height: 54px;
   max-width: 100%;
-  border: 1px solid #d5e3de;
-  border-radius: 6px;
-  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
   background: #ffffff;
-  box-shadow: inset 4px 0 0 rgba(41, 199, 164, 0.42);
   color: var(--ink);
   font-weight: 700;
 }
@@ -263,43 +267,36 @@ label {
   display: grid;
   gap: 8px;
   font-weight: 800;
-  color: var(--ink);
 }
 
 input,
 select {
-  width: min(420px, 100%);
+  width: min(440px, 100%);
   max-width: 100%;
-  border: 1px solid #d0ddd9;
+  border: 1px solid var(--line);
   background: #ffffff;
   color: var(--ink);
-  padding: 0 12px;
+  padding: 0 14px;
 }
 
 input:focus,
 select:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(41, 199, 164, 0.14);
+  box-shadow: 0 0 0 4px rgba(45, 159, 126, 0.14);
   outline: none;
-}
-
-#clickButton,
-#doubleButton {
-  width: fit-content;
-  max-width: 100%;
 }
 
 .mouse-box {
   display: grid;
-  width: min(440px, 100%);
-  min-height: 156px;
+  width: min(460px, 100%);
+  min-height: 160px;
   place-items: center;
-  border: 2px dashed rgba(41, 199, 164, 0.34);
-  border-radius: 8px;
+  border: 2px dashed rgba(45, 159, 126, 0.32);
+  border-radius: 20px;
   background:
-    repeating-linear-gradient(45deg, rgba(41, 199, 164, 0.08) 0 8px, transparent 8px 16px),
-    #f5fbf9;
-  color: var(--muted-dark);
+    linear-gradient(135deg, rgba(45, 159, 126, 0.08), rgba(228, 171, 76, 0.08)),
+    #fcfdfc;
+  color: var(--muted);
   font-weight: 800;
   text-align: center;
   padding: 18px;
@@ -307,38 +304,32 @@ select:focus {
 
 .mouse-box.over {
   border-color: var(--primary);
-  background: #def8f0;
-  color: var(--primary-dark);
-}
-
-#clickComponent {
-  background:
-    linear-gradient(180deg, rgba(41, 199, 164, 0.12), transparent 34%),
-    var(--card);
+  background: #eef8f4;
+  color: var(--primary);
 }
 
 #doubleComponent {
   background:
-    linear-gradient(180deg, rgba(239, 111, 108, 0.1), transparent 34%),
-    var(--card);
+    linear-gradient(180deg, rgba(202, 105, 85, 0.12), transparent 28%),
+    var(--surface);
 }
 
 #keyboardComponent {
   background:
-    linear-gradient(180deg, rgba(246, 184, 63, 0.1), transparent 34%),
-    var(--card);
+    linear-gradient(180deg, rgba(228, 171, 76, 0.14), transparent 28%),
+    var(--surface);
 }
 
 #selectComponent.theme-blue {
-  box-shadow: inset 0 5px 0 #3b82f6, 0 24px 56px rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 6px 0 #3b82f6, 0 24px 50px rgba(17, 32, 25, 0.12);
 }
 
 #selectComponent.theme-green {
-  box-shadow: inset 0 5px 0 #15803d, 0 24px 56px rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 6px 0 #15803d, 0 24px 50px rgba(17, 32, 25, 0.12);
 }
 
 #selectComponent.theme-red {
-  box-shadow: inset 0 5px 0 var(--danger), 0 24px 56px rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 6px 0 var(--danger), 0 24px 50px rgba(17, 32, 25, 0.12);
 }
 
 @media (max-width: 980px) {
@@ -357,58 +348,48 @@ select:focus {
 
 @media (max-width: 720px) {
   .page {
-    width: min(1080px, calc(100% - 24px));
-    padding: 24px 0 32px;
+    width: min(1150px, calc(100% - 22px));
+    padding: 22px 0 30px;
   }
 
   h1 {
-    font-size: 2.45rem;
-  }
-
-  .subtitle {
-    font-size: 1rem;
+    font-size: 2.7rem;
   }
 
   .navigator,
   .component {
     padding: 18px;
+    border-radius: 18px;
   }
 
   .component {
     min-height: 0;
   }
 
-  .component::after {
-    top: 14px;
-    right: 14px;
-  }
-
   .component h2 {
     padding-right: 0;
-    font-size: 1.35rem;
+    font-size: 1.65rem;
   }
 
-  #clickButton,
-  #doubleButton,
+  .component button,
   input,
   select {
     width: 100%;
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 540px) {
   .tabs {
     grid-template-columns: 1fr;
   }
 
-  .component h2 {
-    display: grid;
-    gap: 10px;
+  h1 {
+    font-size: 2.2rem;
   }
 
-  .mouse-box {
-    min-height: 128px;
-    padding: 16px;
+  .component::after {
+    position: static;
+    width: fit-content;
   }
 }
 

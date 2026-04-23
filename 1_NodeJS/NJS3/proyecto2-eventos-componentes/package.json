@@ -1,0 +1,13 @@
+{
+  "name": "proyecto2-eventos-componentes",
+  "version": "1.0.0",
+  "description": "Proyecto Express con componentes y eventos del navegador.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
+

@@ -1,0 +1,13 @@
+{
+  "name": "proyecto4-nodos-atributos",
+  "version": "1.0.0",
+  "description": "Proyecto Express para crear nodos y modificar atributos.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
+
