@@ -56,7 +56,7 @@ body {
 h1 {
   margin: 0;
   max-width: 780px;
-  font-size: clamp(2rem, 5vw, 4.4rem);
+  font-size: 4rem;
   line-height: 0.96;
 }
 
@@ -101,6 +101,7 @@ h1 {
 }
 
 .result {
+  min-width: 0;
   padding: 20px;
 }
 
@@ -108,6 +109,8 @@ button {
   display: flex;
   align-items: center;
   gap: 10px;
+  width: 100%;
+  min-width: 0;
   min-height: 46px;
   border: 1px solid rgba(25, 211, 178, 0.4);
   border-radius: 6px;
@@ -117,6 +120,7 @@ button {
   font-weight: 700;
   padding: 0 13px;
   text-align: left;
+  overflow-wrap: anywhere;
 }
 
 button::before {
@@ -205,12 +209,44 @@ button:focus-visible {
 }
 
 @media (max-width: 760px) {
+  .page {
+    width: min(1080px, calc(100% - 24px));
+    padding: 24px 0 32px;
+  }
+
   .layout {
     grid-template-columns: 1fr;
   }
 
+  .controls {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .dom-area {
+    min-height: 320px;
+    padding: 22px;
+  }
+
   h1 {
-    font-size: 2.35rem;
+    font-size: 2.5rem;
   }
 }
 
+@media (max-width: 540px) {
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  h1 {
+    font-size: 2.15rem;
+  }
+
+  .dom-area {
+    min-height: 280px;
+    padding: 18px;
+  }
+}

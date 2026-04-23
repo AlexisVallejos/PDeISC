@@ -56,7 +56,7 @@ p {
 
 h1 {
   margin-bottom: 0;
-  font-size: clamp(2rem, 4vw, 3.7rem);
+  font-size: 3.5rem;
   line-height: 1;
 }
 
@@ -69,8 +69,8 @@ h1 {
 }
 
 .tabs {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px;
   margin: 24px 0 18px;
 }
@@ -87,6 +87,7 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
   background: rgba(29, 36, 37, 0.92);
   color: var(--text);
   cursor: pointer;
@@ -179,7 +180,10 @@ img {
 }
 
 table {
+  display: block;
   width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
   border-collapse: separate;
   border-spacing: 0 8px;
 }
@@ -196,12 +200,30 @@ table {
 }
 
 @media (max-width: 720px) {
-  h1 {
-    font-size: 2.25rem;
+  .page {
+    width: min(1020px, calc(100% - 24px));
+    padding: 24px 0 32px;
   }
 
-  .tabs {
-    display: grid;
+  h1 {
+    font-size: 2.35rem;
+  }
+
+  .component {
+    padding: 20px;
+  }
+
+  .count-button {
+    width: 100%;
   }
 }
 
+@media (max-width: 560px) {
+  h1 {
+    font-size: 2.05rem;
+  }
+
+  .result {
+    font-size: 0.96rem;
+  }
+}

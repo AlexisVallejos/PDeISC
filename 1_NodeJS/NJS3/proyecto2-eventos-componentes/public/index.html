@@ -14,48 +14,59 @@
       <p class="subtitle">Un panel de interacciones para probar eventos del navegador.</p>
     </header>
 
-    <nav class="tabs" aria-label="Componentes">
-      <button class="tab active" type="button" data-target="clickComponent" data-icon="C">Click</button>
-      <button class="tab" type="button" data-target="mouseComponent" data-icon="M">Mouse</button>
-      <button class="tab" type="button" data-target="doubleComponent" data-icon="2X">Doble click</button>
-      <button class="tab" type="button" data-target="keyboardComponent" data-icon="K">Teclado</button>
-      <button class="tab" type="button" data-target="selectComponent" data-icon="S">Select</button>
-    </nav>
+    <section class="workspace">
+      <aside class="navigator">
+        <div class="navigator-head">
+          <p class="section-kicker">Consola central</p>
+          <h2>Seleccion de eventos</h2>
+        </div>
 
-    <section class="component active" id="clickComponent">
-      <h2>Evento click</h2>
-      <p id="clickText">Presiona el boton para cambiar este texto.</p>
-      <button id="clickButton" type="button" data-icon="RUN">Actualizar texto</button>
-    </section>
+        <nav class="tabs" aria-label="Componentes">
+          <button class="tab active" type="button" data-target="clickComponent" data-icon="C">Click</button>
+          <button class="tab" type="button" data-target="mouseComponent" data-icon="M">Mouse</button>
+          <button class="tab" type="button" data-target="doubleComponent" data-icon="2X">Doble click</button>
+          <button class="tab" type="button" data-target="keyboardComponent" data-icon="K">Teclado</button>
+          <button class="tab" type="button" data-target="selectComponent" data-icon="S">Select</button>
+        </nav>
+      </aside>
 
-    <section class="component" id="mouseComponent">
-      <h2>Evento mouseenter y mouseleave</h2>
-      <div id="mouseBox" class="mouse-box" tabindex="0">Pasa el mouse por aqui</div>
-      <p id="mouseText">El estado del mouse se vera aqui.</p>
-    </section>
+      <section class="stage">
+        <section class="component active" id="clickComponent" data-mode="CLICK">
+          <h2>Evento click</h2>
+          <p id="clickText">Presiona el boton para cambiar este texto.</p>
+          <button id="clickButton" type="button" data-icon="RUN">Actualizar texto</button>
+        </section>
 
-    <section class="component" id="doubleComponent">
-      <h2>Evento dblclick</h2>
-      <button id="doubleButton" type="button" data-icon="2X">Hacer doble click</button>
-      <p id="doubleText">Doble clicks detectados: 0</p>
-    </section>
+        <section class="component" id="mouseComponent" data-mode="MOUSE">
+          <h2>Evento mouseenter y mouseleave</h2>
+          <div id="mouseBox" class="mouse-box" tabindex="0">Pasa el mouse por aqui</div>
+          <p id="mouseText">El estado del mouse se vera aqui.</p>
+        </section>
 
-    <section class="component" id="keyboardComponent">
-      <h2>Evento keydown</h2>
-      <label for="keyboardInput">Escribe una tecla</label>
-      <input id="keyboardInput" type="text" autocomplete="off">
-      <p id="keyboardText">Tecla presionada: ninguna</p>
-    </section>
+        <section class="component" id="doubleComponent" data-mode="DBL">
+          <h2>Evento dblclick</h2>
+          <button id="doubleButton" type="button" data-icon="2X">Hacer doble click</button>
+          <p id="doubleText">Doble clicks detectados: 0</p>
+        </section>
 
-    <section class="component" id="selectComponent">
-      <h2>Evento change</h2>
-      <label for="themeSelect">Color del panel</label>
-      <select id="themeSelect">
-        <option value="blue">Azul</option>
-        <option value="green">Verde</option>
-        <option value="red">Rojo</option>
-      </select>
-      <p id="selectText">Color seleccionado: azul</p>
+        <section class="component" id="keyboardComponent" data-mode="KEY">
+          <h2>Evento keydown</h2>
+          <label for="keyboardInput">Escribe una tecla</label>
+          <input id="keyboardInput" type="text" autocomplete="off">
+          <p id="keyboardText">Tecla presionada: ninguna</p>
+        </section>
+
+        <section class="component" id="selectComponent" data-mode="SELECT">
+          <h2>Evento change</h2>
+          <label for="themeSelect">Color del panel</label>
+          <select id="themeSelect">
+            <option value="blue">Azul</option>
+            <option value="green">Verde</option>
+            <option value="red">Rojo</option>
+          </select>
+          <p id="selectText">Color seleccionado: azul</p>
+        </section>
+      </section>
     </section>
   </main>
 
