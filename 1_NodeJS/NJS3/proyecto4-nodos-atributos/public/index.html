@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto 4 - Nodos y atributos</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <p class="eyebrow">Proyecto 4</p>
+      <h1>Crear nodos a y modificar atributos</h1>
+      <p class="subtitle">Un enrutador visual para crear enlaces y auditar cambios de atributos.</p>
+    </header>
+
+    <section class="layout">
+      <aside class="panel controls">
+        <button id="createLinks" type="button" data-icon="+">Crear 5 nodos</button>
+        <button id="modifyLinks" type="button" data-icon="URL">Modificar atributos</button>
+      </aside>
+
+      <section class="panel">
+        <h2>Nodos creados</h2>
+        <div id="linksContainer" class="links-container" aria-live="polite"></div>
+      </section>
+
+      <section class="panel log-panel">
+        <h2>Cambios realizados</h2>
+        <ul id="changeLog" class="change-log" aria-live="polite"></ul>
+      </section>
+    </section>
+  </main>
+
+  <script src="./js/script.js"></script>
+</body>
+</html>

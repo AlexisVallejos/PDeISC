@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto 5 - InnerHTML</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <p class="eyebrow">Proyecto 5</p>
+      <h1>Agregar objetos HTML con innerHTML</h1>
+      <p class="subtitle">Un constructor de contenido para inyectar bloques HTML dinamicamente.</p>
+    </header>
+
+    <section class="layout">
+      <nav class="panel controls" aria-label="Agregar objetos">
+        <button type="button" data-template="card" data-icon="CRD">Agregar tarjeta</button>
+        <button type="button" data-template="list" data-icon="LST">Agregar lista</button>
+        <button type="button" data-template="table" data-icon="TBL">Agregar tabla</button>
+        <button type="button" data-template="form" data-icon="FRM">Agregar mini formulario</button>
+        <button type="button" data-template="notice" data-icon="MSG">Agregar aviso</button>
+        <button id="clearContent" type="button" data-icon="CLR">Limpiar contenido</button>
+      </nav>
+
+      <section class="panel preview">
+        <h2>Contenido dinamico</h2>
+        <div id="contentArea" class="content-area" aria-live="polite">
+          <p class="empty-state">El contenido creado con innerHTML aparecera aqui.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="./js/script.js"></script>
+</body>
+</html>

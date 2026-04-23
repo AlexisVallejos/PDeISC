@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto 6 - Formulario de registro</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <p class="eyebrow">Proyecto 6</p>
+      <h1>Formulario de registro</h1>
+      <p class="subtitle">Una ficha digital para capturar datos personales y mostrarlos al instante.</p>
+    </header>
+
+    <section class="layout">
+      <form id="registerForm" class="panel form">
+        <label>
+          Nombre
+          <input name="name" type="text" required placeholder="Nombre completo">
+        </label>
+
+        <label>
+          Mail
+          <input name="email" type="email" required placeholder="persona@mail.com">
+        </label>
+
+        <label>
+          Edad
+          <input name="age" type="number" min="1" max="120" required placeholder="Edad">
+        </label>
+
+        <fieldset>
+          <legend>Genero</legend>
+          <label class="option"><input name="gender" type="radio" value="Femenino" required> Femenino</label>
+          <label class="option"><input name="gender" type="radio" value="Masculino"> Masculino</label>
+          <label class="option"><input name="gender" type="radio" value="Otro"> Otro</label>
+        </fieldset>
+
+        <label>
+          Provincia
+          <select name="province" required>
+            <option value="">Seleccionar</option>
+            <option value="Buenos Aires">Buenos Aires</option>
+            <option value="Cordoba">Cordoba</option>
+            <option value="Santa Fe">Santa Fe</option>
+            <option value="Mendoza">Mendoza</option>
+          </select>
+        </label>
+
+        <fieldset>
+          <legend>Intereses</legend>
+          <label class="option"><input name="interests" type="checkbox" value="Programacion"> Programacion</label>
+          <label class="option"><input name="interests" type="checkbox" value="Diseno"> Diseno</label>
+          <label class="option"><input name="interests" type="checkbox" value="Bases de datos"> Bases de datos</label>
+        </fieldset>
+
+        <button type="submit" data-icon="OK">Mostrar registro</button>
+      </form>
+
+      <section class="panel result-panel">
+        <h2>Datos cargados</h2>
+        <div id="result" class="result" aria-live="polite">
+          <p class="empty-state">Al enviar el formulario, los datos apareceran aqui.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="./js/script.js"></script>
+</body>
+</html>

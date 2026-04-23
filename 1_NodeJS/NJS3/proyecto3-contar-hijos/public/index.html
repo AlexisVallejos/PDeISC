@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto 3 - Contar hijos</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <p class="eyebrow">Proyecto 3</p>
+      <h1>Contar hijos de un componente</h1>
+      <p class="subtitle">Un inspector de estructura para medir cuantos nodos contiene cada bloque.</p>
+    </header>
+
+    <nav class="tabs" aria-label="Componentes">
+      <button class="tab active" type="button" data-target="cardsComponent" data-icon="CRD">Tarjetas</button>
+      <button class="tab" type="button" data-target="listComponent" data-icon="LST">Lista</button>
+      <button class="tab" type="button" data-target="formComponent" data-icon="FRM">Formulario</button>
+      <button class="tab" type="button" data-target="mediaComponent" data-icon="IMG">Media</button>
+      <button class="tab" type="button" data-target="tableComponent" data-icon="TBL">Tabla</button>
+    </nav>
+
+    <section class="component active" id="cardsComponent">
+      <h2>Componente de tarjetas</h2>
+      <div class="child-list" data-label="tarjetas">
+        <article>Tarjeta uno</article>
+        <article>Tarjeta dos</article>
+        <article>Tarjeta tres</article>
+      </div>
+      <button class="count-button" type="button" data-icon="#">Ver cuantos hijos tiene</button>
+    </section>
+
+    <section class="component" id="listComponent">
+      <h2>Componente de lista</h2>
+      <ul class="child-list" data-label="items de lista">
+        <li>HTML</li>
+        <li>CSS</li>
+        <li>JavaScript</li>
+        <li>Express</li>
+      </ul>
+      <button class="count-button" type="button" data-icon="#">Ver cuantos hijos tiene</button>
+    </section>
+
+    <section class="component" id="formComponent">
+      <h2>Componente de formulario</h2>
+      <form class="child-list" data-label="controles">
+        <input type="text" placeholder="Nombre">
+        <input type="email" placeholder="Mail">
+        <button type="button" data-icon="OK">Validar</button>
+      </form>
+      <button class="count-button" type="button" data-icon="#">Ver cuantos hijos tiene</button>
+    </section>
+
+    <section class="component" id="mediaComponent">
+      <h2>Componente de media</h2>
+      <div class="child-list media-grid" data-label="elementos visuales">
+        <img src="https://picsum.photos/id/1060/220/140" alt="Montana">
+        <img src="https://picsum.photos/id/1069/220/140" alt="Rio">
+      </div>
+      <button class="count-button" type="button" data-icon="#">Ver cuantos hijos tiene</button>
+    </section>
+
+    <section class="component" id="tableComponent">
+      <h2>Componente de tabla</h2>
+      <table>
+        <tbody class="child-list" data-label="filas">
+          <tr><td>Fila 1</td><td>Activa</td></tr>
+          <tr><td>Fila 2</td><td>Pendiente</td></tr>
+          <tr><td>Fila 3</td><td>Finalizada</td></tr>
+        </tbody>
+      </table>
+      <button class="count-button" type="button" data-icon="#">Ver cuantos hijos tiene</button>
+    </section>
+
+    <p id="result" class="result" aria-live="polite">Pulsa un boton para contar hijos.</p>
+  </main>
+
+  <script src="./js/script.js"></script>
+</body>
+</html>

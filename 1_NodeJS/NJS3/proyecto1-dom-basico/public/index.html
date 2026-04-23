@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proyecto 1 - DOM basico</title>
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <main class="page">
+    <header class="header">
+      <p class="eyebrow">Proyecto 1</p>
+      <h1>Eventos DHTML y DOM</h1>
+      <p class="subtitle">Un tablero de laboratorio para crear y modificar elementos en vivo.</p>
+    </header>
+
+    <section class="layout">
+      <nav class="panel controls" aria-label="Acciones DOM">
+        <button id="btnAddTitle" type="button" data-icon="+">Agregar H1</button>
+        <button id="btnChangeText" type="button" data-icon="T">Cambiar texto H1</button>
+        <button id="btnChangeColor" type="button" data-icon="#">Cambiar color H1</button>
+        <button id="btnAddImage" type="button" data-icon="IMG">Agregar imagen</button>
+        <button id="btnChangeImage" type="button" data-icon="SRC">Cambiar imagen</button>
+        <button id="btnResizeImage" type="button" data-icon="PX">Cambiar tamano imagen</button>
+      </nav>
+
+      <section class="panel result" aria-live="polite">
+        <div id="domArea" class="dom-area">
+          <p class="empty-state">Usa los botones para crear y modificar elementos.</p>
+        </div>
+        <p id="message" class="message">Esperando una accion.</p>
+      </section>
+    </section>
+  </main>
+
+  <script src="./js/script.js"></script>
+</body>
+</html>
