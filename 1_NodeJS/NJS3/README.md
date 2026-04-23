@@ -1,23 +1,44 @@
 # NJS3
 
-Carpeta con seis proyectos de DOM accesibles desde un unico servidor Express.
+Carpeta con seis proyectos hechos con Express, HTML, CSS y JavaScript.
 
-## Como ejecutar
+## Estructura general
 
-Ubicarse en `1_NodeJS/NJS3`, instalar dependencias y arrancar:
+Cada proyecto tiene esta base:
+
+- `app.js`: levanta el servidor del proyecto.
+- `package.json`: define dependencias y script de inicio.
+- `public/index.html`: estructura de la pagina.
+- `public/css/style.css`: diseno visual.
+- `public/js/script.js`: logica y eventos.
+
+## Como ejecutar un proyecto individual
+
+Entrar a la carpeta del proyecto y ejecutar:
 
 ```bash
-npm install
 npm start
 ```
 
-## Acceso
+Puertos:
 
-- Portal principal: `http://localhost:3000`
-- Proyecto 1: `http://localhost:3000/proyecto1-dom-basico/`
-- Proyecto 2: `http://localhost:3000/proyecto2-eventos-componentes/`
-- Proyecto 3: `http://localhost:3000/proyecto3-contar-hijos/`
-- Proyecto 4: `http://localhost:3000/proyecto4-nodos-atributos/`
-- Proyecto 5: `http://localhost:3000/proyecto5-innerhtml/`
-- Proyecto 6: `http://localhost:3000/proyecto6-formulario-registro/`
+- `proyecto1-dom-basico`: `http://localhost:3001`
+- `proyecto2-eventos-componentes`: `http://localhost:3002`
+- `proyecto3-contar-hijos`: `http://localhost:3003`
+- `proyecto4-nodos-atributos`: `http://localhost:3004`
+- `proyecto5-innerhtml`: `http://localhost:3005`
+- `proyecto6-formulario-registro`: `http://localhost:3006`
+
+## Documentacion por proyecto
+
+- `proyecto1-dom-basico/README.md`
+- `proyecto2-eventos-componentes/README.md`
+- `proyecto3-contar-hijos/README.md`
+- `proyecto4-nodos-atributos/README.md`
+- `proyecto5-innerhtml/README.md`
+- `proyecto6-formulario-registro/README.md`
+
+## Servidor general
+
+Tambien existe `server.js` en `NJS3` para acceder a todos los proyectos desde `http://localhost:3000`.
 
