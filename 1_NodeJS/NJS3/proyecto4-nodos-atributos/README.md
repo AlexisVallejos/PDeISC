@@ -1,11 +1,5 @@
 # Proyecto 4
 
-## Objetivo
-
-Crear nodos `<a>` y modificar sus atributos de manera dinamica.
-
-## Que hace
-
 - Crea 5 enlaces.
 - Modifica el atributo `href` de cada enlace.
 - Cambia el texto visible de cada nodo.
