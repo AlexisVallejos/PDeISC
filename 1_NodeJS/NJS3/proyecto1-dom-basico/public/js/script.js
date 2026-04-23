@@ -3,9 +3,10 @@ const message = document.getElementById("message");
 
 const colors = ["#c66b3d", "#16803c", "#7c3aed", "#0f766e", "#be123c"];
 const imageSources = [
-  "https://picsum.photos/id/1015/640/400",
-  "https://picsum.photos/id/1039/640/400",
-  "https://picsum.photos/id/1043/640/400"
+  "./img/julian-river-1.jpg",
+  "./img/river-estadio.jpg",
+  "./img/julian-atletico.webp",
+  "./img/julian-river-2.jpg"
 ];
 const sizes = ["", "medium", "large"];
 
@@ -46,7 +47,7 @@ function getOrCreateImage() {
     image = document.createElement("img");
     image.id = "domImage";
     image.className = "dom-image";
-    image.alt = "Paisaje generado para practicar DOM";
+    image.alt = "Imagen de River y Julian Alvarez para practicar DOM";
     image.src = imageSources[imageIndex];
     domArea.appendChild(image);
   }
@@ -55,14 +56,23 @@ function getOrCreateImage() {
 }
 
 function addTitle() {
+  const existingTitle = document.getElementById("domTitle");
+
+  if (existingTitle) {
+    message.textContent = "Ya esta agregado el H1.";
+    return;
+  }
+
   getOrCreateTitle();
   message.textContent = 'Se agrego el componente H1 con el texto "Hola DOM".';
 }
 
 function changeTitleText() {
   const title = getOrCreateTitle();
-  title.textContent = "Chau DOM";
-  message.textContent = 'El texto del H1 cambio a "Chau DOM".';
+  const nextText = title.textContent === "Hola DOM" ? "Chau DOM" : "Hola DOM";
+
+  title.textContent = nextText;
+  message.textContent = `El texto del H1 cambio a "${nextText}".`;
 }
 
 function changeTitleColor() {
@@ -73,6 +83,13 @@ function changeTitleColor() {
 }
 
 function addImage() {
+  const existingImage = document.getElementById("domImage");
+
+  if (existingImage) {
+    message.textContent = "Ya esta agregada la imagen.";
+    return;
+  }
+
   getOrCreateImage();
   message.textContent = "Se agrego una imagen al escenario DOM.";
 }
