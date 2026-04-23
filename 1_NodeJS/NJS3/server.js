@@ -6,6 +6,7 @@ const PORT = Number(process.env.PORT) || 3000;
 
 app.enable("strict routing");
 
+// Esta lista alimenta el portal principal y el endpoint /api/projects.
 const projects = [
   {
     slug: "proyecto1-dom-basico",
@@ -49,6 +50,7 @@ app.get("/api/projects", (req, res) => {
   res.json(projects);
 });
 
+// Cada proyecto expone su carpeta public desde una ruta propia.
 projects.forEach((project) => {
   const projectPublicDir = path.join(__dirname, project.slug, "public");
   const route = `/${project.slug}`;

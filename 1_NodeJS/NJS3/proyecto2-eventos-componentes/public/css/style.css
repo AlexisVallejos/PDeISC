@@ -1,14 +1,15 @@
 :root {
-  --bg: #f2f6f2;
-  --ink: #112019;
-  --muted: #617167;
-  --surface: rgba(255, 255, 255, 0.9);
-  --panel: #15382f;
-  --panel-soft: rgba(21, 56, 47, 0.92);
-  --line: #d4dfd8;
-  --primary: #2d9f7e;
-  --accent: #e4ab4c;
+  --bg: #f7efe4;
+  --ink: #2f241d;
+  --muted: #6f6259;
+  --surface: rgba(255, 251, 247, 0.92);
+  --panel: #c66b3d;
+  --panel-soft: rgba(198, 107, 61, 0.94);
+  --line: #dfcdbd;
+  --primary: #c66b3d;
+  --accent: #316b5b;
   --danger: #ca6955;
+  --primary-soft: #f1dfd2;
 }
 
 * {
@@ -19,11 +20,11 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(45, 159, 126, 0.18), transparent 26%),
-    radial-gradient(circle at right bottom, rgba(228, 171, 76, 0.18), transparent 26%),
-    linear-gradient(180deg, #f7faf7, var(--bg));
+    radial-gradient(circle at top left, rgba(198, 107, 61, 0.2), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(49, 107, 91, 0.16), transparent 28%),
+    linear-gradient(180deg, #fbf5ed, var(--bg));
   color: var(--ink);
-  font-family: "Trebuchet MS", Arial, sans-serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 .page {
@@ -43,7 +44,7 @@ body {
   margin: 0 0 12px;
   border-radius: 999px;
   padding: 0 12px;
-  background: rgba(45, 159, 126, 0.12);
+  background: var(--primary-soft);
   color: var(--primary);
   font-size: 0.76rem;
   font-weight: 800;
@@ -85,10 +86,10 @@ h1 {
   border-radius: 22px;
   padding: 24px;
   background:
-    linear-gradient(180deg, rgba(45, 159, 126, 0.16), transparent 24%),
+    linear-gradient(180deg, rgba(198, 107, 61, 0.14), transparent 24%),
     var(--panel-soft);
   color: #f4f9f7;
-  box-shadow: 0 28px 58px rgba(17, 32, 25, 0.2);
+  box-shadow: 0 24px 60px rgba(93, 68, 49, 0.16);
 }
 
 .navigator-head {
@@ -157,7 +158,7 @@ button:hover,
 button.active,
 button:focus-visible {
   border-color: transparent;
-  background: #f8f6f1;
+  background: #fffdfa;
   color: var(--panel);
   outline: none;
 }
@@ -172,13 +173,13 @@ button:focus-visible::before {
 .component button {
   width: fit-content;
   max-width: 100%;
-  border-color: rgba(45, 159, 126, 0.18);
-  background: rgba(45, 159, 126, 0.08);
+  border-color: rgba(198, 107, 61, 0.18);
+  background: rgba(198, 107, 61, 0.08);
   color: var(--ink);
 }
 
 .component button::before {
-  background: rgba(45, 159, 126, 0.16);
+  background: rgba(198, 107, 61, 0.14);
   color: var(--primary);
 }
 
@@ -204,13 +205,13 @@ button:focus-visible::before {
   display: none;
   min-height: 430px;
   overflow: hidden;
-  border: 1px solid rgba(17, 32, 25, 0.08);
-  border-radius: 22px;
+  border: 1px solid rgba(23, 48, 58, 0.08);
+  border-radius: 18px;
   padding: 28px;
   background:
-    linear-gradient(180deg, rgba(45, 159, 126, 0.1), transparent 26%),
+    linear-gradient(180deg, rgba(198, 107, 61, 0.1), transparent 26%),
     var(--surface);
-  box-shadow: 0 24px 50px rgba(17, 32, 25, 0.12);
+  box-shadow: 0 24px 60px rgba(93, 68, 49, 0.12);
 }
 
 .component.active {
@@ -227,7 +228,7 @@ button:focus-visible::before {
   right: 20px;
   border-radius: 999px;
   padding: 7px 11px;
-  background: rgba(45, 159, 126, 0.1);
+    background: var(--primary-soft);
   color: var(--primary);
   font-size: 0.76rem;
   font-weight: 900;
@@ -284,7 +285,7 @@ select {
 input:focus,
 select:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(45, 159, 126, 0.14);
+  box-shadow: 0 0 0 4px rgba(198, 107, 61, 0.14);
   outline: none;
 }
 
@@ -293,11 +294,11 @@ select:focus {
   width: 100%;
   min-height: 160px;
   place-items: center;
-  border: 2px dashed rgba(45, 159, 126, 0.32);
+  border: 2px dashed rgba(49, 107, 91, 0.3);
   border-radius: 20px;
   background:
-    linear-gradient(135deg, rgba(45, 159, 126, 0.08), rgba(228, 171, 76, 0.08)),
-    #fcfdfc;
+    linear-gradient(135deg, rgba(198, 107, 61, 0.08), rgba(49, 107, 91, 0.08)),
+    #fffdf8;
   color: var(--muted);
   font-weight: 800;
   text-align: center;
@@ -306,7 +307,7 @@ select:focus {
 
 .mouse-box.over {
   border-color: var(--primary);
-  background: #eef8f4;
+  background: #f8f0e8;
   color: var(--primary);
 }
 
@@ -323,15 +324,15 @@ select:focus {
 }
 
 #selectComponent.theme-blue {
-  box-shadow: inset 0 6px 0 #3b82f6, 0 24px 50px rgba(17, 32, 25, 0.12);
+  box-shadow: inset 0 6px 0 #3b82f6, 0 24px 54px rgba(23, 48, 58, 0.1);
 }
 
 #selectComponent.theme-green {
-  box-shadow: inset 0 6px 0 #15803d, 0 24px 50px rgba(17, 32, 25, 0.12);
+  box-shadow: inset 0 6px 0 #15803d, 0 24px 54px rgba(23, 48, 58, 0.1);
 }
 
 #selectComponent.theme-red {
-  box-shadow: inset 0 6px 0 var(--danger), 0 24px 50px rgba(17, 32, 25, 0.12);
+  box-shadow: inset 0 6px 0 var(--danger), 0 24px 54px rgba(23, 48, 58, 0.1);
 }
 
 @media (max-width: 980px) {

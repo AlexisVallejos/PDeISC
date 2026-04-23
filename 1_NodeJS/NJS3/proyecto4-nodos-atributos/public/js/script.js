@@ -24,10 +24,11 @@ function writeLog(text) {
 }
 
 function formatLogMessage(nodeNumber, attribute, previousValue, nextValue) {
-  return `Nodo ${nodeNumber} | atributo: ${attribute} | antes: ${previousValue} | despues: ${nextValue}`;
+  return `Nodo ${nodeNumber} | atributo: ${attribute} | valor anterior: ${previousValue} | valor nuevo: ${nextValue}`;
 }
 
 document.getElementById("createLinks").addEventListener("click", () => {
+  // Reinicia el area para volver a generar exactamente 5 enlaces.
   linksContainer.innerHTML = "";
   changeLog.innerHTML = "";
 
@@ -40,7 +41,7 @@ document.getElementById("createLinks").addEventListener("click", () => {
     link.rel = "noopener noreferrer";
 
     linksContainer.appendChild(link);
-    writeLog(formatLogMessage(index + 1, "href", "sin valor visible", linkData.href));
+    writeLog(formatLogMessage(index + 1, "href", "sin valor previo", linkData.href));
   });
 });
 
@@ -48,11 +49,12 @@ document.getElementById("modifyLinks").addEventListener("click", () => {
   const links = linksContainer.querySelectorAll("a");
 
   if (links.length === 0) {
-    writeLog("Primero se deben crear los nodos a.");
+    writeLog("Primero debes crear los enlaces para poder modificar sus atributos.");
     return;
   }
 
   links.forEach((link, index) => {
+    // getAttribute permite mostrar el valor anterior antes de reemplazarlo.
     const previousHref = link.getAttribute("href");
     const nextData = changedLinks[index];
 

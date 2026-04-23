@@ -36,6 +36,7 @@ function getCheckedValue(inputs) {
 }
 
 function getSelectedInterests() {
+  // Reune todos los checkbox marcados en un arreglo.
   return interestInputs
     .filter((input) => input.checked)
     .map((input) => input.value);
@@ -59,10 +60,18 @@ function validateEmail() {
   const email = emailInput.value.trim().toLowerCase();
   const emailParts = email.split("@");
 
+  if (!email.includes("@")) {
+    markInvalid(
+      emailInput,
+      "Al mail le falta completar el @. Debe escribirse, por ejemplo, como nombre@gmail.com o nombre@hotmail.com."
+    );
+    return false;
+  }
+
   if (emailParts.length !== 2 || !emailParts[0] || !allowedEmailDomains.includes(emailParts[1])) {
     markInvalid(
       emailInput,
-      "El mail debe ser valido y terminar en @gmail.com o @hotmail.com."
+      "El mail debe terminar con un dominio valido como gmail.com o hotmail.com. Ejemplos: nombre@gmail.com o nombre@hotmail.com."
     );
     return false;
   }
@@ -125,6 +134,7 @@ function appendResultItem(label, value) {
 }
 
 function renderResult(data) {
+  // replaceChildren limpia el resultado anterior antes de renderizar uno nuevo.
   result.replaceChildren();
 
   appendResultItem("Nombre", data.name);
@@ -153,6 +163,7 @@ function validateForm() {
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
+  // Solo muestra el resultado si todas las validaciones fueron aprobadas.
   if (!validateForm()) {
     return;
   }
@@ -168,7 +179,7 @@ form.addEventListener("submit", (event) => {
     interests: getSelectedInterests()
   });
 
-  formMessage.textContent = "Registro valido. Los datos fueron cargados correctamente.";
+  formMessage.textContent = "Muy bien, el formulario fue validado y los datos se cargaron correctamente.";
   formMessage.style.color = "var(--ok)";
 });
 

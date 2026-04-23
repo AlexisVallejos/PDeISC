@@ -1,12 +1,14 @@
 :root {
-  --bg: #f4f0fb;
-  --ink: #241c35;
-  --muted: #6e6685;
-  --surface: rgba(255, 255, 255, 0.92);
-  --line: #ddd4ef;
-  --primary: #5b6df7;
-  --accent: #e46f93;
-  --green: #2b9a78;
+  --bg: #f7efe4;
+  --ink: #2f241d;
+  --muted: #6f6259;
+  --surface: rgba(255, 251, 247, 0.92);
+  --line: #dfcdbd;
+  --primary: #c66b3d;
+  --accent: #316b5b;
+  --green: #316b5b;
+  --danger: #b63a3a;
+  --primary-soft: #f1dfd2;
 }
 
 * {
@@ -17,11 +19,11 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(91, 109, 247, 0.18), transparent 26%),
-    radial-gradient(circle at bottom right, rgba(228, 111, 147, 0.18), transparent 26%),
-    linear-gradient(180deg, #faf8fe, var(--bg));
+    radial-gradient(circle at top left, rgba(198, 107, 61, 0.2), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(49, 107, 91, 0.16), transparent 28%),
+    linear-gradient(180deg, #fbf5ed, var(--bg));
   color: var(--ink);
-  font-family: Verdana, Geneva, sans-serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 .page {
@@ -87,7 +89,7 @@ h1 {
   display: grid;
   gap: 12px;
   background:
-    linear-gradient(180deg, rgba(91, 109, 247, 0.12), transparent 30%),
+    linear-gradient(180deg, rgba(198, 107, 61, 0.14), transparent 30%),
     var(--surface);
 }
 
@@ -140,7 +142,7 @@ button:focus-visible::before {
   min-width: 0;
   min-height: 460px;
   background:
-    linear-gradient(180deg, rgba(228, 111, 147, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(49, 107, 91, 0.08), transparent 28%),
     var(--surface);
 }
 
@@ -158,7 +160,7 @@ button:focus-visible::before {
   border-radius: 18px;
   padding: 18px;
   background: #ffffff;
-  box-shadow: inset 5px 0 0 rgba(91, 109, 247, 0.38);
+  box-shadow: inset 5px 0 0 rgba(198, 107, 61, 0.28);
 }
 
 .html-card strong,
@@ -201,6 +203,30 @@ button:focus-visible::before {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 0 12px;
+}
+
+.inline-form label {
+  display: grid;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.inline-form input.invalid {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 4px rgba(182, 58, 58, 0.12);
+  outline: none;
+}
+
+.inline-feedback {
+  min-height: 24px;
+  margin: 0;
+  color: var(--danger);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.inline-feedback.success {
+  color: var(--green);
 }
 
 .empty-state {

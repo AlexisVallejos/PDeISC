@@ -10,8 +10,8 @@
   <main class="page">
     <header class="header">
       <p class="eyebrow">Proyecto 3</p>
-      <h1>Contar hijos de un componente</h1>
-      <p class="subtitle">Un inspector de estructura para medir cuantos nodos contiene cada bloque.</p>
+      <h1>Practica de conteo de nodos</h1>
+      <p class="subtitle">Revisa cada componente y cuenta cuantos hijos contiene su estructura.</p>
     </header>
 
     <nav class="tabs" aria-label="Componentes">
@@ -45,10 +45,11 @@
 
     <section class="component" id="formComponent">
       <h2>Componente de formulario</h2>
-      <form class="child-list" data-label="controles">
-        <input type="text" placeholder="Nombre">
-        <input type="email" placeholder="Mail">
-        <button type="button" data-icon="OK">Validar</button>
+      <form class="child-list secure-form" data-label="controles" novalidate>
+        <input class="secure-name" type="text" placeholder="Nombre" minlength="3" maxlength="50">
+        <input class="secure-email" type="email" placeholder="nombre@gmail.com" inputmode="email">
+        <button class="validate-form-button" type="button" data-icon="OK">Validar</button>
+        <p class="form-feedback" aria-live="polite"></p>
       </form>
       <button class="count-button" type="button" data-icon="#">Ver cuantos hijos tiene</button>
     </section>
@@ -56,8 +57,8 @@
     <section class="component" id="mediaComponent">
       <h2>Componente de media</h2>
       <div class="child-list media-grid" data-label="elementos visuales">
-        <img src="https://picsum.photos/id/1060/220/140" alt="Montana">
-        <img src="https://picsum.photos/id/1069/220/140" alt="Rio">
+        <img src="./img/river-estadio.jpg" alt="Estadio de River Plate">
+        <img src="./img/julian-river-2.jpg" alt="Julian Alvarez con la camiseta de River">
       </div>
       <button class="count-button" type="button" data-icon="#">Ver cuantos hijos tiene</button>
     </section>
@@ -74,7 +75,7 @@
       <button class="count-button" type="button" data-icon="#">Ver cuantos hijos tiene</button>
     </section>
 
-    <p id="result" class="result" aria-live="polite">Pulsa un boton para contar hijos.</p>
+    <p id="result" class="result" aria-live="polite">Selecciona un componente y cuenta sus hijos para ver el resultado.</p>
   </main>
 
   <script src="./js/script.js"></script>
