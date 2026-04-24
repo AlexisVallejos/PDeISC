@@ -1,6 +1,7 @@
 const domArea = document.getElementById("domArea");
 const message = document.getElementById("message");
 
+// Listas usadas para ir alternando colores, imagenes y tamanos.
 const colors = ["#c66b3d", "#16803c", "#7c3aed", "#0f766e", "#be123c"];
 const imageSources = [
   "./img/julian-river-1.jpg",
@@ -14,6 +15,7 @@ let colorIndex = 0;
 let imageIndex = 0;
 let sizeIndex = 0;
 
+// Borra el mensaje inicial cuando ya se agrega un elemento real al DOM.
 function clearEmptyState() {
   const emptyState = domArea.querySelector(".empty-state");
 
@@ -22,6 +24,7 @@ function clearEmptyState() {
   }
 }
 
+// Crea el H1 si no existe y devuelve ese mismo nodo para reutilizarlo.
 function getOrCreateTitle() {
   clearEmptyState();
 
@@ -39,6 +42,7 @@ function getOrCreateTitle() {
   return title;
 }
 
+// Crea la imagen si no existe y la devuelve para reutilizarla sin duplicarla.
 function getOrCreateImage() {
   clearEmptyState();
 
@@ -57,6 +61,7 @@ function getOrCreateImage() {
   return image;
 }
 
+// Agrega el H1 al area de practica.
 function addTitle() {
   const existingTitle = document.getElementById("domTitle");
 
@@ -69,6 +74,7 @@ function addTitle() {
   message.textContent = 'Se agrego el H1 con el texto "Hola DOM".';
 }
 
+// Cambia el texto del H1 entre las dos opciones del ejercicio.
 function changeTitleText() {
   const title = getOrCreateTitle();
   // Alterna entre los dos textos pedidos en el enunciado.
@@ -78,6 +84,7 @@ function changeTitleText() {
   message.textContent = `El texto del H1 se actualizo a "${nextText}".`;
 }
 
+// Recorre el arreglo de colores para cambiar el color del titulo.
 function changeTitleColor() {
   const title = getOrCreateTitle();
   colorIndex = (colorIndex + 1) % colors.length;
@@ -85,6 +92,7 @@ function changeTitleColor() {
   message.textContent = `El color del H1 se actualizo a ${colors[colorIndex]}.`;
 }
 
+// Agrega una imagen al area de practica.
 function addImage() {
   const existingImage = document.getElementById("domImage");
 
@@ -97,6 +105,7 @@ function addImage() {
   message.textContent = "Se agrego una imagen al area de practica.";
 }
 
+// Reemplaza la imagen actual por otra del arreglo.
 function changeImage() {
   const image = getOrCreateImage();
   imageIndex = (imageIndex + 1) % imageSources.length;
@@ -104,6 +113,7 @@ function changeImage() {
   message.textContent = "La imagen se actualizo correctamente.";
 }
 
+// Cambia el tamano de la imagen usando clases CSS.
 function resizeImage() {
   const image = getOrCreateImage();
   // Recorre los tamanos disponibles en cada clic.
@@ -114,6 +124,7 @@ function resizeImage() {
   message.textContent = `El tamano de la imagen se actualizo a ${sizeLabel}.`;
 }
 
+// Vincula cada boton con la accion que debe ejecutar.
 document.getElementById("addTitleButton").addEventListener("click", addTitle);
 document.getElementById("changeTitleTextButton").addEventListener("click", changeTitleText);
 document.getElementById("changeTitleColorButton").addEventListener("click", changeTitleColor);

@@ -2,6 +2,7 @@ const form = document.getElementById("registerForm");
 const result = document.getElementById("result");
 const formMessage = document.getElementById("formMessage");
 
+// Referencias directas a los campos para validar y leer sus valores.
 const nameInput = form.elements.name;
 const emailInput = form.elements.email;
 const ageInput = form.elements.age;
@@ -13,6 +14,7 @@ const fieldsets = form.querySelectorAll("fieldset");
 const allowedEmailDomains = ["gmail.com", "hotmail.com"];
 const namePattern = /^[\p{L}\s]{3,50}$/u;
 
+// Limpia mensajes y estados de error antes de una nueva validacion.
 function clearValidationState() {
   formMessage.textContent = "";
 
@@ -21,6 +23,7 @@ function clearValidationState() {
   });
 }
 
+// Marca un campo como invalido y muestra el mensaje correspondiente.
 function markInvalid(field, message) {
   field.classList.add("invalid");
   formMessage.textContent = message;
@@ -30,11 +33,13 @@ function markInvalid(field, message) {
   }
 }
 
+// Devuelve el valor del radio que este seleccionado.
 function getCheckedValue(inputs) {
   const checkedInput = inputs.find((input) => input.checked);
   return checkedInput ? checkedInput.value : "";
 }
 
+// Reune todos los checkbox marcados en un arreglo.
 function getSelectedInterests() {
   // Reune todos los checkbox marcados en un arreglo.
   return interestInputs
@@ -42,6 +47,7 @@ function getSelectedInterests() {
     .map((input) => input.value);
 }
 
+// Valida que el nombre tenga el formato esperado.
 function validateName() {
   const name = nameInput.value.trim();
 
@@ -56,6 +62,7 @@ function validateName() {
   return true;
 }
 
+// Valida que el mail tenga @ y un dominio permitido.
 function validateEmail() {
   const email = emailInput.value.trim().toLowerCase();
   const emailParts = email.split("@");
@@ -79,6 +86,7 @@ function validateEmail() {
   return true;
 }
 
+// Valida que la edad sea un numero entero dentro del rango permitido.
 function validateAge() {
   const age = Number(ageInput.value);
 
@@ -90,6 +98,7 @@ function validateAge() {
   return true;
 }
 
+// Verifica que el usuario haya elegido un genero.
 function validateGender() {
   const genderFieldset = fieldsets[0];
 
@@ -101,6 +110,7 @@ function validateGender() {
   return true;
 }
 
+// Verifica que se haya seleccionado una provincia.
 function validateProvince() {
   if (!provinceSelect.value) {
     markInvalid(provinceSelect, "Debes seleccionar una provincia.");
@@ -110,6 +120,7 @@ function validateProvince() {
   return true;
 }
 
+// Verifica que exista al menos un interes marcado.
 function validateInterests() {
   const interestsFieldset = fieldsets[1];
 
@@ -121,6 +132,7 @@ function validateInterests() {
   return true;
 }
 
+// Crea una fila visual dentro del resumen final.
 function appendResultItem(label, value) {
   const item = document.createElement("div");
   item.className = "result-item";
@@ -133,6 +145,7 @@ function appendResultItem(label, value) {
   result.appendChild(item);
 }
 
+// Limpia el resultado anterior y agrega los nuevos datos.
 function renderResult(data) {
   // replaceChildren limpia el resultado anterior antes de renderizar uno nuevo.
   result.replaceChildren();
@@ -145,6 +158,7 @@ function renderResult(data) {
   appendResultItem("Intereses", data.interests.join(", "));
 }
 
+// Ejecuta todas las validaciones necesarias del formulario.
 function validateForm() {
   clearValidationState();
 
@@ -160,6 +174,7 @@ function validateForm() {
   return validations.every((validate) => validate());
 }
 
+// Captura el submit, valida y muestra los datos en la misma pagina.
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
@@ -183,6 +198,7 @@ form.addEventListener("submit", (event) => {
   formMessage.style.color = "var(--ok)";
 });
 
+// Mientras el usuario escribe, limpia el mensaje previo para volver a validar.
 form.addEventListener("input", () => {
   clearValidationState();
   formMessage.style.color = "var(--danger)";

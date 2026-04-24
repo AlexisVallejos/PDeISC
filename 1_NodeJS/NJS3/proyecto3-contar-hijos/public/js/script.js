@@ -4,6 +4,7 @@ const result = document.getElementById("result");
 const allowedEmailDomains = ["gmail.com", "hotmail.com"];
 const namePattern = /^[\p{L}\s]{3,50}$/u;
 
+// Cambia entre los distintos paneles del proyecto.
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     tabs.forEach((item) => item.classList.remove("active"));
@@ -14,6 +15,7 @@ tabs.forEach((tab) => {
   });
 });
 
+// Cuenta los hijos del contenedor principal de cada componente.
 document.querySelectorAll(".count-button").forEach((button) => {
   button.addEventListener("click", () => {
     const component = button.closest(".component");
@@ -26,12 +28,14 @@ document.querySelectorAll(".count-button").forEach((button) => {
   });
 });
 
+// Muestra un mensaje dentro del formulario de ejemplo.
 function showFormFeedback(form, message, isValid) {
   const feedback = form.querySelector(".form-feedback");
   feedback.textContent = message;
   feedback.classList.toggle("success", isValid);
 }
 
+// Limpia errores anteriores antes de volver a validar.
 function clearFormValidation(form) {
   form.querySelectorAll(".invalid").forEach((field) => {
     field.classList.remove("invalid");
@@ -40,6 +44,7 @@ function clearFormValidation(form) {
   showFormFeedback(form, "", false);
 }
 
+// Valida nombre y mail del formulario de ejemplo.
 function validateSecureForm(form) {
   clearFormValidation(form);
 
@@ -74,6 +79,7 @@ function validateSecureForm(form) {
   showFormFeedback(form, "Muy bien, el formulario de prueba fue aprobado.", true);
 }
 
+// Prepara la validacion del formulario sin enviar datos al servidor.
 document.querySelectorAll(".secure-form").forEach((form) => {
   // El formulario de ejemplo se valida sin enviarse al servidor.
   form.querySelector(".validate-form-button").addEventListener("click", () => {

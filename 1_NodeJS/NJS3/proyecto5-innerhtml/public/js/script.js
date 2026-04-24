@@ -2,6 +2,7 @@ const contentArea = document.getElementById("contentArea");
 const allowedEmailDomains = ["gmail.com", "hotmail.com"];
 const namePattern = /^[\p{L}\s]{3,50}$/u;
 
+// Guarda las plantillas HTML que se pueden insertar en el contenido.
 const templates = {
   // Cada clave guarda un bloque HTML listo para insertarse en pantalla.
   card: `
@@ -49,6 +50,7 @@ const templates = {
   `
 };
 
+// Borra el estado inicial cuando se agrega contenido dinamico.
 function removeEmptyState() {
   const emptyState = contentArea.querySelector(".empty-state");
 
@@ -57,6 +59,7 @@ function removeEmptyState() {
   }
 }
 
+// Inserta la plantilla correspondiente al boton presionado.
 document.querySelectorAll("[data-template]").forEach((button) => {
   button.addEventListener("click", () => {
     removeEmptyState();
@@ -65,16 +68,19 @@ document.querySelectorAll("[data-template]").forEach((button) => {
   });
 });
 
+// Restaura el mensaje inicial y limpia el contenido generado.
 document.getElementById("clearContent").addEventListener("click", () => {
   contentArea.innerHTML = '<p class="empty-state">El contenido creado con innerHTML aparecera aqui.</p>';
 });
 
+// Muestra el resultado de la validacion del mini formulario.
 function showInlineFeedback(form, message, isValid) {
   const feedback = form.querySelector(".inline-feedback");
   feedback.textContent = message;
   feedback.classList.toggle("success", isValid);
 }
 
+// Limpia errores previos para una nueva validacion.
 function clearInlineValidation(form) {
   form.querySelectorAll(".invalid").forEach((field) => {
     field.classList.remove("invalid");
@@ -83,6 +89,7 @@ function clearInlineValidation(form) {
   showInlineFeedback(form, "", false);
 }
 
+// Valida nombre y mail del formulario creado con innerHTML.
 function validateInlineForm(form) {
   clearInlineValidation(form);
 
@@ -114,9 +121,10 @@ function validateInlineForm(form) {
     return;
   }
 
-    showInlineFeedback(form, "Muy bien, el formulario de prueba fue aprobado.", true);
+  showInlineFeedback(form, "Muy bien, el formulario de prueba fue aprobado.", true);
 }
 
+// Usa delegacion de eventos porque el formulario se crea dinamicamente.
 contentArea.addEventListener("click", (event) => {
   const validateButton = event.target.closest(".validate-inline-form");
 
@@ -127,6 +135,7 @@ contentArea.addEventListener("click", (event) => {
   validateInlineForm(validateButton.closest(".secure-inline-form"));
 });
 
+// Limpia errores mientras el usuario vuelve a escribir.
 contentArea.addEventListener("input", (event) => {
   const form = event.target.closest(".secure-inline-form");
 
