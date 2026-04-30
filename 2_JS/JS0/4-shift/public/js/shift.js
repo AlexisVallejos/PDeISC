@@ -1,3 +1,31 @@
+/**
+ * Archivo didáctico del método shift.
+ *
+ * Este script conecta los botones de la interfaz con la ejecución de cada consigna.
+ * - Cada botón (#btn-1, #btn-2, #btn-3) ejecuta un ejercicio independiente.
+ * - showResult(...) renderiza el resultado textual en pantalla con una animación breve.
+ * - También hay eventos de teclado para ejecutar con teclas 1, 2 y 3.
+ */
+
+/**
+ * Muestra el resultado en el contenedor indicado.
+ * @param {string} elementId - id del nodo de salida (display-1/2/3).
+ * @param {string} result - texto final a mostrar al usuario.
+ */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -5,10 +33,11 @@ function showResult(elementId, result) {
     el.textContent = result;
 }
 
+// Evento click: ejecuta la consigna 1 del proyecto.
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let enteros = [10, 20, 30];
+            let enteros = getUserArray('Ingresá valores separados por coma:', [10, 20, 30]);
 let eliminado = enteros.shift();
 return `Eliminado: ${eliminado} | Quedan: [${enteros.join(', ')}]`;
         };
@@ -18,10 +47,11 @@ return `Eliminado: ${eliminado} | Quedan: [${enteros.join(', ')}]`;
     }
 });
 
+// Evento click: ejecuta la consigna 2 del proyecto.
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let mensajes = ['Hola', '¿Cómo estás?', 'Bien'];
+            let mensajes = getUserArray('Ingresá valores separados por coma:', ['Hola', '¿Cómo estás?', 'Bien']);
 let eliminado = mensajes.shift();
 return `Eliminado: ${eliminado} | Quedan: [${mensajes.join(', ')}]`;
         };
@@ -31,10 +61,11 @@ return `Eliminado: ${eliminado} | Quedan: [${mensajes.join(', ')}]`;
     }
 });
 
+// Evento click: ejecuta la consigna 3 del proyecto.
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let cola = ['Cliente 1', 'Cliente 2', 'Cliente 3'];
+            let cola = getUserArray('Ingresá valores separados por coma:', ['Cliente 1', 'Cliente 2', 'Cliente 3']);
 let atendido = cola.shift();
 return `Atendiendo a: ${atendido} | Quedan en cola: [${cola.join(', ')}]`;
         };
@@ -44,3 +75,15 @@ return `Atendiendo a: ${atendido} | Quedan en cola: [${cola.join(', ')}]`;
     }
 });
 
+
+// Evento DOMContentLoaded: informa al usuario que la pantalla está lista.
+document.addEventListener('DOMContentLoaded', () => {
+    showResult('display-1', 'Interacción lista: usa clic o teclas 1, 2 y 3.');
+});
+
+// Evento keydown: habilita accesos rápidos con teclado (1, 2, 3).
+document.addEventListener('keydown', (event) => {
+    if (event.key === '1') document.getElementById('btn-1').click();
+    if (event.key === '2') document.getElementById('btn-2').click();
+    if (event.key === '3') document.getElementById('btn-3').click();
+});
