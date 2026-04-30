@@ -1,65 +1,71 @@
+let tareas = ['Estudiar', 'Practicar'];
+
+const controls = document.getElementById('controls');
 const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
+const errorMsg = document.getElementById('error-msg');
 const consoleOutput = document.getElementById('console-output');
 
-btnAction.textContent = 'Mostrar consignas resueltas';
+controls.innerHTML = `
+    <input type="text" id="input-tarea" placeholder="Nueva tarea urgente">
+    <button id="btn-unshift">Agregar al inicio</button>
+    <button id="btn-reset">Reiniciar</button>
+`;
 
-function formatArray(array) {
-    return `[${array.map(item => String(item)).join(', ')}]`;
-}
+const inputTarea = document.getElementById('input-tarea');
+const btnUnshift = document.getElementById('btn-unshift');
+const btnReset = document.getElementById('btn-reset');
 
-function render(items) {
+function render() {
     container.innerHTML = '';
-    items.forEach(item => {
-        let div = document.createElement('div');
+    tareas.forEach(tarea => {
+        const div = document.createElement('div');
         div.className = 'array-item';
-        div.textContent = item;
+        div.textContent = tarea;
         container.appendChild(div);
     });
 }
 
-function showOutput(exercises) {
-    consoleOutput.innerHTML = exercises.map((exercise, index) => (
-        `<p><strong>${index + 1}. ${exercise.consigna}</strong><br>${exercise.resultado}</p>`
-    )).join('');
+function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
 }
 
-function runExercises() {
-    const colores = [];
-    colores.unshift('Rojo');
-    colores.unshift('Verde');
-    colores.unshift('Azul');
-
-    const tareas = ['Estudiar JavaScript', 'Practicar arrays'];
-    tareas.unshift('Entregar tarea urgente');
-
-    const usuariosConectados = ['Lucia', 'Pedro'];
-    usuariosConectados.unshift('Camila');
-
-    render([
-        `Colores: ${formatArray(colores)}`,
-        `Tareas: ${formatArray(tareas)}`,
-        `Usuarios conectados: ${formatArray(usuariosConectados)}`
-    ]);
-
-    showOutput([
-        {
-            consigna: 'Agrega tres colores al principio de un array vacío.',
-            resultado: `colores = ${formatArray(colores)}`
-        },
-        {
-            consigna: 'Dado un array de tareas, agrega una nueva tarea urgente al principio.',
-            resultado: `tareas = ${formatArray(tareas)}`
-        },
-        {
-            consigna: 'Inserta el nombre de un usuario al principio de un array de usuarios conectados.',
-            resultado: `usuariosConectados = ${formatArray(usuariosConectados)}`
-        }
-    ]);
+function clearError() {
+    errorMsg.textContent = '';
+    errorMsg.classList.remove('show');
 }
 
-btnAction.addEventListener('click', () => {
-    runExercises();
+function setOutput(message) {
+    consoleOutput.textContent = message;
+}
+
+btnUnshift.addEventListener('click', () => {
+    const tarea = inputTarea.value.trim();
+
+    if (!tarea) {
+        showError('Escribi una tarea para agregarla al inicio.');
+        return;
+    }
+
+    clearError();
+    const nuevaLongitud = tareas.unshift(tarea);
+    inputTarea.value = '';
+    render();
+    setOutput(`unshift("${tarea}") agrego el elemento al principio. Nueva longitud: ${nuevaLongitud}.`);
 });
 
-runExercises();
+inputTarea.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+        btnUnshift.click();
+    }
+});
+
+btnReset.addEventListener('click', () => {
+    tareas = ['Estudiar', 'Practicar'];
+    clearError();
+    render();
+    setOutput('Array reiniciado.');
+});
+
+render();
+setOutput('Escribi una tarea y agregala al principio del array.');

@@ -1,79 +1,71 @@
+let frutas = ['Manzana', 'Banana'];
+
+const controls = document.getElementById('controls');
 const container = document.getElementById('array-container');
-const inputVal = document.getElementById('input-val');
-const btnAction = document.getElementById('btn-action');
 const errorMsg = document.getElementById('error-msg');
 const consoleOutput = document.getElementById('console-output');
 
-if (inputVal) {
-    inputVal.style.display = 'none';
-}
+controls.innerHTML = `
+    <input type="text" id="input-fruta" placeholder="Nueva fruta">
+    <button id="btn-agregar">Agregar con push()</button>
+    <button id="btn-reset">Reiniciar</button>
+`;
 
-if (errorMsg) {
-    errorMsg.textContent = '';
-    errorMsg.classList.remove('show');
-}
+const inputFruta = document.getElementById('input-fruta');
+const btnAgregar = document.getElementById('btn-agregar');
+const btnReset = document.getElementById('btn-reset');
 
-btnAction.textContent = 'Mostrar consignas resueltas';
-
-function formatArray(array) {
-    return `[${array.map(item => String(item)).join(', ')}]`;
-}
-
-function render(items) {
+function render() {
     container.innerHTML = '';
-    items.forEach(item => {
-        let div = document.createElement('div');
+    frutas.forEach(fruta => {
+        const div = document.createElement('div');
         div.className = 'array-item';
-        div.textContent = item;
+        div.textContent = fruta;
         container.appendChild(div);
     });
 }
 
-function showOutput(exercises) {
-    consoleOutput.innerHTML = exercises.map((exercise, index) => (
-        `<p><strong>${index + 1}. ${exercise.consigna}</strong><br>${exercise.resultado}</p>`
-    )).join('');
+function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
 }
 
-function runExercises() {
-    const frutas = [];
-    frutas.push('Manzana');
-    frutas.push('Banana');
-    frutas.push('Pera');
+function clearError() {
+    errorMsg.textContent = '';
+    errorMsg.classList.remove('show');
+}
 
-    const amigos = ['Lucia'];
-    amigos.push('Mateo', 'Sofia', 'Tomas');
+function setOutput(message) {
+    consoleOutput.textContent = message;
+}
 
-    const numeros = [8, 15, 22];
-    const nuevoNumero = 30;
-    if (nuevoNumero > numeros[numeros.length - 1]) {
-        numeros.push(nuevoNumero);
+btnAgregar.addEventListener('click', () => {
+    const fruta = inputFruta.value.trim();
+
+    if (!fruta) {
+        showError('Escribi una fruta para agregarla.');
+        return;
     }
 
-    render([
-        `Frutas: ${formatArray(frutas)}`,
-        `Amigos: ${formatArray(amigos)}`,
-        `Numeros: ${formatArray(numeros)}`
-    ]);
-
-    showOutput([
-        {
-            consigna: 'Crea un array vacío y agrega tres frutas usando push().',
-            resultado: `frutas = ${formatArray(frutas)}`
-        },
-        {
-            consigna: 'Agrega los nombres de tus 3 amigos a un array existente llamado amigos.',
-            resultado: `amigos = ${formatArray(amigos)}`
-        },
-        {
-            consigna: 'Dado un array de números, agrega un nuevo número solo si es mayor que el último número.',
-            resultado: `El nuevo numero ${nuevoNumero} es mayor que el ultimo, entonces numeros = ${formatArray(numeros)}`
-        }
-    ]);
-}
-
-btnAction.addEventListener('click', () => {
-    runExercises();
+    clearError();
+    const nuevaLongitud = frutas.push(fruta);
+    inputFruta.value = '';
+    render();
+    setOutput(`push("${fruta}") agrego el elemento al final. Nueva longitud: ${nuevaLongitud}.`);
 });
 
-runExercises();
+inputFruta.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+        btnAgregar.click();
+    }
+});
+
+btnReset.addEventListener('click', () => {
+    frutas = ['Manzana', 'Banana'];
+    clearError();
+    render();
+    setOutput('Array reiniciado.');
+});
+
+render();
+setOutput('Escribi una fruta y agregala al final del array.');

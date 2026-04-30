@@ -1,72 +1,94 @@
+let animales = ['Perro', 'Gato', 'Conejo'];
+
+const controls = document.getElementById('controls');
 const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
 const errorMsg = document.getElementById('error-msg');
 const consoleOutput = document.getElementById('console-output');
 
-if (errorMsg) {
-    errorMsg.textContent = '';
-    errorMsg.classList.remove('show');
-}
+controls.innerHTML = `
+    <input type="text" id="input-animal" placeholder="Agregar animal">
+    <button id="btn-agregar">Agregar</button>
+    <button id="btn-pop">Quitar ultimo con pop()</button>
+    <button id="btn-reset">Reiniciar</button>
+`;
 
-btnAction.textContent = 'Mostrar consignas resueltas';
+const inputAnimal = document.getElementById('input-animal');
+const btnAgregar = document.getElementById('btn-agregar');
+const btnPop = document.getElementById('btn-pop');
+const btnReset = document.getElementById('btn-reset');
 
-function formatArray(array) {
-    return `[${array.map(item => String(item)).join(', ')}]`;
-}
-
-function render(items) {
+function render() {
     container.innerHTML = '';
-    items.forEach(item => {
-        let div = document.createElement('div');
+
+    if (animales.length === 0) {
+        const div = document.createElement('div');
         div.className = 'array-item';
-        div.textContent = item;
+        div.textContent = 'Array vacio';
+        container.appendChild(div);
+        return;
+    }
+
+    animales.forEach(animal => {
+        const div = document.createElement('div');
+        div.className = 'array-item';
+        div.textContent = animal;
         container.appendChild(div);
     });
 }
 
-function showOutput(exercises) {
-    consoleOutput.innerHTML = exercises.map((exercise, index) => (
-        `<p><strong>${index + 1}. ${exercise.consigna}</strong><br>${exercise.resultado}</p>`
-    )).join('');
+function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
 }
 
-function runExercises() {
-    const animales = ['Perro', 'Gato', 'Conejo'];
-    const animalEliminado = animales.pop();
+function clearError() {
+    errorMsg.textContent = '';
+    errorMsg.classList.remove('show');
+}
 
-    const compras = ['Pan', 'Leche', 'Huevos'];
-    const productoEliminado = compras.pop();
+function setOutput(message) {
+    consoleOutput.textContent = message;
+}
 
-    const elementos = ['A', 'B', 'C'];
-    const eliminados = [];
-    while (elementos.length > 0) {
-        eliminados.push(elementos.pop());
+btnAgregar.addEventListener('click', () => {
+    const animal = inputAnimal.value.trim();
+
+    if (!animal) {
+        showError('Escribi un animal para cargarlo.');
+        return;
     }
 
-    render([
-        `Animales: ${formatArray(animales)}`,
-        `Compras: ${formatArray(compras)}`,
-        `Array vaciado: ${formatArray(elementos)}`
-    ]);
-
-    showOutput([
-        {
-            consigna: 'Elimina el último elemento de un array de animales.',
-            resultado: `Se elimino ${animalEliminado}; animales = ${formatArray(animales)}`
-        },
-        {
-            consigna: 'Quita el último producto de una lista de compras y muestra cuál fue eliminado.',
-            resultado: `Producto eliminado: ${productoEliminado}; compras = ${formatArray(compras)}`
-        },
-        {
-            consigna: 'Usa un bucle while para vaciar un array con pop().',
-            resultado: `Elementos quitados con pop(): ${formatArray(eliminados)}; array final = ${formatArray(elementos)}`
-        }
-    ]);
-}
-
-btnAction.addEventListener('click', () => {
-    runExercises();
+    clearError();
+    animales.push(animal);
+    inputAnimal.value = '';
+    render();
+    setOutput(`Se agrego "${animal}" para que puedas seguir probando pop().`);
 });
 
-runExercises();
+inputAnimal.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+        btnAgregar.click();
+    }
+});
+
+btnPop.addEventListener('click', () => {
+    if (animales.length === 0) {
+        showError('No quedan animales para quitar.');
+        return;
+    }
+
+    clearError();
+    const eliminado = animales.pop();
+    render();
+    setOutput(`pop() quito "${eliminado}".`);
+});
+
+btnReset.addEventListener('click', () => {
+    animales = ['Perro', 'Gato', 'Conejo'];
+    clearError();
+    render();
+    setOutput('Array reiniciado.');
+});
+
+render();
+setOutput('Agrega animales o quita el ultimo con pop().');

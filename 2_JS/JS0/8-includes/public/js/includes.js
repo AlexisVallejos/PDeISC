@@ -1,66 +1,92 @@
+let usuarios = ['admin', 'editor', 'invitado'];
+
+const controls = document.getElementById('controls');
 const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
+const errorMsg = document.getElementById('error-msg');
 const consoleOutput = document.getElementById('console-output');
 
-btnAction.textContent = 'Mostrar consignas resueltas';
+controls.innerHTML = `
+    <input type="text" id="input-usuario" placeholder="Usuario o rol">
+    <button id="btn-comprobar">Comprobar includes()</button>
+    <button id="btn-agregar">Agregar si no existe</button>
+    <button id="btn-reset">Reiniciar</button>
+`;
 
-function formatArray(array) {
-    return `[${array.map(item => String(item)).join(', ')}]`;
-}
+const inputUsuario = document.getElementById('input-usuario');
+const btnComprobar = document.getElementById('btn-comprobar');
+const btnAgregar = document.getElementById('btn-agregar');
+const btnReset = document.getElementById('btn-reset');
 
-function render(items) {
+function render() {
     container.innerHTML = '';
-    items.forEach(item => {
-        let div = document.createElement('div');
+    usuarios.forEach(usuario => {
+        const div = document.createElement('div');
         div.className = 'array-item';
-        div.textContent = item;
+        div.textContent = usuario;
         container.appendChild(div);
     });
 }
 
-function showOutput(exercises) {
-    consoleOutput.innerHTML = exercises.map((exercise, index) => (
-        `<p><strong>${index + 1}. ${exercise.consigna}</strong><br>${exercise.resultado}</p>`
-    )).join('');
+function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
 }
 
-function runExercises() {
-    const roles = ['usuario', 'editor', 'admin'];
-    const tieneAdmin = roles.includes('admin');
+function clearError() {
+    errorMsg.textContent = '';
+    errorMsg.classList.remove('show');
+}
 
-    const colores = ['rojo', 'azul', 'verde'];
-    const existeVerde = colores.includes('verde');
+function setOutput(message) {
+    consoleOutput.textContent = message;
+}
 
-    const numeros = [5, 10, 15];
-    const numeroNuevo = 20;
-    if (!numeros.includes(numeroNuevo)) {
-        numeros.push(numeroNuevo);
+btnComprobar.addEventListener('click', () => {
+    const usuario = inputUsuario.value.trim();
+
+    if (!usuario) {
+        showError('Escribi un valor para comprobarlo.');
+        return;
     }
 
-    render([
-        `Contiene admin: ${tieneAdmin}`,
-        `Existe verde: ${existeVerde}`,
-        `Numeros: ${formatArray(numeros)}`
-    ]);
-
-    showOutput([
-        {
-            consigna: 'Comprueba si un array contiene la palabra "admin".',
-            resultado: `roles.includes('admin') = ${tieneAdmin}`
-        },
-        {
-            consigna: 'Dado un array de colores, indica si existe "verde".',
-            resultado: `colores.includes('verde') = ${existeVerde}`
-        },
-        {
-            consigna: 'Verifica si un número está presente antes de sumarlo al array.',
-            resultado: `Como ${numeroNuevo} no estaba presente, numeros = ${formatArray(numeros)}`
-        }
-    ]);
-}
-
-btnAction.addEventListener('click', () => {
-    runExercises();
+    clearError();
+    const existe = usuarios.includes(usuario);
+    setOutput(`includes("${usuario}") devolvio ${existe}.`);
 });
 
-runExercises();
+btnAgregar.addEventListener('click', () => {
+    const usuario = inputUsuario.value.trim();
+
+    if (!usuario) {
+        showError('Escribi un valor para agregarlo.');
+        return;
+    }
+
+    clearError();
+    if (usuarios.includes(usuario)) {
+        setOutput(`"${usuario}" ya estaba en el array, no se agrego otra vez.`);
+        return;
+    }
+
+    usuarios.push(usuario);
+    inputUsuario.value = '';
+    render();
+    setOutput(`"${usuario}" no estaba presente y se agrego al array.`);
+});
+
+inputUsuario.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+        btnComprobar.click();
+    }
+});
+
+btnReset.addEventListener('click', () => {
+    usuarios = ['admin', 'editor', 'invitado'];
+    inputUsuario.value = '';
+    clearError();
+    render();
+    setOutput('Array reiniciado.');
+});
+
+render();
+setOutput('Escribi un valor para comprobar si existe en el array.');

@@ -1,22 +1,90 @@
-let array = [1, 2, 3, 4, 5];
+let valores = ['40', '5', '100', '12'];
+
+const controls = document.getElementById('controls');
 const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
+const errorMsg = document.getElementById('error-msg');
 const consoleOutput = document.getElementById('console-output');
-function render(arr) {
+
+controls.innerHTML = `
+    <input type="text" id="input-valores" placeholder="Valores separados por coma" value="40, 5, 100, 12">
+    <button id="btn-numeros">Ordenar numeros</button>
+    <button id="btn-texto">Ordenar texto</button>
+    <button id="btn-reset">Reiniciar</button>
+`;
+
+const inputValores = document.getElementById('input-valores');
+const btnNumeros = document.getElementById('btn-numeros');
+const btnTexto = document.getElementById('btn-texto');
+const btnReset = document.getElementById('btn-reset');
+
+function parseValues(value) {
+    return value
+        .split(',')
+        .map(item => item.trim())
+        .filter(Boolean);
+}
+
+function render(items = valores) {
     container.innerHTML = '';
-    arr.forEach(item => {
-        let div = document.createElement('div');
+    items.forEach(item => {
+        const div = document.createElement('div');
         div.className = 'array-item';
         div.textContent = item;
         container.appendChild(div);
     });
 }
-btnAction.addEventListener('click', () => {
-    let res = [...array].reverse();
-    if ('sort' === 'sort') res = [...array].sort((a,b)=>b-a);
-    if ('sort' === 'map') res = array.map(x => x*2);
-    if ('sort' === 'filter') res = array.filter(x => x>2);
-    render(res);
-    consoleOutput.innerHTML = `Se ejecutó sort(). Observa el resultado.`;
+
+function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
+}
+
+function clearError() {
+    errorMsg.textContent = '';
+    errorMsg.classList.remove('show');
+}
+
+function setOutput(message) {
+    consoleOutput.textContent = message;
+}
+
+btnNumeros.addEventListener('click', () => {
+    const cargados = parseValues(inputValores.value);
+    const numeros = cargados.map(valor => Number(valor));
+
+    if (numeros.length === 0 || numeros.some(numero => !Number.isFinite(numero))) {
+        showError('Para ordenar numeros, todos los valores deben ser numericos.');
+        return;
+    }
+
+    clearError();
+    numeros.sort((a, b) => a - b);
+    valores = numeros.map(String);
+    render(valores);
+    setOutput(`sort((a, b) => a - b) ordeno [${valores.join(', ')}].`);
 });
-render(array);
+
+btnTexto.addEventListener('click', () => {
+    const cargados = parseValues(inputValores.value);
+
+    if (cargados.length === 0) {
+        showError('Escribi valores separados por coma.');
+        return;
+    }
+
+    clearError();
+    valores = cargados.sort((a, b) => a.localeCompare(b));
+    render();
+    setOutput(`sort() ordeno alfabeticamente [${valores.join(', ')}].`);
+});
+
+btnReset.addEventListener('click', () => {
+    valores = ['40', '5', '100', '12'];
+    inputValores.value = '40, 5, 100, 12';
+    clearError();
+    render();
+    setOutput('Array reiniciado.');
+});
+
+render();
+setOutput('Carga valores y elegi si queres ordenarlos como numeros o texto.');

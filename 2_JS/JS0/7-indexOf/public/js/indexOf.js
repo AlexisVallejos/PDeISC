@@ -1,65 +1,90 @@
+let palabras = ['gato', 'perro', 'casa', 'perro'];
+
+const controls = document.getElementById('controls');
 const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
+const errorMsg = document.getElementById('error-msg');
 const consoleOutput = document.getElementById('console-output');
 
-btnAction.textContent = 'Mostrar consignas resueltas';
+controls.innerHTML = `
+    <input type="text" id="input-palabra" placeholder="Buscar palabra">
+    <button id="btn-buscar">Buscar con indexOf()</button>
+    <button id="btn-agregar">Agregar palabra</button>
+    <button id="btn-reset">Reiniciar</button>
+`;
 
-function render(items) {
+const inputPalabra = document.getElementById('input-palabra');
+const btnBuscar = document.getElementById('btn-buscar');
+const btnAgregar = document.getElementById('btn-agregar');
+const btnReset = document.getElementById('btn-reset');
+
+function render() {
     container.innerHTML = '';
-    items.forEach(item => {
-        let div = document.createElement('div');
+    palabras.forEach(palabra => {
+        const div = document.createElement('div');
         div.className = 'array-item';
-        div.textContent = item;
+        div.textContent = palabra;
         container.appendChild(div);
     });
 }
 
-function showOutput(exercises) {
-    consoleOutput.innerHTML = exercises.map((exercise, index) => (
-        `<p><strong>${index + 1}. ${exercise.consigna}</strong><br>${exercise.resultado}</p>`
-    )).join('');
+function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
 }
 
-function runExercises() {
-    const animales = ['gato', 'perro', 'conejo'];
-    const indicePerro = animales.indexOf('perro');
-
-    const numeros = [10, 25, 50, 80];
-    const indiceCincuenta = numeros.indexOf(50);
-    const mensajeCincuenta = indiceCincuenta !== -1
-        ? `El numero 50 esta en la posicion ${indiceCincuenta}.`
-        : 'El numero 50 no esta en el array.';
-
-    const ciudades = ['Buenos Aires', 'Roma', 'Paris'];
-    const indiceMadrid = ciudades.indexOf('Madrid');
-    const mensajeMadrid = indiceMadrid !== -1
-        ? `Madrid esta en la posicion ${indiceMadrid}.`
-        : 'Madrid no esta en el array de ciudades.';
-
-    render([
-        `perro: posicion ${indicePerro}`,
-        `50: posicion ${indiceCincuenta}`,
-        mensajeMadrid
-    ]);
-
-    showOutput([
-        {
-            consigna: 'Encuentra la posición de la palabra "perro" en un array.',
-            resultado: `animales.indexOf('perro') = ${indicePerro}`
-        },
-        {
-            consigna: 'Verifica si el número 50 está en un array y en qué posición.',
-            resultado: mensajeCincuenta
-        },
-        {
-            consigna: 'Dado un array de ciudades, muestra el índice de "Madrid" o un mensaje si no está.',
-            resultado: mensajeMadrid
-        }
-    ]);
+function clearError() {
+    errorMsg.textContent = '';
+    errorMsg.classList.remove('show');
 }
 
-btnAction.addEventListener('click', () => {
-    runExercises();
+function setOutput(message) {
+    consoleOutput.textContent = message;
+}
+
+btnBuscar.addEventListener('click', () => {
+    const palabra = inputPalabra.value.trim();
+
+    if (!palabra) {
+        showError('Escribi una palabra para buscarla.');
+        return;
+    }
+
+    clearError();
+    const indice = palabras.indexOf(palabra);
+    const mensaje = indice === -1
+        ? `"${palabra}" no aparece en el array.`
+        : `indexOf("${palabra}") encontro la primera coincidencia en la posicion ${indice}.`;
+    setOutput(mensaje);
 });
 
-runExercises();
+btnAgregar.addEventListener('click', () => {
+    const palabra = inputPalabra.value.trim();
+
+    if (!palabra) {
+        showError('Escribi una palabra para agregarla.');
+        return;
+    }
+
+    clearError();
+    palabras.push(palabra);
+    inputPalabra.value = '';
+    render();
+    setOutput(`Se agrego "${palabra}" al array.`);
+});
+
+inputPalabra.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+        btnBuscar.click();
+    }
+});
+
+btnReset.addEventListener('click', () => {
+    palabras = ['gato', 'perro', 'casa', 'perro'];
+    inputPalabra.value = '';
+    clearError();
+    render();
+    setOutput('Array reiniciado.');
+});
+
+render();
+setOutput('Escribi una palabra para buscarla o agregarla.');

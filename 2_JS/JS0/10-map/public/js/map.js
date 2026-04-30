@@ -1,63 +1,82 @@
+let numeros = [2, 4, 6];
+
+const controls = document.getElementById('controls');
 const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
+const errorMsg = document.getElementById('error-msg');
 const consoleOutput = document.getElementById('console-output');
 
-btnAction.textContent = 'Mostrar consignas resueltas';
+controls.innerHTML = `
+    <input type="text" id="input-numeros" placeholder="Numeros: 2, 4, 6" value="2, 4, 6">
+    <input type="number" id="input-factor" placeholder="Factor" value="3">
+    <button id="btn-map">Multiplicar con map()</button>
+    <button id="btn-reset">Reiniciar</button>
+`;
 
-function formatArray(array) {
-    return `[${array.map(item => String(item)).join(', ')}]`;
+const inputNumeros = document.getElementById('input-numeros');
+const inputFactor = document.getElementById('input-factor');
+const btnMap = document.getElementById('btn-map');
+const btnReset = document.getElementById('btn-reset');
+
+function parseNumbers(value) {
+    return value
+        .split(',')
+        .map(item => Number(item.trim()))
+        .filter(numero => Number.isFinite(numero));
 }
 
-function render(items) {
+function render(items = numeros) {
     container.innerHTML = '';
     items.forEach(item => {
-        let div = document.createElement('div');
+        const div = document.createElement('div');
         div.className = 'array-item';
         div.textContent = item;
         container.appendChild(div);
     });
 }
 
-function showOutput(exercises) {
-    consoleOutput.innerHTML = exercises.map((exercise, index) => (
-        `<p><strong>${index + 1}. ${exercise.consigna}</strong><br>${exercise.resultado}</p>`
-    )).join('');
+function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
 }
 
-function runExercises() {
-    const numeros = [2, 4, 6];
-    const porTres = numeros.map(numero => numero * 3);
-
-    const nombres = ['ana', 'luis', 'sofia'];
-    const nombresMayusculas = nombres.map(nombre => nombre.toUpperCase());
-
-    const precios = [100, 250, 500];
-    const preciosConIva = precios.map(precio => Number((precio * 1.21).toFixed(2)));
-
-    render([
-        `Por 3: ${formatArray(porTres)}`,
-        `Mayusculas: ${formatArray(nombresMayusculas)}`,
-        `Con IVA: ${formatArray(preciosConIva)}`
-    ]);
-
-    showOutput([
-        {
-            consigna: 'Crea un nuevo array con cada número multiplicado por 3.',
-            resultado: `porTres = ${formatArray(porTres)}`
-        },
-        {
-            consigna: 'Convierte un array de nombres en mayúsculas.',
-            resultado: `nombresMayusculas = ${formatArray(nombresMayusculas)}`
-        },
-        {
-            consigna: 'A un array de precios, agrégale el 21% de IVA y crea un nuevo array.',
-            resultado: `preciosConIva = ${formatArray(preciosConIva)}`
-        }
-    ]);
+function clearError() {
+    errorMsg.textContent = '';
+    errorMsg.classList.remove('show');
 }
 
-btnAction.addEventListener('click', () => {
-    runExercises();
+function setOutput(message) {
+    consoleOutput.textContent = message;
+}
+
+btnMap.addEventListener('click', () => {
+    const valores = parseNumbers(inputNumeros.value);
+    const factor = Number(inputFactor.value);
+
+    if (valores.length === 0) {
+        showError('Escribi numeros separados por coma.');
+        return;
+    }
+
+    if (!Number.isFinite(factor)) {
+        showError('Escribi un factor valido.');
+        return;
+    }
+
+    clearError();
+    numeros = valores;
+    const resultado = numeros.map(numero => numero * factor);
+    render(resultado);
+    setOutput(`map() creo [${resultado.join(', ')}] sin modificar el original [${numeros.join(', ')}].`);
 });
 
-runExercises();
+btnReset.addEventListener('click', () => {
+    numeros = [2, 4, 6];
+    inputNumeros.value = '2, 4, 6';
+    inputFactor.value = '3';
+    clearError();
+    render();
+    setOutput('Array reiniciado.');
+});
+
+render();
+setOutput('Edita los numeros y el factor para crear un nuevo array con map().');

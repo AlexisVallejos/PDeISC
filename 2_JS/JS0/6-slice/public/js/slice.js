@@ -1,63 +1,95 @@
+let numeros = [10, 20, 30, 40, 50, 60];
+
+const controls = document.getElementById('controls');
 const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
+const errorMsg = document.getElementById('error-msg');
 const consoleOutput = document.getElementById('console-output');
 
-btnAction.textContent = 'Mostrar consignas resueltas';
+controls.innerHTML = `
+    <input type="number" id="input-inicio" placeholder="Inicio" value="0">
+    <input type="number" id="input-fin" placeholder="Fin" value="3">
+    <input type="number" id="input-numero" placeholder="Agregar numero">
+    <button id="btn-slice">Crear copia</button>
+    <button id="btn-agregar">Agregar</button>
+    <button id="btn-reset">Reiniciar</button>
+`;
 
-function formatArray(array) {
-    return `[${array.map(item => String(item)).join(', ')}]`;
-}
+const inputInicio = document.getElementById('input-inicio');
+const inputFin = document.getElementById('input-fin');
+const inputNumero = document.getElementById('input-numero');
+const btnSlice = document.getElementById('btn-slice');
+const btnAgregar = document.getElementById('btn-agregar');
+const btnReset = document.getElementById('btn-reset');
 
-function render(items) {
+function render(items = numeros) {
     container.innerHTML = '';
+
     items.forEach(item => {
-        let div = document.createElement('div');
+        const div = document.createElement('div');
         div.className = 'array-item';
         div.textContent = item;
         container.appendChild(div);
     });
 }
 
-function showOutput(exercises) {
-    consoleOutput.innerHTML = exercises.map((exercise, index) => (
-        `<p><strong>${index + 1}. ${exercise.consigna}</strong><br>${exercise.resultado}</p>`
-    )).join('');
+function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
 }
 
-function runExercises() {
-    const numeros = [1, 2, 3, 4, 5, 6];
-    const primerosTres = numeros.slice(0, 3);
-
-    const peliculas = ['Matrix', 'Avatar', 'Titanic', 'Gladiador', 'Rocky', 'Shrek'];
-    const copiaParcial = peliculas.slice(2, 5);
-
-    const elementos = ['A', 'B', 'C', 'D', 'E', 'F'];
-    const ultimosTres = elementos.slice(-3);
-
-    render([
-        `Primeros 3: ${formatArray(primerosTres)}`,
-        `Peliculas 2 a 4: ${formatArray(copiaParcial)}`,
-        `Ultimos 3: ${formatArray(ultimosTres)}`
-    ]);
-
-    showOutput([
-        {
-            consigna: 'Copia los primeros 3 elementos de un array de números.',
-            resultado: `numeros original = ${formatArray(numeros)}; copia = ${formatArray(primerosTres)}`
-        },
-        {
-            consigna: 'Crea una copia parcial de un array de películas desde la posición 2 hasta la 4.',
-            resultado: `peliculas original = ${formatArray(peliculas)}; copiaParcial = ${formatArray(copiaParcial)}`
-        },
-        {
-            consigna: 'Crea un array nuevo con los últimos 3 elementos sin modificarlos.',
-            resultado: `elementos original = ${formatArray(elementos)}; ultimosTres = ${formatArray(ultimosTres)}`
-        }
-    ]);
+function clearError() {
+    errorMsg.textContent = '';
+    errorMsg.classList.remove('show');
 }
 
-btnAction.addEventListener('click', () => {
-    runExercises();
+function setOutput(message) {
+    consoleOutput.textContent = message;
+}
+
+btnSlice.addEventListener('click', () => {
+    const inicio = Number(inputInicio.value);
+    const fin = inputFin.value === '' ? undefined : Number(inputFin.value);
+
+    if (!Number.isInteger(inicio)) {
+        showError('El inicio debe ser un numero entero.');
+        return;
+    }
+
+    if (fin !== undefined && !Number.isInteger(fin)) {
+        showError('El fin debe ser un numero entero.');
+        return;
+    }
+
+    clearError();
+    const copia = numeros.slice(inicio, fin);
+    render(copia);
+    setOutput(`slice(${inicio}${fin === undefined ? '' : ', ' + fin}) creo [${copia.join(', ')}]. Original: [${numeros.join(', ')}].`);
 });
 
-runExercises();
+btnAgregar.addEventListener('click', () => {
+    const numero = Number(inputNumero.value);
+
+    if (!Number.isFinite(numero)) {
+        showError('Escribi un numero para agregarlo.');
+        return;
+    }
+
+    clearError();
+    numeros.push(numero);
+    inputNumero.value = '';
+    render();
+    setOutput(`Se agrego ${numero} al array original.`);
+});
+
+btnReset.addEventListener('click', () => {
+    numeros = [10, 20, 30, 40, 50, 60];
+    inputInicio.value = '0';
+    inputFin.value = '3';
+    inputNumero.value = '';
+    clearError();
+    render();
+    setOutput('Array reiniciado.');
+});
+
+render();
+setOutput('Elegi inicio y fin para crear una copia con slice().');

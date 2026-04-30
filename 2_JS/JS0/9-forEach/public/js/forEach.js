@@ -1,72 +1,86 @@
+let nombres = ['Ana', 'Luis', 'Sofia'];
+
+const controls = document.getElementById('controls');
 const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
+const errorMsg = document.getElementById('error-msg');
 const consoleOutput = document.getElementById('console-output');
 
-btnAction.textContent = 'Mostrar consignas resueltas';
+controls.innerHTML = `
+    <input type="text" id="input-nombre" placeholder="Nuevo nombre">
+    <button id="btn-agregar">Agregar nombre</button>
+    <button id="btn-saludar">Saludar con forEach()</button>
+    <button id="btn-reset">Reiniciar</button>
+`;
 
-function render(items) {
+const inputNombre = document.getElementById('input-nombre');
+const btnAgregar = document.getElementById('btn-agregar');
+const btnSaludar = document.getElementById('btn-saludar');
+const btnReset = document.getElementById('btn-reset');
+
+function render(items = nombres) {
     container.innerHTML = '';
     items.forEach(item => {
-        let div = document.createElement('div');
+        const div = document.createElement('div');
         div.className = 'array-item';
         div.textContent = item;
         container.appendChild(div);
     });
 }
 
-function showOutput(exercises) {
-    consoleOutput.innerHTML = exercises.map((exercise, index) => (
-        `<p><strong>${index + 1}. ${exercise.consigna}</strong><br>${exercise.resultado}</p>`
-    )).join('');
+function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
 }
 
-function runExercises() {
-    const nombres = ['Ana', 'Luis', 'Sofia'];
+function clearError() {
+    errorMsg.textContent = '';
+    errorMsg.classList.remove('show');
+}
+
+function setOutput(message) {
+    consoleOutput.textContent = message;
+}
+
+btnAgregar.addEventListener('click', () => {
+    const nombre = inputNombre.value.trim();
+
+    if (!nombre) {
+        showError('Escribi un nombre para agregarlo.');
+        return;
+    }
+
+    clearError();
+    nombres.push(nombre);
+    inputNombre.value = '';
+    render();
+    setOutput(`Se agrego "${nombre}" al array.`);
+});
+
+inputNombre.addEventListener('keydown', event => {
+    if (event.key === 'Enter') {
+        btnAgregar.click();
+    }
+});
+
+btnSaludar.addEventListener('click', () => {
     const saludos = [];
+
     nombres.forEach(nombre => {
         saludos.push(`Hola, ${nombre}`);
     });
 
-    const numeros = [2, 4, 6];
-    const dobles = [];
-    numeros.forEach(numero => {
-        dobles.push(numero * 2);
-    });
-
-    const personas = [
-        { nombre: 'Carla', edad: 21 },
-        { nombre: 'Diego', edad: 24 },
-        { nombre: 'Mia', edad: 19 }
-    ];
-    const datosPersonas = [];
-    personas.forEach(persona => {
-        datosPersonas.push(`${persona.nombre} tiene ${persona.edad} años`);
-    });
-
-    render([
-        ...saludos,
-        `Dobles: ${dobles.join(', ')}`,
-        ...datosPersonas
-    ]);
-
-    showOutput([
-        {
-            consigna: 'Muestra todos los nombres de un array con un saludo.',
-            resultado: saludos.join(' | ')
-        },
-        {
-            consigna: 'Imprime el doble de cada número de un array con forEach()',
-            resultado: `Dobles: ${dobles.join(', ')}`
-        },
-        {
-            consigna: 'Dado un array de objetos {nombre, edad}, muestra cada nombre con su edad.',
-            resultado: datosPersonas.join(' | ')
-        }
-    ]);
-}
-
-btnAction.addEventListener('click', () => {
-    runExercises();
+    render(saludos);
+    clearError();
+    setOutput(`forEach() recorrio ${nombres.length} nombres.`);
 });
 
-runExercises();
+btnReset.addEventListener('click', () => {
+    nombres = ['Ana', 'Luis', 'Sofia'];
+    inputNombre.value = '';
+    clearError();
+    render();
+    setOutput('Array reiniciado.');
+});
+
+render();
+setOutput('Agrega nombres y recorrelos con forEach().');

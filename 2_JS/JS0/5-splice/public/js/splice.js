@@ -1,63 +1,94 @@
+let elementos = ['A', 'B', 'C', 'D', 'E'];
+
+const controls = document.getElementById('controls');
 const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
+const errorMsg = document.getElementById('error-msg');
 const consoleOutput = document.getElementById('console-output');
 
-btnAction.textContent = 'Mostrar consignas resueltas';
+controls.innerHTML = `
+    <input type="number" id="input-inicio" placeholder="Posicion" min="0" value="1">
+    <input type="number" id="input-cantidad" placeholder="Eliminar" min="0" value="1">
+    <input type="text" id="input-nuevos" placeholder="Nuevos: X, Y">
+    <button id="btn-splice">Aplicar splice()</button>
+    <button id="btn-reset">Reiniciar</button>
+`;
 
-function formatArray(array) {
-    return `[${array.map(item => String(item)).join(', ')}]`;
-}
+const inputInicio = document.getElementById('input-inicio');
+const inputCantidad = document.getElementById('input-cantidad');
+const inputNuevos = document.getElementById('input-nuevos');
+const btnSplice = document.getElementById('btn-splice');
+const btnReset = document.getElementById('btn-reset');
 
-function render(items) {
+function render() {
     container.innerHTML = '';
-    items.forEach(item => {
-        let div = document.createElement('div');
+
+    if (elementos.length === 0) {
+        const div = document.createElement('div');
         div.className = 'array-item';
-        div.textContent = item;
+        div.textContent = 'Array vacio';
+        container.appendChild(div);
+        return;
+    }
+
+    elementos.forEach(elemento => {
+        const div = document.createElement('div');
+        div.className = 'array-item';
+        div.textContent = elemento;
         container.appendChild(div);
     });
 }
 
-function showOutput(exercises) {
-    consoleOutput.innerHTML = exercises.map((exercise, index) => (
-        `<p><strong>${index + 1}. ${exercise.consigna}</strong><br>${exercise.resultado}</p>`
-    )).join('');
+function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.classList.add('show');
 }
 
-function runExercises() {
-    const letras = ['A', 'B', 'C', 'D', 'E'];
-    const letrasEliminadas = letras.splice(1, 2);
-
-    const nombres = ['Ana', 'Luis', 'Marta'];
-    nombres.splice(1, 0, 'Carlos');
-
-    const numeros = [10, 20, 30, 40, 50];
-    const reemplazados = numeros.splice(2, 2, 35, 45);
-
-    render([
-        `Letras: ${formatArray(letras)}`,
-        `Nombres: ${formatArray(nombres)}`,
-        `Numeros: ${formatArray(numeros)}`
-    ]);
-
-    showOutput([
-        {
-            consigna: 'Elimina dos elementos desde la posición 1 de un array de letras.',
-            resultado: `Eliminados: ${formatArray(letrasEliminadas)}; letras = ${formatArray(letras)}`
-        },
-        {
-            consigna: 'Inserta un nuevo nombre en la segunda posición sin eliminar nada.',
-            resultado: `nombres = ${formatArray(nombres)}`
-        },
-        {
-            consigna: 'Reemplaza dos elementos por otros nuevos desde una posición determinada.',
-            resultado: `Reemplazados: ${formatArray(reemplazados)}; numeros = ${formatArray(numeros)}`
-        }
-    ]);
+function clearError() {
+    errorMsg.textContent = '';
+    errorMsg.classList.remove('show');
 }
 
-btnAction.addEventListener('click', () => {
-    runExercises();
+function setOutput(message) {
+    consoleOutput.textContent = message;
+}
+
+function parseNewItems(value) {
+    return value
+        .split(',')
+        .map(item => item.trim())
+        .filter(Boolean);
+}
+
+btnSplice.addEventListener('click', () => {
+    const inicio = Number(inputInicio.value);
+    const cantidad = Number(inputCantidad.value);
+    const nuevos = parseNewItems(inputNuevos.value);
+
+    if (!Number.isInteger(inicio) || inicio < 0 || inicio > elementos.length) {
+        showError(`La posicion debe estar entre 0 y ${elementos.length}.`);
+        return;
+    }
+
+    if (!Number.isInteger(cantidad) || cantidad < 0) {
+        showError('La cantidad a eliminar debe ser 0 o mayor.');
+        return;
+    }
+
+    clearError();
+    const eliminados = elementos.splice(inicio, cantidad, ...nuevos);
+    render();
+    setOutput(`splice(${inicio}, ${cantidad}${nuevos.length ? ', ' + nuevos.join(', ') : ''}) elimino [${eliminados.join(', ')}].`);
 });
 
-runExercises();
+btnReset.addEventListener('click', () => {
+    elementos = ['A', 'B', 'C', 'D', 'E'];
+    inputInicio.value = '1';
+    inputCantidad.value = '1';
+    inputNuevos.value = '';
+    clearError();
+    render();
+    setOutput('Array reiniciado.');
+});
+
+render();
+setOutput('Elegi posicion, cantidad y valores nuevos para modificar el array.');
