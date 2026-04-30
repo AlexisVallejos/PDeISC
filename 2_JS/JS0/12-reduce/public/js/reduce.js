@@ -44,3 +44,13 @@ return `Total Carrito: ${res}`;
     }
 });
 
+
+document.addEventListener('DOMContentLoaded', () => {
+    showResult('display-1', 'Interacción lista: usa clic o teclas 1, 2 y 3.');
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === '1') document.getElementById('btn-1').click();
+    if (event.key === '2') document.getElementById('btn-2').click();
+    if (event.key === '3') document.getElementById('btn-3').click();
+});
