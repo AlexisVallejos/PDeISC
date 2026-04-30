@@ -1,22 +1,49 @@
-let array = [1, 2, 3, 4, 5];
-const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
-const consoleOutput = document.getElementById('console-output');
-function render(arr) {
-    container.innerHTML = '';
-    arr.forEach(item => {
-        let div = document.createElement('div');
-        div.className = 'array-item';
-        div.textContent = item;
-        container.appendChild(div);
-    });
+function showResult(elementId, result) {
+    const el = document.getElementById(elementId);
+    el.classList.add('flash');
+    setTimeout(() => el.classList.remove('flash'), 300);
+    el.textContent = result;
 }
-btnAction.addEventListener('click', () => {
-    let res = [...array].reverse();
-    if ('forEach' === 'sort') res = [...array].sort((a,b)=>b-a);
-    if ('forEach' === 'map') res = array.map(x => x*2);
-    if ('forEach' === 'filter') res = array.filter(x => x>2);
-    render(res);
-    consoleOutput.innerHTML = `Se ejecutó forEach(). Observa el resultado.`;
+
+document.getElementById('btn-1').addEventListener('click', () => {
+    try {
+        const execute = () => {
+            let personas = ['Ana', 'Juan', 'Maria'];
+let saludos = [];
+personas.forEach(p => saludos.push(`Hola ${p}`));
+return saludos.join(', ');
+        };
+        showResult('display-1', execute());
+    } catch(e) {
+        showResult('display-1', 'Error: ' + e.message);
+    }
 });
-render(array);
+
+document.getElementById('btn-2').addEventListener('click', () => {
+    try {
+        const execute = () => {
+            let valores = [2, 4, 6];
+let dobles = [];
+valores.forEach(v => dobles.push(v * 2));
+return `Dobles: [${dobles.join(', ')}]`;
+        };
+        showResult('display-2', execute());
+    } catch(e) {
+        showResult('display-2', 'Error: ' + e.message);
+    }
+});
+
+document.getElementById('btn-3').addEventListener('click', () => {
+    try {
+        const execute = () => {
+            let users = [{nombre: 'Luis', edad: 25}, {nombre: 'Marta', edad: 30}];
+let res = [];
+users.forEach(u => res.push(`${u.nombre} (${u.edad} años)`));
+return res.join(' | ');
+        };
+        showResult('display-3', execute());
+    } catch(e) {
+        showResult('display-3', 'Error: ' + e.message);
+    }
+});
+

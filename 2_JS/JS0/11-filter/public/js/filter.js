@@ -1,22 +1,46 @@
-let array = [1, 2, 3, 4, 5];
-const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
-const consoleOutput = document.getElementById('console-output');
-function render(arr) {
-    container.innerHTML = '';
-    arr.forEach(item => {
-        let div = document.createElement('div');
-        div.className = 'array-item';
-        div.textContent = item;
-        container.appendChild(div);
-    });
+function showResult(elementId, result) {
+    const el = document.getElementById(elementId);
+    el.classList.add('flash');
+    setTimeout(() => el.classList.remove('flash'), 300);
+    el.textContent = result;
 }
-btnAction.addEventListener('click', () => {
-    let res = [...array].reverse();
-    if ('filter' === 'sort') res = [...array].sort((a,b)=>b-a);
-    if ('filter' === 'map') res = array.map(x => x*2);
-    if ('filter' === 'filter') res = array.filter(x => x>2);
-    render(res);
-    consoleOutput.innerHTML = `Se ejecutó filter(). Observa el resultado.`;
+
+document.getElementById('btn-1').addEventListener('click', () => {
+    try {
+        const execute = () => {
+            let nums = [5, 12, 8, 20, 3];
+let res = nums.filter(n => n > 10);
+return `Mayores a 10: [${res.join(', ')}]`;
+        };
+        showResult('display-1', execute());
+    } catch(e) {
+        showResult('display-1', 'Error: ' + e.message);
+    }
 });
-render(array);
+
+document.getElementById('btn-2').addEventListener('click', () => {
+    try {
+        const execute = () => {
+            let palabras = ['sol', 'planeta', 'luz', 'galaxia'];
+let res = palabras.filter(p => p.length > 5);
+return `Palabras largas: [${res.join(', ')}]`;
+        };
+        showResult('display-2', execute());
+    } catch(e) {
+        showResult('display-2', 'Error: ' + e.message);
+    }
+});
+
+document.getElementById('btn-3').addEventListener('click', () => {
+    try {
+        const execute = () => {
+            let usrs = [{n: 'A', activo: true}, {n: 'B', activo: false}];
+let res = usrs.filter(u => u.activo).map(u => u.n);
+return `Activos: [${res.join(', ')}]`;
+        };
+        showResult('display-3', execute());
+    } catch(e) {
+        showResult('display-3', 'Error: ' + e.message);
+    }
+});
+

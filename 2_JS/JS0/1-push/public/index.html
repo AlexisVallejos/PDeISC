@@ -1,24 +1,77 @@
 <!DOCTYPE html>
-<html lang='es'>
+<html lang="es">
 <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Array Method - push()</title>
-    <link rel='stylesheet' href='css/style.css'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS0 - push() Masterclass</title>
+    <!-- Use Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class='container'>
-        <h1>push()</h1>
-        <p class='description'>Agrega uno o más elementos al final del array.</p>
-        <div class='controls' id='controls'>
-            <input type="text" id="input-val" placeholder="Ej. Fresa"><button id="btn-action">Ejecutar push()</button>
-        </div>
-        <div class='error-msg' id='error-msg'></div>
-        <div class='array-container' id='array-container'></div>
-        <div class='console-output' id='console-output'>
-            Esperando interacción del usuario...
-        </div>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
     </div>
-    <script src='js/push.js'></script>
+
+    <header class="header">
+        <h1>Método <span>push()</span></h1>
+        <p>Agrega uno o más elementos al final de un array y devuelve la nueva longitud.</p>
+    </header>
+
+    <main class="container">
+        <!-- Ejercicio 1 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>1. Frutas</h2>
+                <p>Crea un array vacío y agrega tres frutas.</p>
+            </div>
+            <div class="card-body">
+                <div class="array-display" id="frutas-display">[]</div>
+                <div class="controls">
+                    <input type="text" id="fruta-input" placeholder="Ej. Manzana" autocomplete="off">
+                    <button id="fruta-btn" class="btn primary">Agregar Fruta</button>
+                </div>
+                <div id="fruta-msg" class="message"></div>
+            </div>
+        </section>
+
+        <!-- Ejercicio 2 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>2. Amigos</h2>
+                <p>Agrega los nombres de tus 3 amigos a un array existente.</p>
+            </div>
+            <div class="card-body">
+                <div class="array-display" id="amigos-display">["Juan"]</div>
+                <div class="controls">
+                    <input type="text" id="amigo-input" placeholder="Ej. Pedro" autocomplete="off">
+                    <button id="amigo-btn" class="btn secondary">Agregar Amigo</button>
+                </div>
+                <div id="amigo-msg" class="message"></div>
+            </div>
+        </section>
+
+        <!-- Ejercicio 3 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>3. Números</h2>
+                <p>Agrega un número solo si es mayor que el último.</p>
+            </div>
+            <div class="card-body">
+                <div class="array-display" id="numeros-display">[1, 5, 8]</div>
+                <div class="controls">
+                    <input type="number" id="numero-input" placeholder="Ej. 10">
+                    <button id="numero-btn" class="btn accent">Verificar y Agregar</button>
+                </div>
+                <div id="numero-msg" class="message"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/push.js"></script>
 </body>
 </html>

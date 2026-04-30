@@ -1,22 +1,46 @@
-let array = [1, 2, 3, 4, 5];
-const container = document.getElementById('array-container');
-const btnAction = document.getElementById('btn-action');
-const consoleOutput = document.getElementById('console-output');
-function render(arr) {
-    container.innerHTML = '';
-    arr.forEach(item => {
-        let div = document.createElement('div');
-        div.className = 'array-item';
-        div.textContent = item;
-        container.appendChild(div);
-    });
+function showResult(elementId, result) {
+    const el = document.getElementById(elementId);
+    el.classList.add('flash');
+    setTimeout(() => el.classList.remove('flash'), 300);
+    el.textContent = result;
 }
-btnAction.addEventListener('click', () => {
-    let res = [...array].reverse();
-    if ('slice' === 'sort') res = [...array].sort((a,b)=>b-a);
-    if ('slice' === 'map') res = array.map(x => x*2);
-    if ('slice' === 'filter') res = array.filter(x => x>2);
-    render(res);
-    consoleOutput.innerHTML = `Se ejecutó slice(). Observa el resultado.`;
+
+document.getElementById('btn-1').addEventListener('click', () => {
+    try {
+        const execute = () => {
+            let numSlice = [10, 20, 30, 40, 50];
+let primerosTres = numSlice.slice(0, 3);
+return `Copia: [${primerosTres.join(', ')}]`;
+        };
+        showResult('display-1', execute());
+    } catch(e) {
+        showResult('display-1', 'Error: ' + e.message);
+    }
 });
-render(array);
+
+document.getElementById('btn-2').addEventListener('click', () => {
+    try {
+        const execute = () => {
+            let peliculas = ['Peli1', 'Peli2', 'Peli3', 'Peli4', 'Peli5'];
+let copiaParcial = peliculas.slice(2, 4);
+return `Copia (2 a 4): [${copiaParcial.join(', ')}]`;
+        };
+        showResult('display-2', execute());
+    } catch(e) {
+        showResult('display-2', 'Error: ' + e.message);
+    }
+});
+
+document.getElementById('btn-3').addEventListener('click', () => {
+    try {
+        const execute = () => {
+            let numSlice2 = [10, 20, 30, 40, 50];
+let ultimos = numSlice2.slice(-3);
+return `Últimos 3: [${ultimos.join(', ')}]`;
+        };
+        showResult('display-3', execute());
+    } catch(e) {
+        showResult('display-3', 'Error: ' + e.message);
+    }
+});
+

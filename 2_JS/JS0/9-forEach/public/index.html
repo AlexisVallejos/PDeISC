@@ -1,24 +1,71 @@
 <!DOCTYPE html>
-<html lang='es'>
+<html lang="es">
 <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Array Method - forEach()</title>
-    <link rel='stylesheet' href='css/style.css'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS0 - forEach() Masterclass</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class='container'>
-        <h1>forEach()</h1>
-        <p class='description'>Demostración interactiva del método forEach().</p>
-        <div class='controls' id='controls'>
-            <button id="btn-action">Ejecutar forEach()</button>
-        </div>
-        <div class='error-msg' id='error-msg'></div>
-        <div class='array-container' id='array-container'></div>
-        <div class='console-output' id='console-output'>
-            Esperando interacción del usuario...
-        </div>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
     </div>
-    <script src='js/forEach.js'></script>
+
+    <header class="header">
+        <h1>Método <span>forEach()</span></h1>
+        <p>Ejecuta la función indicada una vez por cada elemento del array.</p>
+    </header>
+
+    <main class="container">
+
+        <!-- Ejercicio 1 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>1. Saludos</h2>
+                <p>Muestra todos los nombres con un saludo.</p>
+            </div>
+            <div class="card-body">
+                <div class="array-display" id="display-1">Haz clic para ejecutar</div>
+                <div class="controls">
+                    <button id="btn-1" class="btn primary">Ejecutar Código</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejercicio 2 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>2. Doble</h2>
+                <p>Imprime el doble de cada número.</p>
+            </div>
+            <div class="card-body">
+                <div class="array-display" id="display-2">Haz clic para ejecutar</div>
+                <div class="controls">
+                    <button id="btn-2" class="btn secondary">Ejecutar Código</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejercicio 3 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>3. Objetos</h2>
+                <p>Muestra nombre y edad de un objeto.</p>
+            </div>
+            <div class="card-body">
+                <div class="array-display" id="display-3">Haz clic para ejecutar</div>
+                <div class="controls">
+                    <button id="btn-3" class="btn accent">Ejecutar Código</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <script src="js/forEach.js"></script>
 </body>
 </html>

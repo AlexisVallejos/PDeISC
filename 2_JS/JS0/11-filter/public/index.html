@@ -1,24 +1,71 @@
 <!DOCTYPE html>
-<html lang='es'>
+<html lang="es">
 <head>
-    <meta charset='UTF-8'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>Array Method - filter()</title>
-    <link rel='stylesheet' href='css/style.css'>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS0 - filter() Masterclass</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class='container'>
-        <h1>filter()</h1>
-        <p class='description'>Demostración interactiva del método filter().</p>
-        <div class='controls' id='controls'>
-            <button id="btn-action">Ejecutar filter()</button>
-        </div>
-        <div class='error-msg' id='error-msg'></div>
-        <div class='array-container' id='array-container'></div>
-        <div class='console-output' id='console-output'>
-            Esperando interacción del usuario...
-        </div>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
     </div>
-    <script src='js/filter.js'></script>
+
+    <header class="header">
+        <h1>Método <span>filter()</span></h1>
+        <p>Crea un nuevo array con todos los elementos que cumplan la condición.</p>
+    </header>
+
+    <main class="container">
+
+        <!-- Ejercicio 1 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>1. Mayores a 10</h2>
+                <p>Filtra números mayores a 10.</p>
+            </div>
+            <div class="card-body">
+                <div class="array-display" id="display-1">Haz clic para ejecutar</div>
+                <div class="controls">
+                    <button id="btn-1" class="btn primary">Ejecutar Código</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejercicio 2 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>2. Palabras Largas</h2>
+                <p>Filtra palabras con más de 5 letras.</p>
+            </div>
+            <div class="card-body">
+                <div class="array-display" id="display-2">Haz clic para ejecutar</div>
+                <div class="controls">
+                    <button id="btn-2" class="btn secondary">Ejecutar Código</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejercicio 3 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>3. Usuarios Activos</h2>
+                <p>Filtra usuarios activos de un array de objetos.</p>
+            </div>
+            <div class="card-body">
+                <div class="array-display" id="display-3">Haz clic para ejecutar</div>
+                <div class="controls">
+                    <button id="btn-3" class="btn accent">Ejecutar Código</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    <script src="js/filter.js"></script>
 </body>
 </html>
