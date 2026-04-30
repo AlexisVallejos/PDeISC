@@ -12,6 +12,20 @@
  * @param {string} elementId - id del nodo de salida (display-1/2/3).
  * @param {string} result - texto final a mostrar al usuario.
  */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -23,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nums = [1, 2, 3, 4, 5];
+            let nums = getUserArray('Ingresá valores separados por coma:', [1, 2, 3, 4, 5]);
 let res = nums.reduce((acc, curr) => acc + curr, 0);
 return `Suma total: ${res}`;
         };
@@ -37,7 +51,7 @@ return `Suma total: ${res}`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nums = [1, 2, 3, 4, 5];
+            let nums = getUserArray('Ingresá valores separados por coma:', [1, 2, 3, 4, 5]);
 let res = nums.reduce((acc, curr) => acc * curr, 1);
 return `Multiplicación: ${res}`;
         };
@@ -51,7 +65,7 @@ return `Multiplicación: ${res}`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let carrito = [{precio: 10}, {precio: 20}, {precio: 30}];
+            let carrito = getUserArray('Ingresá valores separados por coma:', [{precio: 10}, {precio: 20}, {precio: 30}]);
 let res = carrito.reduce((acc, curr) => acc + curr.precio, 0);
 return `Total Carrito: ${res}`;
         };

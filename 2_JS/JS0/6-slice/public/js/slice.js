@@ -12,6 +12,20 @@
  * @param {string} elementId - id del nodo de salida (display-1/2/3).
  * @param {string} result - texto final a mostrar al usuario.
  */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -23,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let numSlice = [10, 20, 30, 40, 50];
+            let numSlice = getUserArray('Ingresá valores separados por coma:', [10, 20, 30, 40, 50]);
 let primerosTres = numSlice.slice(0, 3);
 return `Copia: [${primerosTres.join(', ')}]`;
         };
@@ -37,7 +51,7 @@ return `Copia: [${primerosTres.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let peliculas = ['Peli1', 'Peli2', 'Peli3', 'Peli4', 'Peli5'];
+            let peliculas = getUserArray('Ingresá valores separados por coma:', ['Peli1', 'Peli2', 'Peli3', 'Peli4', 'Peli5']);
 let copiaParcial = peliculas.slice(2, 4);
 return `Copia (2 a 4): [${copiaParcial.join(', ')}]`;
         };
@@ -51,7 +65,7 @@ return `Copia (2 a 4): [${copiaParcial.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let numSlice2 = [10, 20, 30, 40, 50];
+            let numSlice2 = getUserArray('Ingresá valores separados por coma:', [10, 20, 30, 40, 50]);
 let ultimos = numSlice2.slice(-3);
 return `Últimos 3: [${ultimos.join(', ')}]`;
         };

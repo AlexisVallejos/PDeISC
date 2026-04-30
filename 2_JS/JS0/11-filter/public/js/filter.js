@@ -12,6 +12,20 @@
  * @param {string} elementId - id del nodo de salida (display-1/2/3).
  * @param {string} result - texto final a mostrar al usuario.
  */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -23,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nums = [5, 12, 8, 20, 3];
+            let nums = getUserArray('Ingresá valores separados por coma:', [5, 12, 8, 20, 3]);
 let res = nums.filter(n => n > 10);
 return `Mayores a 10: [${res.join(', ')}]`;
         };
@@ -37,7 +51,7 @@ return `Mayores a 10: [${res.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let palabras = ['sol', 'planeta', 'luz', 'galaxia'];
+            let palabras = getUserArray('Ingresá valores separados por coma:', ['sol', 'planeta', 'luz', 'galaxia']);
 let res = palabras.filter(p => p.length > 5);
 return `Palabras largas: [${res.join(', ')}]`;
         };
@@ -51,7 +65,7 @@ return `Palabras largas: [${res.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let usrs = [{n: 'A', activo: true}, {n: 'B', activo: false}];
+            let usrs = getUserArray('Ingresá valores separados por coma:', [{n: 'A', activo: true}, {n: 'B', activo: false}]);
 let res = usrs.filter(u => u.activo).map(u => u.n);
 return `Activos: [${res.join(', ')}]`;
         };

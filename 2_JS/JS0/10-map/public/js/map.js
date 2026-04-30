@@ -12,6 +12,20 @@
  * @param {string} elementId - id del nodo de salida (display-1/2/3).
  * @param {string} result - texto final a mostrar al usuario.
  */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -23,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let bases = [1, 2, 3];
+            let bases = getUserArray('Ingresá valores separados por coma:', [1, 2, 3]);
 let porTres = bases.map(x => x * 3);
 return `Resultado: [${porTres.join(', ')}]`;
         };
@@ -37,7 +51,7 @@ return `Resultado: [${porTres.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nombresMap = ['juan', 'pedro', 'ana'];
+            let nombresMap = getUserArray('Ingresá valores separados por coma:', ['juan', 'pedro', 'ana']);
 let mayus = nombresMap.map(n => n.toUpperCase());
 return `Mayúsculas: [${mayus.join(', ')}]`;
         };
@@ -51,7 +65,7 @@ return `Mayúsculas: [${mayus.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let precios = [100, 200, 300];
+            let precios = getUserArray('Ingresá valores separados por coma:', [100, 200, 300]);
 let conIVA = precios.map(p => p * 1.21);
 return `Con IVA: [${conIVA.join(', ')}]`;
         };

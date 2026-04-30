@@ -12,6 +12,20 @@
  * @param {string} elementId - id del nodo de salida (display-1/2/3).
  * @param {string} result - texto final a mostrar al usuario.
  */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -23,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let mascotas = ['gato', 'loro', 'perro', 'pez'];
+            let mascotas = getUserArray('Ingresá valores separados por coma:', ['gato', 'loro', 'perro', 'pez']);
 let posPerro = mascotas.indexOf('perro');
 return `Posición de perro: ${posPerro}`;
         };
@@ -37,7 +51,7 @@ return `Posición de perro: ${posPerro}`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let numBusqueda = [10, 20, 50, 40];
+            let numBusqueda = getUserArray('Ingresá valores separados por coma:', [10, 20, 50, 40]);
 let pos50 = numBusqueda.indexOf(50);
 return `Posición del 50: ${pos50}`;
         };
@@ -51,7 +65,7 @@ return `Posición del 50: ${pos50}`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let ciudades = ['Barcelona', 'Valencia', 'Sevilla'];
+            let ciudades = getUserArray('Ingresá valores separados por coma:', ['Barcelona', 'Valencia', 'Sevilla']);
 let posMadrid = ciudades.indexOf('Madrid');
 return posMadrid !== -1 ? `Índice de Madrid: ${posMadrid}` : 'Madrid no está en el array';
         };

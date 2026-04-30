@@ -12,6 +12,20 @@
  * @param {string} elementId - id del nodo de salida (display-1/2/3).
  * @param {string} result - texto final a mostrar al usuario.
  */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -37,7 +51,7 @@ return `Colores: [${colores.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let tareas = ['Lavar ropa', 'Limpiar casa'];
+            let tareas = getUserArray('Ingresá valores separados por coma:', ['Lavar ropa', 'Limpiar casa']);
 tareas.unshift('Tarea urgente: Comprar comida');
 return `Tareas: [${tareas.join(' | ')}]`;
         };
@@ -51,7 +65,7 @@ return `Tareas: [${tareas.join(' | ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let usuarios = ['user2', 'user3'];
+            let usuarios = getUserArray('Ingresá valores separados por coma:', ['user2', 'user3']);
 usuarios.unshift('user1');
 return `Usuarios: [${usuarios.join(', ')}]`;
         };

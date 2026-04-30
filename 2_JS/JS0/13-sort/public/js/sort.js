@@ -12,6 +12,20 @@
  * @param {string} elementId - id del nodo de salida (display-1/2/3).
  * @param {string} result - texto final a mostrar al usuario.
  */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -23,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nums = [5, 1, 8, 3, 9];
+            let nums = getUserArray('Ingresá valores separados por coma:', [5, 1, 8, 3, 9]);
 nums.sort((a, b) => a - b);
 return `Ordenados: [${nums.join(', ')}]`;
         };
@@ -37,7 +51,7 @@ return `Ordenados: [${nums.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let palabras = ['Zorro', 'Árbol', 'Perro', 'Gato'];
+            let palabras = getUserArray('Ingresá valores separados por coma:', ['Zorro', 'Árbol', 'Perro', 'Gato']);
 palabras.sort((a, b) => a.localeCompare(b));
 return `Ordenadas: [${palabras.join(', ')}]`;
         };
@@ -51,7 +65,7 @@ return `Ordenadas: [${palabras.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let personas = [{n: 'Juan', edad: 30}, {n: 'Ana', edad: 20}];
+            let personas = getUserArray('Ingresá valores separados por coma:', [{n: 'Juan', edad: 30}, {n: 'Ana', edad: 20}]);
 personas.sort((a, b) => a.edad - b.edad);
 let res = personas.map(p => p.n);
 return `De menor a mayor: [${res.join(', ')}]`;

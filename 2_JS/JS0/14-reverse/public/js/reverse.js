@@ -12,6 +12,20 @@
  * @param {string} elementId - id del nodo de salida (display-1/2/3).
  * @param {string} result - texto final a mostrar al usuario.
  */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -23,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let letras = ['A', 'B', 'C', 'D'];
+            let letras = getUserArray('Ingresá valores separados por coma:', ['A', 'B', 'C', 'D']);
 letras.reverse();
 return `Letras al revés: [${letras.join(', ')}]`;
         };
@@ -37,7 +51,7 @@ return `Letras al revés: [${letras.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nums = [1, 2, 3, 4, 5];
+            let nums = getUserArray('Ingresá valores separados por coma:', [1, 2, 3, 4, 5]);
 nums.reverse();
 return `Números al revés: [${nums.join(', ')}]`;
         };
@@ -51,7 +65,7 @@ return `Números al revés: [${nums.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let texto = "Hola Mundo";
+            let texto = prompt('Ingresá un texto para invertir:') || "Hola Mundo";
 let revertido = texto.split('').reverse().join('');
 return `Texto revertido: ${revertido}`;
         };

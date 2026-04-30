@@ -12,6 +12,20 @@
  * @param {string} elementId - id del nodo de salida (display-1/2/3).
  * @param {string} result - texto final a mostrar al usuario.
  */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -23,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let letras = ['A', 'B', 'C', 'D', 'E'];
+            let letras = getUserArray('Ingresá valores separados por coma:', ['A', 'B', 'C', 'D', 'E']);
 letras.splice(1, 2);
 return `Letras restantes: [${letras.join(', ')}]`;
         };
@@ -37,7 +51,7 @@ return `Letras restantes: [${letras.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nombres = ['Ana', 'Carlos', 'David'];
+            let nombres = getUserArray('Ingresá valores separados por coma:', ['Ana', 'Carlos', 'David']);
 nombres.splice(1, 0, 'Beatriz');
 return `Nombres: [${nombres.join(', ')}]`;
         };
@@ -51,7 +65,7 @@ return `Nombres: [${nombres.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let elementos = [1, 2, 3, 4, 5];
+            let elementos = getUserArray('Ingresá valores separados por coma:', [1, 2, 3, 4, 5]);
 elementos.splice(2, 2, 8, 9);
 return `Elementos: [${elementos.join(', ')}]`;
         };

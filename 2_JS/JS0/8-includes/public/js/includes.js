@@ -12,6 +12,20 @@
  * @param {string} elementId - id del nodo de salida (display-1/2/3).
  * @param {string} result - texto final a mostrar al usuario.
  */
+
+function smartValue(token) {
+    const clean = token.trim();
+    if (clean === '') return clean;
+    const n = Number(clean);
+    return Number.isNaN(n) ? clean : n;
+}
+
+function getUserArray(message, fallback) {
+    const raw = prompt(message);
+    if (!raw || !raw.trim()) return [...fallback];
+    return raw.split(',').map(smartValue);
+}
+
 function showResult(elementId, result) {
     const el = document.getElementById(elementId);
     el.classList.add('flash');
@@ -23,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let roles = ['user', 'editor', 'admin'];
+            let roles = getUserArray('Ingresá valores separados por coma:', ['user', 'editor', 'admin']);
 return `Contiene admin: ${roles.includes('admin')}`;
         };
         showResult('display-1', execute());
@@ -36,7 +50,7 @@ return `Contiene admin: ${roles.includes('admin')}`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let arrayColores = ['rojo', 'azul', 'amarillo'];
+            let arrayColores = getUserArray('Ingresá valores separados por coma:', ['rojo', 'azul', 'amarillo']);
 return `Contiene verde: ${arrayColores.includes('verde')}`;
         };
         showResult('display-2', execute());
@@ -49,7 +63,7 @@ return `Contiene verde: ${arrayColores.includes('verde')}`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let arrayNumeros = [1, 2, 3];
+            let arrayNumeros = getUserArray('Ingresá valores separados por coma:', [1, 2, 3]);
 let num = 4;
 if (!arrayNumeros.includes(num)) arrayNumeros.push(num);
 return `Array final: [${arrayNumeros.join(', ')}]`;
