@@ -1,0 +1,12 @@
+{
+  "name": "proyecto-slice",
+  "version": "1.0.0",
+  "description": "Proyecto demostrativo del método slice()",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

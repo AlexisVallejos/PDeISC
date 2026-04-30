@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Array Method</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; margin: 0; padding: 2rem; }
+        a.back { color: #3b82f6; text-decoration: none; margin-bottom: 2rem; display: inline-block; font-weight: 600;}
+        a.back:hover { text-decoration: underline; color: #60a5fa;}
+        .container { max-width: 800px; margin: 0 auto; background: rgba(30, 41, 59, 0.7); padding: 2.5rem; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); }
+        h1 { margin-top: 0; font-size: 2.5rem; color: #c084fc;}
+        .console-output { background: #020617; padding: 1.5rem; border-radius: 12px; font-family: 'Courier New', Courier, monospace; color: #10b981; overflow-x: auto; margin-top: 2rem; line-height: 1.6; border: 1px solid #334155; white-space: pre-wrap;}
+        .output-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #334155; padding-bottom: 0.5rem; margin-bottom: 1rem; color: #94a3b8; font-family: 'Inter', sans-serif; font-size: 0.9rem;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <h1 id="page-title">Cargando método...</h1>
+        <p>A continuación se muestra el resultado de la ejecución del script correspondiente a este método. (El código original se ejecutó y su salida fue capturada en la pantalla).</p>
+        
+        <div class="console-output">
+            <div class="output-header"><span>Terminal Output</span><span>Node.js Environment Sim</span></div>
+            <div id="output"></div>
+        </div>
+    </div>
+
+    <script>
+        // Interceptar console.log para mostrarlo en la página
+        const outputDiv = document.getElementById('output');
+        const originalLog = console.log;
+        
+        console.log = function(...args) {
+            // Llama a la consola original
+            originalLog.apply(console, args);
+            
+            // Procesa para HTML
+            const line = document.createElement('div');
+            line.textContent = '> ' + args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : a).join(' ');
+            outputDiv.appendChild(line);
+        };
+
+        // Asignar título basado en la ruta
+        const pathParts = window.location.pathname.split('/').filter(p => p);
+        const folderName = pathParts[pathParts.length - 1];
+        if(folderName) {
+            const cleanName = folderName.split('-')[1];
+            document.getElementById('page-title').textContent = 'Método: ' + cleanName + '()';
+        }
+    </script>
+    
+    <!-- Aquí se cargará dinámicamente el script correspondiente al método -->
+    <script id="method-script"></script>
+    <script>
+        const folder = window.location.pathname.split('/').filter(p => p).pop();
+        if (folder) {
+            const scriptName = folder.split('-')[1] + '.js';
+            document.getElementById('method-script').src = 'js/' + scriptName;
+        }
+    </script>
+</body>
+</html>

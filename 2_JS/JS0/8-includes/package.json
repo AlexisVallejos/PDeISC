@@ -1,0 +1,12 @@
+{
+  "name": "proyecto-includes",
+  "version": "1.0.0",
+  "description": "Proyecto demostrativo del método includes()",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
