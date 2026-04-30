@@ -1,22 +1,72 @@
-let array = [1, 2, 3, 4, 5];
 const container = document.getElementById('array-container');
 const btnAction = document.getElementById('btn-action');
 const consoleOutput = document.getElementById('console-output');
-function render(arr) {
+
+btnAction.textContent = 'Mostrar consignas resueltas';
+
+function render(items) {
     container.innerHTML = '';
-    arr.forEach(item => {
+    items.forEach(item => {
         let div = document.createElement('div');
         div.className = 'array-item';
         div.textContent = item;
         container.appendChild(div);
     });
 }
+
+function showOutput(exercises) {
+    consoleOutput.innerHTML = exercises.map((exercise, index) => (
+        `<p><strong>${index + 1}. ${exercise.consigna}</strong><br>${exercise.resultado}</p>`
+    )).join('');
+}
+
+function runExercises() {
+    const nombres = ['Ana', 'Luis', 'Sofia'];
+    const saludos = [];
+    nombres.forEach(nombre => {
+        saludos.push(`Hola, ${nombre}`);
+    });
+
+    const numeros = [2, 4, 6];
+    const dobles = [];
+    numeros.forEach(numero => {
+        dobles.push(numero * 2);
+    });
+
+    const personas = [
+        { nombre: 'Carla', edad: 21 },
+        { nombre: 'Diego', edad: 24 },
+        { nombre: 'Mia', edad: 19 }
+    ];
+    const datosPersonas = [];
+    personas.forEach(persona => {
+        datosPersonas.push(`${persona.nombre} tiene ${persona.edad} años`);
+    });
+
+    render([
+        ...saludos,
+        `Dobles: ${dobles.join(', ')}`,
+        ...datosPersonas
+    ]);
+
+    showOutput([
+        {
+            consigna: 'Muestra todos los nombres de un array con un saludo.',
+            resultado: saludos.join(' | ')
+        },
+        {
+            consigna: 'Imprime el doble de cada número de un array con forEach()',
+            resultado: `Dobles: ${dobles.join(', ')}`
+        },
+        {
+            consigna: 'Dado un array de objetos {nombre, edad}, muestra cada nombre con su edad.',
+            resultado: datosPersonas.join(' | ')
+        }
+    ]);
+}
+
 btnAction.addEventListener('click', () => {
-    let res = [...array].reverse();
-    if ('forEach' === 'sort') res = [...array].sort((a,b)=>b-a);
-    if ('forEach' === 'map') res = array.map(x => x*2);
-    if ('forEach' === 'filter') res = array.filter(x => x>2);
-    render(res);
-    consoleOutput.innerHTML = `Se ejecutó forEach(). Observa el resultado.`;
+    runExercises();
 });
-render(array);
+
+runExercises();
