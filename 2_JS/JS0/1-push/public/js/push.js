@@ -1,4 +1,20 @@
+/**
+ * Script del proyecto push().
+ *
+ * Objetivo: resolver 3 consignas usando push() con interacción del usuario.
+ * - Consigna 1: cargar 3 frutas en un array vacío.
+ * - Consigna 2: agregar 3 amigos a un array existente.
+ * - Consigna 3: agregar un número solo si supera al último valor cargado.
+ *
+ * La UI se actualiza en vivo con renderArray(...) y showMessage(...).
+ */
+
 // Utilidad para renderizar visualmente el array
+/**
+ * Dibuja el contenido del array en pantalla.
+ * @param {string} elementId - id del contenedor visual.
+ * @param {Array<string|number>} array - array a renderizar.
+ */
 function renderArray(elementId, array) {
     const el = document.getElementById(elementId);
     
@@ -21,6 +37,12 @@ function renderArray(elementId, array) {
     }
 }
 
+/**
+ * Muestra mensajes de feedback (éxito/error) por unos segundos.
+ * @param {string} elementId
+ * @param {string} text
+ * @param {'success'|'error'} type
+ */
 function showMessage(elementId, text, type) {
     const el = document.getElementById(elementId);
     el.textContent = text;
@@ -38,6 +60,7 @@ let frutasAgregadas = 0;
 const frutaInput = document.getElementById('fruta-input');
 const frutaBtn = document.getElementById('fruta-btn');
 
+// Click en "Agregar Fruta": valida, agrega y refresca el estado del ejercicio 1.
 frutaBtn.addEventListener('click', () => {
     const fruta = frutaInput.value.trim();
     
@@ -60,6 +83,7 @@ frutaBtn.addEventListener('click', () => {
     }
 });
 
+// Teclado en input fruta: Enter ejecuta el mismo flujo que el botón.
 frutaInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') frutaBtn.click();
 });
@@ -72,6 +96,7 @@ let amigosAgregados = 0;
 const amigoInput = document.getElementById('amigo-input');
 const amigoBtn = document.getElementById('amigo-btn');
 
+// Click en "Agregar Amigo": valida, agrega y refresca el estado del ejercicio 2.
 amigoBtn.addEventListener('click', () => {
     const amigo = amigoInput.value.trim();
     
@@ -94,6 +119,7 @@ amigoBtn.addEventListener('click', () => {
     }
 });
 
+// Teclado en input amigo: Enter dispara la carga del amigo.
 amigoInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') amigoBtn.click();
 });
@@ -105,6 +131,7 @@ let numeros = [1, 5, 8];
 const numeroInput = document.getElementById('numero-input');
 const numeroBtn = document.getElementById('numero-btn');
 
+// Click en "Verificar y Agregar": compara contra el último número antes de hacer push().
 numeroBtn.addEventListener('click', () => {
     const valorStr = numeroInput.value.trim();
     if (!valorStr) {
@@ -129,6 +156,7 @@ numeroBtn.addEventListener('click', () => {
     }
 });
 
+// Teclado en input número: Enter ejecuta validación y posible inserción.
 numeroInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') numeroBtn.click();
 });
