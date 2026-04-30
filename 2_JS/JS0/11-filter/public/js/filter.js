@@ -20,10 +20,16 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(inputId, fallback) {
+function getUserArray(inputId) {
     const raw = document.getElementById(inputId)?.value || "";
-    if (!raw || !raw.trim()) return [...fallback];
-    return raw.split(',').map(smartValue);
+    if (!raw.trim()) {
+        throw new Error('Ingresá al menos un valor en el campo antes de ejecutar.');
+    }
+    const values = raw.split(',').map(smartValue).filter((v) => `${v}`.trim() !== '');
+    if (values.length === 0) {
+        throw new Error('Formato inválido. Usá valores separados por coma.');
+    }
+    return values;
 }
 
 function showResult(elementId, result) {
@@ -37,7 +43,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nums = getUserArray('input-1', [5, 12, 8, 20, 3]);
+            let nums = getUserArray('input-1');
 let res = nums.filter(n => n > 10);
 return `Mayores a 10: [${res.join(', ')}]`;
         };
@@ -51,7 +57,7 @@ return `Mayores a 10: [${res.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let palabras = getUserArray('input-2', ['sol', 'planeta', 'luz', 'galaxia']);
+            let palabras = getUserArray('input-2');
 let res = palabras.filter(p => p.length > 5);
 return `Palabras largas: [${res.join(', ')}]`;
         };
@@ -65,7 +71,7 @@ return `Palabras largas: [${res.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let usrs = getUserArray('input-3', [{n: 'A', activo: true}, {n: 'B', activo: false}]);
+            let usrs = getUserArray('input-3');
 let res = usrs.filter(u => u.activo).map(u => u.n);
 return `Activos: [${res.join(', ')}]`;
         };

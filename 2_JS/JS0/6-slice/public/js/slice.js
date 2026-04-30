@@ -20,10 +20,16 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(inputId, fallback) {
+function getUserArray(inputId) {
     const raw = document.getElementById(inputId)?.value || "";
-    if (!raw || !raw.trim()) return [...fallback];
-    return raw.split(',').map(smartValue);
+    if (!raw.trim()) {
+        throw new Error('Ingresá al menos un valor en el campo antes de ejecutar.');
+    }
+    const values = raw.split(',').map(smartValue).filter((v) => `${v}`.trim() !== '');
+    if (values.length === 0) {
+        throw new Error('Formato inválido. Usá valores separados por coma.');
+    }
+    return values;
 }
 
 function showResult(elementId, result) {
@@ -37,7 +43,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let numSlice = getUserArray('input-1', [10, 20, 30, 40, 50]);
+            let numSlice = getUserArray('input-1');
 let primerosTres = numSlice.slice(0, 3);
 return `Copia: [${primerosTres.join(', ')}]`;
         };
@@ -51,7 +57,7 @@ return `Copia: [${primerosTres.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let peliculas = getUserArray('input-2', ['Peli1', 'Peli2', 'Peli3', 'Peli4', 'Peli5']);
+            let peliculas = getUserArray('input-2');
 let copiaParcial = peliculas.slice(2, 4);
 return `Copia (2 a 4): [${copiaParcial.join(', ')}]`;
         };
@@ -65,7 +71,7 @@ return `Copia (2 a 4): [${copiaParcial.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let numSlice2 = getUserArray('input-3', [10, 20, 30, 40, 50]);
+            let numSlice2 = getUserArray('input-3');
 let ultimos = numSlice2.slice(-3);
 return `Últimos 3: [${ultimos.join(', ')}]`;
         };

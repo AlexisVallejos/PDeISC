@@ -20,10 +20,16 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(inputId, fallback) {
+function getUserArray(inputId) {
     const raw = document.getElementById(inputId)?.value || "";
-    if (!raw || !raw.trim()) return [...fallback];
-    return raw.split(',').map(smartValue);
+    if (!raw.trim()) {
+        throw new Error('Ingresá al menos un valor en el campo antes de ejecutar.');
+    }
+    const values = raw.split(',').map(smartValue).filter((v) => `${v}`.trim() !== '');
+    if (values.length === 0) {
+        throw new Error('Formato inválido. Usá valores separados por coma.');
+    }
+    return values;
 }
 
 function showResult(elementId, result) {
@@ -37,7 +43,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let letras = getUserArray('input-1', ['A', 'B', 'C', 'D']);
+            let letras = getUserArray('input-1');
 letras.reverse();
 return `Letras al revés: [${letras.join(', ')}]`;
         };
@@ -51,7 +57,7 @@ return `Letras al revés: [${letras.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nums = getUserArray('input-2', [1, 2, 3, 4, 5]);
+            let nums = getUserArray('input-2');
 nums.reverse();
 return `Números al revés: [${nums.join(', ')}]`;
         };
@@ -65,7 +71,8 @@ return `Números al revés: [${nums.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let texto = (document.getElementById('input-3')?.value || '').trim() || "Hola Mundo";
+            let texto = (document.getElementById('input-3')?.value || '').trim();
+if (!texto) throw new Error('Ingresá un texto para invertir.');
 let revertido = texto.split('').reverse().join('');
 return `Texto revertido: ${revertido}`;
         };

@@ -20,10 +20,16 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(inputId, fallback) {
+function getUserArray(inputId) {
     const raw = document.getElementById(inputId)?.value || "";
-    if (!raw || !raw.trim()) return [...fallback];
-    return raw.split(',').map(smartValue);
+    if (!raw.trim()) {
+        throw new Error('Ingresá al menos un valor en el campo antes de ejecutar.');
+    }
+    const values = raw.split(',').map(smartValue).filter((v) => `${v}`.trim() !== '');
+    if (values.length === 0) {
+        throw new Error('Formato inválido. Usá valores separados por coma.');
+    }
+    return values;
 }
 
 function showResult(elementId, result) {
@@ -37,7 +43,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let roles = getUserArray('input-1', ['user', 'editor', 'admin']);
+            let roles = getUserArray('input-1');
 return `Contiene admin: ${roles.includes('admin')}`;
         };
         showResult('display-1', execute());
@@ -50,7 +56,7 @@ return `Contiene admin: ${roles.includes('admin')}`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let arrayColores = getUserArray('input-2', ['rojo', 'azul', 'amarillo']);
+            let arrayColores = getUserArray('input-2');
 return `Contiene verde: ${arrayColores.includes('verde')}`;
         };
         showResult('display-2', execute());
@@ -63,7 +69,7 @@ return `Contiene verde: ${arrayColores.includes('verde')}`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let arrayNumeros = getUserArray('input-3', [1, 2, 3]);
+            let arrayNumeros = getUserArray('input-3');
 let num = 4;
 if (!arrayNumeros.includes(num)) arrayNumeros.push(num);
 return `Array final: [${arrayNumeros.join(', ')}]`;

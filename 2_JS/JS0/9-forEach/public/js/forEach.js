@@ -20,10 +20,16 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(inputId, fallback) {
+function getUserArray(inputId) {
     const raw = document.getElementById(inputId)?.value || "";
-    if (!raw || !raw.trim()) return [...fallback];
-    return raw.split(',').map(smartValue);
+    if (!raw.trim()) {
+        throw new Error('Ingresá al menos un valor en el campo antes de ejecutar.');
+    }
+    const values = raw.split(',').map(smartValue).filter((v) => `${v}`.trim() !== '');
+    if (values.length === 0) {
+        throw new Error('Formato inválido. Usá valores separados por coma.');
+    }
+    return values;
 }
 
 function showResult(elementId, result) {
@@ -37,7 +43,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let personas = getUserArray('input-1', ['Ana', 'Juan', 'Maria']);
+            let personas = getUserArray('input-1');
 let saludos = [];
 personas.forEach(p => saludos.push(`Hola ${p}`));
 return saludos.join(', ');
@@ -52,7 +58,7 @@ return saludos.join(', ');
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let valores = getUserArray('input-2', [2, 4, 6]);
+            let valores = getUserArray('input-2');
 let dobles = [];
 valores.forEach(v => dobles.push(v * 2));
 return `Dobles: [${dobles.join(', ')}]`;
@@ -67,7 +73,7 @@ return `Dobles: [${dobles.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let users = getUserArray('input-3', [{nombre: 'Luis', edad: 25}, {nombre: 'Marta', edad: 30}]);
+            let users = getUserArray('input-3');
 let res = [];
 users.forEach(u => res.push(`${u.nombre} (${u.edad} años)`));
 return res.join(' | ');

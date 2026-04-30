@@ -20,10 +20,16 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(inputId, fallback) {
+function getUserArray(inputId) {
     const raw = document.getElementById(inputId)?.value || "";
-    if (!raw || !raw.trim()) return [...fallback];
-    return raw.split(',').map(smartValue);
+    if (!raw.trim()) {
+        throw new Error('Ingresá al menos un valor en el campo antes de ejecutar.');
+    }
+    const values = raw.split(',').map(smartValue).filter((v) => `${v}`.trim() !== '');
+    if (values.length === 0) {
+        throw new Error('Formato inválido. Usá valores separados por coma.');
+    }
+    return values;
 }
 
 function showResult(elementId, result) {
@@ -37,7 +43,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nums = getUserArray('input-1', [1, 2, 3, 4, 5]);
+            let nums = getUserArray('input-1');
 let res = nums.reduce((acc, curr) => acc + curr, 0);
 return `Suma total: ${res}`;
         };
@@ -51,7 +57,7 @@ return `Suma total: ${res}`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nums = getUserArray('input-2', [1, 2, 3, 4, 5]);
+            let nums = getUserArray('input-2');
 let res = nums.reduce((acc, curr) => acc * curr, 1);
 return `Multiplicación: ${res}`;
         };
@@ -65,7 +71,7 @@ return `Multiplicación: ${res}`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let carrito = getUserArray('input-3', [{precio: 10}, {precio: 20}, {precio: 30}]);
+            let carrito = getUserArray('input-3');
 let res = carrito.reduce((acc, curr) => acc + curr.precio, 0);
 return `Total Carrito: ${res}`;
         };

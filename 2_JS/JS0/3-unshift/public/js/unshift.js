@@ -20,10 +20,16 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(inputId, fallback) {
+function getUserArray(inputId) {
     const raw = document.getElementById(inputId)?.value || "";
-    if (!raw || !raw.trim()) return [...fallback];
-    return raw.split(',').map(smartValue);
+    if (!raw.trim()) {
+        throw new Error('Ingresá al menos un valor en el campo antes de ejecutar.');
+    }
+    const values = raw.split(',').map(smartValue).filter((v) => `${v}`.trim() !== '');
+    if (values.length === 0) {
+        throw new Error('Formato inválido. Usá valores separados por coma.');
+    }
+    return values;
 }
 
 function showResult(elementId, result) {
@@ -51,7 +57,7 @@ return `Colores: [${colores.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let tareas = getUserArray('input-1', ['Lavar ropa', 'Limpiar casa']);
+            let tareas = getUserArray('input-1');
 tareas.unshift('Tarea urgente: Comprar comida');
 return `Tareas: [${tareas.join(' | ')}]`;
         };
@@ -65,7 +71,7 @@ return `Tareas: [${tareas.join(' | ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let usuarios = getUserArray('input-2', ['user2', 'user3']);
+            let usuarios = getUserArray('input-2');
 usuarios.unshift('user1');
 return `Usuarios: [${usuarios.join(', ')}]`;
         };

@@ -20,10 +20,16 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(inputId, fallback) {
+function getUserArray(inputId) {
     const raw = document.getElementById(inputId)?.value || "";
-    if (!raw || !raw.trim()) return [...fallback];
-    return raw.split(',').map(smartValue);
+    if (!raw.trim()) {
+        throw new Error('Ingresá al menos un valor en el campo antes de ejecutar.');
+    }
+    const values = raw.split(',').map(smartValue).filter((v) => `${v}`.trim() !== '');
+    if (values.length === 0) {
+        throw new Error('Formato inválido. Usá valores separados por coma.');
+    }
+    return values;
 }
 
 function showResult(elementId, result) {
@@ -37,7 +43,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let animales = getUserArray('input-1', ['Perro', 'Gato', 'León', 'Tigre']);
+            let animales = getUserArray('input-1');
 let eliminado = animales.pop();
 return `Eliminado: ${eliminado} | Quedan: [${animales.join(', ')}]`;
         };
@@ -51,7 +57,7 @@ return `Eliminado: ${eliminado} | Quedan: [${animales.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let compras = getUserArray('input-2', ['Pan', 'Leche', 'Huevos', 'Manteca']);
+            let compras = getUserArray('input-2');
 let eliminado = compras.pop();
 return `Eliminado: ${eliminado} | Quedan: [${compras.join(', ')}]`;
         };
@@ -65,7 +71,7 @@ return `Eliminado: ${eliminado} | Quedan: [${compras.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let arrayParaVaciar = getUserArray('input-3', [1, 2, 3, 4, 5]);
+            let arrayParaVaciar = getUserArray('input-3');
 let pasos = [];
 while(arrayParaVaciar.length > 0) {
     pasos.push(arrayParaVaciar.pop());
