@@ -60,8 +60,8 @@ frutaBtn.addEventListener('click', () => {
     }
 });
 
-frutaInput.addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') frutaBtn.click();
+frutaInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') frutaBtn.click();
 });
 
 // --- EJERCICIO 2: AMIGOS ---
@@ -94,8 +94,8 @@ amigoBtn.addEventListener('click', () => {
     }
 });
 
-amigoInput.addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') amigoBtn.click();
+amigoInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') amigoBtn.click();
 });
 
 // --- EJERCICIO 3: NÚMEROS ---
@@ -129,6 +129,6 @@ numeroBtn.addEventListener('click', () => {
     }
 });
 
-numeroInput.addEventListener('keypress', (e) => {
-    if(e.key === 'Enter') numeroBtn.click();
+numeroInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') numeroBtn.click();
 });
