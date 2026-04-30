@@ -20,8 +20,8 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(message, fallback) {
-    const raw = prompt(message);
+function getUserArray(inputId, fallback) {
+    const raw = document.getElementById(inputId)?.value || "";
     if (!raw || !raw.trim()) return [...fallback];
     return raw.split(',').map(smartValue);
 }
@@ -51,7 +51,7 @@ return `Colores: [${colores.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let tareas = getUserArray('Ingresá valores separados por coma:', ['Lavar ropa', 'Limpiar casa']);
+            let tareas = getUserArray('input-1', ['Lavar ropa', 'Limpiar casa']);
 tareas.unshift('Tarea urgente: Comprar comida');
 return `Tareas: [${tareas.join(' | ')}]`;
         };
@@ -65,7 +65,7 @@ return `Tareas: [${tareas.join(' | ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let usuarios = getUserArray('Ingresá valores separados por coma:', ['user2', 'user3']);
+            let usuarios = getUserArray('input-2', ['user2', 'user3']);
 usuarios.unshift('user1');
 return `Usuarios: [${usuarios.join(', ')}]`;
         };

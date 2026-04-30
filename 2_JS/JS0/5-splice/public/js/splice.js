@@ -20,8 +20,8 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(message, fallback) {
-    const raw = prompt(message);
+function getUserArray(inputId, fallback) {
+    const raw = document.getElementById(inputId)?.value || "";
     if (!raw || !raw.trim()) return [...fallback];
     return raw.split(',').map(smartValue);
 }
@@ -37,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let letras = getUserArray('Ingresá valores separados por coma:', ['A', 'B', 'C', 'D', 'E']);
+            let letras = getUserArray('input-1', ['A', 'B', 'C', 'D', 'E']);
 letras.splice(1, 2);
 return `Letras restantes: [${letras.join(', ')}]`;
         };
@@ -51,7 +51,7 @@ return `Letras restantes: [${letras.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nombres = getUserArray('Ingresá valores separados por coma:', ['Ana', 'Carlos', 'David']);
+            let nombres = getUserArray('input-2', ['Ana', 'Carlos', 'David']);
 nombres.splice(1, 0, 'Beatriz');
 return `Nombres: [${nombres.join(', ')}]`;
         };
@@ -65,7 +65,7 @@ return `Nombres: [${nombres.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let elementos = getUserArray('Ingresá valores separados por coma:', [1, 2, 3, 4, 5]);
+            let elementos = getUserArray('input-3', [1, 2, 3, 4, 5]);
 elementos.splice(2, 2, 8, 9);
 return `Elementos: [${elementos.join(', ')}]`;
         };

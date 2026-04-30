@@ -20,8 +20,8 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(message, fallback) {
-    const raw = prompt(message);
+function getUserArray(inputId, fallback) {
+    const raw = document.getElementById(inputId)?.value || "";
     if (!raw || !raw.trim()) return [...fallback];
     return raw.split(',').map(smartValue);
 }
@@ -37,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let bases = getUserArray('Ingresá valores separados por coma:', [1, 2, 3]);
+            let bases = getUserArray('input-1', [1, 2, 3]);
 let porTres = bases.map(x => x * 3);
 return `Resultado: [${porTres.join(', ')}]`;
         };
@@ -51,7 +51,7 @@ return `Resultado: [${porTres.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nombresMap = getUserArray('Ingresá valores separados por coma:', ['juan', 'pedro', 'ana']);
+            let nombresMap = getUserArray('input-2', ['juan', 'pedro', 'ana']);
 let mayus = nombresMap.map(n => n.toUpperCase());
 return `Mayúsculas: [${mayus.join(', ')}]`;
         };
@@ -65,7 +65,7 @@ return `Mayúsculas: [${mayus.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let precios = getUserArray('Ingresá valores separados por coma:', [100, 200, 300]);
+            let precios = getUserArray('input-3', [100, 200, 300]);
 let conIVA = precios.map(p => p * 1.21);
 return `Con IVA: [${conIVA.join(', ')}]`;
         };

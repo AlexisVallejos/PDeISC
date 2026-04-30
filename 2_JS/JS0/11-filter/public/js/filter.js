@@ -20,8 +20,8 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(message, fallback) {
-    const raw = prompt(message);
+function getUserArray(inputId, fallback) {
+    const raw = document.getElementById(inputId)?.value || "";
     if (!raw || !raw.trim()) return [...fallback];
     return raw.split(',').map(smartValue);
 }
@@ -37,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let nums = getUserArray('Ingresá valores separados por coma:', [5, 12, 8, 20, 3]);
+            let nums = getUserArray('input-1', [5, 12, 8, 20, 3]);
 let res = nums.filter(n => n > 10);
 return `Mayores a 10: [${res.join(', ')}]`;
         };
@@ -51,7 +51,7 @@ return `Mayores a 10: [${res.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let palabras = getUserArray('Ingresá valores separados por coma:', ['sol', 'planeta', 'luz', 'galaxia']);
+            let palabras = getUserArray('input-2', ['sol', 'planeta', 'luz', 'galaxia']);
 let res = palabras.filter(p => p.length > 5);
 return `Palabras largas: [${res.join(', ')}]`;
         };
@@ -65,7 +65,7 @@ return `Palabras largas: [${res.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let usrs = getUserArray('Ingresá valores separados por coma:', [{n: 'A', activo: true}, {n: 'B', activo: false}]);
+            let usrs = getUserArray('input-3', [{n: 'A', activo: true}, {n: 'B', activo: false}]);
 let res = usrs.filter(u => u.activo).map(u => u.n);
 return `Activos: [${res.join(', ')}]`;
         };

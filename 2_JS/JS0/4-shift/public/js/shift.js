@@ -20,8 +20,8 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(message, fallback) {
-    const raw = prompt(message);
+function getUserArray(inputId, fallback) {
+    const raw = document.getElementById(inputId)?.value || "";
     if (!raw || !raw.trim()) return [...fallback];
     return raw.split(',').map(smartValue);
 }
@@ -37,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let enteros = getUserArray('Ingresá valores separados por coma:', [10, 20, 30]);
+            let enteros = getUserArray('input-1', [10, 20, 30]);
 let eliminado = enteros.shift();
 return `Eliminado: ${eliminado} | Quedan: [${enteros.join(', ')}]`;
         };
@@ -51,7 +51,7 @@ return `Eliminado: ${eliminado} | Quedan: [${enteros.join(', ')}]`;
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let mensajes = getUserArray('Ingresá valores separados por coma:', ['Hola', '¿Cómo estás?', 'Bien']);
+            let mensajes = getUserArray('input-2', ['Hola', '¿Cómo estás?', 'Bien']);
 let eliminado = mensajes.shift();
 return `Eliminado: ${eliminado} | Quedan: [${mensajes.join(', ')}]`;
         };
@@ -65,7 +65,7 @@ return `Eliminado: ${eliminado} | Quedan: [${mensajes.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let cola = getUserArray('Ingresá valores separados por coma:', ['Cliente 1', 'Cliente 2', 'Cliente 3']);
+            let cola = getUserArray('input-3', ['Cliente 1', 'Cliente 2', 'Cliente 3']);
 let atendido = cola.shift();
 return `Atendiendo a: ${atendido} | Quedan en cola: [${cola.join(', ')}]`;
         };

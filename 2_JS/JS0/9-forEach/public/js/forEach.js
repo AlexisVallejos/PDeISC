@@ -20,8 +20,8 @@ function smartValue(token) {
     return Number.isNaN(n) ? clean : n;
 }
 
-function getUserArray(message, fallback) {
-    const raw = prompt(message);
+function getUserArray(inputId, fallback) {
+    const raw = document.getElementById(inputId)?.value || "";
     if (!raw || !raw.trim()) return [...fallback];
     return raw.split(',').map(smartValue);
 }
@@ -37,7 +37,7 @@ function showResult(elementId, result) {
 document.getElementById('btn-1').addEventListener('click', () => {
     try {
         const execute = () => {
-            let personas = getUserArray('Ingresá valores separados por coma:', ['Ana', 'Juan', 'Maria']);
+            let personas = getUserArray('input-1', ['Ana', 'Juan', 'Maria']);
 let saludos = [];
 personas.forEach(p => saludos.push(`Hola ${p}`));
 return saludos.join(', ');
@@ -52,7 +52,7 @@ return saludos.join(', ');
 document.getElementById('btn-2').addEventListener('click', () => {
     try {
         const execute = () => {
-            let valores = getUserArray('Ingresá valores separados por coma:', [2, 4, 6]);
+            let valores = getUserArray('input-2', [2, 4, 6]);
 let dobles = [];
 valores.forEach(v => dobles.push(v * 2));
 return `Dobles: [${dobles.join(', ')}]`;
@@ -67,7 +67,7 @@ return `Dobles: [${dobles.join(', ')}]`;
 document.getElementById('btn-3').addEventListener('click', () => {
     try {
         const execute = () => {
-            let users = getUserArray('Ingresá valores separados por coma:', [{nombre: 'Luis', edad: 25}, {nombre: 'Marta', edad: 30}]);
+            let users = getUserArray('input-3', [{nombre: 'Luis', edad: 25}, {nombre: 'Marta', edad: 30}]);
 let res = [];
 users.forEach(u => res.push(`${u.nombre} (${u.edad} años)`));
 return res.join(' | ');
