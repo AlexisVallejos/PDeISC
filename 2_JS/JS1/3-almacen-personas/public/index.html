@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS1 - Almacén de Personas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <header class="header">
+        <h1>Almacén de <span>Personas</span></h1>
+        <p>Validaciones por JS y persistencia en localStorage. Los datos se mantienen al recargar.</p>
+    </header>
+
+    <main class="container">
+        <section class="card form-card">
+            <div class="card-header">
+                <h2>Nueva Persona</h2>
+                <p>Completá los datos. Los errores se muestran debajo de cada campo.</p>
+            </div>
+
+            <form id="form-persona" class="form-grid" novalidate autocomplete="off">
+                <div class="field">
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" maxlength="40">
+                    <small class="error-msg" data-error="nombre"></small>
+                </div>
+
+                <div class="field">
+                    <label>Apellido</label>
+                    <input type="text" name="apellido" maxlength="40">
+                    <small class="error-msg" data-error="apellido"></small>
+                </div>
+
+                <div class="field">
+                    <label>Edad</label>
+                    <input type="number" name="edad" min="0" max="120" step="1">
+                    <small class="error-msg" data-error="edad"></small>
+                </div>
+
+                <div class="field">
+                    <label>Fecha de nacimiento</label>
+                    <input type="date" name="fechaNacimiento">
+                    <small class="error-msg" data-error="fechaNacimiento"></small>
+                </div>
+
+                <div class="field">
+                    <label>Sexo</label>
+                    <select name="sexo">
+                        <option value="">Seleccioná...</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+                    <small class="error-msg" data-error="sexo"></small>
+                </div>
+
+                <div class="field">
+                    <label>Documento (DNI)</label>
+                    <input type="text" name="documento" inputmode="numeric" maxlength="8">
+                    <small class="error-msg" data-error="documento"></small>
+                </div>
+
+                <div class="field">
+                    <label>Estado civil</label>
+                    <select name="estadoCivil">
+                        <option value="">Seleccioná...</option>
+                        <option value="Soltero/a">Soltero/a</option>
+                        <option value="Casado/a">Casado/a</option>
+                        <option value="Divorciado/a">Divorciado/a</option>
+                        <option value="Viudo/a">Viudo/a</option>
+                        <option value="Concubinato">Concubinato</option>
+                    </select>
+                    <small class="error-msg" data-error="estadoCivil"></small>
+                </div>
+
+                <div class="field">
+                    <label>Nacionalidad</label>
+                    <input type="text" name="nacionalidad" maxlength="40">
+                    <small class="error-msg" data-error="nacionalidad"></small>
+                </div>
+
+                <div class="field">
+                    <label>Teléfono</label>
+                    <input type="text" name="telefono" inputmode="tel" maxlength="20">
+                    <small class="error-msg" data-error="telefono"></small>
+                </div>
+
+                <div class="field">
+                    <label>Mail</label>
+                    <input type="email" name="mail" maxlength="80">
+                    <small class="error-msg" data-error="mail"></small>
+                </div>
+
+                <div class="field">
+                    <label>¿Tiene hijos?</label>
+                    <select name="tieneHijos" id="tiene-hijos">
+                        <option value="">Seleccioná...</option>
+                        <option value="No">No</option>
+                        <option value="Si">Sí</option>
+                    </select>
+                    <small class="error-msg" data-error="tieneHijos"></small>
+                </div>
+
+                <div class="field" id="cantidad-hijos-field" style="display: none;">
+                    <label>Cantidad de hijos</label>
+                    <input type="number" name="cantidadHijos" min="1" max="20" step="1">
+                    <small class="error-msg" data-error="cantidadHijos"></small>
+                </div>
+
+                <div class="field full-width">
+                    <button type="submit" class="btn primary">Guardar Persona</button>
+                </div>
+            </form>
+
+            <div id="form-msg" class="message"></div>
+        </section>
+
+        <section class="card lista-card">
+            <div class="card-header">
+                <div class="lista-header">
+                    <div>
+                        <h2>Personas Almacenadas</h2>
+                        <p>Total: <span id="total">0</span> · Persistido en <code>localStorage</code></p>
+                    </div>
+                    <button id="btn-vaciar" class="btn danger">Vaciar Almacén</button>
+                </div>
+            </div>
+
+            <ul id="lista-nombres" class="lista-nombres"></ul>
+
+            <h3 class="sub-title">Detalle</h3>
+            <div id="lista-detalle" class="lista-detalle"></div>
+        </section>
+    </main>
+
+    <script src="js/almacen.js"></script>
+</body>
+</html>

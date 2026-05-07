@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS1 - Registro de Pacientes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <header class="header">
+        <h1>Registro de <span>Pacientes</span></h1>
+        <p>Hospital Central — 3 formas distintas de leer formularios en JavaScript, sin recargar la página.</p>
+    </header>
+
+    <main class="container">
+        <!-- Método 1 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>1. getElementById</h2>
+                <p>Lectura clásica con <code>document.getElementById()</code>.</p>
+            </div>
+            <div class="card-body">
+                <form id="form-id" novalidate autocomplete="off">
+                    <div class="field">
+                        <input type="text" id="nombre-id" placeholder="Nombre del paciente" maxlength="50">
+                        <small class="error-msg" data-error-for="nombre-id"></small>
+                    </div>
+                    <div class="field">
+                        <input type="number" id="edad-id" placeholder="Edad" min="0" max="120" step="1">
+                        <small class="error-msg" data-error-for="edad-id"></small>
+                    </div>
+                    <div class="field">
+                        <select id="area-id">
+                            <option value="">Área de atención...</option>
+                            <option value="Clínica">Clínica</option>
+                            <option value="Pediatría">Pediatría</option>
+                            <option value="Cardiología">Cardiología</option>
+                            <option value="Traumatología">Traumatología</option>
+                        </select>
+                        <small class="error-msg" data-error-for="area-id"></small>
+                    </div>
+                    <button type="submit" class="btn primary">Registrar Paciente</button>
+                </form>
+                <div id="msg-id" class="message"></div>
+            </div>
+        </section>
+
+        <!-- Método 2 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>2. querySelector</h2>
+                <p>Lectura con <code>document.querySelector()</code> y selectores CSS.</p>
+            </div>
+            <div class="card-body">
+                <form id="form-qs" novalidate autocomplete="off">
+                    <div class="field">
+                        <input type="text" name="nombre" placeholder="Nombre del paciente" maxlength="50">
+                        <small class="error-msg" data-error-for="qs-nombre"></small>
+                    </div>
+                    <div class="field">
+                        <input type="number" name="edad" placeholder="Edad" min="0" max="120" step="1">
+                        <small class="error-msg" data-error-for="qs-edad"></small>
+                    </div>
+                    <div class="field">
+                        <select name="area">
+                            <option value="">Área de atención...</option>
+                            <option value="Clínica">Clínica</option>
+                            <option value="Pediatría">Pediatría</option>
+                            <option value="Cardiología">Cardiología</option>
+                            <option value="Traumatología">Traumatología</option>
+                        </select>
+                        <small class="error-msg" data-error-for="qs-area"></small>
+                    </div>
+                    <button type="submit" class="btn secondary">Registrar Paciente</button>
+                </form>
+                <div id="msg-qs" class="message"></div>
+            </div>
+        </section>
+
+        <!-- Método 3 -->
+        <section class="card">
+            <div class="card-header">
+                <h2>3. FormData</h2>
+                <p>Lectura moderna iterando un objeto <code>FormData</code>.</p>
+            </div>
+            <div class="card-body">
+                <form id="form-fd" novalidate autocomplete="off">
+                    <div class="field">
+                        <input type="text" name="nombre" placeholder="Nombre del paciente" maxlength="50">
+                        <small class="error-msg" data-error-for="fd-nombre"></small>
+                    </div>
+                    <div class="field">
+                        <input type="number" name="edad" placeholder="Edad" min="0" max="120" step="1">
+                        <small class="error-msg" data-error-for="fd-edad"></small>
+                    </div>
+                    <div class="field">
+                        <select name="area">
+                            <option value="">Área de atención...</option>
+                            <option value="Clínica">Clínica</option>
+                            <option value="Pediatría">Pediatría</option>
+                            <option value="Cardiología">Cardiología</option>
+                            <option value="Traumatología">Traumatología</option>
+                        </select>
+                        <small class="error-msg" data-error-for="fd-area"></small>
+                    </div>
+                    <button type="submit" class="btn accent">Registrar Paciente</button>
+                </form>
+                <div id="msg-fd" class="message"></div>
+            </div>
+        </section>
+    </main>
+
+    <section class="lista-section">
+        <h2>Pacientes Registrados</h2>
+        <p class="lista-info">Total: <span id="total-pacientes">0</span></p>
+        <ul id="lista-pacientes" class="lista-pacientes"></ul>
+    </section>
+
+    <script src="js/registro.js"></script>
+</body>
+</html>
