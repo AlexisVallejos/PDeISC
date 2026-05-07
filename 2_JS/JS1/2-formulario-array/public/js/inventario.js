@@ -21,6 +21,7 @@
 // === Constantes de configuración ===
 
 const METODOS_VALIDOS = ['push', 'unshift', 'splice', 'indice'];
+const DEPORTES_VALIDOS = ['Fútbol', 'Futsal', 'Básquet', 'Vóley', 'Handball', 'Hockey', 'Natación', 'Atletismo', 'Tenis', 'Otro'];
 
 // Regex genérica para campos de texto (letras Unicode, dígitos, signos comunes).
 const RE_TEXTO_GEN = /^[\p{L}0-9\s.,'\-+/()]{1,80}$/u;
@@ -78,7 +79,7 @@ function validarTexto(v, { min = 1, max = 80, label = 'Campo', regex = RE_TEXTO_
 
 /** Valida número: finito, rango cerrado [min, max], opcionalmente entero. */
 function validarNumero(v, { min, max, entero = false, label = 'Número' } = {}) {
-    const s = String(v ?? '').trim();
+    const s = String(v ?? '').trim().replace(',', '.');
     if (s === '') return `${label}: obligatorio`;
     const n = Number(s);
     if (!Number.isFinite(n)) return `${label}: numérico inválido`;
@@ -108,11 +109,17 @@ function validarMetodo(v) {
     return '';
 }
 
+/** Valida deporte contra lista cerrada de opciones del EMDER. */
+function validarDeporte(v) {
+    if (!DEPORTES_VALIDOS.includes(v)) return 'Seleccioná un deporte de la lista';
+    return '';
+}
+
 /** Valida un artículo completo. Devuelve { campo: msg } con todos los errores. */
 function validarArticulo(art) {
     const e = {};
     let m;
-    if ((m = validarTexto(art.deporte, { min: 2, max: 40, label: 'Deporte' }))) e.deporte = m;
+    if ((m = validarDeporte(art.deporte))) e.deporte = m;
     if ((m = validarTexto(art.herramienta, { min: 2, max: 60, label: 'Herramienta' }))) e.herramienta = m;
     if ((m = validarTexto(art.marca, { min: 1, max: 40, label: 'Marca' }))) e.marca = m;
     if ((m = validarTexto(art.modelo, { min: 1, max: 40, label: 'Modelo' }))) e.modelo = m;
@@ -269,7 +276,7 @@ formEl.addEventListener('submit', (e) => {
 // Mapeo nombre-de-campo → función que devuelve mensaje de error o ''.
 // Se usa al perder el foco (blur) para feedback inmediato por campo.
 const validadoresEnVivo = {
-    deporte: (v) => validarTexto(v, { min: 2, max: 40, label: 'Deporte' }),
+    deporte: (v) => validarDeporte(v),
     herramienta: (v) => validarTexto(v, { min: 2, max: 60, label: 'Herramienta' }),
     marca: (v) => validarTexto(v, { min: 1, max: 40, label: 'Marca' }),
     modelo: (v) => validarTexto(v, { min: 1, max: 40, label: 'Modelo' }),

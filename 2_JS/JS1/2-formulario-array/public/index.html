@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JS1 - Inventario Deportivo</title>
+    <title>Sistema de Control de Patrimonios Deportivos MDQ</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fira+Code&display=swap" rel="stylesheet">
@@ -17,19 +17,31 @@
     </div>
 
     <header class="header">
-        <h1>Inventario <span>Deportivo</span></h1>
-        <p>Registrá artículos y elegí cómo se almacenan en el array. Visualización en vivo.</p>
+        <h1>EMDER MDQ <span>Control Deportivo</span></h1>
+        <p>Sistema de Control de Patrimonios Deportivos MDQ para registrar materiales que entran y salen en clubes y polideportivos locales.</p>
     </header>
 
     <main class="container">
         <section class="card form-card">
             <div class="card-header">
-                <h2>Nuevo Artículo</h2>
-                <p>Completá los 10 campos y elegí el método de almacenaje.</p>
+                <h2>Nuevo Material Deportivo</h2>
+                <p>Cargá cada elemento para mantener trazabilidad de stock en sedes como el Polideportivo Islas Malvinas o el Natatorio.</p>
             </div>
             <form id="form-articulo" class="form-grid" novalidate autocomplete="off">
                 <div class="field">
-                    <input type="text" name="deporte" placeholder="Deporte (ej. Fútbol)" maxlength="40">
+                    <select name="deporte">
+                        <option value="">Seleccioná un deporte...</option>
+                        <option value="Fútbol">Fútbol</option>
+                        <option value="Futsal">Futsal</option>
+                        <option value="Básquet">Básquet</option>
+                        <option value="Vóley">Vóley</option>
+                        <option value="Handball">Handball</option>
+                        <option value="Hockey">Hockey</option>
+                        <option value="Natación">Natación</option>
+                        <option value="Atletismo">Atletismo</option>
+                        <option value="Tenis">Tenis</option>
+                        <option value="Otro">Otro</option>
+                    </select>
                     <small class="error-msg" data-error="deporte"></small>
                 </div>
                 <div class="field">
@@ -41,27 +53,27 @@
                     <small class="error-msg" data-error="marca"></small>
                 </div>
                 <div class="field">
-                    <input type="text" name="modelo" placeholder="Modelo" maxlength="40">
+                    <input type="text" name="modelo" placeholder="Modelo (ej. Predator 24)" maxlength="40">
                     <small class="error-msg" data-error="modelo"></small>
                 </div>
                 <div class="field">
-                    <input type="number" name="precio" placeholder="Precio ($)" min="0" max="10000000" step="0.01">
+                    <input type="number" name="precio" placeholder="Precio (ej. 25999.99)" min="0" max="10000000" step="0.01">
                     <small class="error-msg" data-error="precio"></small>
                 </div>
                 <div class="field">
-                    <input type="number" name="stock" placeholder="Stock" min="0" max="100000" step="1">
+                    <input type="number" name="stock" placeholder="Cantidad en stock (ej. 15)" min="0" max="100000" step="1">
                     <small class="error-msg" data-error="stock"></small>
                 </div>
                 <div class="field">
-                    <input type="text" name="talle" placeholder="Talle / Tamaño" maxlength="20">
+                    <input type="text" name="talle" placeholder="Talle / Tamaño (ej. Nº5 o M)" maxlength="20">
                     <small class="error-msg" data-error="talle"></small>
                 </div>
                 <div class="field">
-                    <input type="text" name="color" placeholder="Color" maxlength="30">
+                    <input type="text" name="color" placeholder="Color (ej. Negro)" maxlength="30">
                     <small class="error-msg" data-error="color"></small>
                 </div>
                 <div class="field">
-                    <input type="text" name="material" placeholder="Material" maxlength="40">
+                    <input type="text" name="material" placeholder="Material (ej. Cuero sintético)" maxlength="40">
                     <small class="error-msg" data-error="material"></small>
                 </div>
                 <div class="field">
@@ -71,23 +83,23 @@
 
                 <div class="field full-width">
                     <select name="metodo">
-                        <option value="push">push() - Agregar al final</option>
-                        <option value="unshift">unshift() - Agregar al inicio</option>
-                        <option value="splice">splice() - Insertar en el medio</option>
-                        <option value="indice">arr[length] = ... - Por índice</option>
+                        <option value="push">Guardar al final de la lista</option>
+                        <option value="unshift">Guardar al inicio de la lista</option>
+                        <option value="splice">Guardar en el medio de la lista</option>
+                        <option value="indice">Guardar por posición automática</option>
                     </select>
                     <small class="error-msg" data-error="metodo"></small>
                 </div>
 
-                <button type="submit" class="btn primary full-width">Agregar al inventario</button>
+                <button type="submit" class="btn primary full-width">Guardar producto</button>
             </form>
             <div id="form-msg" class="message"></div>
         </section>
 
         <section class="card stats-card">
             <div class="card-header">
-                <h2>Estadísticas</h2>
-                <p>Resumen del inventario actual.</p>
+                <h2>Resumen</h2>
+                <p>Información rápida del inventario cargado.</p>
             </div>
             <div class="stats-grid">
                 <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Artículos</div></div>
@@ -99,8 +111,8 @@
     </main>
 
     <section class="lista-section">
-        <h2>Inventario Completo</h2>
-        <p class="lista-info">Total ítems en el array: <span id="total-items">0</span></p>
+        <h2>Materiales Registrados</h2>
+        <p class="lista-info">Total de patrimonios deportivos registrados: <span id="total-items">0</span></p>
         <div id="lista-articulos" class="lista-articulos"></div>
     </section>
 
