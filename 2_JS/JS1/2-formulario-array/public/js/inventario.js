@@ -19,6 +19,7 @@
  */
 
 // === Constantes de configuración ===
+// Todo valor de control de negocio/validación vive acá para fácil mantenimiento.
 
 const METODOS_VALIDOS = ['push', 'unshift', 'splice', 'indice'];
 const DEPORTES_VALIDOS = ['Fútbol', 'Futsal', 'Básquet', 'Vóley', 'Handball', 'Hockey', 'Natación', 'Atletismo', 'Tenis', 'Otro'];
@@ -35,9 +36,11 @@ const MAX_STOCK = 100_000;
 const MAX_ITEMS = 1000;
 
 // Array global donde se guardan todos los artículos.
+// Representa el estado en memoria de este módulo.
 const inventario = [];
 
 // Referencias al DOM que se reutilizan.
+// Se cachean para evitar búsquedas repetidas en cada evento.
 const formEl = document.getElementById('form-articulo');
 const listaEl = document.getElementById('lista-articulos');
 const totalItemsEl = document.getElementById('total-items');
@@ -48,6 +51,7 @@ const statValorEl = document.getElementById('stat-valor');
 const statDeportesEl = document.getElementById('stat-deportes');
 
 // === Utilidades ===
+// Helpers de uso transversal (sanitizado y normalización).
 
 /** Escapa caracteres HTML peligrosos antes de inyectar texto al DOM (XSS). */
 function escapeHtml(str) {
@@ -65,6 +69,7 @@ function norm(v) {
 }
 
 // === Validadores ===
+// Cada validador devuelve '' cuando el dato es correcto.
 // Cada uno devuelve '' si es OK o un mensaje de error legible.
 
 /** Valida un texto: trim, longitud y regex configurables. */
@@ -117,6 +122,7 @@ function validarDeporte(v) {
 
 /** Valida un artículo completo. Devuelve { campo: msg } con todos los errores. */
 function validarArticulo(art) {
+    // Valida todas las propiedades del artículo y arma un objeto de errores.
     const e = {};
     let m;
     if ((m = validarDeporte(art.deporte))) e.deporte = m;
@@ -134,6 +140,7 @@ function validarArticulo(art) {
 }
 
 // === Helpers de UI (errores y mensajes) ===
+// Encapsulan el feedback visual para no repetir código.
 
 /** Mensaje global success/error que se oculta solo a los 3.5s. */
 function showMessage(text, type) {
@@ -159,9 +166,11 @@ function clearAllErrors() {
 }
 
 // === Render ===
+// Bloque responsable de pintar estadísticas y tarjetas de inventario.
 
 /** Recalcula y muestra el panel de estadísticas. */
 function renderStats() {
+    // Recalcula métricas en cada cambio de inventario.
     statTotalEl.textContent = inventario.length;
 
     const stockTotal = inventario.reduce((acc, a) => acc + a.stock, 0);
@@ -176,6 +185,7 @@ function renderStats() {
 
 /** Redibuja la lista de artículos con HTML escapado en cada campo. */
 function renderLista() {
+    // Redibuja lista completa para mantener UI consistente.
     listaEl.innerHTML = '';
     inventario.forEach((art, idx) => {
         const div = document.createElement('div');
@@ -203,6 +213,7 @@ function renderLista() {
 }
 
 // === Almacenaje ===
+// Inserta en distintas posiciones según el método elegido por usuario.
 
 /**
  * Inserta el artículo en el array `inventario` con el método elegido:
@@ -233,6 +244,7 @@ function almacenar(art, metodo) {
 }
 
 // === Submit del formulario ===
+// Flujo de alta: leer -> validar -> guardar -> renderizar.
 // Lee con FormData, valida todos los campos, y si pasa los chequeos
 // almacena el artículo y resetea el formulario.
 formEl.addEventListener('submit', (e) => {
@@ -254,6 +266,7 @@ formEl.addEventListener('submit', (e) => {
         metodoUsado: String(fd.get('metodo') || '')
     };
 
+    // 1) Validación estructural de todos los campos
     const errores = validarArticulo(art);
     if (Object.keys(errores).length > 0) {
         for (const [campo, msg] of Object.entries(errores)) setError(campo, msg);
@@ -261,11 +274,13 @@ formEl.addEventListener('submit', (e) => {
         return;
     }
 
+    // 2) Regla de límite global
     if (inventario.length >= MAX_ITEMS) {
         showMessage(`Límite de ${MAX_ITEMS} artículos alcanzado.`, 'error');
         return;
     }
 
+    // 3) Persistencia en memoria + render + feedback
     almacenar(art, art.metodoUsado);
     renderLista();
     showMessage(`"${art.herramienta}" agregado con ${art.metodoUsado}()`, 'success');
@@ -273,6 +288,7 @@ formEl.addEventListener('submit', (e) => {
 });
 
 // === Validación en vivo ===
+// Feedback inmediato en blur/input por campo.
 // Mapeo nombre-de-campo → función que devuelve mensaje de error o ''.
 // Se usa al perder el foco (blur) para feedback inmediato por campo.
 const validadoresEnVivo = {
