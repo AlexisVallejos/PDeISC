@@ -1,3 +1,13 @@
+// ============================================================================
+// Proyecto 3 - Admisión clínica de pacientes
+// ----------------------------------------------------------------------------
+// Este archivo implementa:
+// 1) Captura de una ficha médica completa.
+// 2) Validación en vivo por campo y validación total al enviar.
+// 3) Persistencia local con localStorage.
+// 4) Render de resumen y detalle de pacientes registrados.
+// ============================================================================
+
 const STORAGE_KEY = "admision-pacientes";
 const MAX_PERSONAS = 1000;
 
@@ -15,6 +25,7 @@ const RE_EMAIL_BASE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const RE_TEL_AR = /^(?:\+?54)?(?:9)?\d{10}$/;
 const RE_AFILIADO = /^[A-Za-z0-9\-\/]{4,20}$/;
 
+// Referencias a nodos del DOM usados constantemente.
 const formEl = document.getElementById("form-persona");
 const formMsgEl = document.getElementById("form-msg");
 const listaNombresEl = document.getElementById("lista-nombres");
@@ -28,11 +39,13 @@ const cantidadHijosInput = formEl.querySelector('[name="cantidadHijos"]');
 const fechaNacimientoInput = formEl.querySelector('[name="fechaNacimiento"]');
 const edadInput = formEl.querySelector('[name="edad"]');
 
+// Estado principal de la app en memoria.
 let personas = cargarDeLocalStorage();
 renderTodo();
 actualizarEstadoSubmit();
 
 function escapeHtml(str) {
+    // Protección XSS al renderizar texto proveniente del usuario.
     return String(str ?? "")
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
@@ -42,6 +55,7 @@ function escapeHtml(str) {
 }
 
 function norm(v) {
+    // Normaliza espacios en textos para que validen/guarden uniforme.
     return String(v ?? "").trim().replace(/\s+/g, " ");
 }
 
@@ -62,6 +76,10 @@ function esPersonaValida(p) {
 }
 
 function cargarDeLocalStorage() {
+    // Carga defensiva:
+    // - evita romper si el JSON está corrupto
+    // - filtra estructuras inválidas
+    // - elimina duplicados por identificador
     try {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (!raw) return [];
@@ -82,6 +100,7 @@ function cargarDeLocalStorage() {
 }
 
 function guardarEnLocalStorage() {
+    // Persistimos el estado completo.
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(personas));
         return true;
@@ -99,6 +118,7 @@ function showFormMessage(texto, tipo) {
 }
 
 function setError(campo, mensaje) {
+    // Marca visualmente un campo inválido + mensaje asociado.
     const small = document.querySelector(`.error-msg[data-error="${campo}"]`);
     if (small) small.textContent = mensaje;
     const input = formEl.querySelector(`[name="${campo}"]`);
@@ -109,6 +129,7 @@ function setError(campo, mensaje) {
 }
 
 function limpiarError(campo) {
+    // Limpia mensaje y marca el campo como válido.
     const small = document.querySelector(`.error-msg[data-error="${campo}"]`);
     if (small) small.textContent = "";
     const input = formEl.querySelector(`[name="${campo}"]`);
@@ -124,6 +145,7 @@ function limpiarTodosLosErrores() {
 }
 
 function calcularEdadDesdeFecha(fechaStr) {
+    // Calcula edad exacta en años cumplidos.
     const f = new Date(fechaStr + "T00:00:00");
     if (isNaN(f.getTime())) return null;
     const hoy = new Date();
@@ -134,6 +156,7 @@ function calcularEdadDesdeFecha(fechaStr) {
 }
 
 function formatearEdadConMeses(edad, fechaNacimiento) {
+    // Si edad es 0, intentamos mostrar meses de vida.
     const n = Number(edad);
     if (n !== 0) return String(n);
     const f = new Date(String(fechaNacimiento || "") + "T00:00:00");
@@ -304,6 +327,8 @@ function leerFormulario() {
 }
 
 function validarFormulario(d) {
+    // Validador integral: concentra todas las reglas de negocio.
+    // Devuelve un objeto {campo: mensaje} con errores detectados.
     const e = {};
     let m = "";
     if ((m = validarNombre(d.nombre))) e.nombre = m;
@@ -335,6 +360,7 @@ function validarFormulario(d) {
 }
 
 function autocompletarEdadDesdeFecha() {
+    // UX: completa edad automáticamente al elegir fecha de nacimiento.
     const fecha = String(fechaNacimientoInput.value || "");
     if (!fecha || validarFechaNac(fecha) !== "") return;
     const edad = calcularEdadDesdeFecha(fecha);
@@ -344,6 +370,7 @@ function autocompletarEdadDesdeFecha() {
 }
 
 function toggleCantidadHijos() {
+    // UX condicional: habilita/deshabilita cantidad de hijos según respuesta.
     const tiene = tieneHijosSel.value;
     if (tiene === "Si") {
         cantidadHijosField.style.display = "flex";
@@ -357,6 +384,7 @@ function toggleCantidadHijos() {
 }
 
 function actualizarEstadoSubmit() {
+    // Seguridad UX: no deja enviar si existen errores o se alcanzó límite.
     const datos = leerFormulario();
     const errores = validarFormulario(datos);
     submitBtn.disabled = Object.keys(errores).length > 0 || personas.length >= MAX_PERSONAS;
@@ -374,6 +402,7 @@ fechaNacimientoInput.addEventListener("change", () => {
 
 formEl.querySelectorAll("input, select").forEach((input) => {
     const evt = input.type === "checkbox" ? "change" : "input";
+    // Evento principal de feedback en tiempo real.
     input.addEventListener(evt, () => {
         const datos = leerFormulario();
         const errores = validarFormulario(datos);
@@ -389,6 +418,7 @@ formEl.querySelectorAll("input, select").forEach((input) => {
         actualizarEstadoSubmit();
     });
 
+    // Refuerzo al perder foco: valida y deja mensaje estable.
     input.addEventListener("blur", () => {
         const datos = leerFormulario();
         const errores = validarFormulario(datos);
@@ -401,6 +431,10 @@ formEl.querySelectorAll("input, select").forEach((input) => {
 });
 
 formEl.addEventListener("submit", (e) => {
+    // Flujo de alta:
+    // 1) validar
+    // 2) armar paciente final
+    // 3) guardar y renderizar
     e.preventDefault();
     limpiarTodosLosErrores();
 
@@ -443,6 +477,7 @@ formEl.addEventListener("submit", (e) => {
 });
 
 btnVaciar.addEventListener("click", () => {
+    // Limpia todo el registro con confirmación previa del usuario.
     if (personas.length === 0) {
         showFormMessage("No hay pacientes para eliminar.", "error");
         return;
@@ -460,6 +495,7 @@ btnVaciar.addEventListener("click", () => {
 });
 
 function eliminarPersona(documento) {
+    // Baja individual por identificador.
     const backup = personas.slice();
     personas = personas.filter((p) => p.documento !== documento);
     if (!guardarEnLocalStorage()) {
@@ -471,6 +507,10 @@ function eliminarPersona(documento) {
 }
 
 function renderTodo() {
+    // Render maestro:
+    // - contador total
+    // - chips de nombres
+    // - tarjetas detalle
     totalEl.textContent = personas.length;
 
     listaNombresEl.innerHTML = "";
