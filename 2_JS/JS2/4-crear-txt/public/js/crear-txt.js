@@ -135,7 +135,7 @@ function renderNumeros() {
     } else if (numeros.length < MAX_NUMEROS) {
         // Mensaje cuando ya puede descargar pero aun puede agregar mas.
         estadoCarga.textContent = `Ya podes descargar. Tambien podes agregar ${MAX_NUMEROS - numeros.length} mas.`;
-        mensajeDescargaOriginal.textContent = "Al descargar, elegis donde guardar tu copia y el backend guarda otra.";
+        mensajeDescargaOriginal.textContent = "Al descargar, guardas una copia y otra queda en la carpeta del servidor.";
         mensajeDescargaOriginal.className = "status-message ok";
     } else {
         // Mensaje cuando se llega al maximo de la consigna.

@@ -356,7 +356,7 @@ h3 {
 .filter-panel .panel-title,
 .filter-panel .results-layout,
 .filter-panel .concat-box,
-.filter-panel .wide,
+.filter-panel .download-action,
 .filter-panel .status-message {
     grid-column: 1 / -1;
 }
@@ -537,6 +537,12 @@ input.invalid {
 
 .wide {
     width: 100%;
+}
+
+.download-action {
+    width: auto;
+    min-width: 250px;
+    justify-self: end;
 }
 
 .actions-row {
@@ -855,7 +861,7 @@ input[type="file"]:hover::file-selector-button {
     .filter-panel .stats,
     .filter-panel .results-layout,
     .filter-panel .concat-box,
-    .filter-panel .wide,
+    .filter-panel .download-action,
     .filter-panel .status-message {
         grid-column: 1;
         grid-row: auto;
@@ -944,7 +950,8 @@ input[type="file"]:hover::file-selector-button {
     }
 
     .btn,
-    .theme-btn {
+    .theme-btn,
+    .download-action {
         width: 100%;
     }
 
