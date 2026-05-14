@@ -1,0 +1,9 @@
+{
+  "name": "js2-filtrar-txt",
+  "version": "1.0.0",
+  "description": "Lee y filtra numeros desde archivos TXT",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

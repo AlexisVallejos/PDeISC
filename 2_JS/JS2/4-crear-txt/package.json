@@ -1,0 +1,9 @@
+{
+  "name": "js2-crear-txt",
+  "version": "1.0.0",
+  "description": "Carga numeros y crea un archivo TXT",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
