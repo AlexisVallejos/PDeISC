@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS2 - Archivos de numeros</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="hero-copy">
+            <p class="eyebrow">JS2 - Manejo de archivos TXT</p>
+            <h1>Laboratorio de numeros</h1>
+            <p class="hero-text">Carga, edita, descarga, sube y filtra numeros desde archivos de texto.</p>
+        </div>
+        <div class="top-actions">
+            <time id="fecha-actual" datetime=""></time>
+            <button id="btn-tema" class="theme-btn" type="button" aria-label="Cambiar modo">Modo oscuro</button>
+        </div>
+    </header>
+
+    <main class="layout">
+        <section class="panel entry-panel">
+            <div class="panel-title">
+                <div>
+                    <p class="eyebrow">Punto 1</p>
+                    <h2>Cargar numeros</h2>
+                </div>
+                <span id="contador-carga" class="pill">0 / 20</span>
+            </div>
+
+            <div class="progress-box">
+                <div class="progress-track">
+                    <span id="barra-progreso"></span>
+                </div>
+                <p id="estado-carga">Faltan 10 numeros para poder descargar.</p>
+            </div>
+
+            <form id="form-numero" class="entry-form" novalidate autocomplete="off">
+                <label for="numero">Numero entero</label>
+                <input id="numero" name="numero" type="text" inputmode="numeric" maxlength="12" placeholder="Ej: 525">
+                <input id="indice-edicion" type="hidden">
+                <button id="btn-guardar" class="btn primary" type="submit">Agregar</button>
+                <button id="btn-cancelar" class="btn neutral" type="button" hidden>Cancelar</button>
+                <small id="error-numero" class="error"></small>
+            </form>
+
+            <div class="actions-row">
+                <button id="btn-descargar-original" class="btn secondary" type="button" disabled>Descargar original</button>
+                <button id="btn-limpiar" class="btn danger ghost" type="button" disabled>Borrar todo</button>
+            </div>
+
+            <div class="numbers-board">
+                <div class="board-header">
+                    <h3>Numeros cargados</h3>
+                    <p>Minimo 10, maximo 20</p>
+                </div>
+                <div id="lista-numeros" class="number-grid"></div>
+            </div>
+
+            <div class="concat-box">
+                <span>Concatenados</span>
+                <strong id="concatenados">Sin numeros cargados</strong>
+            </div>
+        </section>
+
+        <section class="panel filter-panel">
+            <div class="panel-title">
+                <div>
+                    <p class="eyebrow">Punto 2</p>
+                    <h2>Leer y filtrar TXT</h2>
+                </div>
+                <span id="archivo-nombre" class="pill">Sin archivo</span>
+            </div>
+
+            <div class="upload-box">
+                <label for="archivo-txt">Subir archivo .txt</label>
+                <input id="archivo-txt" type="file" accept=".txt,text/plain">
+                <p id="mensaje-archivo">Tambien sirve el txt descargado desde el punto anterior.</p>
+            </div>
+
+            <div class="stats">
+                <article>
+                    <span>Total leidos</span>
+                    <strong id="total-leidos">0</strong>
+                </article>
+                <article>
+                    <span>Utiles</span>
+                    <strong id="total-utiles">0</strong>
+                </article>
+                <article>
+                    <span>No utiles</span>
+                    <strong id="total-no-utiles">0</strong>
+                </article>
+                <article>
+                    <span>Porcentaje</span>
+                    <strong id="porcentaje-utiles">0%</strong>
+                </article>
+            </div>
+
+            <div class="result-card">
+                <div class="board-header">
+                    <h3>Numeros utiles ordenados</h3>
+                    <p>Empiezan y terminan con el mismo digito.</p>
+                </div>
+                <ol id="lista-utiles" class="result-list"></ol>
+            </div>
+
+            <div class="concat-box">
+                <span>Resultado concatenado</span>
+                <strong id="concatenados-filtrados">Sin resultados</strong>
+            </div>
+
+                <button id="btn-descargar-filtrado" class="btn primary wide" type="button" disabled>Descargar filtrado</button>
+        </section>
+    </main>
+
+    <script src="js/archivos-numeros.js"></script>
+</body>
+</html>
