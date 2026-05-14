@@ -3,120 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JS2 - Archivos de numeros</title>
+    <meta name="description" content="TP JS2 para cargar numeros, guardar TXT, leer TXT y filtrar resultados utiles.">
+    <title>JS2 - Panel de numeros</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header class="topbar">
-        <div class="hero-copy">
-            <p class="eyebrow">JS2 - Manejo de archivos TXT</p>
-            <h1>Laboratorio de numeros</h1>
-            <p class="hero-text">Carga, edita, descarga, sube y filtra numeros desde archivos de texto.</p>
-        </div>
-        <div class="top-actions">
-            <time id="fecha-actual" datetime=""></time>
-            <button id="btn-tema" class="theme-btn" type="button" aria-label="Cambiar modo">Modo oscuro</button>
-        </div>
-    </header>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-    <main class="layout">
-        <section class="panel entry-panel">
-            <div class="panel-title">
+    <div class="dashboard">
+        <aside class="side-panel" aria-label="Resumen del trabajo">
+            <div class="brand-block">
+                <span class="brand-mark" aria-hidden="true">JS2</span>
                 <div>
-                    <p class="eyebrow">Punto 1</p>
-                    <h2>Cargar numeros</h2>
+                    <p class="eyebrow">Archivos TXT</p>
+                    <h1>Panel de numeros</h1>
                 </div>
-                <span id="contador-carga" class="pill">0 / 20</span>
             </div>
 
-            <div class="progress-box">
-                <div class="progress-track">
-                    <span id="barra-progreso"></span>
+            <p class="side-copy">Carga, exporta, importa y filtra numeros en una sola pantalla.</p>
+
+            <nav class="step-list" aria-label="Pasos del TP">
+                <a href="#carga" class="step-link">
+                    <span>01</span>
+                    <strong>Cargar numeros</strong>
+                </a>
+                <a href="#filtrado" class="step-link">
+                    <span>02</span>
+                    <strong>Filtrar archivo</strong>
+                </a>
+                <a href="#resultados" class="step-link">
+                    <span>03</span>
+                    <strong>Descargar resultado</strong>
+                </a>
+            </nav>
+
+            <div class="side-footer">
+                <time id="fecha-actual" class="date-pill" datetime=""></time>
+                <button id="btn-tema" class="theme-toggle" type="button" aria-label="Activar modo oscuro" aria-pressed="false">Modo oscuro</button>
+            </div>
+        </aside>
+
+        <main id="contenido" class="content-grid">
+            <section id="carga" class="command-panel" aria-labelledby="titulo-carga" data-animate="fade-up">
+                <header class="panel-head">
+                    <div>
+                        <p class="eyebrow">Entrada manual</p>
+                        <h2 id="titulo-carga">Carga de numeros</h2>
+                    </div>
+                    <span id="contador-carga" class="status-chip" aria-live="polite">0 / 20</span>
+                </header>
+
+                <div class="progress-card" aria-labelledby="estado-carga">
+                    <div class="progress-info">
+                        <strong>Progreso</strong>
+                        <p id="estado-carga" aria-live="polite">Faltan 10 numeros para poder descargar.</p>
+                    </div>
+                    <div class="progress-track" role="progressbar" aria-label="Progreso de carga" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0">
+                        <span id="barra-progreso"></span>
+                    </div>
                 </div>
-                <p id="estado-carga">Faltan 10 numeros para poder descargar.</p>
-            </div>
 
-            <form id="form-numero" class="entry-form" novalidate autocomplete="off">
-                <label for="numero">Numero entero</label>
-                <input id="numero" name="numero" type="text" inputmode="numeric" maxlength="12" placeholder="Ej: 525">
-                <input id="indice-edicion" type="hidden">
-                <button id="btn-guardar" class="btn primary" type="submit">Agregar</button>
-                <button id="btn-cancelar" class="btn neutral" type="button" hidden>Cancelar</button>
-                <small id="error-numero" class="error"></small>
-            </form>
+                <form id="form-numero" class="input-strip" novalidate autocomplete="off">
+                    <div class="field">
+                        <label for="numero">Numero entero</label>
+                        <input id="numero" name="numero" type="text" inputmode="numeric" maxlength="12" placeholder="Ej: 525" aria-describedby="error-numero estado-carga">
+                    </div>
+                    <input id="indice-edicion" type="hidden">
+                    <button id="btn-guardar" class="button button--primary" type="submit">Agregar</button>
+                    <button id="btn-cancelar" class="button button--muted" type="button" hidden>Cancelar</button>
+                    <small id="error-numero" class="field-error" role="alert"></small>
+                </form>
 
-            <div class="actions-row">
-                <button id="btn-descargar-original" class="btn secondary" type="button" disabled>Descargar original</button>
-                <button id="btn-limpiar" class="btn danger ghost" type="button" disabled>Borrar todo</button>
-            </div>
-
-            <div class="numbers-board">
-                <div class="board-header">
-                    <h3>Numeros cargados</h3>
-                    <p>Minimo 10, maximo 20</p>
+                <div class="action-strip" aria-label="Acciones de archivo original">
+                    <button id="btn-descargar-original" class="button button--secondary" type="button" disabled>Descargar original</button>
+                    <button id="btn-limpiar" class="button button--danger" type="button" disabled>Borrar todo</button>
                 </div>
-                <div id="lista-numeros" class="number-grid"></div>
-            </div>
+            </section>
 
-            <div class="concat-box">
-                <span>Concatenados</span>
-                <strong id="concatenados">Sin numeros cargados</strong>
-            </div>
-        </section>
+            <section class="list-panel" aria-labelledby="titulo-lista" data-animate="fade-up">
+                <header class="panel-head panel-head--small">
+                    <div>
+                        <p class="eyebrow">Alta, baja y modificacion</p>
+                        <h2 id="titulo-lista">Numeros cargados</h2>
+                    </div>
+                </header>
 
-        <section class="panel filter-panel">
-            <div class="panel-title">
-                <div>
-                    <p class="eyebrow">Punto 2</p>
-                    <h2>Leer y filtrar TXT</h2>
+                <div id="lista-numeros" class="number-grid" role="list" aria-live="polite"></div>
+
+                <aside class="code-output" aria-label="Numeros concatenados">
+                    <span>Concatenados</span>
+                    <strong id="concatenados">Sin numeros cargados</strong>
+                </aside>
+            </section>
+
+            <section id="filtrado" class="filter-panel" aria-labelledby="titulo-filtrado" data-animate="fade-up">
+                <header class="panel-head">
+                    <div>
+                        <p class="eyebrow">Lectura de TXT</p>
+                        <h2 id="titulo-filtrado">Filtrado automatico</h2>
+                    </div>
+                    <span id="archivo-nombre" class="status-chip" aria-live="polite">Sin archivo</span>
+                </header>
+
+                <div class="upload-zone">
+                    <div>
+                        <label for="archivo-txt">Seleccionar archivo</label>
+                        <p id="mensaje-archivo" aria-live="polite">Tambien sirve el TXT generado en el punto anterior.</p>
+                    </div>
+                    <input id="archivo-txt" type="file" accept=".txt,text/plain" aria-describedby="mensaje-archivo">
                 </div>
-                <span id="archivo-nombre" class="pill">Sin archivo</span>
-            </div>
 
-            <div class="upload-box">
-                <label for="archivo-txt">Subir archivo .txt</label>
-                <input id="archivo-txt" type="file" accept=".txt,text/plain">
-                <p id="mensaje-archivo">Tambien sirve el txt descargado desde el punto anterior.</p>
-            </div>
-
-            <div class="stats">
-                <article>
-                    <span>Total leidos</span>
-                    <strong id="total-leidos">0</strong>
-                </article>
-                <article>
-                    <span>Utiles</span>
-                    <strong id="total-utiles">0</strong>
-                </article>
-                <article>
-                    <span>No utiles</span>
-                    <strong id="total-no-utiles">0</strong>
-                </article>
-                <article>
-                    <span>Porcentaje</span>
-                    <strong id="porcentaje-utiles">0%</strong>
-                </article>
-            </div>
-
-            <div class="result-card">
-                <div class="board-header">
-                    <h3>Numeros utiles ordenados</h3>
-                    <p>Empiezan y terminan con el mismo digito.</p>
+                <div class="metrics" aria-label="Resumen del filtrado">
+                    <article class="metric">
+                        <span>Total leidos</span>
+                        <strong id="total-leidos">0</strong>
+                    </article>
+                    <article class="metric">
+                        <span>Utiles</span>
+                        <strong id="total-utiles">0</strong>
+                    </article>
+                    <article class="metric">
+                        <span>No utiles</span>
+                        <strong id="total-no-utiles">0</strong>
+                    </article>
+                    <article class="metric metric--accent">
+                        <span>Porcentaje</span>
+                        <strong id="porcentaje-utiles">0%</strong>
+                    </article>
                 </div>
-                <ol id="lista-utiles" class="result-list"></ol>
-            </div>
+            </section>
 
-            <div class="concat-box">
-                <span>Resultado concatenado</span>
-                <strong id="concatenados-filtrados">Sin resultados</strong>
-            </div>
+            <section id="resultados" class="results-panel" aria-labelledby="titulo-utiles" data-animate="fade-up">
+                <header class="panel-head panel-head--small">
+                    <div>
+                        <p class="eyebrow">Salida final</p>
+                        <h2 id="titulo-utiles">Utiles ordenados</h2>
+                    </div>
+                </header>
 
-                <button id="btn-descargar-filtrado" class="btn primary wide" type="button" disabled>Descargar filtrado</button>
-        </section>
-    </main>
+                <ol id="lista-utiles" class="result-list" aria-live="polite"></ol>
+
+                <aside class="code-output" aria-label="Resultado concatenado">
+                    <span>Resultado concatenado</span>
+                    <strong id="concatenados-filtrados">Sin resultados</strong>
+                </aside>
+
+                <button id="btn-descargar-filtrado" class="button button--primary button--full" type="button" disabled>Descargar filtrado</button>
+            </section>
+        </main>
+    </div>
 
     <script src="js/archivos-numeros.js"></script>
 </body>

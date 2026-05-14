@@ -78,6 +78,7 @@ function guardarNumeros() {
 function setError(mensaje) {
     errorNumero.textContent = mensaje;
     inputNumero.classList.toggle("invalid", Boolean(mensaje));
+    inputNumero.setAttribute("aria-invalid", mensaje ? "true" : "false");
 }
 
 function mostrarFecha() {
@@ -97,6 +98,8 @@ function iniciarTema() {
     const usarOscuro = temaGuardado === "dark";
     document.body.classList.toggle("dark", usarOscuro);
     btnTema.textContent = usarOscuro ? "Modo claro" : "Modo oscuro";
+    btnTema.setAttribute("aria-pressed", usarOscuro ? "true" : "false");
+    btnTema.setAttribute("aria-label", usarOscuro ? "Activar modo claro" : "Activar modo oscuro");
 }
 
 function cambiarTema() {
@@ -104,12 +107,15 @@ function cambiarTema() {
     document.body.classList.toggle("dark", usarOscuro);
     localStorage.setItem(THEME_KEY, usarOscuro ? "dark" : "light");
     btnTema.textContent = usarOscuro ? "Modo claro" : "Modo oscuro";
+    btnTema.setAttribute("aria-pressed", usarOscuro ? "true" : "false");
+    btnTema.setAttribute("aria-label", usarOscuro ? "Activar modo claro" : "Activar modo oscuro");
 }
 
 function renderNumeros() {
     contadorCarga.textContent = `${numeros.length} / ${MAX_NUMEROS}`;
     const porcentajeCarga = Math.min((numeros.length / MAX_NUMEROS) * 100, 100);
     barraProgreso.style.width = `${porcentajeCarga}%`;
+    barraProgreso.parentElement.setAttribute("aria-valuenow", String(numeros.length));
 
     if (numeros.length < MIN_NUMEROS) {
         estadoCarga.textContent = `Faltan ${MIN_NUMEROS - numeros.length} numeros para poder descargar.`;
@@ -124,6 +130,7 @@ function renderNumeros() {
     numeros.forEach((numero, indice) => {
         const card = document.createElement("article");
         card.className = "number-card";
+        card.setAttribute("role", "listitem");
         card.innerHTML = `
             <strong>${escapeHtml(numero)}</strong>
             <div class="card-actions">
