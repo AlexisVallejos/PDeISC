@@ -216,7 +216,7 @@ function renderResultado() {
 
     btnDescargarFiltrado.disabled = resultadoActual.leidos.length === 0;
     mensajeDescargaFiltrado.textContent = resultadoActual.leidos.length
-        ? "Resultado listo. Elegi donde guardar tu copia y el backend guardara otra."
+        ? "Resultado listo. Guardas una copia y otra queda en la carpeta del servidor."
         : "Subi un TXT para generar el resultado.";
     mensajeDescargaFiltrado.className = resultadoActual.leidos.length ? "status-message ok" : "status-message";
 }
