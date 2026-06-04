@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtrar TXT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dark">
+    <div class="app-shell">
+        <header class="topbar compact-topbar">
+            <div class="hero-copy">
+                <p class="eyebrow">Archivos de numeros</p>
+                <h1>Filtrar TXT</h1>
+                <p class="hero-text">Sube un archivo, detecta coincidencias, factoriales, porcentajes y descarga el resultado.</p>
+            </div>
+
+            <div class="top-actions">
+                <button id="btn-tema" class="theme-btn" type="button" aria-label="Cambiar modo">Modo claro</button>
+            </div>
+        </header>
+
+        <main class="single-layout">
+            <section class="panel filter-panel">
+                <div class="panel-title">
+                    <div>
+                        <p class="eyebrow">Archivo final</p>
+                        <h2>Resultado filtrado</h2>
+                    </div>
+                    <span id="archivo-nombre" class="pill">Sin archivo</span>
+                </div>
+
+                <div class="upload-box">
+                    <div class="field">
+                        <label for="archivo-txt">Archivo TXT</label>
+                        <input id="archivo-txt" type="file" accept=".txt,text/plain">
+                    </div>
+                    <p id="mensaje-archivo">Subi un TXT con numeros para filtrarlos.</p>
+                </div>
+
+                <div class="stats">
+                    <article>
+                        <span>Leidos</span>
+                        <strong id="total-leidos">0</strong>
+                    </article>
+                    <article>
+                        <span>Cumplen</span>
+                        <strong id="total-utiles">0</strong>
+                    </article>
+                    <article>
+                        <span>No cumplen</span>
+                        <strong id="total-no-utiles">0</strong>
+                    </article>
+                    <article>
+                        <span>Porcentaje</span>
+                        <strong id="porcentaje-utiles">0%</strong>
+                    </article>
+                    <article>
+                        <span>Factoriales</span>
+                        <strong id="total-factoriales">0</strong>
+                    </article>
+                </div>
+
+                <div class="results-layout">
+                    <div class="result-card">
+                        <div class="board-header">
+                            <h3>Coincidencias</h3>
+                            <p>Empiezan y terminan igual.</p>
+                        </div>
+                        <ol id="lista-utiles" class="result-list"></ol>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="board-header">
+                            <h3>No cumplen</h3>
+                            <p>No empiezan y terminan igual.</p>
+                        </div>
+                        <ol id="lista-no-utiles" class="result-list rejected-list"></ol>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="board-header">
+                            <h3>Factoriales</h3>
+                            <p>Valores como 1!, 2!, 3!...</p>
+                        </div>
+                        <ol id="lista-factoriales" class="result-list factorial-list"></ol>
+                    </div>
+                </div>
+
+                <div class="concat-box">
+                    <span>TXT filtrado</span>
+                    <strong id="concatenados-filtrados">Sin resultados</strong>
+                </div>
+
+                <button id="btn-descargar-filtrado" class="btn primary download-action" type="button" disabled>Descargar archivo filtrado</button>
+                <p id="mensaje-descarga-filtrado" class="status-message" aria-live="polite">Subi un TXT para generar el resultado.</p>
+            </section>
+        </main>
+    </div>
+
+    <div id="modal-descarga" class="modal-backdrop" hidden>
+        <section class="modal-card info" role="dialog" aria-modal="true" aria-labelledby="modal-descarga-titulo" aria-describedby="modal-descarga-texto">
+            <div class="modal-icon" aria-hidden="true">i</div>
+            <div class="modal-copy">
+                <p class="eyebrow">Antes de descargar</p>
+                <h2 id="modal-descarga-titulo">Guardar resultado</h2>
+                <p id="modal-descarga-texto">Vas a descargar una copia para vos. Otra copia quedara guardada en la carpeta del servidor para futuras validaciones.</p>
+            </div>
+            <div class="modal-actions">
+                <button id="btn-descarga-cancelar" class="btn neutral" type="button">Cancelar</button>
+                <button id="btn-descarga-confirmar" class="btn primary" type="button">Aceptar y descargar</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="../js/filtrar-txt.js"></script>
+</body>
+</html>

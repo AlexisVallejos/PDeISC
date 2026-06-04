@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear TXT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="dark">
+    <div class="app-shell">
+        <header class="topbar compact-topbar">
+            <div class="hero-copy">
+                <p class="eyebrow">Archivos de numeros</p>
+                <h1>Crear TXT</h1>
+                <p class="hero-text">Carga entre 10 y 20 numeros enteros o decimales con punto para generar tu archivo TXT.</p>
+            </div>
+
+            <div class="top-actions">
+                <button id="btn-tema" class="theme-btn" type="button" aria-label="Cambiar modo">Modo claro</button>
+            </div>
+        </header>
+
+        <main class="single-layout">
+            <section class="panel entry-panel">
+                <div class="panel-title">
+                    <div>
+                        <p class="eyebrow">Archivo base</p>
+                        <h2>Lista de numeros</h2>
+                    </div>
+                    <span id="contador-carga" class="pill">0 / 20</span>
+                </div>
+
+                <div class="progress-box">
+                    <div class="progress-copy">
+                        <span>Progreso</span>
+                        <p id="estado-carga">Faltan 10 numeros para poder descargar.</p>
+                    </div>
+                    <div class="progress-track" aria-hidden="true">
+                        <span id="barra-progreso"></span>
+                    </div>
+                </div>
+
+                <form id="form-numero" class="entry-form" novalidate autocomplete="off">
+                    <div class="field">
+                        <label for="numero">Numero</label>
+                        <input id="numero" name="numero" type="text" inputmode="decimal" maxlength="16" placeholder="Ej: 525 o 12.5">
+                    </div>
+                    <input id="indice-edicion" type="hidden">
+                    <div class="form-actions">
+                        <button id="btn-guardar" class="btn primary" type="submit">Agregar numero</button>
+                        <button id="btn-cancelar" class="btn neutral" type="button" hidden>Cancelar</button>
+                    </div>
+                    <small id="error-numero" class="error" aria-live="polite"></small>
+                </form>
+
+                <div class="actions-row">
+                    <button id="btn-descargar-original" class="btn secondary" type="button" disabled>Descargar TXT</button>
+                    <button id="btn-limpiar" class="btn danger ghost" type="button" disabled>Limpiar lista</button>
+                </div>
+                <p id="mensaje-descarga-original" class="status-message" aria-live="polite">Cuando tengas 10 numeros, se habilita la descarga.</p>
+
+                <div class="numbers-board">
+                    <div class="board-header">
+                        <h3>Numeros cargados</h3>
+                        <p>Minimo 10. Maximo 20.</p>
+                    </div>
+                    <div id="lista-numeros" class="number-grid"></div>
+                </div>
+
+                <div class="concat-box">
+                    <span>Vista del TXT</span>
+                    <strong id="concatenados">Sin numeros cargados</strong>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="modal-limpiar" class="modal-backdrop" hidden>
+        <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal-limpiar-titulo" aria-describedby="modal-limpiar-texto">
+            <div class="modal-icon" aria-hidden="true">!</div>
+            <div class="modal-copy">
+                <p class="eyebrow">Confirmar accion</p>
+                <h2 id="modal-limpiar-titulo">Limpiar lista</h2>
+                <p id="modal-limpiar-texto">Se borran todos los numeros cargados en pantalla. Esta accion no elimina archivos ya descargados.</p>
+            </div>
+            <div class="modal-actions">
+                <button id="btn-modal-cancelar" class="btn neutral" type="button">Cancelar</button>
+                <button id="btn-modal-confirmar" class="btn danger" type="button">Limpiar lista</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="modal-descarga" class="modal-backdrop" hidden>
+        <section class="modal-card info" role="dialog" aria-modal="true" aria-labelledby="modal-descarga-titulo" aria-describedby="modal-descarga-texto">
+            <div class="modal-icon" aria-hidden="true">i</div>
+            <div class="modal-copy">
+                <p class="eyebrow">Antes de descargar</p>
+                <h2 id="modal-descarga-titulo">Guardar archivo</h2>
+                <p id="modal-descarga-texto">Vas a descargar una copia para vos. Otra copia quedara guardada en la carpeta del servidor para futuras validaciones.</p>
+            </div>
+            <div class="modal-actions">
+                <button id="btn-descarga-cancelar" class="btn neutral" type="button">Cancelar</button>
+                <button id="btn-descarga-confirmar" class="btn primary" type="button">Aceptar y descargar</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="../js/crear-txt.js"></script>
+</body>
+</html>

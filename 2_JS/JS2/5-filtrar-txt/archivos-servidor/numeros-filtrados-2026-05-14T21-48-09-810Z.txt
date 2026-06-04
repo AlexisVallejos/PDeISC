@@ -1,0 +1,28 @@
+RESULTADO DE FILTRADO
+Total leidos: 20
+Numeros utiles: 11
+Numeros no utiles: 9
+Porcentaje de utiles: 55.00%
+Numeros factoriales: 5
+
+Numeros utiles ordenados:
+-22
+6
+8,8
+33.3
+44
+45,4
+77.7
+90.09
+121
+525
+1001
+
+Numeros factoriales encontrados:
+6
+24
+120
+720
+362880
+
+Concatenados utiles: -22 - 6 - 8,8 - 33.3 - 44 - 45,4 - 77.7 - 90.09 - 121 - 525 - 1001

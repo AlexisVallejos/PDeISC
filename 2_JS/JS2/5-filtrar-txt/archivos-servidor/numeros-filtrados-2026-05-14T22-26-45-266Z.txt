@@ -1,0 +1,26 @@
+RESULTADO DE FILTRADO
+Total leidos: 9
+Numeros utiles: 3
+Numeros no utiles: 6
+Porcentaje de utiles: 33.33%
+Numeros factoriales: 3
+
+Numeros utiles ordenados:
+44
+121
+525
+
+Numeros que no cumplen:
+123
+18
+78
+6
+24
+120
+
+Numeros factoriales encontrados:
+6
+24
+120
+
+Concatenados utiles: 44 - 121 - 525

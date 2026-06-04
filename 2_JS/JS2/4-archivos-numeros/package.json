@@ -1,9 +1,0 @@
-{
-  "name": "archivos-numeros",
-  "version": "1.0.0",
-  "description": "Carga, descarga y filtrado de numeros desde archivos txt",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  }
-}
