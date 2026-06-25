@@ -76,7 +76,7 @@ export async function registerSocio(req, res) {
     await sendWelcomeSocioEmail(email, documento);
 
     return res.status(201).json({
-      message: 'Registro de Socio de River exitoso',
+      message: 'Registro de Socio AFA ID exitoso',
       socio: newSocio
     });
   } catch (error) {

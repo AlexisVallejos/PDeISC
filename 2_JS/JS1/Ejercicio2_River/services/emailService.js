@@ -1,4 +1,4 @@
-﻿import nodemailer from 'nodemailer';
+import nodemailer from 'nodemailer';
 
 export async function sendWelcomeSocioEmail(toEmail, documento) {
   const fallback = {
@@ -8,30 +8,29 @@ export async function sendWelcomeSocioEmail(toEmail, documento) {
   };
 
   try {
-    const testAccount = await nodemailer.createTestAccount();
-
+    // Usar la configuracion real de Gmail desde .env
     const transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: process.env.SMTP_PORT || 587,
+      secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
       auth: {
-        user: testAccount.user,
-        pass: testAccount.pass
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
       }
     });
 
     const mailOptions = {
-      from: '"Socios River Plate" <noreply@sociosriver.com>',
+      from: `"AFA ID - Socios" <${process.env.SMTP_USER}>`,
       to: toEmail,
-      subject: 'Bienvenido a River Plate',
-      text: `Felicidades, el documento ${documento} ha sido registrado como socio.`
+      subject: 'Bienvenido a AFA ID - Asociacion del Futbol Argentino',
+      text: `Felicidades, el documento ${documento} ha sido registrado exitosamente como socio oficial de la AFA.`
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('Correo de bienvenida enviado:', nodemailer.getTestMessageUrl(info));
+    console.log('Correo de bienvenida AFA ID enviado a:', toEmail);
     return info;
   } catch (error) {
-    console.warn('No se pudo enviar el correo de prueba del socio. Se usa confirmacion local.', error.message);
+    console.error('Error al enviar el correo real del socio:', error.message);
     return fallback;
   }
 }
@@ -44,31 +43,28 @@ export async function sendInventoryEmail(toEmail, encargadoNombre, nombreProduct
   };
 
   try {
-    const testAccount = await nodemailer.createTestAccount();
     const transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
+      host: process.env.SMTP_HOST || 'smtp.gmail.com',
+      port: process.env.SMTP_PORT || 587,
+      secure: process.env.SMTP_SECURE === 'true',
       auth: {
-        user: testAccount.user,
-        pass: testAccount.pass
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
       }
     });
 
     const mailOptions = {
-      from: '\"Inventario River\" <noreply@inventarioriver.com>',
+      from: `"AFA ID" <${process.env.SMTP_USER}>`,
       to: toEmail,
       subject: 'Item de inventario registrado',
       text: `Hola ${encargadoNombre}, el producto ${nombreProducto} fue registrado correctamente.`
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('Correo de inventario enviado:', nodemailer.getTestMessageUrl(info));
+    console.log('Correo de inventario enviado a:', toEmail);
     return info;
   } catch (error) {
-    console.warn('No se pudo enviar el correo de inventario. Se usa confirmacion local.', error.message);
+    console.error('Error al enviar el correo real de inventario:', error.message);
     return fallback;
   }
 }
-
-

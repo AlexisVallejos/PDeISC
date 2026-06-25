@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const termsModal = document.getElementById('termsModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
     const termsBody = document.getElementById('termsBody');
-    const scrollDownBtn = document.getElementById('scrollDownBtn');
+    const acceptTermsBtn = document.getElementById('acceptTermsBtn');
     const termsCheckbox = document.getElementById('termsCheckbox');
 
     openTermsModal.addEventListener('click', (e) => {
@@ -71,19 +71,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target === termsModal) closeTerms();
     });
 
-    termsBody.addEventListener('scroll', () => {
-        const isAtBottom = termsBody.scrollHeight - termsBody.scrollTop <= termsBody.clientHeight + 5;
-        if (isAtBottom) {
+    if (acceptTermsBtn) {
+        acceptTermsBtn.addEventListener('click', () => {
             termsCheckbox.disabled = false;
             termsCheckbox.checked = true;
-            scrollDownBtn.innerHTML = '<i class="bi bi-check-all"></i> Terminos leidos y aceptados';
-            scrollDownBtn.style.background = 'var(--success)';
-        }
-    });
-
-    scrollDownBtn.addEventListener('click', () => {
-        termsBody.scrollTo({ top: termsBody.scrollHeight, behavior: 'smooth' });
-    });
+            closeTerms();
+        });
+    }
 
     const showToast = (msg, type = 'success') => {
         const toast = document.createElement('div');
@@ -162,8 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tramiteInput.setAttribute('required', 'true');
         termsCheckbox.checked = false;
         termsCheckbox.disabled = true;
-        scrollDownBtn.innerHTML = '<i class="bi bi-arrow-down-circle"></i> Bajar hasta el final para aceptar';
-        scrollDownBtn.style.background = '';
 
         showToast('Formulario limpiado.', 'success');
     };

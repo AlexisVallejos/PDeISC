@@ -38,5 +38,5 @@ app.use(express.static(path.join(__dirname, 'public'), {
 app.post('/api/socios', registerSocio);
 
 app.listen(PORT, () => {
-  console.log(`Servidor de Registro Socios River corriendo en el puerto http://localhost:${PORT}`);
+  console.log(`Servidor AFA ID - Registro de Socios corriendo en http://localhost:${PORT}`);
 });
