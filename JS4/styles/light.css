@@ -1,0 +1,25 @@
+:root {
+  --bg: #f7f0e5;
+  --surface: rgba(255, 251, 245, 0.86);
+  --surface-strong: #fffdfa;
+  --text: #221d18;
+  --muted: #6f6558;
+  --accent: #cf6e3d;
+  --accent-soft: rgba(207, 110, 61, 0.14);
+  --line: rgba(34, 29, 24, 0.12);
+  --shadow: 0 24px 48px rgba(82, 61, 38, 0.12);
+}
+
+html[data-theme="light"] body {
+  background:
+    radial-gradient(circle at top left, rgba(207, 110, 61, 0.18), transparent 22%),
+    radial-gradient(circle at bottom right, rgba(45, 128, 104, 0.12), transparent 28%),
+    linear-gradient(180deg, #fffaf3 0%, var(--bg) 100%);
+  color: var(--text);
+}
+
+.floating-control {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}

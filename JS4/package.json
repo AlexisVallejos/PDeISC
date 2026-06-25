@@ -1,0 +1,19 @@
+{
+  "name": "js4-trabajo-practico",
+  "version": "1.0.0",
+  "description": "Trabajo practico con launcher y servidores separados por punto.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:punto1": "node modules/ejercicio01_fetch/server.js",
+    "start:punto2": "node modules/ejercicio02_formulario/server.js",
+    "start:punto3": "node modules/ejercicio03_busqueda/server.js",
+    "start:punto4": "node modules/ejercicio04_alumnos/server.js",
+    "start:all": "node tools/start-all.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "range-parser": "^1.2.1"
+  }
+}

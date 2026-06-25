@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Launcher JS4</title>
+    <link rel="stylesheet" href="/styles/bootstrap.min.css" />
+    <link rel="stylesheet" href="/shared/common.css" />
+    <link rel="stylesheet" href="/styles/light.css" />
+    <link rel="stylesheet" href="/styles/dark.css" />
+    <link rel="stylesheet" href="/styles/launcher.css" />
+  </head>
+  <body>
+    <main class="launcher-shell">
+      <section class="hero-block">
+        <div class="hero-content">
+          <p class="hero-kicker">JS4 con servidores separados</p>
+          <h1>Launcher principal JS4</h1>
+          <p class="hero-copy">
+            Cada punto corre en su propio servidor Express, con acceso directo
+            a los cuatro ejercicios del trabajo practico.
+          </p>
+        </div>
+        <div class="hero-summary" aria-label="Resumen del trabajo practico">
+          <span class="summary-number">4</span>
+          <span class="summary-label">ejercicios activos</span>
+        </div>
+      </section>
+
+      <section class="launcher-panel">
+        <div class="section-heading">
+          <p class="hero-kicker">Servidores</p>
+          <h2>Elegir ejercicio</h2>
+        </div>
+        <div id="launcher-grid" class="row g-4"></div>
+      </section>
+    </main>
+
+    <button id="theme-btn" class="theme-btn" type="button" aria-label="Cambiar tema">
+      <svg class="floating-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3a1 1 0 0 1 1 1v1.1a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1Zm0 14a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm9-6a1 1 0 0 1-1 1h-1.1a1 1 0 1 1 0-2H20a1 1 0 0 1 1 1ZM6.2 6.2a1 1 0 0 1 0 1.4l-.8.8a1 1 0 1 1-1.4-1.4l.8-.8a1 1 0 0 1 1.4 0Zm12.2 0a1 1 0 0 1 1.4 0l.8.8a1 1 0 1 1-1.4 1.4l-.8-.8a1 1 0 0 1 0-1.4ZM4 11a1 1 0 1 1 0 2H2.9a1 1 0 1 1 0-2H4Zm1.4 6.2a1 1 0 0 1 1.4 1.4l-.8.8a1 1 0 0 1-1.4-1.4l.8-.8Zm13.2 0 .8.8a1 1 0 0 1-1.4 1.4l-.8-.8a1 1 0 0 1 1.4-1.4ZM12 18.9a1 1 0 0 1 1 1V21a1 1 0 1 1-2 0v-1.1a1 1 0 0 1 1-1Z"/>
+      </svg>
+      <span class="sr-only">Cambiar tema</span>
+    </button>
+
+    <button id="back-to-top" class="back-to-top" type="button" aria-label="Volver arriba">
+      <svg class="floating-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5.3 4.6 12.7a1 1 0 0 0 1.4 1.4l5-5V20a1 1 0 1 0 2 0V9.1l5 5a1 1 0 0 0 1.4-1.4L12 5.3Z"/>
+      </svg>
+      <span class="sr-only">Subir</span>
+    </button>
+
+    <script type="module" src="/scripts/main.js"></script>
+  </body>
+</html>

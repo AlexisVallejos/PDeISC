@@ -1,0 +1,67 @@
+.content-panel {
+  min-height: 420px;
+}
+
+.api-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.6fr);
+  gap: 1rem;
+}
+
+.api-panel,
+.students-panel {
+  padding: 1.35rem;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+}
+
+.api-panel {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+
+.api-panel h2,
+.students-heading h2 {
+  margin: 0;
+}
+
+.route-box {
+  display: block;
+  padding: 1rem;
+  border-radius: 18px;
+  border: 1px dashed var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.students-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.count-chip {
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+@media (max-width: 991.98px) {
+  .api-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .students-heading {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,7 @@
+﻿html[data-theme="dark"] body {
+  background:
+    radial-gradient(circle at top left, rgba(255, 157, 99, 0.15), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(81, 196, 154, 0.12), transparent 30%),
+    linear-gradient(180deg, #091018 0%, var(--bg) 100%);
+  color: var(--text);
+}
