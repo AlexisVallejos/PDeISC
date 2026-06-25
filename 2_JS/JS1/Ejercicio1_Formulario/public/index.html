@@ -4,132 +4,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuarios | Premium Design</title>
-    <meta name="description" content="Formulario de registro de usuarios dinámico con validaciones.">
-    <!-- fuentes de google -->
+    <title>Gran Sorteo | Vase Company</title>
+    <meta name="description" content="Sorteo exclusivo de Vase Company. Registrate para ganar premios increíbles.">
+    <!-- Fuentes de Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- iconos de bootstrap -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+    <!-- Iconos de Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- mis estilos -->
+    <!-- Estilos -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-    <button id="themeToggleBtn" class="floating-btn floating-theme" type="button" aria-label="Cambiar tema"><i data-lucide="moon" aria-hidden="true"></i><span>Modo oscuro</span></button>
-    <button id="scrollTopBtn" class="floating-btn floating-top" type="button" aria-label="Subir al inicio"><i data-lucide="arrow-up" aria-hidden="true"></i></button>
+    <button id="themeToggleBtn" class="floating-btn floating-theme" type="button" aria-label="Cambiar tema">
+        <i data-lucide="moon" aria-hidden="true"></i><span>Modo oscuro</span>
+    </button>
+    <button id="scrollTopBtn" class="floating-btn floating-top" type="button" aria-label="Subir al inicio">
+        <i data-lucide="arrow-up" aria-hidden="true"></i>
+    </button>
+
     <div class="background-elements">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
     </div>
 
-    <main class="container">
-        <section class="form-section">
-            <div class="form-header">
-                <h1>Únete a nosotros</h1>
-                <p>Completa el formulario para registrarte en nuestra plataforma.</p>
-            </div>
-
-            <!-- las notificaciones toast para no usar alerts -->
-            <div id="toast-container" class="toast-container"></div>
-
-            <!-- el form de registro -->
-            <form id="registrationForm" class="registration-form" novalidate>
-                <!-- para elegir como leer los datos con js -->
-                <div class="input-group full-width">
-                    <label for="jsMethod">Método de Lectura JS:</label>
-                    <select id="jsMethod" name="jsMethod" class="input-field select-field">
-                        <option value="1">1. getElementById / querySelector</option>
-                        <option value="2">2. document.forms</option>
-                        <option value="3">3. FormData</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label for="name">Nombre</label>
-                    <input type="text" id="name" name="name" class="input-field" placeholder="Ej. Juan" minlength="3"
-                        maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" required>
-                    <span class="error-message" id="nameError">El nombre debe tener entre 3 y 100 caracteres y no
-                        contener números.</span>
-                </div>
-
-                <div class="input-group">
-                    <label for="surname">Apellido</label>
-                    <input type="text" id="surname" name="surname" class="input-field" placeholder="Ej. Pérez"
-                        minlength="2" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" required>
-                    <span class="error-message" id="surnameError">El apellido debe tener entre 2 y 100 caracteres y no
-                        contener números.</span>
-                </div>
-
-                <div class="input-group full-width">
-                    <label>Correo Electrónico</label>
-                    <div class="email-composite">
-                        <input 
-                            type="text" 
-                            id="emailUser" 
-                            name="emailUser" 
-                            class="input-field" 
-                            placeholder="juan"
-                            minlength="3"
-                            maxlength="64"
-                            pattern="^[a-zA-Z0-9._-]+$"
-                            required>
-                        <span class="email-separator">@</span>
-                        <input 
-                            type="text" 
-                            id="emailDomain" 
-                            name="emailDomain" 
-                            class="input-field" 
-                            placeholder="gmail"
-                            minlength="2"
-                            maxlength="63"
-                            pattern="^[a-zA-Z0-9-]+$"
-                            required>
-                        <select id="emailTld" name="emailTld" class="input-field select-field" required>
-                            <option value=".com">.com</option>
-                            <option value=".ar">.ar</option>
-                            <option value=".net">.net</option>
-                            <option value=".org">.org</option>
-                            <option value=".edu">.edu</option>
-                        </select>
+    <div class="page-wrapper">
+        <main class="landing-container">
+            
+            <!-- SECCIÓN IZQUIERDA: HERO / BRANDING -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <div class="brand-badge">VASE COMPANY</div>
+                    <h1 class="hero-title">El Gran <em>Sorteo</em> de la Temporada</h1>
+                    <p class="hero-text">Registrate completando el formulario y participá para ganar una de nuestras exclusivas colecciones de piezas decorativas. Elevá el estilo de tus espacios con Vase.</p>
+                    
+                    <div class="hero-features">
+                        <div class="feature">
+                            <i class="bi bi-gift-fill"></i>
+                            <span>Premios de Lujo</span>
+                        </div>
+                        <div class="feature">
+                            <i class="bi bi-clock-fill"></i>
+                            <span>Sorteo Mensual</span>
+                        </div>
+                        <div class="feature">
+                            <i class="bi bi-shield-check"></i>
+                            <span>Registro Seguro</span>
+                        </div>
                     </div>
-                    <span class="error-message" id="emailError">Ingresa un usuario y dominio válidos (solo letras, números y puntos/guiones).</span>
+                </div>
+                <div class="hero-overlay"></div>
+            </section>
+
+            <!-- SECCIÓN DERECHA: FORMULARIO Y PARTICIPANTES -->
+            <section class="interactive-section">
+                
+                <div id="toast-container" class="toast-container"></div>
+
+                <div class="glass-card form-card">
+                    <div class="card-header">
+                        <h2>Ticket de Participación</h2>
+                        <p>Ingresá tus datos para asegurar tu lugar en el sorteo.</p>
+                    </div>
+
+                    <form id="registrationForm" class="registration-form" novalidate>
+                        
+                        <!-- SELECTOR TÉCNICO OCULTO/MINIMALISTA -->
+                        <div class="input-group hidden-technical">
+                            <label for="jsMethod">Método de Lectura (Técnico):</label>
+                            <select id="jsMethod" name="jsMethod" class="input-field select-field">
+                                <option value="1">1. getElementById / querySelector</option>
+                                <option value="2">2. document.forms</option>
+                                <option value="3">3. FormData</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="name">Nombre</label>
+                                <div class="input-wrapper">
+                                    <i class="bi bi-person input-icon"></i>
+                                    <input type="text" id="name" name="name" class="input-field has-icon" placeholder="Ej. Ana" minlength="3" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" required>
+                                </div>
+                                <span class="error-message" id="nameError">Mínimo 3 letras, sin números.</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="surname">Apellido</label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="surname" name="surname" class="input-field" placeholder="Ej. Silva" minlength="2" maxlength="100" pattern="^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$" required>
+                                </div>
+                                <span class="error-message" id="surnameError">Mínimo 2 letras, sin números.</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group full-width">
+                            <label>Correo Electrónico de Contacto</label>
+                            <div class="email-composite">
+                                <input type="text" id="emailUser" name="emailUser" class="input-field" placeholder="ana.silva" minlength="3" maxlength="64" pattern="^[a-zA-Z0-9._-]+$" required>
+                                <span class="email-separator">@</span>
+                                <input type="text" id="emailDomain" name="emailDomain" class="input-field domain-input" placeholder="gmail" minlength="2" maxlength="63" pattern="^[a-zA-Z0-9-]+$" required>
+                                <select id="emailTld" name="emailTld" class="input-field select-field tld-select" required>
+                                    <option value=".com">.com</option>
+                                    <option value=".ar">.ar</option>
+                                    <option value=".net">.net</option>
+                                </select>
+                            </div>
+                            <span class="error-message" id="emailError">Correo inválido. Revisá usuario y dominio.</span>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="clearBtn">
+                                <i class="bi bi-eraser"></i> Limpiar
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <span class="btn-text">¡Participar Ahora!</span>
+                                <span class="loader" id="btnLoader" style="display: none;"></span>
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
-                <div class="form-actions full-width">
-                    <button type="button" class="clear-btn" id="clearBtn">Limpiar campos</button>
-                    <button type="submit" class="submit-btn" id="submitBtn">
-                        <span class="btn-text">Registrar Usuario</span>
-                        <span class="loader" id="btnLoader" style="display: none;"></span>
-                    </button>
+                <!-- SECCIÓN DE PARTICIPANTES (Live Feed) -->
+                <div class="glass-card participants-card">
+                    <div class="card-header small-header">
+                        <h3><i class="bi bi-people-fill"></i> Últimos Participantes</h3>
+                        <span class="live-badge">En vivo</span>
+                    </div>
+
+                    <div class="users-list-container">
+                        <ul id="usersList" class="users-list">
+                            <!-- Inyección JS -->
+                            <li class="empty-state" id="emptyState">
+                                <i class="bi bi-ticket-perforated"></i>
+                                <p>Aún no hay registrados. ¡Sé el primero en participar!</p>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </form>
-        </section>
 
-        <section class="users-section">
-            <div class="users-header">
-                <h2>Usuarios Registrados</h2>
-                <p>Lista dinámica actualizada en tiempo real.</p>
-            </div>
+            </section>
+        </main>
+    </div>
 
-            <div class="users-list-container">
-                <ul id="usersList" class="users-list">
-                    <!-- aca vamos metiendo a los usuarios con js -->
-                    <li class="empty-state" id="emptyState">
-                        <i class="bi bi-person-plus" style="font-size: 3rem; color: var(--primary); margin-bottom: 1rem;"></i>
-                        <p>Aún no hay usuarios registrados.</p>
-                    </li>
-                </ul>
-            </div>
-        </section>
-    </main>
-
-    <!-- los scripts de js -->
     <script src="js/formHandlers.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="config/theme.js"></script>
     <script src="js/main.js"></script>
 </body>
-
 </html>
