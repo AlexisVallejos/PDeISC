@@ -17,116 +17,38 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/diario.css" />
+    <link rel="stylesheet" href="styles/index.css" />
   </head>
   <body>
     <!-- HEADER -->
-    <header>
+                                <header>
       <div class="header-top container-fluid px-4">
         <div class="d-flex justify-content-between">
           <span class="fecha">Jueves 26 de Marzo de 2026</span>
           <span>Edición digital</span>
         </div>
       </div>
-
-      <div class="cabeza-principal container">
-        <h1 class="titulo-diario">
-          <a href="index.html" style="text-decoration: none; color: inherit"
-            >Pepito Informa</a
-          >
-        </h1>
-        <p class="subtitulo">lee lo que querés leer</p>
-        <div class="header-line"></div>
-      </div>
-
-      <!-- Bootstrap navbar colapsable en mobile -->
-      <nav
-        class="nav-categorias navbar navbar-expand-md"
-        aria-label="Categorías"
-      >
+      <nav class="nav-categorias navbar navbar-expand-lg align-items-center" aria-label="Categorías">
         <div class="container">
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navMenu"
-            aria-controls="navMenu"
-            aria-expanded="false"
-            aria-label="Abrir menú"
-          >
+          <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <img src="public/logo.png" alt="Pepitos Informa Logo" style="height: 90px; object-fit: contain;">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Abrir menú">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navMenu">
-            <ul class="navbar-nav mx-auto">
-              <li class="nav-item">
-                <a class="nav-link activo" href="index.html">Portada</a>
-              </li>
-
-              <input type="checkbox" id="toggle-popup" class="popup-check" />
-
-              <input type="checkbox" id="toggle-popup" />
-
-              <li class="nav-item">
-                <label
-                  for="toggle-popup"
-                  class="nav-link"
-                  style="cursor: pointer"
-                  >Suscribete</label
-                >
-              </li>
-             <!-- creo una clase llapado popup para que me muestre una ventana al tocar el boton -->
-              <div class="popup-fondo">
-                <div class="modal-dialog-centered">
-                  <div class="modal-content">
-                    <label for="toggle-popup" class="btn-close-custom"
-                      >&times;</label
-                    >
-                    <div class="textosus">
-                      <h4 class="text-center mb-3">Suscribete!</h4>
-                    </div>
-                    <form>
-                       <!-- creo un formulario de tipo email y que requiera si o si el @gmail -->
-                      <input
-                        type="email"
-                        class="form-control"
-                        placeholder="tu@email.com"
-                        required
-                      />
-                      <div class="invalid-feedback">
-                        Formato de correo no válido.
-                      </div>
-                      <div class="valid-feedback">¡Email correcto!</div>
-                      <button type="submit" class="btn btn-primary w-100">
-                        Recibir Noticias
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-               <!-- agrego li con clase donde armo el diiseño y con texto quue me redireccione a una subpagina -->
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/politica.html">Política</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/economia.html">Economía</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/mundo.html">Mundo</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/deportes.html">Deportes</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/tecnologias.html"
-                  >Tecnologías</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/espectaculo.html"
-                  >Espectáculo</a
-                >
-              </li>
+          <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navMenu">
+            <ul class="navbar-nav mx-auto align-items-lg-center">
+              <li class="nav-item"><a class="nav-link" href="index.html">Portada</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/politica.html">Política</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/economia.html">Economía</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/mundo.html">Mundo</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/deportes.html">Deportes</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/tecnologias.html">Tecnologías</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/espectaculo.html">Espectáculo</a></li>
             </ul>
+            <div class="d-flex mt-3 mt-lg-0 mb-3 mb-lg-0">
+              <label for="toggle-popup" class="btn btn-suscribirse fw-bold px-4 text-uppercase">Suscribirse</label>
+            </div>
           </div>
         </div>
       </nav>
@@ -141,7 +63,7 @@
       >
         <div class="col-md-7">
           <a
-            href="articulos/acdc.html"
+            href="pages/articulos/articulo-1.html"
             class="noticia-principal-imagen"
             aria-label="Ir a nota: AC/DC"
           >
@@ -157,7 +79,7 @@
           <div class="noticia-principal-texto">
             <span class="categoria-tag">ESPECTÁCULO</span>
             <h2>
-              <a href="articulos/acdc.html"
+              <a href="pages/articulos/articulo-1.html"
                 >¿Se suspenden los shows de AC/DC en Argentina tras la
                 internación de Stevie Young?</a
               >
@@ -167,7 +89,7 @@
               Qué dice el parte oficial y cuál es la situación de los recitales
               en River.
             </p>
-            <a href="articulos/acdc.html" class="btn-leer-mas"
+            <a href="pages/articulos/articulo-1.html" class="btn-leer-mas"
               >Leer nota completa</a
             >
           </div>
@@ -188,7 +110,7 @@
         <div class="col">
           <article class="tarjeta">
             <div class="tarjeta-img-wrap">
-              <a href="articulos/carne.html" tabindex="-1" aria-hidden="true">
+              <a href="pages/articulos/articulo-4.html" tabindex="-1" aria-hidden="true">
                 <img
                   src="https://media.minutouno.com/p/94efa31aeafc3b2a52d1b0027a2d9901/adjuntos/150/imagenes/043/243/0043243503/255x191/867x504:887x524/carne-vacuna.jpg"
                   alt="Carne vacuna en carnicería"
@@ -199,7 +121,7 @@
             </div>
             <div class="tarjeta-body">
               <h3>
-                <a href="articulos/carne.html"
+                <a href="pages/articulos/articulo-4.html"
                   >Lujo para pocos: en febrero, la carne aumentó más de un 7% y
                   se vuelve impagable para los argentinos</a
                 >
@@ -210,7 +132,7 @@
               </p>
               <div class="tarjeta-footer">
                 <span class="tiempo">19 marzo 2026 · 17:59</span>
-                <a href="articulos/carne.html" class="btn-leer-mas">Ver más</a>
+                <a href="pages/articulos/articulo-4.html" class="btn-leer-mas">Ver más</a>
               </div>
             </div>
           </article>
@@ -219,7 +141,7 @@
         <div class="col">
           <article class="tarjeta">
             <div class="tarjeta-img-wrap">
-              <a href="articulos/anses.html" tabindex="-1" aria-hidden="true">
+              <a href="pages/articulos/articulo-3.html" tabindex="-1" aria-hidden="true">
                 <img
                   src="https://media.minutouno.com/p/9595b58b330da0e2ce2f239a15f29163/adjuntos/150/imagenes/042/296/0042296134/anses-auhjpg.jpg"
                   alt="Sede de ANSES"
@@ -230,7 +152,7 @@
             </div>
             <div class="tarjeta-body">
               <h3>
-                <a href="articulos/anses.html"
+                <a href="pages/articulos/articulo-3.html"
                   >ANSES: los montos confirmados para los beneficiarios de la
                   Tarjeta Alimentar en marzo</a
                 >
@@ -241,7 +163,7 @@
               </p>
               <div class="tarjeta-footer">
                 <span class="tiempo">19 marzo 2026 · 07:20</span>
-                <a href="articulos/anses.html" class="btn-leer-mas">Ver más</a>
+                <a href="pages/articulos/articulo-3.html" class="btn-leer-mas">Ver más</a>
               </div>
             </div>
           </article>
@@ -250,7 +172,7 @@
         <div class="col">
           <article class="tarjeta">
             <div class="tarjeta-img-wrap">
-              <a href="articulos/coudet.html" tabindex="-1" aria-hidden="true">
+              <a href="pages/articulos/articulo-5.html" tabindex="-1" aria-hidden="true">
                 <img
                   src="https://media.minutouno.com/p/6af2388e06760db89e567584d33bb3e3/adjuntos/150/imagenes/043/246/0043246832/610x0/smart/coudet-2.jpg"
                   alt="Eduardo Coudet, entrenador de River"
@@ -261,7 +183,7 @@
             </div>
             <div class="tarjeta-body">
               <h3>
-                <a href="articulos/coudet.html"
+                <a href="pages/articulos/articulo-5.html"
                   >Chacho Coudet bajó a cinco jugadores de River a Reserva para
                   sumar minutos ante Atlético Tucumán</a
                 >
@@ -272,7 +194,7 @@
               </p>
               <div class="tarjeta-footer">
                 <span class="tiempo">19 marzo 2026 · 17:15</span>
-                <a href="articulos/coudet.html" class="btn-leer-mas">Ver más</a>
+                <a href="pages/articulos/articulo-5.html" class="btn-leer-mas">Ver más</a>
               </div>
             </div>
           </article>
@@ -281,7 +203,7 @@
         <div class="col">
           <article class="tarjeta">
             <div class="tarjeta-img-wrap">
-              <a href="articulos/oms.html" tabindex="-1" aria-hidden="true">
+              <a href="pages/articulos/articulo-9.html" tabindex="-1" aria-hidden="true">
                 <img
                   src="https://media.minutouno.com/p/9498c9b904ff59290595214cb5b6d65f/adjuntos/150/imagenes/043/246/0043246627/610x0/665x392:685x412/tedros-adhanom-ghebreyesus.jpg"
                   alt="Tedros Adhanom Ghebreyesus, director general de la OMS"
@@ -292,7 +214,7 @@
             </div>
             <div class="tarjeta-body">
               <h3>
-                <a href="articulos/oms.html"
+                <a href="pages/articulos/articulo-9.html"
                   >La OMS advirtió que la salida de Argentina "la hará menos
                   segura" y cuestionó la decisión del Gobierno</a
                 >
@@ -303,7 +225,7 @@
               </p>
               <div class="tarjeta-footer">
                 <span class="tiempo">19 marzo 2026 · 16:52</span>
-                <a href="articulos/oms.html" class="btn-leer-mas">Ver más</a>
+                <a href="pages/articulos/articulo-9.html" class="btn-leer-mas">Ver más</a>
               </div>
             </div>
           </article>
@@ -312,7 +234,7 @@
         <div class="col">
           <article class="tarjeta">
             <div class="tarjeta-img-wrap">
-              <a href="articulos/adorni.html" tabindex="-1" aria-hidden="true">
+              <a href="pages/articulos/articulo-2.html" tabindex="-1" aria-hidden="true">
                 <img
                   src="https://media.minutouno.com/p/88c4b962daa0a81c0887d96dcfcbe2ed/adjuntos/150/imagenes/043/246/0043246452/adorni-milei.jpg"
                   alt="Manuel Adorni junto a Javier Milei"
@@ -323,7 +245,7 @@
             </div>
             <div class="tarjeta-body">
               <h3>
-                <a href="articulos/adorni.html"
+                <a href="pages/articulos/articulo-2.html"
                   >Irónico posteo de Manuel Adorni en medio de rumores de
                   salida: "Flamante jefe de Gabinete"</a
                 >
@@ -334,7 +256,7 @@
               </p>
               <div class="tarjeta-footer">
                 <span class="tiempo">19 marzo 2026 · 14:38</span>
-                <a href="articulos/adorni.html" class="btn-leer-mas">Ver más</a>
+                <a href="pages/articulos/articulo-2.html" class="btn-leer-mas">Ver más</a>
               </div>
             </div>
           </article>
@@ -343,7 +265,7 @@
         <div class="col">
           <article class="tarjeta">
             <div class="tarjeta-img-wrap">
-              <a href="articulos/magistv.html" tabindex="-1" aria-hidden="true">
+              <a href="pages/articulos/articulo-8.html" tabindex="-1" aria-hidden="true">
                 <img
                   src="https://media.minutouno.com/p/71f52537fef0d6617c2845627cfeff14/adjuntos/150/imagenes/043/158/0043158367/610x0/smart/a-magis-tv-fuera-servicio-xuper-tv-no-opcion-segura-alternativas-existen-1121858-141148.png"
                   alt="Pantalla con logos de Magis TV y Xuper TV"
@@ -354,7 +276,7 @@
             </div>
             <div class="tarjeta-body">
               <h3>
-                <a href="articulos/magistv.html"
+                <a href="pages/articulos/articulo-8.html"
                   >Borrá ya Magis TV y Xuper TV: te roban los datos del banco y
                   hay 3 apps gratis para reemplazarlas</a
                 >
@@ -365,7 +287,7 @@
               </p>
               <div class="tarjeta-footer">
                 <span class="tiempo">09 febrero 2026</span>
-                <a href="articulos/magistv.html" class="btn-leer-mas"
+                <a href="pages/articulos/articulo-8.html" class="btn-leer-mas"
                   >Ver más</a
                 >
               </div>
@@ -377,7 +299,7 @@
           <article class="tarjeta">
             <div class="tarjeta-img-wrap">
               <a
-                href="articulos/desempleo.html"
+                href="pages/articulos/articulo-6.html"
                 tabindex="-1"
                 aria-hidden="true"
               >
@@ -391,7 +313,7 @@
             </div>
             <div class="tarjeta-body">
               <h3>
-                <a href="articulos/desempleo.html"
+                <a href="pages/articulos/articulo-6.html"
                   >Fin del relato: el desempleo subió al 7,5% y llegó a su nivel
                   más alto desde la pandemia</a
                 >
@@ -402,7 +324,7 @@
               </p>
               <div class="tarjeta-footer">
                 <span class="tiempo">19 marzo 2026 · 09:25</span>
-                <a href="articulos/desempleo.html" class="btn-leer-mas"
+                <a href="pages/articulos/articulo-6.html" class="btn-leer-mas"
                   >Ver más</a
                 >
               </div>
@@ -414,7 +336,7 @@
           <article class="tarjeta">
             <div class="tarjeta-img-wrap">
               <a
-                href="articulos/seleccion.html"
+                href="pages/articulos/articulo-10.html"
                 tabindex="-1"
                 aria-hidden="true"
               >
@@ -428,7 +350,7 @@
             </div>
             <div class="tarjeta-body">
               <h3>
-                <a href="articulos/seleccion.html"
+                <a href="pages/articulos/articulo-10.html"
                   >La Selección Argentina prepara otro amistoso para fines de
                   marzo: quién será el rival</a
                 >
@@ -439,7 +361,7 @@
               </p>
               <div class="tarjeta-footer">
                 <span class="tiempo">19 marzo 2026 · 12:50</span>
-                <a href="articulos/seleccion.html" class="btn-leer-mas"
+                <a href="pages/articulos/articulo-10.html" class="btn-leer-mas"
                   >Ver más</a
                 >
               </div>
@@ -450,7 +372,7 @@
         <div class="col">
           <article class="tarjeta">
             <div class="tarjeta-img-wrap">
-              <a href="articulos/israel.html" tabindex="-1" aria-hidden="true">
+              <a href="pages/articulos/articulo-7.html" tabindex="-1" aria-hidden="true">
                 <img
                   src="https://media.minutouno.com/p/9af0bb2f26c9e4ebd4a2f6e0cb18e06b/adjuntos/150/imagenes/043/244/0043244041/610x0/906x570:926x590/beirut.jpg"
                   alt="Vista aérea de Beirut tras bombardeos"
@@ -461,7 +383,7 @@
             </div>
             <div class="tarjeta-body">
               <h3>
-                <a href="articulos/israel.html"
+                <a href="pages/articulos/articulo-7.html"
                   >Israel atacó el Líbano: 12 personas murieron y 41 resultaron
                   heridas en dos bombardeos sobre Beirut</a
                 >
@@ -472,7 +394,7 @@
               </p>
               <div class="tarjeta-footer">
                 <span class="tiempo">09 febrero 2026</span>
-                <a href="articulos/israel.html" class="btn-leer-mas">Ver más</a>
+                <a href="pages/articulos/articulo-7.html" class="btn-leer-mas">Ver más</a>
               </div>
             </div>
           </article>
@@ -483,9 +405,9 @@
     <!-- FOOTER -->
     <footer>
       <div class="container">
-        <div class="footer-inner">
-          <span class="footer-logo">Pepito Informa</span>
-          <p>© 2026 Pepito Informa · Todos los derechos reservados</p>
+        <div class="footer-inner d-flex flex-column align-items-center gap-3">
+          <img src="public/logo.png" alt="Pepitos Informa Logo" style="height: 120px;">
+          <p class="mb-0 text-center text-white">© 2026 PEPITOS INFORMA · Todos los derechos reservados</p>
           <nav class="footer-links" aria-label="Enlaces del pie">
             <a href="privacidad.html">Política de privacidad</a>
             <a href="terminos.html">Términos de uso</a>
@@ -495,6 +417,36 @@
       </div>
     </footer>
 
+    <button class="floating-btn btn-theme-toggle" id="btn-theme-toggle" title="Alternar Modo Oscuro/Claro">🌓</button>
+    <button class="floating-btn btn-back-top" id="btn-back-top" title="Volver arriba">⬆️</button>
+
+    <!-- MODAL DE SUSCRIPCIÓN -->
+    <input type="checkbox" id="toggle-popup" />
+    <div class="popup-fondo">
+      <div class="modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+          <label for="toggle-popup" class="btn-close-custom" aria-label="Cerrar">&times;</label>
+          <div class="mb-4">
+            <h4 class="fw-bold mb-2" style="font-family: var(--fuente-display); color: var(--tinta);">¡Recibí las noticias primero!</h4>
+            <p class="text-muted small">Suscribite a nuestro boletín y no te pierdas de nada.</p>
+          </div>
+          <form id="subscribe-form" class="text-start">
+            <div class="mb-3">
+              <input type="email" class="form-control form-control-lg" id="subscribe-email" placeholder="tu@gmail.com" required>
+            </div>
+            <button type="submit" id="subscribe-btn" class="btn btn-primary btn-lg w-100 fw-bold">Suscribirme</button>
+          </form>
+          <div class="mt-3 text-muted" style="font-size: 0.75rem;">
+            No enviamos spam. Al suscribirte aceptás nuestra política de privacidad.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="public/theme.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="public/subscription.js"></script>
+    <script src="public/contacto.js"></script>
   </body>
 </html>

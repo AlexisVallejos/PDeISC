@@ -17,8 +17,8 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="css/diario.css" />
-    <link rel="stylesheet" href="css/articulo.css" />
+    <link rel="stylesheet" href="styles/index.css" />
+    <link rel="stylesheet" href="styles/articulos.css" />
 
     <style>
       .form-label {
@@ -104,31 +104,78 @@
         font-weight: 600;
       }
 
-      /* Botón */
+      /* Tarjeta Formulario */
+      .contacto-form-card {
+        background: var(--blanco);
+        border: 1px solid var(--gris-claro);
+        border-radius: 16px;
+        padding: 36px 40px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      }
+      .contacto-form-titulo {
+        font-family: var(--fuente-display);
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--tinta-oscura);
+        margin-bottom: 8px;
+      }
+      .contacto-form-bajada {
+        color: var(--gris-medio);
+        font-size: 0.95rem;
+        margin-bottom: 28px;
+        line-height: 1.5;
+      }
+
+      /* Inputs Premium */
+      .form-control, .form-select {
+        background-color: rgba(0, 0, 0, 0.02);
+        border: 1px solid var(--gris-claro);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+      }
+      .form-control:focus, .form-select:focus {
+        background-color: var(--blanco);
+        border-color: #800e13;
+        box-shadow: 0 0 0 4px rgba(128, 14, 19, 0.1);
+      }
+      .form-floating > label {
+        color: var(--gris-medio);
+      }
+      .form-floating > .form-control:focus ~ label,
+      .form-floating > .form-control:not(:placeholder-shown) ~ label,
+      .form-floating > .form-select ~ label {
+        color: #800e13;
+        font-weight: 600;
+      }
+
+      /* Botón Premium */
       .btn-enviar {
-        background: var(--tinta);
-        color: var(--papel);
+        background: linear-gradient(135deg, #800e13, #c0392b);
+        color: #fff;
         font-family: var(--fuente-ui);
-        font-size: 1rem;
-        letter-spacing: 0.16em;
+        font-size: 1.05rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        padding: 12px 36px;
+        padding: 16px 36px;
         border: none;
-        border-radius: var(--radio);
+        border-radius: 12px;
+        width: 100%;
         cursor: pointer;
-        transition:
-          background var(--trans-rapida),
-          transform var(--trans-rapida);
+        box-shadow: 0 6px 15px rgba(128, 14, 19, 0.25);
+        transition: all 0.3s ease;
       }
       .btn-enviar:hover {
-        background: var(--acento);
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(128, 14, 19, 0.35);
       }
       .btn-enviar:active {
-        transform: translateY(0);
+        transform: translateY(1px);
+        box-shadow: 0 4px 10px rgba(128, 14, 19, 0.2);
       }
       .btn-enviar:disabled {
-        opacity: 0.6;
+        background: var(--gris-medio);
+        box-shadow: none;
         cursor: not-allowed;
         transform: none;
       }
@@ -153,126 +200,174 @@
         margin-bottom: 8px;
       }
 
-      /* Panel info */
-      .contacto-info {
-        padding: 28px;
+      /* ====== TARJETA DATOS DE CONTACTO (Premium) ====== */
+      .contacto-card {
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        border: 1px solid var(--gris-claro);
         background: var(--blanco);
-        border: 1px solid var(--papel-oscuro);
-        border-radius: var(--radio);
-        box-shadow: var(--sombra);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
-      .contacto-info-titulo {
+      .contacto-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+      }
+
+      .contacto-card-header {
+        background: linear-gradient(135deg, #800e13 0%, #a0121a 50%, #c0392b 100%);
+        padding: 28px 28px 22px;
+        color: #fff;
+      }
+      .contacto-card-titulo {
         font-family: var(--fuente-display);
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: 700;
-        color: var(--tinta);
-        border-bottom: 2px solid var(--tinta);
-        padding-bottom: 10px;
-        margin-bottom: 20px;
+        margin: 0 0 4px;
+        color: #fff;
       }
-      .info-item {
+      .contacto-card-subtitulo {
+        font-family: var(--fuente-cuerpo);
+        font-size: 0.88rem;
+        margin: 0;
+        opacity: 0.85;
+      }
+
+      .contacto-card-body {
+        padding: 24px 28px;
+      }
+
+      .contacto-item {
         display: flex;
-        gap: 14px;
-        align-items: flex-start;
-        margin-bottom: 16px;
+        gap: 16px;
+        align-items: center;
+        padding: 14px 16px;
+        border-radius: 12px;
+        margin-bottom: 8px;
+        transition: background 0.25s ease, transform 0.25s ease;
+        cursor: default;
       }
-      .info-item:last-child {
+      .contacto-item:last-child {
         margin-bottom: 0;
       }
-      .info-icono {
-        width: 36px;
-        height: 36px;
-        background: var(--tinta);
-        color: var(--papel);
-        border-radius: 50%;
+      .contacto-item:hover {
+        background: rgba(128, 14, 19, 0.06);
+        transform: translateX(4px);
+      }
+
+      .contacto-item-icono {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, #800e13, #c0392b);
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1rem;
+        font-size: 1.2rem;
         flex-shrink: 0;
+        box-shadow: 0 3px 10px rgba(128, 14, 19, 0.2);
       }
-      .info-texto strong {
-        display: block;
+
+      .contacto-item-texto {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .contacto-item-label {
         font-family: var(--fuente-ui);
-        font-size: 0.78rem;
+        font-size: 0.72rem;
         letter-spacing: 0.12em;
         text-transform: uppercase;
-        color: var(--tinta);
-        margin-bottom: 2px;
+        color: var(--gris-medio);
+        font-weight: 600;
       }
-      .info-texto span {
-        font-size: 0.87rem;
-        color: var(--gris);
-        line-height: 1.5;
+      .contacto-item-valor {
+        font-family: var(--fuente-cuerpo);
+        font-size: 0.92rem;
+        color: var(--tinta-oscura);
+        line-height: 1.4;
       }
+      .contacto-link {
+        color: var(--acento) !important;
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+      .contacto-link:hover {
+        color: var(--tinta) !important;
+        text-decoration: underline;
+      }
+
+      .contacto-card-footer {
+        background: var(--papel-oscuro);
+        padding: 14px 28px;
+        text-align: center;
+        border-top: 1px solid var(--gris-claro);
+      }
+      .contacto-card-footer p {
+        margin: 0;
+        font-family: var(--fuente-ui);
+        font-size: 0.78rem;
+        letter-spacing: 0.08em;
+        color: var(--gris-medio);
+      }
+
       .aviso-formulario {
         font-size: 0.78rem;
         color: var(--gris-medio);
         font-style: italic;
         line-height: 1.6;
       }
+      /* ====== MEDIA QUERIES (Responsividad) ====== */
+      @media (max-width: 768px) {
+        .contacto-form-card {
+          padding: 24px 20px;
+        }
+        .contacto-form-titulo {
+          font-size: 1.4rem;
+        }
+        .contacto-card-header {
+          padding: 24px 20px 18px;
+        }
+        .contacto-card-body {
+          padding: 20px;
+        }
+        .btn-enviar {
+          padding: 14px 24px;
+        }
+      }
     </style>
+      <link rel="stylesheet" href="styles/legal.css" />
   </head>
   <body>
     <!-- HEADER -->
-    <header>
+                                <header>
       <div class="header-top container-fluid px-4">
         <div class="d-flex justify-content-between">
-          <span class="fecha">Jueves 19 de Marzo de 2026</span>
+          <span class="fecha">Jueves 26 de Marzo de 2026</span>
           <span>Edición digital</span>
         </div>
       </div>
-      <div class="cabeza-principal container">
-        <h1 class="titulo-diario">
-          <a href="index.html" style="text-decoration: none; color: inherit"
-            >Pepito Informa</a
-          >
-        </h1>
-        <p class="subtitulo">lee lo que querés leer</p>
-        <div class="header-line"></div>
-      </div>
-      <nav
-        class="nav-categorias navbar navbar-expand-md"
-        aria-label="Categorías"
-      >
+      <nav class="nav-categorias navbar navbar-expand-lg align-items-center" aria-label="Categorías">
         <div class="container">
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navMenu"
-            aria-expanded="false"
-          >
+          <a class="navbar-brand d-flex align-items-center" href="index.html">
+            <img src="public/logo.png" alt="Pepitos Informa Logo" style="height: 90px; object-fit: contain;">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Abrir menú">
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navMenu">
-            <ul class="navbar-nav mx-auto">
-              <li class="nav-item">
-                <a class="nav-link" href="index.html">Portada</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/politica.html">Política</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/economia.html">Economía</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/mundo.html">Mundo</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/deportes.html">Deportes</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/tecnologias.html"
-                  >Tecnologías</a
-                >
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="navbar/espectaculo.html"
-                  >Espectáculo</a
-                >
-              </li>
+          <div class="collapse navbar-collapse mt-2 mt-lg-0" id="navMenu">
+            <ul class="navbar-nav mx-auto align-items-lg-center">
+              <li class="nav-item"><a class="nav-link" href="index.html">Portada</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/politica.html">Política</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/economia.html">Economía</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/mundo.html">Mundo</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/deportes.html">Deportes</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/tecnologias.html">Tecnologías</a></li>
+              <li class="nav-item"><a class="nav-link" href="pages/categorias/espectaculo.html">Espectáculo</a></li>
             </ul>
+            <div class="d-flex mt-3 mt-lg-0 mb-3 mb-lg-0">
+              <label for="toggle-popup" class="btn btn-suscribirse fw-bold px-4 text-uppercase">Suscribirse</label>
+            </div>
           </div>
         </div>
       </nav>
@@ -299,7 +394,7 @@
       </div>
 
       <div class="articulo-cuerpo">
-        <div class="row g-5 align-items-start">
+        <div class="row g-5 align-items-start mt-5 pt-2">
           <!-- FORMULARIO -->
           <div class="col-lg-7">
             <!-- Confirmación -->
@@ -316,242 +411,154 @@
               </p>
             </div>
 
-            <form id="formulario-contacto" novalidate>
-              <!-- Nombre + Apellido -->
-              <div class="row g-3 mb-3">
-                <div class="col-sm-6">
-                  <label for="nombre" class="form-label">
-                    Nombre <span class="requerido">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="nombre"
-                    name="nombre"
-                    placeholder="Tu nombre"
-                    required
-                    minlength="2"
-                    maxlength="50"
-                    autocomplete="given-name"
-                    aria-describedby="nombre-feedback"
-                  />
-                  <div class="invalid-feedback" id="nombre-feedback">
-                    Ingresá tu nombre (mínimo 2 caracteres).
+            <div class="contacto-form-card">
+              <h2 class="contacto-form-titulo">Envianos tu consulta</h2>
+              <p class="contacto-form-bajada">Completá el formulario a continuación y nos pondremos en contacto a la brevedad.</p>
+
+              <form id="formulario-contacto" novalidate>
+                <!-- Nombre + Apellido -->
+                <div class="row g-3 mb-4">
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Tu nombre" required minlength="2" maxlength="50" autocomplete="given-name" aria-describedby="nombre-feedback" />
+                      <label for="nombre">Nombre <span class="text-danger">*</span></label>
+                      <div class="invalid-feedback" id="nombre-feedback">Ingresá tu nombre (mínimo 2 caracteres).</div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Tu apellido" maxlength="50" autocomplete="family-name" />
+                      <label for="apellido">Apellido (opcional)</label>
+                    </div>
                   </div>
                 </div>
-                <div class="col-sm-6">
-                  <label for="apellido" class="form-label">Apellido</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="apellido"
-                    name="apellido"
-                    placeholder="Tu apellido"
-                    maxlength="50"
-                    autocomplete="family-name"
-                  />
-                </div>
-              </div>
 
-              <!-- Email -->
-              <div class="mb-3">
-                <label for="email" class="form-label">
-                  Correo electrónico <span class="requerido">*</span>
-                </label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="email"
-                  name="email"
-                  placeholder="tu@correo.com"
-                  required
-                  autocomplete="email"
-                  aria-describedby="email-feedback"
-                />
-                <div class="invalid-feedback" id="email-feedback">
-                  Ingresá un correo válido (ej: nombre@dominio.com).
-                </div>
-              </div>
-
-              <!-- Teléfono (opcional) -->
-              <div class="mb-3">
-                <label for="telefono" class="form-label">
-                  Teléfono
-                  <span
-                    style="
-                      color: var(--gris-medio);
-                      font-size: 0.72rem;
-                      text-transform: none;
-                      letter-spacing: 0;
-                      font-family: var(--fuente-cuerpo);
-                    "
-                  >
-                    — opcional</span
-                  >
-                </label>
-                <input
-                  type="tel"
-                  class="form-control"
-                  id="telefono"
-                  name="telefono"
-                  placeholder="+54 9 11 0000-0000"
-                  pattern="[\+\d\s\-\(\)]{7,20}"
-                  autocomplete="tel"
-                  aria-describedby="telefono-feedback"
-                />
-                <div class="invalid-feedback" id="telefono-feedback">
-                  Formato inválido. Usá números, espacios o guiones (7–20
-                  caracteres).
-                </div>
-              </div>
-
-              <!-- Motivo -->
-              <div class="mb-3">
-                <label for="motivo" class="form-label">
-                  Motivo de contacto <span class="requerido">*</span>
-                </label>
-                <select
-                  class="form-select"
-                  id="motivo"
-                  name="motivo"
-                  required
-                  aria-describedby="motivo-feedback"
-                >
-                  <option value="" disabled selected>
-                    Seleccioná una opción…
-                  </option>
-                  <option value="consulta">Consulta general</option>
-                  <option value="noticia">Enviarnos una noticia o tip</option>
-                  <option value="error">Reportar un error en una nota</option>
-                  <option value="publicidad">Publicidad y auspicios</option>
-                  <option value="otro">Otro</option>
-                </select>
-                <div class="invalid-feedback" id="motivo-feedback">
-                  Seleccioná el motivo de tu consulta.
-                </div>
-              </div>
-
-              <!-- URL de la nota (aparece solo si motivo = "error") -->
-              <div class="mb-3" id="campo-url" style="display: none">
-                <label for="url-nota" class="form-label"
-                  >URL de la nota con el error</label
-                >
-                <input
-                  type="url"
-                  class="form-control"
-                  id="url-nota"
-                  name="url_nota"
-                  placeholder="https://pepitoinforma.com.ar/articulos/..."
-                  aria-describedby="url-nota-feedback"
-                />
-                <div class="invalid-feedback" id="url-nota-feedback">
-                  Ingresá una URL válida (debe empezar con https://).
-                </div>
-              </div>
-
-              <!-- Mensaje -->
-              <div class="mb-3">
-                <label for="mensaje" class="form-label">
-                  Mensaje <span class="requerido">*</span>
-                </label>
-                <textarea
-                  class="form-control"
-                  id="mensaje"
-                  name="mensaje"
-                  rows="5"
-                  placeholder="Escribí tu mensaje aquí…"
-                  required
-                  minlength="10"
-                  maxlength="2000"
-                  style="resize: vertical"
-                  aria-describedby="mensaje-feedback mensaje-contador"
-                ></textarea>
-                <div class="invalid-feedback" id="mensaje-feedback">
-                  El mensaje debe tener al menos 10 caracteres.
-                </div>
-                <div
-                  class="char-counter"
-                  id="mensaje-contador"
-                  aria-live="polite"
-                >
-                  0 / 2000 caracteres
-                </div>
-              </div>
-
-              <!-- Política de privacidad -->
-              <div class="mb-4">
-                <div class="form-check">
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    id="privacidad"
-                    name="privacidad"
-                    required
-                    aria-describedby="privacidad-feedback"
-                    style="margin-top: 3px"
-                  />
-                  <label
-                    class="form-check-label"
-                    for="privacidad"
-                    style="font-size: 0.85rem; color: var(--gris)"
-                  >
-                    Leí y acepto la
-                    <a href="privacidad.html" style="color: var(--acento)"
-                      >Política de privacidad</a
-                    >.
-                    <span class="requerido">*</span>
-                  </label>
-                  <div class="invalid-feedback" id="privacidad-feedback">
-                    Debés aceptar la política de privacidad para continuar.
+                <!-- Email -->
+                <div class="form-floating mb-4">
+                  <input type="email" class="form-control" id="email" name="email" placeholder="tu@gmail.com" required pattern="^[a-zA-Z0-9](\.?[a-zA-Z0-9]){5,29}@gmail\.com$" autocomplete="email" aria-describedby="email-feedback" />
+                  <label for="email">Correo electrónico de Gmail <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback" id="email-feedback">
+                    Ingresá un Gmail válido (letras, números, puntos sin repetir, entre 6 y 30 caracteres antes del @).
                   </div>
                 </div>
-              </div>
 
-              <p class="aviso-formulario mb-4">
-                Los campos con <span style="color: var(--acento)">*</span> son
-                obligatorios. Tu información no será compartida con terceros.
-              </p>
+                <!-- Teléfono (opcional) -->
+                <div class="form-floating mb-4">
+                  <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="+54 9 11 0000-0000" pattern="[\+\d\s\-\(\)]{7,20}" autocomplete="tel" aria-describedby="telefono-feedback" />
+                  <label for="telefono">Teléfono (opcional)</label>
+                  <div class="invalid-feedback" id="telefono-feedback">
+                    Formato inválido. Usá números, espacios o guiones.
+                  </div>
+                </div>
 
-              <button type="submit" class="btn-enviar" id="btn-submit">
-                Enviar mensaje
-              </button>
-            </form>
+                <!-- Motivo -->
+                <div class="form-floating mb-4">
+                  <select class="form-select" id="motivo" name="motivo" required aria-describedby="motivo-feedback">
+                    <option value="" disabled selected>Seleccioná un motivo...</option>
+                    <option value="consulta">Consulta general</option>
+                    <option value="noticia">Enviarnos una noticia o tip</option>
+                    <option value="error">Reportar un error en una nota</option>
+                    <option value="publicidad">Publicidad y auspicios</option>
+                    <option value="otro">Otro</option>
+                  </select>
+                  <label for="motivo">Motivo de contacto <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback" id="motivo-feedback">Seleccioná el motivo de tu consulta.</div>
+                </div>
+
+                <!-- URL de la nota (aparece solo si motivo = "error") -->
+                <div class="form-floating mb-4" id="campo-url" style="display: none">
+                  <input type="url" class="form-control" id="url-nota" name="url_nota" placeholder="https://pepitoinforma.com.ar/..." aria-describedby="url-nota-feedback" />
+                  <label for="url-nota">URL de la nota con el error <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback" id="url-nota-feedback">Ingresá una URL válida (debe empezar con https://).</div>
+                </div>
+
+                <!-- Mensaje -->
+                <div class="form-floating mb-4">
+                  <textarea class="form-control" id="mensaje" name="mensaje" placeholder="Escribí tu mensaje aquí..." required minlength="10" maxlength="2000" style="height: 140px; resize: none" aria-describedby="mensaje-feedback mensaje-contador"></textarea>
+                  <label for="mensaje">Tu mensaje <span class="text-danger">*</span></label>
+                  <div class="invalid-feedback" id="mensaje-feedback">El mensaje debe tener al menos 10 caracteres.</div>
+                  <div class="char-counter mt-1" id="mensaje-contador" aria-live="polite">0 / 2000 caracteres</div>
+                </div>
+
+                <!-- Política de privacidad -->
+                <div class="mb-4 pt-2">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="privacidad" name="privacidad" required aria-describedby="privacidad-feedback" style="margin-top: 4px; cursor: pointer;" />
+                    <label class="form-check-label" for="privacidad" style="font-size: 0.9rem; color: var(--gris-medio); cursor: pointer;">
+                      Leí y acepto la <a href="privacidad.html" style="color: #800e13; font-weight: 500; text-decoration: none;">Política de privacidad</a> <span class="text-danger">*</span>
+                    </label>
+                    <div class="invalid-feedback" id="privacidad-feedback">Debés aceptar la política de privacidad para continuar.</div>
+                  </div>
+                </div>
+
+                <hr style="margin: 24px 0; border-color: var(--gris-claro);">
+
+                <button type="submit" class="btn-enviar" id="btn-submit">
+                  <span style="margin-right: 8px;">Enviar mensaje</span> ➔
+                </button>
+              </form>
+            </div>
           </div>
 
           <!-- PANEL LATERAL -->
           <div class="col-lg-5">
-            <aside class="contacto-info" aria-label="Datos de contacto">
-              <p class="contacto-info-titulo">Datos de contacto</p>
-              <div class="info-item">
-                <div class="info-icono" aria-hidden="true">✉</div>
-                <div class="info-texto">
-                  <strong>Correo electrónico</strong>
-                  <span>redaccion@pepitoinforma.com.ar</span>
+            <aside class="contacto-card" aria-label="Datos de contacto">
+              <!-- Encabezado con gradiente -->
+              <div class="contacto-card-header">
+                <h3 class="contacto-card-titulo">📬 Datos de contacto</h3>
+                <p class="contacto-card-subtitulo">Estamos para ayudarte</p>
+              </div>
+
+              <div class="contacto-card-body">
+                <!-- Email -->
+                <div class="contacto-item">
+                  <div class="contacto-item-icono">✉️</div>
+                  <div class="contacto-item-texto">
+                    <span class="contacto-item-label">Correo electrónico</span>
+                    <a href="mailto:redaccion@pepitoinforma.com.ar" class="contacto-item-valor contacto-link">redaccion@pepitoinforma.com.ar</a>
+                  </div>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="contacto-item">
+                  <div class="contacto-item-icono">📍</div>
+                  <div class="contacto-item-texto">
+                    <span class="contacto-item-label">Redacción</span>
+                    <span class="contacto-item-valor">Ciudad Autónoma de Buenos Aires, Argentina</span>
+                  </div>
+                </div>
+
+                <!-- Horario -->
+                <div class="contacto-item">
+                  <div class="contacto-item-icono">🕐</div>
+                  <div class="contacto-item-texto">
+                    <span class="contacto-item-label">Horario de atención</span>
+                    <span class="contacto-item-valor">Lunes a viernes de 9:00 a 18:00 hs (UTC−3)</span>
+                  </div>
+                </div>
+
+                <!-- Publicidad -->
+                <div class="contacto-item">
+                  <div class="contacto-item-icono">📣</div>
+                  <div class="contacto-item-texto">
+                    <span class="contacto-item-label">Publicidad y auspicios</span>
+                    <a href="mailto:publicidad@pepitoinforma.com.ar" class="contacto-item-valor contacto-link">publicidad@pepitoinforma.com.ar</a>
+                  </div>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="contacto-item">
+                  <div class="contacto-item-icono">📞</div>
+                  <div class="contacto-item-texto">
+                    <span class="contacto-item-label">Teléfono</span>
+                    <span class="contacto-item-valor">+54 11 0000-0000</span>
+                  </div>
                 </div>
               </div>
-              <hr style="border-color: var(--papel-oscuro)" />
-              <div class="info-item">
-                <div class="info-icono" aria-hidden="true">📍</div>
-                <div class="info-texto">
-                  <strong>Redacción</strong>
-                  <span>Ciudad Autónoma de Buenos Aires, Argentina</span>
-                </div>
-              </div>
-              <hr style="border-color: var(--papel-oscuro)" />
-              <div class="info-item">
-                <div class="info-icono" aria-hidden="true">🕐</div>
-                <div class="info-texto">
-                  <strong>Horario de atención</strong>
-                  <span>Lunes a viernes de 9:00 a 18:00 hs (UTC−3)</span>
-                </div>
-              </div>
-              <hr style="border-color: var(--papel-oscuro)" />
-              <div class="info-item">
-                <div class="info-icono" aria-hidden="true">📣</div>
-                <div class="info-texto">
-                  <strong>Publicidad y auspicios</strong>
-                  <span>publicidad@pepitoinforma.com.ar</span>
-                </div>
+
+              <!-- Footer decorativo -->
+              <div class="contacto-card-footer">
+                <p>🇦🇷 Medio digital argentino desde 2026</p>
               </div>
             </aside>
           </div>
@@ -562,10 +569,10 @@
     <!-- FOOTER -->
     <footer>
       <div class="container">
-        <div class="footer-inner">
-          <span class="footer-logo">Pepito Informa</span>
-          <p>© 2026 Pepito Informa · Todos los derechos reservados</p>
-          <nav class="footer-links">
+        <div class="footer-inner d-flex flex-column align-items-center gap-3">
+          <img src="public/logo.png" alt="Pepitos Informa Logo" style="height: 120px;">
+          <p class="mb-0 text-center text-white">© 2026 PEPITOS INFORMA · Todos los derechos reservados</p>
+          <nav class="footer-links" aria-label="Enlaces del pie">
             <a href="privacidad.html">Política de privacidad</a>
             <a href="terminos.html">Términos de uso</a>
             <a href="contacto.html">Contacto</a>
@@ -574,104 +581,36 @@
       </div>
     </footer>
 
+    <button class="floating-btn btn-theme-toggle" id="btn-theme-toggle" title="Alternar Modo Oscuro/Claro">🌓</button>
+    <button class="floating-btn btn-back-top" id="btn-back-top" title="Volver arriba">⬆️</button>
+
+    <!-- MODAL DE SUSCRIPCIÓN -->
+    <input type="checkbox" id="toggle-popup" />
+    <div class="popup-fondo">
+      <div class="modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+          <label for="toggle-popup" class="btn-close-custom" aria-label="Cerrar">&times;</label>
+          <div class="mb-4">
+            <h4 class="fw-bold mb-2" style="font-family: var(--fuente-display); color: var(--tinta);">¡Recibí las noticias primero!</h4>
+            <p class="text-muted small">Suscribite a nuestro boletín y no te pierdas de nada.</p>
+          </div>
+          <form id="subscribe-form" class="text-start">
+            <div class="mb-3">
+              <input type="email" class="form-control form-control-lg" id="subscribe-email" placeholder="tu@gmail.com" required>
+            </div>
+            <button type="submit" id="subscribe-btn" class="btn btn-primary btn-lg w-100 fw-bold">Suscribirme</button>
+          </form>
+          <div class="mt-3 text-muted" style="font-size: 0.75rem;">
+            No enviamos spam. Al suscribirte aceptás nuestra política de privacidad.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="public/theme.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      "use strict";
-
-      const form = document.getElementById("formulario-contacto");
-      const btnSubmit = document.getElementById("btn-submit");
-      const confirmBox = document.getElementById("confirmacion");
-      const campoURL = document.getElementById("campo-url");
-      const motivoSel = document.getElementById("motivo");
-      const mensajeTA = document.getElementById("mensaje");
-      const contador = document.getElementById("mensaje-contador");
-      const urlNota = document.getElementById("url-nota");
-
-      /* ── Contador de caracteres ── */
-      mensajeTA.addEventListener("input", function () {
-        const n = this.value.length;
-        const max = parseInt(this.getAttribute("maxlength"));
-        contador.textContent = n + " / " + max + " caracteres";
-        contador.className = "char-counter";
-        if (n >= max) contador.classList.add("limite");
-        else if (n >= 1800) contador.classList.add("cerca");
-      });
-
-      /* ── Campo URL condicional (solo si motivo = "error") ── */
-      motivoSel.addEventListener("change", function () {
-        const es = this.value === "error";
-        campoURL.style.display = es ? "block" : "none";
-        urlNota.required = es;
-        if (!es) {
-          urlNota.value = "";
-          urlNota.classList.remove("is-invalid", "is-valid");
-        }
-      });
-
-      /* ── Validación campo a campo en tiempo real (activa solo post-submit) ── */
-      function marcarCampo(campo) {
-        if (!campo.checkValidity()) {
-          campo.classList.add("is-invalid");
-          campo.classList.remove("is-valid");
-        } else {
-          campo.classList.remove("is-invalid");
-          campo.classList.add("is-valid");
-        }
-      }
-
-      form.addEventListener("input", function (e) {
-        if (form.classList.contains("was-validated")) marcarCampo(e.target);
-      });
-      form.addEventListener("change", function (e) {
-        if (form.classList.contains("was-validated")) marcarCampo(e.target);
-      });
-
-      /* ── Validación de email más estricta ── */
-      function emailValido(v) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
-      }
-
-      /* ── Submit ── */
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        /* Corrección extra del email */
-        const emailInput = document.getElementById("email");
-        emailInput.setCustomValidity(
-          emailInput.value.trim() && !emailValido(emailInput.value)
-            ? "Email inválido"
-            : "",
-        );
-
-        form.classList.add("was-validated");
-
-        /* Marcar cada campo y encontrar el primero inválido */
-        let primerError = null;
-        form.querySelectorAll("input, textarea, select").forEach(function (c) {
-          marcarCampo(c);
-          if (!c.checkValidity() && !primerError) primerError = c;
-        });
-
-        if (!form.checkValidity()) {
-          if (primerError) {
-            primerError.focus();
-            primerError.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-          return;
-        }
-
-        /* Todo OK — simular envío */
-        btnSubmit.disabled = true;
-        btnSubmit.textContent = "Enviando…";
-
-        /* En producción: reemplazar el setTimeout por fetch() a tu endpoint */
-        setTimeout(function () {
-          form.style.display = "none";
-          confirmBox.classList.add("visible");
-          confirmBox.scrollIntoView({ behavior: "smooth", block: "center" });
-        }, 800);
-      });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="public/subscription.js"></script>
+    <script src="public/contacto.js"></script>
   </body>
 </html>
