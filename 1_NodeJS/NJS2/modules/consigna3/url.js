@@ -1,7 +1,7 @@
 // Modulo de la consigna 3.
 // Analiza una URL nativa de JavaScript y muestra sus partes por consola.
 
-export const URL_EJEMPLO = 'https://www.nike.com.ar/mas-vendidos?gad_campaignid=19954478100&initialMap=productClusterIds&initialQuery=139&map=productClusterIds,tipo-de-producto,productclusternames,productclusternames&query=/139/botines/mas-vendidos-calzado-indumentaria/mas-vendidos-calzado-indumentaria&searchState';
+export const URL_EJEMPLO = 'https://www.mercadolibre.com.ar/ofertas/ofertas-futboleras#c_id=/home/exhibitors-carousel/element&c_campaign=display%2Fclicks%2FMLA%2Fcount&c_element_order=1&c_uid=fc6b525e-3f1a-4bb5-b7a1-30c421003ac7';
 
 export function analizarURL(urlString = URL_EJEMPLO) {
   // new URL() separa automaticamente protocolo, host, pathname y parametros.

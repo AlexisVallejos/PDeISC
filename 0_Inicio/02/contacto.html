@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Contactá a la redacción de Pepito Informa."
+    />
+    <title>Contacto — Pepito Informa</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=Bebas+Neue&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/diario.css" />
+    <link rel="stylesheet" href="css/articulo.css" />
+
+    <style>
+      .form-label {
+        font-family: var(--fuente-ui);
+        font-size: 0.82rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--tinta);
+        margin-bottom: 4px;
+      }
+      .requerido {
+        color: var(--acento);
+        margin-left: 2px;
+      }
+
+      .form-control,
+      .form-select {
+        font-family: var(--fuente-cuerpo);
+        font-size: 0.95rem;
+        color: var(--gris);
+        background: var(--blanco);
+        border: 1px solid var(--gris-claro);
+        border-radius: var(--radio);
+        padding: 10px 14px;
+        transition:
+          border-color var(--trans-rapida),
+          box-shadow var(--trans-rapida);
+      }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--tinta);
+        box-shadow: 0 0 0 3px rgba(128, 14, 19, 0.12);
+      }
+
+      /* Estados de validación — sin íconos de Bootstrap, solo color */
+      .was-validated .form-control:valid,
+      .was-validated .form-select:valid {
+        border-color: var(--color-economia);
+        background-image: none;
+      }
+      .was-validated .form-control:invalid,
+      .was-validated .form-select:invalid {
+        border-color: var(--acento);
+        background-image: none;
+      }
+      .was-validated .form-control:focus:invalid {
+        box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+      }
+
+      /* Checkbox */
+      .form-check-input:checked {
+        background-color: var(--tinta);
+        border-color: var(--tinta);
+      }
+      .form-check-input:focus {
+        box-shadow: 0 0 0 3px rgba(128, 14, 19, 0.12);
+      }
+      .was-validated .form-check-input:invalid {
+        border-color: var(--acento);
+      }
+
+      .invalid-feedback {
+        font-size: 0.78rem;
+        color: var(--acento);
+      }
+      .valid-feedback {
+        font-size: 0.78rem;
+        color: var(--color-economia);
+      }
+
+      /* Contador */
+      .char-counter {
+        font-size: 0.72rem;
+        color: var(--gris-medio);
+        text-align: right;
+        margin-top: 3px;
+      }
+      .char-counter.cerca {
+        color: var(--color-deportes);
+      }
+      .char-counter.limite {
+        color: var(--acento);
+        font-weight: 600;
+      }
+
+      /* Botón */
+      .btn-enviar {
+        background: var(--tinta);
+        color: var(--papel);
+        font-family: var(--fuente-ui);
+        font-size: 1rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        padding: 12px 36px;
+        border: none;
+        border-radius: var(--radio);
+        cursor: pointer;
+        transition:
+          background var(--trans-rapida),
+          transform var(--trans-rapida);
+      }
+      .btn-enviar:hover {
+        background: var(--acento);
+        transform: translateY(-2px);
+      }
+      .btn-enviar:active {
+        transform: translateY(0);
+      }
+      .btn-enviar:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      /* Confirmación */
+      .mensaje-enviado {
+        display: none;
+        border-radius: var(--radio);
+        padding: 28px;
+        background: color-mix(in srgb, var(--color-economia) 8%, transparent);
+        border: 1px solid var(--color-economia);
+        color: var(--color-economia);
+        animation: fadeUp 0.4s ease both;
+      }
+      .mensaje-enviado.visible {
+        display: block;
+      }
+      .mensaje-enviado h3 {
+        font-family: var(--fuente-display);
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      /* Panel info */
+      .contacto-info {
+        padding: 28px;
+        background: var(--blanco);
+        border: 1px solid var(--papel-oscuro);
+        border-radius: var(--radio);
+        box-shadow: var(--sombra);
+      }
+      .contacto-info-titulo {
+        font-family: var(--fuente-display);
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--tinta);
+        border-bottom: 2px solid var(--tinta);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+      }
+      .info-item {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        margin-bottom: 16px;
+      }
+      .info-item:last-child {
+        margin-bottom: 0;
+      }
+      .info-icono {
+        width: 36px;
+        height: 36px;
+        background: var(--tinta);
+        color: var(--papel);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+      .info-texto strong {
+        display: block;
+        font-family: var(--fuente-ui);
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--tinta);
+        margin-bottom: 2px;
+      }
+      .info-texto span {
+        font-size: 0.87rem;
+        color: var(--gris);
+        line-height: 1.5;
+      }
+      .aviso-formulario {
+        font-size: 0.78rem;
+        color: var(--gris-medio);
+        font-style: italic;
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <div class="header-top container-fluid px-4">
+        <div class="d-flex justify-content-between">
+          <span class="fecha">Jueves 19 de Marzo de 2026</span>
+          <span>Edición digital</span>
+        </div>
+      </div>
+      <div class="cabeza-principal container">
+        <h1 class="titulo-diario">
+          <a href="index.html" style="text-decoration: none; color: inherit"
+            >Pepito Informa</a
+          >
+        </h1>
+        <p class="subtitulo">lee lo que querés leer</p>
+        <div class="header-line"></div>
+      </div>
+      <nav
+        class="nav-categorias navbar navbar-expand-md"
+        aria-label="Categorías"
+      >
+        <div class="container">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navMenu"
+            aria-expanded="false"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav mx-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="index.html">Portada</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="navbar/politica.html">Política</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="navbar/economia.html">Economía</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="navbar/mundo.html">Mundo</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="navbar/deportes.html">Deportes</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="navbar/tecnologias.html"
+                  >Tecnologías</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="navbar/espectaculo.html"
+                  >Espectáculo</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- CONTENIDO -->
+    <main>
+      <div class="articulo-hero">
+        <a href="index.html" class="btn-volver">&#8592; Volver a portada</a>
+        <nav class="breadcrumb" aria-label="Ruta de navegación">
+          <a href="index.html">Portada</a>
+          <span class="breadcrumb-sep">›</span>
+          <span>Contacto</span>
+        </nav>
+        <div class="articulo-encabezado">
+          <span class="articulo-categoria">Redacción</span>
+          <h1 class="articulo-titulo">Contacto</h1>
+          <p class="articulo-bajada">
+            ¿Tenés una consulta, comentario, sugerencia o querés enviarnos una
+            noticia? Completá el formulario y la redacción te responderá a la
+            brevedad.
+          </p>
+        </div>
+      </div>
+
+      <div class="articulo-cuerpo">
+        <div class="row g-5 align-items-start">
+          <!-- FORMULARIO -->
+          <div class="col-lg-7">
+            <!-- Confirmación -->
+            <div
+              class="mensaje-enviado"
+              id="confirmacion"
+              role="alert"
+              aria-live="polite"
+            >
+              <h3>✅ ¡Mensaje enviado!</h3>
+              <p>
+                Gracias por escribirnos. Nos pondremos en contacto con vos en
+                las próximas 48 horas hábiles.
+              </p>
+            </div>
+
+            <form id="formulario-contacto" novalidate>
+              <!-- Nombre + Apellido -->
+              <div class="row g-3 mb-3">
+                <div class="col-sm-6">
+                  <label for="nombre" class="form-label">
+                    Nombre <span class="requerido">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="nombre"
+                    name="nombre"
+                    placeholder="Tu nombre"
+                    required
+                    minlength="2"
+                    maxlength="50"
+                    autocomplete="given-name"
+                    aria-describedby="nombre-feedback"
+                  />
+                  <div class="invalid-feedback" id="nombre-feedback">
+                    Ingresá tu nombre (mínimo 2 caracteres).
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <label for="apellido" class="form-label">Apellido</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="apellido"
+                    name="apellido"
+                    placeholder="Tu apellido"
+                    maxlength="50"
+                    autocomplete="family-name"
+                  />
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="email" class="form-label">
+                  Correo electrónico <span class="requerido">*</span>
+                </label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  placeholder="tu@correo.com"
+                  required
+                  autocomplete="email"
+                  aria-describedby="email-feedback"
+                />
+                <div class="invalid-feedback" id="email-feedback">
+                  Ingresá un correo válido (ej: nombre@dominio.com).
+                </div>
+              </div>
+
+              <!-- Teléfono (opcional) -->
+              <div class="mb-3">
+                <label for="telefono" class="form-label">
+                  Teléfono
+                  <span
+                    style="
+                      color: var(--gris-medio);
+                      font-size: 0.72rem;
+                      text-transform: none;
+                      letter-spacing: 0;
+                      font-family: var(--fuente-cuerpo);
+                    "
+                  >
+                    — opcional</span
+                  >
+                </label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="telefono"
+                  name="telefono"
+                  placeholder="+54 9 11 0000-0000"
+                  pattern="[\+\d\s\-\(\)]{7,20}"
+                  autocomplete="tel"
+                  aria-describedby="telefono-feedback"
+                />
+                <div class="invalid-feedback" id="telefono-feedback">
+                  Formato inválido. Usá números, espacios o guiones (7–20
+                  caracteres).
+                </div>
+              </div>
+
+              <!-- Motivo -->
+              <div class="mb-3">
+                <label for="motivo" class="form-label">
+                  Motivo de contacto <span class="requerido">*</span>
+                </label>
+                <select
+                  class="form-select"
+                  id="motivo"
+                  name="motivo"
+                  required
+                  aria-describedby="motivo-feedback"
+                >
+                  <option value="" disabled selected>
+                    Seleccioná una opción…
+                  </option>
+                  <option value="consulta">Consulta general</option>
+                  <option value="noticia">Enviarnos una noticia o tip</option>
+                  <option value="error">Reportar un error en una nota</option>
+                  <option value="publicidad">Publicidad y auspicios</option>
+                  <option value="otro">Otro</option>
+                </select>
+                <div class="invalid-feedback" id="motivo-feedback">
+                  Seleccioná el motivo de tu consulta.
+                </div>
+              </div>
+
+              <!-- URL de la nota (aparece solo si motivo = "error") -->
+              <div class="mb-3" id="campo-url" style="display: none">
+                <label for="url-nota" class="form-label"
+                  >URL de la nota con el error</label
+                >
+                <input
+                  type="url"
+                  class="form-control"
+                  id="url-nota"
+                  name="url_nota"
+                  placeholder="https://pepitoinforma.com.ar/articulos/..."
+                  aria-describedby="url-nota-feedback"
+                />
+                <div class="invalid-feedback" id="url-nota-feedback">
+                  Ingresá una URL válida (debe empezar con https://).
+                </div>
+              </div>
+
+              <!-- Mensaje -->
+              <div class="mb-3">
+                <label for="mensaje" class="form-label">
+                  Mensaje <span class="requerido">*</span>
+                </label>
+                <textarea
+                  class="form-control"
+                  id="mensaje"
+                  name="mensaje"
+                  rows="5"
+                  placeholder="Escribí tu mensaje aquí…"
+                  required
+                  minlength="10"
+                  maxlength="2000"
+                  style="resize: vertical"
+                  aria-describedby="mensaje-feedback mensaje-contador"
+                ></textarea>
+                <div class="invalid-feedback" id="mensaje-feedback">
+                  El mensaje debe tener al menos 10 caracteres.
+                </div>
+                <div
+                  class="char-counter"
+                  id="mensaje-contador"
+                  aria-live="polite"
+                >
+                  0 / 2000 caracteres
+                </div>
+              </div>
+
+              <!-- Política de privacidad -->
+              <div class="mb-4">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="privacidad"
+                    name="privacidad"
+                    required
+                    aria-describedby="privacidad-feedback"
+                    style="margin-top: 3px"
+                  />
+                  <label
+                    class="form-check-label"
+                    for="privacidad"
+                    style="font-size: 0.85rem; color: var(--gris)"
+                  >
+                    Leí y acepto la
+                    <a href="privacidad.html" style="color: var(--acento)"
+                      >Política de privacidad</a
+                    >.
+                    <span class="requerido">*</span>
+                  </label>
+                  <div class="invalid-feedback" id="privacidad-feedback">
+                    Debés aceptar la política de privacidad para continuar.
+                  </div>
+                </div>
+              </div>
+
+              <p class="aviso-formulario mb-4">
+                Los campos con <span style="color: var(--acento)">*</span> son
+                obligatorios. Tu información no será compartida con terceros.
+              </p>
+
+              <button type="submit" class="btn-enviar" id="btn-submit">
+                Enviar mensaje
+              </button>
+            </form>
+          </div>
+
+          <!-- PANEL LATERAL -->
+          <div class="col-lg-5">
+            <aside class="contacto-info" aria-label="Datos de contacto">
+              <p class="contacto-info-titulo">Datos de contacto</p>
+              <div class="info-item">
+                <div class="info-icono" aria-hidden="true">✉</div>
+                <div class="info-texto">
+                  <strong>Correo electrónico</strong>
+                  <span>redaccion@pepitoinforma.com.ar</span>
+                </div>
+              </div>
+              <hr style="border-color: var(--papel-oscuro)" />
+              <div class="info-item">
+                <div class="info-icono" aria-hidden="true">📍</div>
+                <div class="info-texto">
+                  <strong>Redacción</strong>
+                  <span>Ciudad Autónoma de Buenos Aires, Argentina</span>
+                </div>
+              </div>
+              <hr style="border-color: var(--papel-oscuro)" />
+              <div class="info-item">
+                <div class="info-icono" aria-hidden="true">🕐</div>
+                <div class="info-texto">
+                  <strong>Horario de atención</strong>
+                  <span>Lunes a viernes de 9:00 a 18:00 hs (UTC−3)</span>
+                </div>
+              </div>
+              <hr style="border-color: var(--papel-oscuro)" />
+              <div class="info-item">
+                <div class="info-icono" aria-hidden="true">📣</div>
+                <div class="info-texto">
+                  <strong>Publicidad y auspicios</strong>
+                  <span>publicidad@pepitoinforma.com.ar</span>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="container">
+        <div class="footer-inner">
+          <span class="footer-logo">Pepito Informa</span>
+          <p>© 2026 Pepito Informa · Todos los derechos reservados</p>
+          <nav class="footer-links">
+            <a href="privacidad.html">Política de privacidad</a>
+            <a href="terminos.html">Términos de uso</a>
+            <a href="contacto.html">Contacto</a>
+          </nav>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      "use strict";
+
+      const form = document.getElementById("formulario-contacto");
+      const btnSubmit = document.getElementById("btn-submit");
+      const confirmBox = document.getElementById("confirmacion");
+      const campoURL = document.getElementById("campo-url");
+      const motivoSel = document.getElementById("motivo");
+      const mensajeTA = document.getElementById("mensaje");
+      const contador = document.getElementById("mensaje-contador");
+      const urlNota = document.getElementById("url-nota");
+
+      /* ── Contador de caracteres ── */
+      mensajeTA.addEventListener("input", function () {
+        const n = this.value.length;
+        const max = parseInt(this.getAttribute("maxlength"));
+        contador.textContent = n + " / " + max + " caracteres";
+        contador.className = "char-counter";
+        if (n >= max) contador.classList.add("limite");
+        else if (n >= 1800) contador.classList.add("cerca");
+      });
+
+      /* ── Campo URL condicional (solo si motivo = "error") ── */
+      motivoSel.addEventListener("change", function () {
+        const es = this.value === "error";
+        campoURL.style.display = es ? "block" : "none";
+        urlNota.required = es;
+        if (!es) {
+          urlNota.value = "";
+          urlNota.classList.remove("is-invalid", "is-valid");
+        }
+      });
+
+      /* ── Validación campo a campo en tiempo real (activa solo post-submit) ── */
+      function marcarCampo(campo) {
+        if (!campo.checkValidity()) {
+          campo.classList.add("is-invalid");
+          campo.classList.remove("is-valid");
+        } else {
+          campo.classList.remove("is-invalid");
+          campo.classList.add("is-valid");
+        }
+      }
+
+      form.addEventListener("input", function (e) {
+        if (form.classList.contains("was-validated")) marcarCampo(e.target);
+      });
+      form.addEventListener("change", function (e) {
+        if (form.classList.contains("was-validated")) marcarCampo(e.target);
+      });
+
+      /* ── Validación de email más estricta ── */
+      function emailValido(v) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
+      }
+
+      /* ── Submit ── */
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        /* Corrección extra del email */
+        const emailInput = document.getElementById("email");
+        emailInput.setCustomValidity(
+          emailInput.value.trim() && !emailValido(emailInput.value)
+            ? "Email inválido"
+            : "",
+        );
+
+        form.classList.add("was-validated");
+
+        /* Marcar cada campo y encontrar el primero inválido */
+        let primerError = null;
+        form.querySelectorAll("input, textarea, select").forEach(function (c) {
+          marcarCampo(c);
+          if (!c.checkValidity() && !primerError) primerError = c;
+        });
+
+        if (!form.checkValidity()) {
+          if (primerError) {
+            primerError.focus();
+            primerError.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+          return;
+        }
+
+        /* Todo OK — simular envío */
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = "Enviando…";
+
+        /* En producción: reemplazar el setTimeout por fetch() a tu endpoint */
+        setTimeout(function () {
+          form.style.display = "none";
+          confirmBox.classList.add("visible");
+          confirmBox.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 800);
+      });
+    </script>
+  </body>
+</html>

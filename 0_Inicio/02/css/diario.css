@@ -1,0 +1,691 @@
+/**
+ * diario.css — Pepito Informa
+ * Bootstrap 5.3 como base estructural.
+ * Este archivo maneja SOLO identidad visual y sobreescrituras.
+ *
+ *  1. Tokens de diseño
+ *  2. Base / body
+ *  3. Header
+ *  4. Navbar de categorías (Bootstrap navbar)
+ *  5. Noticia principal (portada)
+ *  6. Badges
+ *  7. Autor / metadata
+ *  8. Grilla de noticias (Bootstrap grid)
+ *  9. Tarjeta
+ * 10. Footer
+ * 11. Botones
+ * 12. Animaciones
+ */
+
+/* ============================================================
+   1. TOKENS DE DISEÑO
+   ============================================================ */
+:root {
+  --tinta: #800e13;
+  --tinta-oscura: #5a0a0e;
+  --papel: #fff7f8;
+  --papel-oscuro: #ece7dc;
+  --acento: #c0392b;
+  --gris: #333333;
+  --gris-medio: #666666;
+  --gris-claro: #ccc5b9;
+  --blanco: #ffffff;
+
+  --color-economia: #1e7a4a;
+  --color-politica: #c0392b;
+  --color-deportes: #c87d0e;
+  --color-mundo: #6b3fa0;
+  --color-tecnologia: #2563a8;
+  --color-espectaculo: #c0392b;
+
+  --radio: 4px;
+  --radio-grande: 8px;
+
+  --sombra: 0 2px 16px rgba(26, 16, 8, 0.1);
+  --sombra-hover: 0 8px 32px rgba(26, 16, 8, 0.18);
+
+  --fuente-display: "Playfair Display", Georgia, serif;
+  --fuente-cuerpo: "Source Serif 4", Georgia, serif;
+  --fuente-ui: "Bebas Neue", sans-serif;
+
+  --trans-rapida: 0.2s ease;
+  --trans-media: 0.35s ease;
+  --trans-lenta: 0.5s ease;
+}
+
+/* ============================================================
+   2. BASE / BODY
+   ============================================================ */
+body {
+  background-color: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fuente-cuerpo);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ============================================================
+   3. HEADER
+   ============================================================ */
+header {
+  background: var(--papel);
+  border-bottom: 3px solid var(--tinta);
+  position: sticky;
+  top: 0;
+  z-index: 1030; /* encima del sticky de Bootstrap */
+  box-shadow: 0 2px 12px rgba(26, 16, 8, 0.08);
+}
+
+.header-top {
+  padding: 4px 0;
+  font-size: 0.72rem;
+  color: var(--gris);
+  border-bottom: 1px solid var(--gris-claro);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cabeza-principal {
+  text-align: center;
+  padding: 18px 0 10px;
+}
+
+.header-line {
+  height: 2px;
+  background: var(--tinta);
+  margin: 6px auto;
+  max-width: 800px;
+}
+
+.titulo-diario {
+  font-family: var(--fuente-display);
+  font-size: clamp(2rem, 4vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  color: var(--tinta);
+  line-height: 1;
+}
+
+.subtitulo {
+  font-family: var(--fuente-cuerpo);
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--gris-medio);
+  letter-spacing: 0.12em;
+  margin-top: 2px;
+}
+
+/* ============================================================
+   4. NAVBAR DE CATEGORÍAS — Bootstrap navbar sobreescrito
+   ============================================================ */
+.nav-categorias {
+  background: var(--tinta) !important;
+  border-radius: 0;
+  padding: 0;
+}
+
+.nav-categorias .navbar-toggler {
+  border-color: rgba(255, 255, 255, 0.4);
+  margin: 6px 12px;
+}
+
+.nav-categorias .navbar-toggler-icon {
+  filter: invert(1);
+}
+
+.nav-categorias .navbar-collapse {
+  justify-content: center;
+}
+
+.nav-categorias .nav-link {
+  color: var(--papel) !important;
+  font-family: var(--fuente-ui);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 10px 20px !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  transition:
+    background var(--trans-rapida),
+    color var(--trans-rapida);
+  border-radius: 0;
+}
+
+.nav-categorias .nav-link:last-child {
+  border-right: none;
+}
+
+.nav-categorias .nav-link:hover,
+.nav-categorias .nav-link.activo {
+  background: var(--acento) !important;
+  color: var(--blanco) !important;
+}
+
+/* ============================================================
+   5. NOTICIA PRINCIPAL (portada)
+   ============================================================ */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+
+.noticia-principal {
+  border-bottom: 2px solid var(--tinta);
+  padding-bottom: 40px;
+  margin-bottom: 36px;
+  animation: fadeUp 0.7s ease both;
+}
+
+.noticia-principal-imagen {
+  position: relative;
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra);
+  aspect-ratio: 16 / 10;
+  display: block;
+}
+
+.noticia-principal-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--trans-lenta);
+}
+
+.noticia-principal-imagen:hover img {
+  transform: scale(1.04);
+}
+
+.noticia-principal-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  justify-content: center;
+}
+
+.noticia-principal-texto h2 {
+  font-family: var(--fuente-display);
+  font-size: clamp(1.4rem, 2.2vw, 1.95rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--tinta);
+}
+
+.bajada {
+  font-size: 1rem;
+  color: var(--gris);
+  font-style: italic;
+  line-height: 1.7;
+  border-left: 3px solid var(--acento);
+  padding-left: 14px;
+}
+
+/* ============================================================
+   6. BADGES
+   ============================================================ */
+.badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  font-family: var(--fuente-ui);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  padding: 3px 10px;
+  border-radius: 2px;
+  color: var(--blanco) !important;
+  z-index: 2;
+  text-transform: uppercase;
+}
+
+.badge-rojo {
+  background: var(--color-politica) !important;
+}
+.badge-azul {
+  background: var(--color-tecnologia) !important;
+}
+.badge-verde {
+  background: var(--color-economia) !important;
+}
+.badge-amarillo {
+  background: var(--color-deportes) !important;
+}
+.badge-morado {
+  background: var(--color-mundo) !important;
+}
+
+.categoria-tag {
+  font-family: var(--fuente-ui);
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  color: var(--acento);
+}
+
+/* ============================================================
+   7. AUTOR / METADATA
+   ============================================================ */
+.autor-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.autor-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--tinta);
+  color: var(--papel);
+  font-family: var(--fuente-display);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.autor {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--tinta);
+  letter-spacing: 0.04em;
+}
+.tiempo {
+  font-size: 0.75rem;
+  color: var(--gris-medio);
+}
+
+/* ============================================================
+   8. GRILLA DE NOTICIAS — Bootstrap row/col
+   ============================================================ */
+.grilla-titulo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  font-family: var(--fuente-ui);
+  font-size: 1.1rem;
+  letter-spacing: 0.2em;
+  color: var(--tinta);
+  text-transform: uppercase;
+}
+
+.grilla-linea {
+  flex: 1;
+  height: 1px;
+  background: var(--gris-claro);
+}
+
+/* La grilla usa Bootstrap row + col-* en el HTML */
+.grilla-noticias {
+  --bs-gutter-x: 1.75rem;
+  --bs-gutter-y: 1.75rem;
+}
+
+/* ============================================================
+   9. TARJETA — Bootstrap card sobreescrita
+   ============================================================ */
+.tarjeta {
+  background: var(--blanco);
+  border-radius: var(--radio) !important;
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--papel-oscuro) !important;
+  transition:
+    transform var(--trans-media),
+    box-shadow var(--trans-media);
+  animation: fadeUp 0.6s ease both;
+  height: 100%;
+}
+
+.tarjeta:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.tarjeta:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.tarjeta:nth-child(3) {
+  animation-delay: 0.19s;
+}
+.tarjeta:nth-child(4) {
+  animation-delay: 0.26s;
+}
+.tarjeta:nth-child(5) {
+  animation-delay: 0.33s;
+}
+.tarjeta:nth-child(6) {
+  animation-delay: 0.4s;
+}
+.tarjeta:nth-child(7) {
+  animation-delay: 0.47s;
+}
+.tarjeta:nth-child(8) {
+  animation-delay: 0.54s;
+}
+.tarjeta:nth-child(9) {
+  animation-delay: 0.61s;
+}
+
+.tarjeta:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--sombra-hover);
+}
+
+.tarjeta-img-wrap {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.tarjeta-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--trans-lenta);
+}
+
+.tarjeta:hover .tarjeta-img-wrap img {
+  transform: scale(1.06);
+}
+
+.tarjeta-body {
+  padding: 20px 22px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.tarjeta-body h3 {
+  font-family: var(--fuente-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--tinta-oscura);
+}
+
+.tarjeta-body p {
+  font-size: 0.88rem;
+  color: var(--gris);
+  line-height: 1.65;
+  flex: 1;
+}
+
+.tarjeta-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--papel-oscuro);
+  padding-top: 10px;
+  margin-top: auto;
+}
+
+.tarjeta-footer .tiempo {
+  font-size: 0.73rem;
+}
+
+/* ============================================================
+   10. FOOTER — Bootstrap container + utilidades
+   ============================================================ */
+footer {
+  background: var(--tinta);
+  color: var(--papel);
+  padding: 30px 0;
+  border-top: 4px solid var(--acento);
+}
+
+.footer-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.footer-logo {
+  font-family: var(--fuente-display);
+  font-size: 2rem;
+  color: var(--papel);
+  font-weight: 900;
+}
+
+footer p {
+  font-size: 0.78rem;
+  color: var(--gris-claro);
+  letter-spacing: 0.06em;
+  margin: 0;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-links a {
+  color: var(--gris-claro);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  transition: color var(--trans-rapida);
+}
+
+.footer-links a:hover {
+  color: var(--blanco);
+}
+
+/* ============================================================
+   11. BOTONES
+   ============================================================ */
+.btn-leer-mas {
+  display: inline-block;
+  background: var(--tinta);
+  color: var(--papel) !important;
+  font-family: var(--fuente-ui);
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 7px 18px;
+  border-radius: var(--radio);
+  border: none;
+  cursor: pointer;
+  transition:
+    background var(--trans-rapida),
+    transform var(--trans-rapida);
+  text-decoration: none;
+}
+
+.btn-leer-mas:hover {
+  background: var(--acento);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   12. ANIMACIONES
+   ============================================================ */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 576px) {
+  .header-top {
+    font-size: 0.65rem;
+  }
+  .titulo-diario {
+    font-size: 2.6rem;
+  }
+  main {
+    padding: 24px 14px 40px;
+  }
+  .nav-categorias .nav-link {
+    padding: 8px 14px !important;
+    font-size: 0.85rem;
+  }
+}
+
+/* =========================================
+   1. CONTROL DEL POP-UP (CHECKBOX HACK)
+   ========================================= */
+
+/* Ocultamos el checkbox que sirve de interruptor */
+#toggle-popup {
+  display: none;
+}
+
+/* El fondo oscuro del modal */
+.popup-fondo {
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Oscurece el fondo */
+  backdrop-filter: blur(4px); /* Efecto de desenfoque premium */
+  z-index: 1050; /* Por encima de todo */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Cuando el checkbox está marcado, mostramos el fondo */
+#toggle-popup:checked ~ .popup-fondo {
+  display: block;
+  opacity: 1;
+}
+
+/* =========================================
+   2. DISEÑO DEL MODAL (ESTILO BOOTSTRAP)
+   ========================================= */
+
+.modal-dialog-centered {
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 3.5rem);
+  justify-content: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 15px;
+  border: none;
+  max-width: 450px;
+  width: 90%;
+  position: relative;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  /* Animación de entrada */
+  transform: translateY(-20px);
+  transition: transform 0.3s ease;
+}
+
+#toggle-popup:checked ~ .popup-fondo .modal-content {
+  transform: translateY(0);
+}
+
+/* Botón de cerrar (X) */
+.btn-close-custom {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.btn-close-custom:hover {
+  color: #000;
+}
+
+/* =========================================
+   3. VALIDACIÓN DE BOOTSTRAP (SOLO CSS)
+   ========================================= */
+
+/* Estilo base del input */
+.form-control {
+  border: 1px solid #ced4da;
+  padding: 0.75rem;
+  border-radius: 8px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+/* Ocultar mensajes de validación por defecto */
+.invalid-feedback,
+.valid-feedback {
+  display: none;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* --- ESTADO INVÁLIDO --- 
+   Si el usuario escribió algo pero NO es un formato de email válido */
+.form-control:not(:placeholder-shown):invalid {
+  border-color: #dc3545;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.form-control:not(:placeholder-shown):invalid ~ .invalid-feedback {
+  display: block;
+  color: #dc3545;
+}
+
+/* --- ESTADO VÁLIDO --- 
+   Si lo que escribió cumple con el formato de email */
+.form-control:not(:placeholder-shown):valid {
+  border-color: #198754;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23198754' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+.form-control:not(:placeholder-shown):valid ~ .valid-feedback {
+  display: block;
+  color: #198754;
+}
+
+/* Botón enviar de Bootstrap */
+.btn-primary {
+  background-color: #960a0a;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #db2505;
+}
+
+.textosus {
+  color: #ac0c0c;
+}

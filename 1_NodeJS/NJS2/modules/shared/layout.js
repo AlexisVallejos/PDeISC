@@ -5,21 +5,22 @@ import { getMenu } from '../consigna5/menu.js';
 
 export function renderLayout(titulo, contenido, rutaActiva = '/') {
   return `<!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es" data-bs-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${titulo} - NJS2</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="/styles/estilos.css">
 </head>
 <body>
-  <div class="fondo-ui">
-    <div class="fondo-ui__blur fondo-ui__blur--uno"></div>
-    <div class="fondo-ui__blur fondo-ui__blur--dos"></div>
+  <div class="saas-background">
+    <div class="saas-blob saas-blob--top"></div>
+    <div class="saas-blob saas-blob--bottom"></div>
   </div>
 
   ${getMenu(rutaActiva)}
@@ -30,21 +31,16 @@ export function renderLayout(titulo, contenido, rutaActiva = '/') {
     </div>
   </main>
 
-  <footer class="px-3 px-lg-4 pb-4">
-    <div class="shell-ui">
-      <div class="footer-ui">
-        <div>
-          <div class="footer-ui__brand">NJS2</div>
-          <p class="footer-ui__text mb-0">Node.js Modules Showcase con enfoque visual responsive.</p>
-        </div>
-        <div class="footer-ui__meta">Solo pages, styles y modules</div>
-      </div>
+  <footer class="saas-footer px-3 px-lg-4 pb-4">
+    <div class="shell-ui text-center">
+      <div class="saas-footer__brand mb-2">NJS2 · Modern App</div>
+      <p class="saas-footer__text mb-0">Demostración de módulos de Node.js con diseño UI Premium.</p>
     </div>
   </footer>
 
-  <button id="themeBtn" class="theme-fab" type="button" aria-label="Cambiar tema">
-    <span class="theme-fab__icon theme-fab__icon--sun" aria-hidden="true">L</span>
-    <span class="theme-fab__icon theme-fab__icon--moon" aria-hidden="true">D</span>
+  <button id="themeBtn" class="theme-fab shadow-lg" type="button" aria-label="Cambiar tema">
+    <i class="bi bi-sun-fill theme-icon-sun"></i>
+    <i class="bi bi-moon-stars-fill theme-icon-moon"></i>
   </button>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -58,7 +54,12 @@ export function renderLayout(titulo, contenido, rutaActiva = '/') {
     }
 
     function applyTheme(theme) {
-      root.setAttribute('data-theme', theme);
+      root.setAttribute('data-bs-theme', theme);
+      if (theme === 'light') {
+        document.body.classList.add('light-mode');
+      } else {
+        document.body.classList.remove('light-mode');
+      }
       if (themeBtn) {
         themeBtn.setAttribute('aria-label', theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
       }

@@ -50,21 +50,6 @@ export async function sendWelcomeEmail(toEmail, userName) {
                     <p style="margin:6px 0 0;font-size:24px;font-weight:800;color:#1a7a5c;letter-spacing:2px;">🏥 CONFIRMADO</p>
                     <p style="margin:6px 0 0;font-size:13px;color:#5a7a6e;">${toEmail}</p>
                   </div>
-
-                  <p style="margin:0 0 12px;font-size:14px;font-weight:700;color:#0f5a42;text-transform:uppercase;letter-spacing:0.05em;">Próximos pasos</p>
-                  <table width="100%" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td style="padding:10px 14px;background:#f0f4f3;border-radius:10px;display:block;font-size:14px;color:#1a2e28;">
-                        📋 La ficha del paciente está disponible en el sistema
-                      </td>
-                    </tr>
-                    <tr><td style="height:6px;"></td></tr>
-                    <tr>
-                      <td style="padding:10px 14px;background:#f0f4f3;border-radius:10px;font-size:14px;color:#1a2e28;">
-                        🩺 Puede agendar turnos desde el módulo de Turnos
-                      </td>
-                    </tr>
-                  </table>
                 </td>
               </tr>
 

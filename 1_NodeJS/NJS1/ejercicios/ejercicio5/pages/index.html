@@ -3,41 +3,118 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ejercicio 5</title>
-    <link rel="stylesheet" href="../styles/style.css">
+    <title>Node.js | Ejercicio 5</title>
+    <link rel="stylesheet" href="/styles/style.css">
+    <style>
+      /* Extra styles specific to Ejercicio 5 summary and table */
+      #resumen-ejercicios {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+      }
+      .resumen-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        padding: 1rem 1.5rem;
+        border-radius: var(--radius);
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+      .resumen-card span {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .resumen-card strong {
+        font-size: 1.5rem;
+        color: var(--accent);
+      }
+      
+      .results-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .results-table th, .results-table td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      .results-table th {
+        background: rgba(0,0,0,0.2);
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+      .badge-ejercicio {
+        background: var(--border);
+        padding: 0.25rem 0.75rem;
+        border-radius: 99px;
+        font-size: 0.8rem;
+        font-family: var(--font-mono);
+      }
+      
+      .scroll-top {
+        position: fixed;
+        bottom: 6rem;
+        right: 2rem;
+        background: var(--accent);
+        border: none;
+        color: #fff;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      }
+      .scroll-top.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+    </style>
   </head>
   <body>
-    <main class="contenedor">
-      <section class="encabezado">
-        <div>
-          <p class="etiqueta">Servidor independiente · puerto 3005</p>
-          <h1>Resultados de los ejercicios</h1>
-          <p>
-            Tabla generada con JavaScript frontend desde un array de datos.
-          </p>
+    <main class="dashboard-container">
+      <header class="header">
+        <div class="header-info">
+          <h1>Ejercicio 5</h1>
+          <p>Servidor Estático en <strong>Puerto 3005</strong></p>
         </div>
-        <div class="resumen" id="resumen-ejercicios" aria-label="Resumen de ejercicios"></div>
+      </header>
+
+      <section aria-label="Resumen de ejercicios">
+        <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--text-main);">Resumen</h2>
+        <div id="resumen-ejercicios"></div>
       </section>
 
-      <section class="panel-tabla" aria-labelledby="titulo-tabla">
-        <div class="panel-titulo">
-          <div>
-            <p class="etiqueta etiqueta-secundaria">Punto 5</p>
-            <h2 id="titulo-tabla">Resumen completo</h2>
-          </div>
-          <p>Todos los resultados anteriores, ordenados por ejercicio.</p>
+      <section class="terminal-card" aria-label="Salida de consola">
+        <div class="terminal-header">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+          <span class="terminal-title">bash — node server.js</span>
         </div>
-        <div class="tabla-scroll">
-          <table>
-            <thead>
-              <tr>
-                <th>Ejercicio</th>
-                <th>Resultado</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-resultados"></tbody>
-          </table>
-        </div>
+        
+        <table class="results-table">
+          <thead>
+            <tr>
+              <th>Ejercicio</th>
+              <th>Resultado</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-resultados">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
       </section>
     </main>
 
@@ -50,13 +127,13 @@
         <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </button>
-
-    <button class="scroll-top" type="button" aria-label="Volver al inicio">
-      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="m6 15 6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    
+    <button class="scroll-top" type="button" aria-label="Subir">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 15l-6-6-6 6"/>
       </svg>
     </button>
 
-    <script src="../scripts/main.js"></script>
+    <script src="/scripts/main.js" type="module"></script>
   </body>
 </html>

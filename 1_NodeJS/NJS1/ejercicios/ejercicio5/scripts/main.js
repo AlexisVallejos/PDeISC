@@ -20,9 +20,9 @@ const resumen = document.querySelector("#resumen-ejercicios");
 const themeToggle = document.querySelector(".theme-toggle");
 const scrollTopButton = document.querySelector(".scroll-top");
 
-const savedTheme = localStorage.getItem("njs1-theme");
-if (savedTheme === "dark") {
-  document.body.classList.add("dark-theme");
+const savedTheme = localStorage.getItem("njs-theme");
+if (savedTheme === "light") {
+  document.body.classList.add("light-theme");
 }
 
 const totales = resultados.reduce((acc, item) => {
@@ -52,10 +52,10 @@ for (const item of resultados) {
 }
 
 themeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("dark-theme");
+  document.body.classList.toggle("light-theme");
   localStorage.setItem(
-    "njs1-theme",
-    document.body.classList.contains("dark-theme") ? "dark" : "light"
+    "njs-theme",
+    document.body.classList.contains("light-theme") ? "light" : "dark"
   );
 });
 
