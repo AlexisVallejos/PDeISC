@@ -1,9 +1,0 @@
-{
-  "name": "inventario-deportivo",
-  "version": "1.0.0",
-  "description": "Inventario deportivo dinámico con array y múltiples métodos de almacenaje",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  }
-}

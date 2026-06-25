@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 5</title>
+    <link rel="stylesheet" href="../styles/style.css">
+  </head>
+  <body>
+    <main class="contenedor">
+      <section class="encabezado">
+        <div>
+          <p class="etiqueta">Servidor independiente · puerto 3005</p>
+          <h1>Resultados de los ejercicios</h1>
+          <p>
+            Tabla generada con JavaScript frontend desde un array de datos.
+          </p>
+        </div>
+        <div class="resumen" id="resumen-ejercicios" aria-label="Resumen de ejercicios"></div>
+      </section>
+
+      <section class="panel-tabla" aria-labelledby="titulo-tabla">
+        <div class="panel-titulo">
+          <div>
+            <p class="etiqueta etiqueta-secundaria">Punto 5</p>
+            <h2 id="titulo-tabla">Resumen completo</h2>
+          </div>
+          <p>Todos los resultados anteriores, ordenados por ejercicio.</p>
+        </div>
+        <div class="tabla-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Ejercicio</th>
+                <th>Resultado</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-resultados"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <button class="theme-toggle" type="button" aria-label="Cambiar modo claro u oscuro">
+      <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M21 14.6A8.6 8.6 0 0 1 9.4 3a7 7 0 1 0 11.6 11.6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+      </svg>
+      <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>
+        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <button class="scroll-top" type="button" aria-label="Volver al inicio">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m6 15 6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <script src="../scripts/main.js"></script>
+  </body>
+</html>

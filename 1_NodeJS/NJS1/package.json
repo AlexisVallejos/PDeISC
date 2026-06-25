@@ -1,0 +1,21 @@
+{
+  "name": "njs1-trabajo-practico",
+  "version": "1.0.0",
+  "description": "Trabajo practico de Node.js NJS1",
+  "type": "module",
+  "scripts": {
+    "ejercicio1": "node ejercicios/ejercicio1/ejercicio1.js",
+    "ejercicio2": "node ejercicios/ejercicio2/ejercicio2.js",
+    "ejercicio3": "node ejercicios/ejercicio3/ejercicio3.js",
+    "ejercicio4": "node ejercicios/ejercicio4/ejercicio4.js",
+    "server:ejercicio1": "node ejercicios/ejercicio1/server.js",
+    "server:ejercicio2": "node ejercicios/ejercicio2/server.js",
+    "server:ejercicio3": "node ejercicios/ejercicio3/server.js",
+    "server:ejercicio4": "node ejercicios/ejercicio4/server.js",
+    "server:ejercicio5": "node ejercicios/ejercicio5/server.js",
+    "server:all": "start \"ejercicio1\" npm run server:ejercicio1 && start \"ejercicio2\" npm run server:ejercicio2 && start \"ejercicio3\" npm run server:ejercicio3 && start \"ejercicio4\" npm run server:ejercicio4 && start \"ejercicio5\" npm run server:ejercicio5"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

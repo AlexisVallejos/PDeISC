@@ -1,9 +1,0 @@
-{
-  "name": "registro-usuarios-hospital",
-  "version": "1.0.0",
-  "description": "Registro dinámico de pacientes de hospital con 3 formas de lectura de formularios",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  }
-}

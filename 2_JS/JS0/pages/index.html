@@ -1,0 +1,108 @@
+﻿<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Launcher JS0</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/light.css">
+  <link rel="stylesheet" href="/styles/dark.css">
+  <style>
+    :root {
+      --surface: rgba(255,255,255,.85);
+      --border-soft: color-mix(in srgb, var(--border) 85%, transparent);
+      --muted-soft: color-mix(in srgb, var(--muted) 90%, transparent);
+      --shadow: 0 22px 56px rgba(23, 41, 82, 0.14);
+    }
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background: radial-gradient(1200px 700px at 15% -10%, color-mix(in srgb, var(--accent) 28%, transparent), transparent), var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .hero { max-width: 980px; }
+    .launcher-shell { max-width: 1800px; margin-inline: auto; }
+    .hero h1 { font-weight: 800; line-height: 1.1; font-size: clamp(1.9rem, 3.8vw, 3rem); }
+    .hero p { color: var(--muted-soft); }
+    .launcher-card {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 1rem;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+    .method-pill {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      font-size: .78rem;
+      padding: .22rem .65rem;
+      color: var(--muted-soft);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .open-btn {
+      min-height: 44px;
+      border-radius: .7rem;
+      font-weight: 700;
+      background: linear-gradient(140deg, var(--accent), color-mix(in srgb, var(--accent) 76%, black));
+      border: 0;
+      color: #fff;
+      width: 100%;
+      cursor: pointer;
+    }
+    .fab-left, .fab-right {
+      position: fixed;
+      bottom: 16px;
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--surface);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+    }
+    .fab-left { left: 16px; }
+    .fab-right { right: 16px; display: none; }
+    .fab-left svg, .fab-right svg { width: 24px; height: 24px; fill: currentColor; }
+    @media (max-width: 575px) {
+      .fab-left, .fab-right { width: 48px; height: 48px; bottom: 12px; }
+      .fab-left { left: 12px; }
+      .fab-right { right: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container-fluid px-3 px-xl-4 py-4 py-lg-5 launcher-shell">
+    <header class="hero mb-4">
+      <p class="text-uppercase fw-bold mb-2" style="letter-spacing:.08em;color:var(--accent);font-size:.76rem;">Trabajo Integrador JS0</p>
+      <h1 class="mb-2">Launcher de ejercicios por puerto</h1>
+      <p class="mb-0">Cada metodo corre de forma independiente. Abri el que quieras y proba variantes sin mezclar ejercicios.</p>
+    </header>
+
+    <section id="grid" class="row g-3"></section>
+  </main>
+
+  <button id="themeBtn" class="fab-left" type="button" aria-label="Cambiar tema">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a1 1 0 0 1 1 1v1.1a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1Zm0 14a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm9-6a1 1 0 0 1-1 1h-1.1a1 1 0 1 1 0-2H20a1 1 0 0 1 1 1ZM6.2 6.2a1 1 0 0 1 0 1.4l-.8.8a1 1 0 1 1-1.4-1.4l.8-.8a1 1 0 0 1 1.4 0Zm12.2 0a1 1 0 0 1 1.4 0l.8.8a1 1 0 1 1-1.4 1.4l-.8-.8a1 1 0 0 1 0-1.4ZM4 11a1 1 0 1 1 0 2H2.9a1 1 0 1 1 0-2H4Zm1.4 6.2a1 1 0 0 1 1.4 1.4l-.8.8a1 1 0 0 1-1.4-1.4l.8-.8Zm13.2 0 .8.8a1 1 0 0 1-1.4 1.4l-.8-.8a1 1 0 0 1 1.4-1.4ZM12 18.9a1 1 0 0 1 1 1V21a1 1 0 1 1-2 0v-1.1a1 1 0 0 1 1-1Z"/></svg>
+  </button>
+  <button id="toTop" class="fab-right" type="button" aria-label="Subir arriba">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.3 4.6 12.7a1 1 0 0 0 1.4 1.4l5-5V20a1 1 0 1 0 2 0V9.1l5 5a1 1 0 0 0 1.4-1.4L12 5.3Z"/></svg>
+  </button>
+
+  <script type="module" src="/scripts/main.js"></script>
+</body>
+</html>
+
+
+

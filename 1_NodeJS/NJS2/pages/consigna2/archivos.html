@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consigna 2 - NJS2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/estilos.css">
+</head>
+<body>
+  <div class="fondo-ui">
+    <div class="fondo-ui__blur fondo-ui__blur--uno"></div>
+    <div class="fondo-ui__blur fondo-ui__blur--dos"></div>
+  </div>
+
+  
+    <header class="site-header px-3 px-lg-4 pt-3 pt-lg-4">
+      <nav class="navbar navbar-expand-lg navbar-ui shell-ui">
+        <div class="container-fluid px-3 px-lg-4">
+          <a class="navbar-brand navbar-brand-ui" href="/">NJS2</a>
+          <button class="navbar-toggler navbar-toggler-ui" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse mt-3 mt-lg-0" id="menuPrincipal">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+              
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/">
+          <i class="bi bi-grid-1x2-fill"></i>
+          <span>Inicio</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/calculo">
+          <i class="bi bi-stars"></i>
+          <span>Consigna 1</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui nav-link-ui--active" href="/archivos">
+          <i class="bi bi-folder2-open"></i>
+          <span>Consigna 2</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/url">
+          <i class="bi bi-link-45deg"></i>
+          <span>Consigna 3</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/npm">
+          <i class="bi bi-box-seam-fill"></i>
+          <span>Consigna 4</span>
+        </a>
+      </li>
+    
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+  
+
+  <main class="pagina px-3 px-lg-4 py-4 py-lg-5">
+    <div class="shell-ui">
+      
+    <section class="hero-ui hero-ui--compact mb-4">
+      <span class="eyebrow-ui">Consigna 2</span>
+      <h1 class="display-5 serif-title mb-3">HTTP + File System en una sola experiencia</h1>
+      <p class="hero-ui__text mb-0">
+        El modulo genera el archivo HTML real y el mismo servidor principal lo entrega al navegador.
+      </p>
+    </section>
+
+    <section class="row g-4">
+      <div class="col-12 col-xl-7">
+        <div class="section-shell h-100">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+            <div>
+              <span class="eyebrow-ui">File System</span>
+              <h2 class="serif-title mb-2">Archivo generado en disco</h2>
+              <p class="text-ui mb-0">
+                <code>crearVista()</code> escribe <code>pages/consigna2/vista.html</code> usando el modulo
+                <code>modules/consigna2/archivos.js</code>.
+              </p>
+            </div>
+            <div class="icon-ui icon-ui--coral">
+              <i class="bi bi-file-earmark-richtext-fill"></i>
+            </div>
+          </div>
+          <div class="code-strip mb-4">
+            <div><span>Modulo</span><strong>modules/consigna2/consigna2.js</strong></div>
+            <div><span>Salida</span><strong>pages/consigna2/vista.html</strong></div>
+          </div>
+          <div class="preview-note">El HTML se genera al iniciar el servidor y puede servirse desde la misma app.</div>
+        </div>
+      </div>
+
+      <div class="col-12 col-xl-5">
+        <div class="feature-panel h-100">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+            <div>
+              <span class="eyebrow-ui text-white-50">node:http</span>
+              <h2 class="serif-title text-white mb-2">Mismo server.js</h2>
+              <p class="feature-panel__text mb-0">La ruta <code>/vista.html</code> es servida por el mismo servidor principal.</p>
+            </div>
+            <div class="icon-ui icon-ui--light">
+              <i class="bi bi-hdd-network-fill"></i>
+            </div>
+          </div>
+          <div class="list-group list-group-flush panel-list">
+            <div class="list-group-item panel-list__item"><span>Ruta publica</span><strong>/vista.html</strong></div>
+            <div class="list-group-item panel-list__item"><span>Modulo nativo</span><strong>node:http</strong></div>
+            <div class="list-group-item panel-list__item"><span>Ventaja</span><strong>Sin segundo servidor</strong></div>
+          </div>
+          <a class="btn btn-ui btn-ui--primary mt-4" href="/vista.html" target="_blank">Abrir HTML generado</a>
+        </div>
+      </div>
+    </section>
+  
+    </div>
+  </main>
+
+  <footer class="px-3 px-lg-4 pb-4">
+    <div class="shell-ui">
+      <div class="footer-ui">
+        <div>
+          <div class="footer-ui__brand">NJS2</div>
+          <p class="footer-ui__text mb-0">Node.js Modules Showcase con enfoque visual responsive.</p>
+        </div>
+        <div class="footer-ui__meta">Solo pages, styles y modules</div>
+      </div>
+    </div>
+  </footer>
+
+  <button id="themeBtn" class="theme-fab" type="button" aria-label="Cambiar tema">
+    <span class="theme-fab__icon theme-fab__icon--sun" aria-hidden="true">L</span>
+    <span class="theme-fab__icon theme-fab__icon--moon" aria-hidden="true">D</span>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const themeKey = 'njs2-theme';
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('themeBtn');
+
+    function getTheme() {
+      return localStorage.getItem(themeKey) || 'dark';
+    }
+
+    function applyTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      if (themeBtn) {
+        themeBtn.setAttribute('aria-label', theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+      }
+    }
+
+    applyTheme(getTheme());
+
+    themeBtn?.addEventListener('click', () => {
+      const nextTheme = getTheme() === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(themeKey, nextTheme);
+      applyTheme(nextTheme);
+    });
+  </script>
+</body>
+</html>

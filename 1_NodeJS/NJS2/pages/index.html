@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio - NJS2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/estilos.css">
+</head>
+<body>
+  <div class="fondo-ui">
+    <div class="fondo-ui__blur fondo-ui__blur--uno"></div>
+    <div class="fondo-ui__blur fondo-ui__blur--dos"></div>
+  </div>
+
+  
+    <header class="site-header px-3 px-lg-4 pt-3 pt-lg-4">
+      <nav class="navbar navbar-expand-lg navbar-ui shell-ui">
+        <div class="container-fluid px-3 px-lg-4">
+          <a class="navbar-brand navbar-brand-ui" href="/">NJS2</a>
+          <button class="navbar-toggler navbar-toggler-ui" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse mt-3 mt-lg-0" id="menuPrincipal">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+              
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui nav-link-ui--active" href="/">
+          <i class="bi bi-grid-1x2-fill"></i>
+          <span>Inicio</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/calculo">
+          <i class="bi bi-stars"></i>
+          <span>Consigna 1</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/archivos">
+          <i class="bi bi-folder2-open"></i>
+          <span>Consigna 2</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/url">
+          <i class="bi bi-link-45deg"></i>
+          <span>Consigna 3</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/npm">
+          <i class="bi bi-box-seam-fill"></i>
+          <span>Consigna 4</span>
+        </a>
+      </li>
+    
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+  
+
+  <main class="pagina px-3 px-lg-4 py-4 py-lg-5">
+    <div class="shell-ui">
+      
+    <section class="hero-ui mb-4 mb-lg-5">
+      <h1 class="display-1 title-anton text-center mb-0">
+        El Mejor Proyecto Para Aprobar
+      </h1>
+    </section>
+
+    <section class="row g-4 mb-4">
+      <div class="col-12">
+        <div class="feature-panel">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+            <div>
+              <span class="eyebrow-ui text-white-50">Clima incluido en inicio</span>
+              <h2 class="serif-title text-white mb-2">Mar del Plata</h2>
+              <p class="feature-panel__text mb-0">El clima de la consigna 1 ahora vive directamente en la pagina principal.</p>
+            </div>
+            <div class="icon-ui icon-ui--light">
+              <i class="bi bi-cloud-sun-fill"></i>
+            </div>
+          </div>
+          <div class="row g-3 align-items-end">
+            <div class="col-12 col-lg-4">
+              <div class="temp-ui">18<span>°C</span></div>
+            </div>
+            <div class="col-12 col-lg-8">
+              <div class="list-group list-group-flush panel-list">
+                <div class="list-group-item panel-list__item"><span>Condicion</span><strong>Parcialmente nublado</strong></div>
+                <div class="list-group-item panel-list__item"><span>Pais</span><strong>Argentina</strong></div>
+                <div class="list-group-item panel-list__item"><span>Actualizado</span><strong>Dato hardcodeado</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell">
+      <div class="section-heading d-flex flex-column flex-lg-row align-items-lg-end justify-content-between gap-3 mb-4">
+        <div>
+          <span class="eyebrow-ui">Mapa del sitio</span>
+          <h2 class="serif-title mb-2">Cinco paginas para la consigna 5</h2>
+          <p class="text-ui mb-0">Inicio, Consigna 1, Consigna 2, Consigna 3 y Consigna 4.</p>
+        </div>
+      </div>
+      <div class="row g-4">
+        
+    <div class="col-12 col-md-6 col-xl-4">
+      <a class="card card-ui h-100 text-decoration-none" href="/calculo">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+            <div><span class="pill-ui pill-ui--azul">Consigna 1</span></div>
+            <div class="icon-ui icon-ui--azul"><i class="bi bi-stars"></i></div>
+          </div>
+          <h3 class="h4 serif-title mb-3">Modulos propios</h3>
+          <p class="text-ui mb-4">Calculo y clima renderizados desde modulos.</p>
+          <div class="d-flex align-items-center gap-2 fw-semibold link-ui"><span>Explorar</span><i class="bi bi-arrow-right"></i></div>
+        </div>
+      </a>
+    </div>
+  
+    <div class="col-12 col-md-6 col-xl-4">
+      <a class="card card-ui h-100 text-decoration-none" href="/archivos">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+            <div><span class="pill-ui pill-ui--coral">Consigna 2</span></div>
+            <div class="icon-ui icon-ui--coral"><i class="bi bi-folder2-open"></i></div>
+          </div>
+          <h3 class="h4 serif-title mb-3">HTTP + File System</h3>
+          <p class="text-ui mb-4">Se genera un HTML real y el mismo server.js lo entrega.</p>
+          <div class="d-flex align-items-center gap-2 fw-semibold link-ui"><span>Explorar</span><i class="bi bi-arrow-right"></i></div>
+        </div>
+      </a>
+    </div>
+  
+    <div class="col-12 col-md-6 col-xl-4">
+      <a class="card card-ui h-100 text-decoration-none" href="/url">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+            <div><span class="pill-ui pill-ui--verde">Consigna 3</span></div>
+            <div class="icon-ui icon-ui--verde"><i class="bi bi-link-45deg"></i></div>
+          </div>
+          <h3 class="h4 serif-title mb-3">Analisis URL</h3>
+          <p class="text-ui mb-4">Host, pathname, parametros y salida por consola.</p>
+          <div class="d-flex align-items-center gap-2 fw-semibold link-ui"><span>Explorar</span><i class="bi bi-arrow-right"></i></div>
+        </div>
+      </a>
+    </div>
+  
+    <div class="col-12 col-md-6 col-xl-4">
+      <a class="card card-ui h-100 text-decoration-none" href="/npm">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+            <div><span class="pill-ui pill-ui--violeta">Consigna 4</span></div>
+            <div class="icon-ui icon-ui--violeta"><i class="bi bi-box-seam-fill"></i></div>
+          </div>
+          <h3 class="h4 serif-title mb-3">Paquete NPM</h3>
+          <p class="text-ui mb-4">upper-case aplicado en una grilla responsive.</p>
+          <div class="d-flex align-items-center gap-2 fw-semibold link-ui"><span>Explorar</span><i class="bi bi-arrow-right"></i></div>
+        </div>
+      </a>
+    </div>
+  
+      </div>
+    </section>
+  
+    </div>
+  </main>
+
+  <footer class="px-3 px-lg-4 pb-4">
+    <div class="shell-ui">
+      <div class="footer-ui">
+        <div>
+          <div class="footer-ui__brand">NJS2</div>
+          <p class="footer-ui__text mb-0">Node.js Modules Showcase con enfoque visual responsive.</p>
+        </div>
+        <div class="footer-ui__meta">Solo pages, styles y modules</div>
+      </div>
+    </div>
+  </footer>
+
+  <button id="themeBtn" class="theme-fab" type="button" aria-label="Cambiar tema">
+    <span class="theme-fab__icon theme-fab__icon--sun" aria-hidden="true">L</span>
+    <span class="theme-fab__icon theme-fab__icon--moon" aria-hidden="true">D</span>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const themeKey = 'njs2-theme';
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('themeBtn');
+
+    function getTheme() {
+      return localStorage.getItem(themeKey) || 'dark';
+    }
+
+    function applyTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      if (themeBtn) {
+        themeBtn.setAttribute('aria-label', theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+      }
+    }
+
+    applyTheme(getTheme());
+
+    themeBtn?.addEventListener('click', () => {
+      const nextTheme = getTheme() === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(themeKey, nextTheme);
+      applyTheme(nextTheme);
+    });
+  </script>
+</body>
+</html>

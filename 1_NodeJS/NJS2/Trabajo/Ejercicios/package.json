@@ -1,9 +1,0 @@
-{
-  "name": "ejercicio1-modulos-propios",
-  "version": "1.0.0",
-  "description": "Módulos propios de Node.js — clima y cálculo",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  }
-}

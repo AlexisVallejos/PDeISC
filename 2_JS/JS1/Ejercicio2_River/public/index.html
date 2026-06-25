@@ -1,0 +1,428 @@
+﻿<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asociate a River Plate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="icon" href="media/Logo_River_Plate.png" type="image/png" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <button
+      id="themeToggleBtn"
+      class="floating-btn floating-theme"
+      type="button"
+      aria-label="Cambiar tema"
+    >
+      <i data-lucide="moon" aria-hidden="true"></i><span>Modo oscuro</span>
+    </button>
+    <button
+      id="scrollTopBtn"
+      class="floating-btn floating-top"
+      type="button"
+      aria-label="Subir al inicio"
+    >
+      <i data-lucide="arrow-up" aria-hidden="true"></i>
+    </button>
+    <div class="background-elements">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <div class="layout">
+      <header class="header">
+        <div class="logo">
+          <div class="logo-shield">
+            <img
+              src="media/Logo_River_Plate.png"
+              alt="Logo River Plate"
+              class="river-logo-img"
+            />
+          </div>
+          <div class="logo-text">
+            <h1>RiverID</h1>
+            <p class="subtitle">Registro Oficial de Socios</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <section class="card">
+          <div class="section-header">
+            <i class="bi bi-person-badge"></i>
+            <h2>Tus Datos Personales</h2>
+          </div>
+          <form id="socioForm" novalidate>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="tipo_documento">Tipo de Documento</label>
+                <select id="tipo_documento" name="tipo_documento" required>
+                  <option value="" disabled selected>Selecciona.</option>
+                  <option value="DNI Argentino">DNI argentino</option>
+                  <option value="Documento Extranjero">
+                    Documento extranjero
+                  </option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="documento">Numero de Documento (DNI)</label>
+                <input
+                  type="text"
+                  id="documento"
+                  name="documento"
+                  required
+                  pattern="^\d{7,8}$"
+                  placeholder="Ej. 12345678"
+                  maxlength="8"
+                />
+                <span class="error-msg"
+                  >Debe tener entre 7 y 8 numeros exactos.</span
+                >
+              </div>
+
+              <div class="form-group" id="tramiteGroup">
+                <label for="tramite">Numero de Tramite del DNI</label>
+                <input
+                  type="text"
+                  id="tramite"
+                  name="tramite"
+                  required
+                  pattern="^\d{11}$"
+                  placeholder="11 digitos"
+                  maxlength="11"
+                />
+                <span class="error-msg"
+                  >Debe contener 11 numeros. Si tiene menos, se completara con
+                  ceros.</span
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="nacionalidad">Nacionalidad</label>
+                <select id="nacionalidad" name="nacionalidad" required>
+                  <option value="" disabled selected>Selecciona</option>
+                  <option value="Argentina">Argentina</option>
+                  <option value="Uruguay">Uruguay</option>
+                  <option value="Brasil">Brasil</option>
+                  <option value="Chile">Chile</option>
+                  <option value="Paraguay">Paraguay</option>
+                  <option value="Bolivia">Bolivia</option>
+                  <option value="Espana">Espana</option>
+                  <option value="Estados Unidos">Estados Unidos</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="sexo">Sexo (Como figura en el DNI)</label>
+                <select id="sexo" name="sexo" required>
+                  <option value="" disabled selected>Selecciona...</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+                  <option value="No Binario">No binario</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input
+                  type="text"
+                  id="nombre"
+                  name="nombre"
+                  required
+                  minlength="3"
+                  maxlength="50"
+                  pattern="^[A-Za-z\s]+$"
+                  placeholder="Ej. Juan"
+                />
+                <span class="error-msg"
+                  >El nombre debe tener de 3 a 50 letras (sin numeros ni
+                  caracteres especiales).</span
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="apellido">Apellido</label>
+                <input
+                  type="text"
+                  id="apellido"
+                  name="apellido"
+                  required
+                  minlength="2"
+                  maxlength="50"
+                  pattern="^[A-Za-z\s]+$"
+                  placeholder="Ej. Perez"
+                />
+                <span class="error-msg"
+                  >El apellido debe tener de 2 a 50 letras (sin numeros ni
+                  caracteres especiales).</span
+                >
+              </div>
+
+              <!-- el mail dividido en pedazos -->
+              <div class="form-group full-width">
+                <label>Correo Electronico para Verificacion</label>
+                <div class="composite-field">
+                  <input
+                    type="text"
+                    id="emailUser"
+                    name="emailUser"
+                    placeholder="tu.nombre"
+                    minlength="3"
+                    maxlength="64"
+                    pattern="^[a-zA-Z0-9._-]+$"
+                    required
+                  />
+                  <span class="separator">@</span>
+                  <input
+                    type="text"
+                    id="emailDomain"
+                    name="emailDomain"
+                    placeholder="gmail"
+                    minlength="2"
+                    maxlength="63"
+                    pattern="^[a-zA-Z0-9-]+$"
+                    required
+                  />
+                  <select id="emailTld" name="emailTld" required>
+                    <option value=".com">.com</option>
+                    <option value=".ar">.ar</option>
+                    <option value=".net">.net</option>
+                    <option value=".org">.org</option>
+                    <option value=".edu">.edu</option>
+                  </select>
+                </div>
+                <span class="error-msg"
+                  >Ingresa un usuario y dominio validos.</span
+                >
+              </div>
+
+              <!-- el telefono con el prefijo del pais -->
+              <div class="form-group full-width">
+                <label>Telefono Movil</label>
+                <div class="composite-field phone-field">
+                  <select id="phoneCountry" name="phoneCountry" required>
+                    <option value="+54">AR +54 (Argentina)</option>
+                    <option value="+1">US +1 (USA)</option>
+                    <option value="+34">ES +34 (Espana)</option>
+                    <option value="+55">BR +55 (Brasil)</option>
+                    <option value="+56">CL +56 (Chile)</option>
+                    <option value="+598">UY +598 (Uruguay)</option>
+                  </select>
+
+                  <div
+                    id="argMobilePrefix"
+                    class="static-prefix"
+                    style="display: flex"
+                  >
+                    9
+                  </div>
+
+                  <input
+                    type="text"
+                    id="phoneArea"
+                    name="phoneArea"
+                    placeholder="Codigo de Area (Ej. 11)"
+                    minlength="2"
+                    maxlength="4"
+                    pattern="^[0-9]+$"
+                    required
+                  />
+
+                  <input
+                    type="text"
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    placeholder="Numero (Ej. 12345678)"
+                    minlength="6"
+                    maxlength="8"
+                    pattern="^[0-9]+$"
+                    required
+                  />
+                </div>
+                <span class="error-msg"
+                  >Revisa el codigo de area (2-4 digitos) y el numero (6-8
+                  digitos). Solo numeros.</span
+                >
+              </div>
+
+              <!-- la clave con las reglas -->
+              <div class="form-group full-width">
+                <label for="password">Contrasena Segura</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                  pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[.!\@#\$%\^&\*\(\)\-\+\?]).{12,}$"
+                  placeholder="Minimo 12 caracteres"
+                />
+                <div class="password-rules">
+                  <p>Debe contener al menos:</p>
+                  <ul>
+                    <li id="rule-length" class="invalid">12 caracteres</li>
+                    <li id="rule-upper" class="invalid">1 mayuscula</li>
+                    <li id="rule-lower" class="invalid">1 minuscula</li>
+                    <li id="rule-number" class="invalid">1 numero</li>
+                    <li id="rule-special" class="invalid">
+                      1 simbolo (.!@#$%^&*()-+?)
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="metodo_almacenaje"
+                  >Metodo de Almacenaje JS (Para demostracion tecnica)</label
+                >
+                <select
+                  id="metodo_almacenaje"
+                  name="metodo_almacenaje"
+                  required
+                >
+                  <option value="push">Agregar al final (Push)</option>
+                  <option value="unshift">Agregar al inicio (Unshift)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group full-width terms-group">
+              <div class="checkbox-container">
+                <input
+                  type="checkbox"
+                  id="termsCheckbox"
+                  name="termsCheckbox"
+                  required
+                  disabled
+                />
+                <label for="termsCheckbox"
+                  >He leido y acepto los
+                  <a href="#" id="openTermsModal"
+                    >terminos y condiciones de usuario</a
+                  ></label
+                >
+              </div>
+              <span class="error-msg"
+                >Debes leer y aceptar los terminos (bajando hasta el final) para
+                continuar.</span
+              >
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="clearBtn" class="btn btn-secondary">
+                Limpiar campos
+              </button>
+              <button type="submit" id="submitBtn" class="btn btn-primary">
+                <span class="btn-text">Hacerme Socio</span>
+                <span
+                  class="loader"
+                  id="btnLoader"
+                  style="display: none"
+                ></span>
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="card mt-4">
+          <div class="card-header">
+            <h2>Ultimos Socios Registrados</h2>
+            <span class="badge" id="totalItems">0 socios</span>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Nombre completo</th>
+                  <th>DNI</th>
+                  <th>Sexo</th>
+                  <th>Nacionalidad</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableBody">
+                <tr id="emptyRow">
+                  <td colspan="5" class="empty-cell">
+                    Nadie se ha asociado en esta sesion todavia.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="termsModal" class="modal-overlay" style="display: none">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Terminos y Condiciones</h3>
+          <button type="button" class="close-modal" id="closeModalBtn">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        <div class="modal-body" id="termsBody">
+          <p>
+            <strong>Resumen del registro.</strong><br />
+            Este formulario es una practica academica inspirada en un alta de socios.
+            Los datos cargados se usan solo dentro de esta sesion y no reemplazan
+            un proceso oficial del club.
+          </p>
+
+          <p>
+            <strong>Uso responsable.</strong><br />
+            El usuario debe ingresar informacion consistente, revisar cada campo y
+            aceptar que el sistema valida DNI, telefono, email, nacionalidad,
+            usuario y contrasena antes de confirmar el alta.
+          </p>
+
+          <p>
+            <strong>Privacidad.</strong><br />
+            Los registros se mantienen en memoria para fines demostrativos del
+            ejercicio. No se persisten en una base externa ni generan efectos
+            reales sobre una cuenta oficial.
+          </p>
+
+          <p>
+            <strong>Alcance de la demo.</strong><br />
+            El envio de correo es de prueba. Si el servicio externo no responde,
+            el sistema mantiene el alta local para que la funcionalidad principal
+            del ejercicio siga operativa.
+          </p>
+
+          <p style="text-align: center; color: var(--text-muted)">
+            <em>Fin del resumen de terminos.</em>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="scrollDownBtn">
+            <i class="bi bi-arrow-down-circle"></i> Bajar hasta el final para
+            aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/storageMethods.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="config/theme.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
+
+

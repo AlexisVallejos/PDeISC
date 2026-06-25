@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ejercicio metodo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/public/style.css" />
+</head>
+<body>
+  <div class="bg-deco bg-deco-a"></div>
+  <div class="bg-deco bg-deco-b"></div>
+
+  <main class="container py-4 py-lg-5 app-shell">
+    <header class="hero mb-4">
+      <p class="eyebrow mb-2">Ejercicio Secreto</p>
+      <h1 class="display-title mb-2">Secreto In / Secreto Out</h1>
+      <p class="hero-copy mb-0">Elegi ejercicio, revisa codigo y compara resultado sin recargar la pagina.</p>
+    </header>
+
+    <section class="panel mb-4">
+      <label for="secretInput" class="form-label">Secreto In</label>
+      <textarea id="secretInput" class="form-control" rows="4" required minlength="1" maxlength="500" placeholder="Ej: Hoy (.sh 22 sal a) (ed asac ne sominuer son) Marcelo."></textarea>
+      <small class="helper mt-2 d-block">Escribí el fragmento que querés decodificar o cifrar entre paréntesis. Ejemplo: <code>(otxet)</code>.</small>
+      <div class="d-flex flex-wrap gap-2 mt-3">
+        <button id="decodeBtn" class="btn btn-brand" type="button">Decodificar</button>
+        <button id="generateBtn" class="btn btn-ghost" type="button">Auto generar cifrado</button>
+      </div>
+      <p id="feedback" class="feedback mt-3 mb-0" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="result-card">
+      <p><strong>Secreto Out:</strong></p>
+      <pre id="secretOutput">Esperando texto para decodificar...</pre>
+    </section>
+  </main>
+
+  <button id="themeBtn" class="fab-left" type="button" aria-label="Cambiar tema">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a1 1 0 0 1 1 1v1.1a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1Zm0 14a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm9-6a1 1 0 0 1-1 1h-1.1a1 1 0 1 1 0-2H20a1 1 0 0 1 1 1ZM6.2 6.2a1 1 0 0 1 0 1.4l-.8.8a1 1 0 1 1-1.4-1.4l.8-.8a1 1 0 0 1 1.4 0Zm12.2 0a1 1 0 0 1 1.4 0l.8.8a1 1 0 1 1-1.4 1.4l-.8-.8a1 1 0 0 1 0-1.4ZM4 11a1 1 0 1 1 0 2H2.9a1 1 0 1 1 0-2H4Zm1.4 6.2a1 1 0 0 1 1.4 1.4l-.8.8a1 1 0 0 1-1.4-1.4l.8-.8Zm13.2 0 .8.8a1 1 0 0 1-1.4 1.4l-.8-.8a1 1 0 0 1 1.4-1.4ZM12 18.9a1 1 0 0 1 1 1V21a1 1 0 1 1-2 0v-1.1a1 1 0 0 1 1-1Z"/></svg>
+  </button>
+
+  <button id="toTop" class="fab-right" type="button" aria-label="Subir arriba">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5.3 4.6 12.7a1 1 0 0 0 1.4 1.4l5-5V20a1 1 0 1 0 2 0V9.1l5 5a1 1 0 0 0 1.4-1.4L12 5.3Z"/></svg>
+  </button>
+
+  <script type="module" src="/public/script.js"></script>
+</body>
+</html>

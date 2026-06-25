@@ -1,9 +1,0 @@
-{
-  "name": "almacen-personas",
-  "version": "1.0.0",
-  "description": "Almacén de personas con localStorage y validaciones JS dinámicas",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  }
-}

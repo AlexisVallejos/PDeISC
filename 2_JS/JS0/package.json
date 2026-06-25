@@ -1,0 +1,27 @@
+{
+  "name": "js0-arrays-node-sin-express",
+  "version": "1.0.0",
+  "description": "Trabajo integrador de métodos de arrays con Node.js puro",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "fix:utf": "node tools/fix-mojibake.js",
+    "start:push": "node modules/ejercicio01_push/server.js",
+    "start:pop": "node modules/ejercicio02_pop/server.js",
+    "start:unshift": "node modules/ejercicio03_unshift/server.js",
+    "start:shift": "node modules/ejercicio04_shift/server.js",
+    "start:splice": "node modules/ejercicio05_splice/server.js",
+    "start:slice": "node modules/ejercicio06_slice/server.js",
+    "start:indexOf": "node modules/ejercicio07_indexOf/server.js",
+    "start:includes": "node modules/ejercicio08_includes/server.js",
+    "start:forEach": "node modules/ejercicio09_forEach/server.js",
+    "start:map": "node modules/ejercicio10_map/server.js",
+    "start:filter": "node modules/ejercicio11_filter/server.js",
+    "start:reduce": "node modules/ejercicio12_reduce/server.js",
+    "start:sort": "node modules/ejercicio13_sort/server.js",
+    "start:reverse": "node modules/ejercicio14_reverse/server.js",
+    "start:secreto": "node modules/ejercicio15_secreto/server.js",
+    "start:all": "node tools/start-all.js"
+  }
+}

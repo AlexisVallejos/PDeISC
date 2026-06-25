@@ -1,0 +1,10 @@
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --text: #f8fafc;
+  --muted: #cbd5e1;
+  --accent: #38bdf8;
+  --border: #334155;
+}
+
+body { transition: background-color .2s ease, color .2s ease; }

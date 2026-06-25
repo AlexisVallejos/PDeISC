@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NPM - NJS2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/styles/estilos.css">
+</head>
+<body>
+  <div class="fondo-ui">
+    <div class="fondo-ui__blur fondo-ui__blur--uno"></div>
+    <div class="fondo-ui__blur fondo-ui__blur--dos"></div>
+  </div>
+
+  
+    <header class="site-header px-3 px-lg-4 pt-3 pt-lg-4">
+      <nav class="navbar navbar-expand-lg navbar-ui shell-ui">
+        <div class="container-fluid px-3 px-lg-4">
+          <a class="navbar-brand navbar-brand-ui" href="/">NJS2</a>
+          <button class="navbar-toggler navbar-toggler-ui" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal" aria-controls="menuPrincipal" aria-expanded="false" aria-label="Abrir menu">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse mt-3 mt-lg-0" id="menuPrincipal">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+              
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/">
+          <i class="bi bi-grid-1x2-fill"></i>
+          <span>Inicio</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/calculo">
+          <i class="bi bi-stars"></i>
+          <span>Consigna 1</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/archivos">
+          <i class="bi bi-folder2-open"></i>
+          <span>Consigna 2</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui" href="/url">
+          <i class="bi bi-link-45deg"></i>
+          <span>Consigna 3</span>
+        </a>
+      </li>
+    
+      <li class="nav-item">
+        <a class="nav-link nav-link-ui nav-link-ui--active" href="/npm">
+          <i class="bi bi-box-seam-fill"></i>
+          <span>Consigna 4</span>
+        </a>
+      </li>
+    
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+  
+
+  <main class="pagina px-3 px-lg-4 py-4 py-lg-5">
+    <div class="shell-ui">
+      
+    <section class="hero-ui hero-ui--compact mb-4">
+      <span class="eyebrow-ui">Consigna 4</span>
+      <h1 class="display-5 serif-title mb-3">Paquete NPM con enfoque visual</h1>
+      <p class="hero-ui__text mb-0">
+        <code>upper-case</code> transforma textos reales y el modulo arma la grilla HTML al iniciar el proyecto.
+      </p>
+    </section>
+
+    <section class="section-shell mb-4">
+      <div class="row g-4 align-items-center">
+        <div class="col-12 col-lg-7">
+          <span class="eyebrow-ui">Instalacion</span>
+          <h2 class="serif-title mb-3">Un paquete, varias transformaciones</h2>
+          <p class="text-ui mb-0">El paquete fue instalado con <code>npm install upper-case</code> y se usa para convertir textos a mayusculas.</p>
+        </div>
+        <div class="col-12 col-lg-5">
+          <div class="code-strip code-strip--stack">
+            <div><span>Paquete</span><strong>upper-case</strong></div>
+            <div><span>Uso</span><strong>upperCase(texto)</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="row g-4">
+      
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card card-ui h-100 border-0">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <span class="pill-ui pill-ui--violeta">Ejemplo 1</span>
+            <div class="icon-ui icon-ui--violeta"><i class="bi bi-type"></i></div>
+          </div>
+          <p class="text-ui mb-3">node.js es genial</p>
+          <div class="metric-value metric-value--sm">NODE.JS ES GENIAL</div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card card-ui h-100 border-0">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <span class="pill-ui pill-ui--violeta">Ejemplo 2</span>
+            <div class="icon-ui icon-ui--violeta"><i class="bi bi-type"></i></div>
+          </div>
+          <p class="text-ui mb-3">modulos nativos</p>
+          <div class="metric-value metric-value--sm">MODULOS NATIVOS</div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card card-ui h-100 border-0">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <span class="pill-ui pill-ui--violeta">Ejemplo 3</span>
+            <div class="icon-ui icon-ui--violeta"><i class="bi bi-type"></i></div>
+          </div>
+          <p class="text-ui mb-3">upper-case instalado con npm</p>
+          <div class="metric-value metric-value--sm">UPPER-CASE INSTALADO CON NPM</div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card card-ui h-100 border-0">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <span class="pill-ui pill-ui--violeta">Ejemplo 4</span>
+            <div class="icon-ui icon-ui--violeta"><i class="bi bi-type"></i></div>
+          </div>
+          <p class="text-ui mb-3">http · fs · url</p>
+          <div class="metric-value metric-value--sm">HTTP · FS · URL</div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="col-12 col-md-6 col-xl-4">
+      <div class="card card-ui h-100 border-0">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+            <span class="pill-ui pill-ui--violeta">Ejemplo 5</span>
+            <div class="icon-ui icon-ui--violeta"><i class="bi bi-type"></i></div>
+          </div>
+          <p class="text-ui mb-3">proyecto njs2</p>
+          <div class="metric-value metric-value--sm">PROYECTO NJS2</div>
+        </div>
+      </div>
+    </div>
+  
+    </section>
+  
+    </div>
+  </main>
+
+  <footer class="px-3 px-lg-4 pb-4">
+    <div class="shell-ui">
+      <div class="footer-ui">
+        <div>
+          <div class="footer-ui__brand">NJS2</div>
+          <p class="footer-ui__text mb-0">Node.js Modules Showcase con enfoque visual responsive.</p>
+        </div>
+        <div class="footer-ui__meta">Solo pages, styles y modules</div>
+      </div>
+    </div>
+  </footer>
+
+  <button id="themeBtn" class="theme-fab" type="button" aria-label="Cambiar tema">
+    <span class="theme-fab__icon theme-fab__icon--sun" aria-hidden="true">L</span>
+    <span class="theme-fab__icon theme-fab__icon--moon" aria-hidden="true">D</span>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const themeKey = 'njs2-theme';
+    const root = document.documentElement;
+    const themeBtn = document.getElementById('themeBtn');
+
+    function getTheme() {
+      return localStorage.getItem(themeKey) || 'dark';
+    }
+
+    function applyTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      if (themeBtn) {
+        themeBtn.setAttribute('aria-label', theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');
+      }
+    }
+
+    applyTheme(getTheme());
+
+    themeBtn?.addEventListener('click', () => {
+      const nextTheme = getTheme() === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(themeKey, nextTheme);
+      applyTheme(nextTheme);
+    });
+  </script>
+</body>
+</html>
