@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: Ejercicio2_River/public/js/storageMethods.js
+ * Rol: maneja la interaccion del navegador: eventos, DOM, validaciones visuales y llamadas al servidor.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // aca guardamos los socios en un array y lo sincronizamos con el localstorage
 // usamos push o unshift segun lo que elija el usuario para cumplir la consigna
 

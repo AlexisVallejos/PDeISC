@@ -1,9 +1,23 @@
-const onlyLetters = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: modules/shared/exercisesCatalog.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
+// Regex reutilizable: permite letras, espacios y vocales/enie con tilde mediante escapes unicode.
+// Se usa para validar nombres, palabras y listas de texto sin depender de caracteres mal codificados.
+const onlyLetters = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00D1\u00F1\s]+$/;
 
+// splitCsv: Separa una cadena de texto en partes limpias para poder procesarlas.
+// Ejemplo defendible: "Ana, Luis" pasa a ["Ana", "Luis"] y elimina espacios sobrantes.
 function splitCsv(text) {
   return String(text || "").split(",").map((x) => x.trim()).filter(Boolean);
 }
 
+// parseNumberCsv: Convierte texto recibido del formulario a un formato usable por la logica.
+// Devuelve siempre un objeto controlado: { ok: true, value } o { ok: false, error }.
 function parseNumberCsv(text) {
   const arr = splitCsv(text);
   if (!arr.length) return { ok: false, error: "Ingresa al menos un numero." };
@@ -12,6 +26,8 @@ function parseNumberCsv(text) {
   return { ok: true, value: nums };
 }
 
+// parseTextCsv: Convierte texto recibido del formulario a un formato usable por la logica.
+// Valida que cada elemento sea texto real y evita numeros/simbolos cuando la consigna pide palabras.
 function parseTextCsv(text, label) {
   const arr = splitCsv(text);
   if (!arr.length) return { ok: false, error: `Ingresa al menos un valor para ${label}.` };
@@ -19,6 +35,8 @@ function parseTextCsv(text, label) {
   return { ok: true, value: arr };
 }
 
+// parseNameAge: Convierte texto recibido del formulario a un formato usable por la logica.
+// Formato esperado: nombre:edad. Esto permite probar ejercicios con arrays de objetos.
 function parseNameAge(text) {
   const arr = splitCsv(text).map((it) => it.split(":").map((x) => x.trim()));
   if (!arr.length) return { ok: false, error: "Ingresa al menos una persona. Formato nombre:edad" };
@@ -32,6 +50,8 @@ function parseNameAge(text) {
   return { ok: true, value: out };
 }
 
+// parseNameActive: Convierte texto recibido del formulario a un formato usable por la logica.
+// Formato esperado: nombre:true o nombre:false para armar objetos con estado activo.
 function parseNameActive(text) {
   const arr = splitCsv(text).map((it) => it.split(":").map((x) => x.trim()));
   if (!arr.length) return { ok: false, error: "Ingresa al menos un usuario. Formato nombre:true|false" };
@@ -44,12 +64,16 @@ function parseNameActive(text) {
   return { ok: true, value: out };
 }
 
+// parsePriceObjects: Convierte texto recibido del formulario a un formato usable por la logica.
+// Reutiliza parseNumberCsv y luego transforma cada numero en un objeto { precio }.
 function parsePriceObjects(text) {
   const nums = parseNumberCsv(text);
   if (!nums.ok) return nums;
   return { ok: true, value: nums.value.map((precio) => ({ precio })) };
 }
 
+// validarParentesisBalanceados: Valida datos de entrada y devuelve si pueden seguir el flujo.
+// Recorre caracter por caracter y usa un contador para detectar cierres de parentesis sin apertura.
 export function validarParentesisBalanceados(texto) {
   let balance = 0;
   for (const ch of texto) {
@@ -60,6 +84,8 @@ export function validarParentesisBalanceados(texto) {
   return balance === 0;
 }
 
+// decodificarSecreto: Transforma el mensaje de entrada para obtener la salida pedida por la consigna.
+// Cada bloque entre parentesis se invierte y luego se limpian parentesis/espacios duplicados.
 export function decodificarSecreto(texto) {
   return texto.replace(/\(([^()]*)\)/g, (_, b) => b.split("").reverse().join(""))
     .replace(/[()]/g, "")
@@ -67,12 +93,16 @@ export function decodificarSecreto(texto) {
     .trim();
 }
 
+// cifrarSecreto: Transforma texto normal en el formato codificado que usa el ejercicio.
+// Sirve para generar ejemplos nuevos invirtiendo la frase completa dentro de parentesis.
 export function cifrarSecreto(texto) {
   const limpio = String(texto || "").trim().replace(/\s+/g, " ");
   if (!limpio) return "";
   return `(${limpio.split("").reverse().join("")})`;
 }
 
+// pasosSecreto: arma una lista de transformaciones para mostrar el paso a paso del ejercicio secreto.
+// No cambia el texto final; solo explica que fragmento se invierte y cual es el resultado parcial.
 export function pasosSecreto(texto) {
   const pasos = [];
   texto.replace(/\(([^()]*)\)/g, (_, b) => {
@@ -82,6 +112,9 @@ export function pasosSecreto(texto) {
   return pasos;
 }
 
+// defs es el catalogo central de JS0.
+// Cada metodo contiene variantes con consigna, campos que debe pedir el formulario y una funcion run.
+// Ventaja para defender: el frontend no tiene ejercicios hardcodeados; todo sale de esta estructura.
 const defs = {
   push: { categoria: "mutador", variantes: [
     { nombre: "Frutas con push", consigna: "Crea un array vacio y agrega tres frutas usando push().", campos: [{ key: "frutas", label: "Tres frutas (coma)", tipo: "textCsv" }], operacion: "arr.push(fruta1, fruta2, fruta3)", codigo: "const arr = []; arr.push('manzana', 'banana', 'naranja');", run: ({ frutas }) => { const arr=[]; arr.push(...frutas.slice(0,3)); return arr; } },
@@ -160,6 +193,8 @@ const defs = {
   ]}
 };
 
+// validateField: Valida datos de entrada y devuelve si pueden seguir el flujo.
+// El parametro tipo decide que parser usar. Asi se evita repetir validaciones dentro de cada variante.
 function validateField(tipo, value, label) {
   if (tipo === "number") {
     const n = Number(value);
@@ -185,6 +220,8 @@ function validateField(tipo, value, label) {
   return { ok: false, error: "Tipo de validacion no soportado." };
 }
 
+// buildExercisePayload: Construye un objeto de datos listo para enviarse al frontend o a otra capa.
+// Importante: no envia las funciones run al navegador, solo datos seguros para mostrar la consigna.
 export function buildExercisePayload(method) {
   const def = defs[method];
   if (!def) return null;
@@ -196,20 +233,21 @@ export function buildExercisePayload(method) {
       nombre: v.nombre,
       consigna: v.consigna,
       operacion: v.operacion,
-      operación: v.operacion, // Fallback for frontend typo
       codigo: v.codigo,
-      código: v.codigo, // Fallback for frontend typo
       campos: v.campos
     }))
   };
 }
 
+// executeVariant: Ejecuta la variante seleccionada y devuelve su resultado controlado.
+// Flujo defendible: buscar metodo, buscar variante, validar inputs, ejecutar run y devolver resultado.
 export function executeVariant(method, variantId, rawInputs) {
   const def = defs[method];
   if (!def) return { ok: false, error: "Metodo invalido." };
   const variant = def.variantes[Number(variantId) - 1];
   if (!variant) return { ok: false, error: "Variante invalida." };
 
+  // parsed guarda los valores ya convertidos: numeros como Number, listas como arrays y objetos armados.
   const parsed = {};
   for (const field of variant.campos) {
     const check = validateField(field.tipo, rawInputs?.[field.key], field.label);
@@ -223,7 +261,8 @@ export function executeVariant(method, variantId, rawInputs) {
 
   return { ok: true, resultado: variant.run(parsed) };
 }
-// donde esta lo del secreto autogenerado
+// runSecretoCustom: maneja acciones extra del ejercicio secreto sin mezclarlo con las variantes normales.
+// modo puede ser generar, cifrar, paso o decodificar; cada rama devuelve una respuesta controlada.
 export function runSecretoCustom(texto, modo) {
   if (modo === "generar") {
     const base = [

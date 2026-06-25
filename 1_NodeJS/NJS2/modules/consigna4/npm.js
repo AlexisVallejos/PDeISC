@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: modules/consigna4/npm.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // Modulo de la consigna 4.
 // Usa el paquete upper-case instalado con NPM y arma el contenido de la pagina.
 
@@ -11,6 +19,7 @@ const EJEMPLOS = [
   'proyecto njs2',
 ];
 
+// renderContenidoNPM: Genera HTML o contenido visual a partir de datos ya preparados.
 export function renderContenidoNPM() {
   const transformados = EJEMPLOS.map((texto) => ({
     original: texto,

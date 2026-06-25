@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: ejercicios/ejercicio5/scripts/main.js
+ * Rol: maneja la interaccion del navegador: eventos, DOM, validaciones visuales y llamadas al servidor.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 const resultados = [
   { ejercicio: "Ejercicio 1", resultado: "Hola mundo desde Node.js" },
   { ejercicio: "Ejercicio 1", resultado: "Fin" },

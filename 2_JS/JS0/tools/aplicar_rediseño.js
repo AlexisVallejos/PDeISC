@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: tools/aplicar_rediseño.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -7,6 +15,7 @@ const __dirname = path.dirname(__filename);
 
 const modulesDir = path.join(__dirname, '../modules');
 
+// getPremiumHTML: Obtiene y devuelve informacion sin modificar el estado principal.
 const getPremiumHTML = (moduleName) => `<!doctype html>
 <html lang="es" data-theme="light">
 <head>
@@ -110,6 +119,7 @@ const getPremiumHTML = (moduleName) => `<!doctype html>
 </body>
 </html>`;
 
+// getPremiumCSS: Obtiene y devuelve informacion sin modificar el estado principal.
 const getPremiumCSS = () => `:root {
   --bg: #f8fafc;
   --surface: rgba(255, 255, 255, 0.85);
@@ -137,7 +147,7 @@ const getPremiumCSS = () => `:root {
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
   background-color: var(--bg);
-  background-image: 
+  background-image:
     radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.1), transparent 25%),
     radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.1), transparent 25%);
   color: var(--text);
@@ -321,7 +331,7 @@ body {
 /* Force all children to span full width except the top 4 specs */
 #cardBody > * {
   grid-column: 1 / -1;
-  margin: 0; 
+  margin: 0;
 }
 
 /* The Top 4 Property Cards (Grid of specs) */
@@ -382,27 +392,27 @@ body {
 }
 
 /* Code Blocks */
-#cardBody pre { 
-  background: var(--surface) !important; 
-  color: var(--text) !important; 
-  padding: 1.5rem; 
-  border-radius: 16px; 
-  font-family: "IBM Plex Mono", monospace; 
-  font-size: 0.95rem; 
-  overflow-x: auto; 
-  border: 1px solid var(--border); 
+#cardBody pre {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  padding: 1.5rem;
+  border-radius: 16px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.95rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
   box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
   margin-top: 0.5rem;
 }
 #cardBody pre code { background: transparent; color: inherit; padding: 0; }
 
 /* The Data Entry Panel */
-#cardBody .panel { 
-  background: color-mix(in srgb, var(--surface) 80%, transparent); 
-  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); 
-  border-radius: 16px; 
-  padding: 2rem; 
-  margin-top: 2rem; 
+#cardBody .panel {
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-top: 2rem;
   box-shadow: 0 10px 30px color-mix(in srgb, var(--accent) 5%, transparent);
 }
 #cardBody .panel h3 { color: var(--accent); font-weight: 800; margin-bottom: 1.5rem; font-size: 1.25rem;}
@@ -447,18 +457,18 @@ fs.readdir(modulesDir, { withFileTypes: true }, (err, dirents) => {
     console.error('Error leyendo modules', err);
     return;
   }
-  
+
   dirents.forEach(dirent => {
     if (dirent.isDirectory() && dirent.name.startsWith('ejercicio')) {
       const publicPath = path.join(modulesDir, dirent.name, 'public');
-      
+
       if (fs.existsSync(publicPath)) {
         // Write HTML
         fs.writeFileSync(path.join(publicPath, 'index.html'), getPremiumHTML(dirent.name));
-        
+
         // Write CSS
         fs.writeFileSync(path.join(publicPath, 'style.css'), getPremiumCSS());
-        
+
         console.log(`[✔] Rediseñado: ${dirent.name}`);
       }
     }

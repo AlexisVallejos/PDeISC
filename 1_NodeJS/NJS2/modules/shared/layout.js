@@ -1,8 +1,17 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: modules/shared/layout.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // Layout base reutilizado por todas las paginas del sitio.
 // Agrega head, estilos, menu, contenedor principal y footer.
 
 import { getMenu } from '../consigna5/menu.js';
 
+// renderLayout: Genera HTML o contenido visual a partir de datos ya preparados.
 export function renderLayout(titulo, contenido, rutaActiva = '/') {
   return `<!DOCTYPE html>
 <html lang="es" data-bs-theme="dark">
@@ -49,10 +58,12 @@ export function renderLayout(titulo, contenido, rutaActiva = '/') {
     const root = document.documentElement;
     const themeBtn = document.getElementById('themeBtn');
 
+    // getTheme: Obtiene y devuelve informacion sin modificar el estado principal.
     function getTheme() {
       return localStorage.getItem(themeKey) || 'dark';
     }
 
+    // applyTheme: Aplica o guarda configuracion de interfaz, como el tema visual.
     function applyTheme(theme) {
       root.setAttribute('data-bs-theme', theme);
       if (theme === 'light') {

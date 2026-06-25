@@ -1,20 +1,23 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: Ejercicio3_Pacientes/controllers/patientController.js
+ * Rol: contiene la logica de validacion y respuesta del controlador usado por el servidor.
+ * Idea clave: las reglas de pacientes fueron atomizadas en utils/patientValidators.js.
+ * Como defenderlo: el controller valida, controla duplicados, guarda en memoria y responde al frontend.
+ * Validacion: los campos obligatorios y reglas de negocio cortan el flujo antes de crear el paciente.
+ */
 import { sendWelcomeEmail } from '../services/emailService.js';
+import {
+  calculateAge,
+  hasChildren,
+  isLetters,
+  isValidAge,
+  isValidDni,
+  isValidEmail,
+  isValidPhone
+} from '../utils/patientValidators.js';
 
 const memoryDB = { pacientes: [] };
-
-const onlyLetters = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-const dniRegex = /^\d{7,8}$/;
-const phoneRegex = /^\d{10,15}$/;
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-function calculateAge(birthDateStr) {
-  const today = new Date();
-  const birthDate = new Date(birthDateStr);
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const m = today.getMonth() - birthDate.getMonth();
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
-  return age;
-}
 
 export async function registerPatient(req, res) {
   try {
@@ -33,45 +36,39 @@ export async function registerPatient(req, res) {
       }
     }
 
-    if (!onlyLetters.test(data.nombre) || data.nombre.trim().length < 3 || data.nombre.trim().length > 100) {
-      return res.status(400).json({ error: 'Nombre inválido. Solo letras (mín. 3, máx. 100 caracteres).' });
+    if (!isLetters(data.nombre, 3, 100)) {
+      return res.status(400).json({ error: 'Nombre invalido. Solo letras (min. 3, max. 100 caracteres).' });
     }
-
-    if (!onlyLetters.test(data.apellido) || data.apellido.trim().length < 2 || data.apellido.trim().length > 100) {
-      return res.status(400).json({ error: 'Apellido inválido. Solo letras (mín. 2, máx. 100 caracteres).' });
+    if (!isLetters(data.apellido, 2, 100)) {
+      return res.status(400).json({ error: 'Apellido invalido. Solo letras (min. 2, max. 100 caracteres).' });
     }
-
-    if (!dniRegex.test(data.dni)) {
-      return res.status(400).json({ error: 'DNI inválido.' });
+    if (!isValidDni(data.dni)) {
+      return res.status(400).json({ error: 'DNI invalido.' });
     }
-
-    if (!phoneRegex.test(data.telefono) || !phoneRegex.test(data.emergenciaTelefono)) {
-      return res.status(400).json({ error: 'Teléfono inválido.' });
+    if (!isValidPhone(data.telefono) || !isValidPhone(data.emergenciaTelefono)) {
+      return res.status(400).json({ error: 'Telefono invalido.' });
     }
-
-    if (!emailRegex.test(data.email)) {
-      return res.status(400).json({ error: 'Email inválido.' });
+    if (!isValidEmail(data.email)) {
+      return res.status(400).json({ error: 'Email invalido.' });
     }
-
     if (!['Masculino', 'Femenino'].includes(data.sexo)) {
-      return res.status(400).json({ error: 'Sexo inválido.' });
+      return res.status(400).json({ error: 'Sexo invalido.' });
     }
 
     const edadNum = Number(data.edad);
-    if (!Number.isInteger(edadNum) || edadNum < 0 || edadNum > 120) {
-      return res.status(400).json({ error: 'Edad inválida.' });
+    if (!isValidAge(data.edad)) {
+      return res.status(400).json({ error: 'Edad invalida.' });
     }
 
     const edadCalculada = calculateAge(data.fechaNacimiento);
-    if (!Number.isInteger(edadCalculada) || edadCalculada < 0 || edadCalculada > 120) {
-      return res.status(400).json({ error: 'Fecha de nacimiento inválida.' });
+    if (!isValidAge(edadCalculada)) {
+      return res.status(400).json({ error: 'Fecha de nacimiento invalida.' });
     }
-
     if (edadCalculada !== edadNum) {
       return res.status(400).json({ error: `La edad no coincide con la fecha de nacimiento. Edad esperada: ${edadCalculada}.` });
     }
 
-    if (data.tieneHijos === 'Sí') {
+    if (hasChildren(data.tieneHijos)) {
       const hijos = Number(data.cantidadHijos);
       if (!Number.isInteger(hijos) || hijos < 1 || hijos > 20) {
         return res.status(400).json({ error: 'Si tiene hijos, cantidadHijos debe estar entre 1 y 20.' });
@@ -82,19 +79,18 @@ export async function registerPatient(req, res) {
       data.cantidadHijos = '';
     }
 
-    if (!onlyLetters.test(data.emergenciaNombre) || data.emergenciaNombre.trim().length < 3) {
-      return res.status(400).json({ error: 'Nombre de emergencia inválido.' });
+    if (!isLetters(data.emergenciaNombre, 3, 100)) {
+      return res.status(400).json({ error: 'Nombre de emergencia invalido.' });
     }
-
     if (String(data.alergias).trim().length < 4) {
-      return res.status(400).json({ error: 'Alergias inválido: mínimo 4 caracteres.' });
+      return res.status(400).json({ error: 'Alergias invalido: minimo 4 caracteres.' });
     }
 
     const isTramiteDuplicated = memoryDB.pacientes.some((p) => p.tramite === data.tramite);
     const isEmailDuplicated = memoryDB.pacientes.some((p) => p.email === data.email);
 
     if (data.tramite && isTramiteDuplicated) {
-      return res.status(409).json({ error: 'El número de trámite ya se encuentra registrado.' });
+      return res.status(409).json({ error: 'El numero de tramite ya se encuentra registrado.' });
     }
     if (isEmailDuplicated) {
       return res.status(409).json({ error: 'El Email ya se encuentra registrado en el sistema.' });

@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: modules/consigna2/consigna2.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // Modulo de la consigna 2.
 // Genera la vista HTML que se guarda en /pages/consigna2/vista.html
 // y tambien el contenido de la pagina principal de la consigna.
@@ -11,6 +19,7 @@ const RUTA_VISTA = path.join(__dirname, '..', '..', 'pages', 'consigna2', 'vista
 
 import { renderLayout } from '../shared/layout.js';
 
+// renderVistaHTML: Genera HTML o contenido visual a partir de datos ya preparados.
 export function renderVistaHTML() {
   const contenido = `
     <section class="njs-page-header mb-4">
@@ -51,10 +60,12 @@ export function renderVistaHTML() {
   return renderLayout('Vista Generada', contenido, '/vista.html');
 }
 
+// crearVista: Crea o registra informacion nueva despues de validar los datos.
 export function crearVista() {
   escribirArchivo(RUTA_VISTA, renderVistaHTML());
 }
 
+// renderContenidoArchivos: Genera HTML o contenido visual a partir de datos ya preparados.
 export function renderContenidoArchivos() {
   const items = [
     { icon: 'file-earmark-code-fill', label: 'Módulo generador', value: 'modules/consigna2/consigna2.js' },

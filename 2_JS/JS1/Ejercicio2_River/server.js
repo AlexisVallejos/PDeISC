@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: Ejercicio2_River/server.js
+ * Rol: levanta el servidor, define rutas HTTP/API y sirve los archivos necesarios para el ejercicio.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';

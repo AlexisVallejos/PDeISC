@@ -1,8 +1,17 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: modules/consigna1/consigna1.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // Renderiza el contenido HTML de la consigna 1 usando los modulos propios.
 
 import { sumar, restar, multiplicar, dividir, potencia } from './calculo.js';
 import { getClimaActual } from './clima.js';
 
+// renderContenidoConsigna1: Genera HTML o contenido visual a partir de datos ya preparados.
 export function renderContenidoConsigna1() {
   const a = 12;
   const b = 4;

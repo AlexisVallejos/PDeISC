@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: Ejercicio1_Formulario/public/js/main.js
+ * Rol: maneja la interaccion del navegador: eventos, DOM, validaciones visuales y llamadas al servidor.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // logica principal del cliente
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -42,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // clearForm: Limpia campos y deja la interfaz lista para una nueva carga.
     const clearForm = () => {
         form.reset();
         inputs.forEach(input => input.closest('.input-group').classList.remove('invalid'));
@@ -158,6 +167,7 @@ function initUiExtras() {
     const themeBtn = document.getElementById('themeToggleBtn');
     const topBtn = document.getElementById('scrollTopBtn');
 
+    // pintarBotonTema: Aplica o guarda configuracion de interfaz, como el tema visual.
     const pintarBotonTema = (tema) => {
         if (!themeBtn) return;
         const icono = tema === 'dark' ? 'sun' : 'moon';
@@ -180,6 +190,7 @@ function initUiExtras() {
     }
 
     if (topBtn) {
+        // handleScroll: Maneja un evento del usuario y actualiza la interfaz segun corresponda.
         const handleScroll = () => {
             topBtn.style.display = window.scrollY > 220 ? 'inline-flex' : 'none';
         };

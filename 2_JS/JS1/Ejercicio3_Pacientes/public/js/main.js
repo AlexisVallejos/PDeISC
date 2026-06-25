@@ -1,5 +1,12 @@
-// logica para el registro de pacientes medicore
-// maneja la edad, el mail compuesto y el localstorage para el listado de pacientes
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: Ejercicio3_Pacientes/public/js/main.js
+ * Rol: maneja la interaccion del navegador: eventos, DOM, validaciones visuales y llamadas al servidor.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
+// Logica principal del registro de pacientes: edad, campos condicionales y listado local.
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('patientForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -39,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // showToast: Muestra una notificacion temporal para informar exito o error.
     const showToast = (msg, type = 'success') => {
         const toast = document.createElement('div');
         const iconClass = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-octagon-fill';
@@ -50,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 4000);
     };
 
+    // renderTable: Genera HTML o contenido visual a partir de datos ya preparados.
     const renderTable = () => {
         const stored = localStorage.getItem('pacientes_data');
         const patients = stored ? JSON.parse(stored) : [];
@@ -92,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const allInputs = form.querySelectorAll('input, select, textarea');
 
+    // clearForm: Limpia campos y deja la interfaz lista para una nueva carga.
     const clearForm = () => {
         form.reset();
         allInputs.forEach((input) => {
@@ -126,7 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tieneHijosRadios.forEach((radio) => {
         radio.addEventListener('change', (e) => {
-            if (e.target.value === 'Si') {
+            const normalizedValue = e.target.value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            if (normalizedValue === 'Si') {
                 hijosContainer.style.display = 'flex';
                 document.getElementById('cantidadHijos').setAttribute('required', 'true');
             } else {
@@ -230,6 +241,7 @@ function initUiExtras() {
     const themeBtn = document.getElementById('themeToggleBtn');
     const topBtn = document.getElementById('scrollTopBtn');
 
+    // pintarBotonTema: Aplica o guarda configuracion de interfaz, como el tema visual.
     const pintarBotonTema = (tema) => {
         if (!themeBtn) return;
         const icono = tema === 'dark' ? 'sun' : 'moon';
@@ -252,6 +264,7 @@ function initUiExtras() {
     }
 
     if (topBtn) {
+        // handleScroll: Maneja un evento del usuario y actualiza la interfaz segun corresponda.
         const handleScroll = () => {
             topBtn.style.display = window.scrollY > 220 ? 'inline-flex' : 'none';
         };

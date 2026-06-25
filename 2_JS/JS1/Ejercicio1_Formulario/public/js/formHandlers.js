@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: Ejercicio1_Formulario/public/js/formHandlers.js
+ * Rol: maneja la interaccion del navegador: eventos, DOM, validaciones visuales y llamadas al servidor.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // aca estan las funciones para leer el form de las 3 maneras que pide la consigna
 
 const formHandlers = {

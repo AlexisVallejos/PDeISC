@@ -1,16 +1,20 @@
-// Punto de entrada del proyecto.
-// Antes de levantar el servidor, genera todos los HTML dentro de /pages.
-
-import { createServer } from 'node:http';
-import { readFileSync } from 'node:fs';
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: server.js
+ * Rol: punto de entrada del sitio NJS2.
+ * Idea clave: genera las paginas y delega el servidor estatico al modulo shared/staticServer.js.
+ * Como defenderlo: este archivo queda atomizado en configuracion de rutas + arranque.
+ * Validacion: el helper compartido maneja 404, CSS, HTML y errores internos.
+ */
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { generarSitio } from './modules/site/generarSitio.js';
+import { startStaticSiteServer } from './modules/shared/staticServer.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PORT = 3000;
 
-// Cada ruta publica apunta a un archivo HTML ya generado en /pages.
 const RUTAS = {
   '/': 'pages/index.html',
   '/calculo': 'pages/consigna1/calculo.html',
@@ -20,38 +24,7 @@ const RUTAS = {
   '/npm': 'pages/consigna4/npm.html',
 };
 
-await generarSitio();
-
-const server = createServer((req, res) => {
-  // Los estilos se sirven como archivos estaticos.
-  if (req.url?.startsWith('/styles/') && req.url.endsWith('.css')) {
-    const css = readFileSync(path.join(__dirname, req.url), 'utf8');
-    res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
-    res.end(css);
-    return;
-  }
-
-  const archivo = RUTAS[req.url];
-
-  // Si la ruta no existe en el mapa, responde 404.
-  if (!archivo) {
-    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end('404 - Pagina no encontrada');
-    return;
-  }
-
-  try {
-    // Lee y devuelve el HTML ya generado en disco.
-    const html = readFileSync(path.join(__dirname, archivo), 'utf8');
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-    res.end(html);
-  } catch (err) {
-    res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
-    res.end(`Error interno: ${err.message}`);
-  }
-});
-
-server.listen(3000, '127.0.0.1', () => {
+function printStartupInfo() {
   console.log('\n[NJS2] Servidor listo -> http://127.0.0.1:3000\n');
   console.log('  Paginas disponibles:');
   console.log('  /          -> Inicio');
@@ -60,4 +33,13 @@ server.listen(3000, '127.0.0.1', () => {
   console.log('  /vista.html -> HTML generado');
   console.log('  /url       -> Consigna 3');
   console.log('  /npm       -> Consigna 4');
+}
+
+await generarSitio();
+
+startStaticSiteServer({
+  baseDir: __dirname,
+  routes: RUTAS,
+  port: PORT,
+  onReady: printStartupInfo
 });

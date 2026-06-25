@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: modules/consigna5/inicio.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // Modulo de la pagina de inicio.
 // Resume las consignas del proyecto y muestra el clima integrado en la home.
 
@@ -10,6 +18,7 @@ const ITEMS = [
   { href: '/npm', consigna: 'Consigna 4', icono: 'box-seam-fill', titulo: 'Paquete NPM', texto: 'upper-case aplicado en una grilla responsive.', color: '#ec4899' },
 ];
 
+// renderContenidoInicio: Genera HTML o contenido visual a partir de datos ya preparados.
 export function renderContenidoInicio() {
   const clima = getClimaActual('Mar del Plata');
 

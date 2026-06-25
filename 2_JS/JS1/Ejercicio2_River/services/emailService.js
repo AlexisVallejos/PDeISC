@@ -1,5 +1,14 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: Ejercicio2_River/services/emailService.js
+ * Rol: encapsula una tarea externa o reutilizable para que el controlador no mezcle responsabilidades.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 import nodemailer from 'nodemailer';
 
+// sendWelcomeSocioEmail: Envia una notificacion/correo y devuelve el resultado del intento.
 export async function sendWelcomeSocioEmail(toEmail, documento) {
   const fallback = {
     accepted: [toEmail],
@@ -35,6 +44,7 @@ export async function sendWelcomeSocioEmail(toEmail, documento) {
   }
 }
 
+// sendInventoryEmail: Envia una notificacion/correo y devuelve el resultado del intento.
 export async function sendInventoryEmail(toEmail, encargadoNombre, nombreProducto) {
   const fallback = {
     accepted: [toEmail],

@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: server.js
+ * Rol: levanta el servidor, define rutas HTTP/API y sirve los archivos necesarios para el ejercicio.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
@@ -7,6 +15,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = 3000;
 
+// Lista de ejercicios que muestra el launcher. Cada item indica metodo, puerto y carpeta del modulo real.
 const ejercicios = [
   { método: "push", puerto: 3001, carpeta: "ejercicio01_push" },
   { método: "pop", puerto: 3002, carpeta: "ejercicio02_pop" },
@@ -25,6 +34,7 @@ const ejercicios = [
   { método: "secreto", puerto: 3015, carpeta: "ejercicio15_secreto" }
 ];
 
+// contentType: Decide el Content-Type correcto segun la extension del archivo.
 function contentType(filePath) {
   const ext = path.extname(filePath);
   const map = {
@@ -36,6 +46,7 @@ function contentType(filePath) {
   return map[ext] || "text/plain; charset=utf-8";
 }
 
+// serveStatic: Busca un archivo del proyecto y lo entrega con el tipo de contenido correcto.
 function serveStatic(reqPath, res) {
   const rel = reqPath === "/" ? "/pages/index.html" : reqPath;
   const filePath = path.join(__dirname, rel);
@@ -57,6 +68,7 @@ function serveStatic(reqPath, res) {
   });
 }
 
+// server: recibe cada request HTTP y decide que respuesta corresponde.
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
 

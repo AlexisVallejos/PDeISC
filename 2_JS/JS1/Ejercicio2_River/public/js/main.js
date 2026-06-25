@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: Ejercicio2_River/public/js/main.js
+ * Rol: maneja la interaccion del navegador: eventos, DOM, validaciones visuales y llamadas al servidor.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // logica para el registro de socios de river
 // maneja el modal, validaciones, el mail compuesto y guardar todo en la tabla
 document.addEventListener('DOMContentLoaded', () => {
@@ -60,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'hidden';
     });
 
+    // closeTerms: Agrupa una parte de la logica para que el archivo sea mas facil de leer y defender.
     const closeTerms = () => {
         termsModal.style.display = 'none';
         document.body.style.overflow = 'auto';
@@ -79,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // showToast: Muestra una notificacion temporal para informar exito o error.
     const showToast = (msg, type = 'success') => {
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
@@ -115,6 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         /[.!\@#\$%\^&\*\(\)\-\+\?]/.test(val) ? rules.special.classList.add('valid') : rules.special.classList.remove('valid');
     });
 
+    // renderTable: Genera HTML o contenido visual a partir de datos ya preparados.
     const renderTable = () => {
         const items = window.inventoryStorage.getAllItems();
         tableBody.innerHTML = '';
@@ -143,6 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     renderTable();
 
+    // clearForm: Limpia campos y deja la interfaz lista para una nueva carga.
     const clearForm = () => {
         form.reset();
         form.querySelectorAll('input, select').forEach(input => {
@@ -233,6 +245,7 @@ function initUiExtras() {
     const themeBtn = document.getElementById('themeToggleBtn');
     const topBtn = document.getElementById('scrollTopBtn');
 
+    // pintarBotonTema: Aplica o guarda configuracion de interfaz, como el tema visual.
     const pintarBotonTema = (tema) => {
         if (!themeBtn) return;
         const icono = tema === 'dark' ? 'sun' : 'moon';
@@ -255,6 +268,7 @@ function initUiExtras() {
     }
 
     if (topBtn) {
+        // handleScroll: Maneja un evento del usuario y actualiza la interfaz segun corresponda.
         const handleScroll = () => {
             topBtn.style.display = window.scrollY > 220 ? 'inline-flex' : 'none';
         };

@@ -1,8 +1,17 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: scripts/main.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 import { getTheme, applyTheme, toggleTheme } from "/Context/theme.js";
 
 const grid = document.getElementById("grid");
 const toTopBtn = document.getElementById("toTop");
 
+// init: Inicializa eventos y estado visual cuando carga la pantalla.
 async function init() {
   applyTheme(getTheme());
   const res = await fetch("/api/launcher");

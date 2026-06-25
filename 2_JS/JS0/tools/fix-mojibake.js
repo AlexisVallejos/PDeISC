@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: tools/fix-mojibake.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,14 +16,17 @@ const ROOT = path.resolve(__dirname, "..");
 const TEXT_EXTENSIONS = new Set([".js", ".html", ".json", ".md", ".css"]);
 const MARKERS = ["\u00C3", "\u00C2", "\uFFFD", "\u0192", "\u00A2", "\u20AC", "\u2122"];
 
+// mojibakeScore: Agrupa una parte de la logica para que el archivo sea mas facil de leer y defender.
 function mojibakeScore(text) {
   return MARKERS.reduce((total, marker) => total + (text.split(marker).length - 1), 0);
 }
 
+// recodeOnce: Agrupa una parte de la logica para que el archivo sea mas facil de leer y defender.
 function recodeOnce(text) {
   return Buffer.from(text, "latin1").toString("utf8");
 }
 
+// normalizeText: Agrupa una parte de la logica para que el archivo sea mas facil de leer y defender.
 function normalizeText(text) {
   let current = text;
   let currentScore = mojibakeScore(current);
@@ -40,6 +51,7 @@ function normalizeText(text) {
     .replaceAll("m\uFFFDtodo", "m\u00E9todo");
 }
 
+// walk: Agrupa una parte de la logica para que el archivo sea mas facil de leer y defender.
 function walk(dir, files = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const fullPath = path.join(dir, entry.name);

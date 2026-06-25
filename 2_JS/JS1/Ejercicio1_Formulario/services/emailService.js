@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: Ejercicio1_Formulario/services/emailService.js
+ * Rol: encapsula una tarea externa o reutilizable para que el controlador no mezcle responsabilidades.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -15,6 +23,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+// sendWelcomeEmail: Envia una notificacion/correo y devuelve el resultado del intento.
 export async function sendWelcomeEmail(toEmail, userName) {
   const mailOptions = {
     from: `"Vase Company 🏆" <${process.env.SMTP_USER}>`,

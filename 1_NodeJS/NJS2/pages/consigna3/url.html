@@ -185,10 +185,12 @@
     const root = document.documentElement;
     const themeBtn = document.getElementById('themeBtn');
 
+    // getTheme: Obtiene y devuelve informacion sin modificar el estado principal.
     function getTheme() {
       return localStorage.getItem(themeKey) || 'dark';
     }
 
+    // applyTheme: Aplica o guarda configuracion de interfaz, como el tema visual.
     function applyTheme(theme) {
       root.setAttribute('data-bs-theme', theme);
       if (theme === 'light') {

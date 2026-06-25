@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: ejercicios/ejercicio5/server.js
+ * Rol: levanta el servidor, define rutas HTTP/API y sirve los archivos necesarios para el ejercicio.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 import { readFile } from "node:fs/promises";
 import { createServer } from "node:http";
 import { extname, join } from "node:path";
@@ -19,6 +27,7 @@ const tipos = new Map([
   [".js", "text/javascript; charset=utf-8"]
 ]);
 
+// server: recibe cada request HTTP y decide que respuesta corresponde.
 const server = createServer(async (req, res) => {
   const ruta = rutas.get(req.url ?? "");
 

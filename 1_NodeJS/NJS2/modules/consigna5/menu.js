@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: modules/consigna5/menu.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // Modulo del menu principal reutilizado por layout.js.
 
 const LINKS = [
@@ -8,6 +16,7 @@ const LINKS = [
   { href: '/npm', label: 'Consigna 4', icono: 'box-seam-fill' },
 ];
 
+// getMenu: Obtiene y devuelve informacion sin modificar el estado principal.
 export function getMenu(rutaActiva = '/') {
   const links = LINKS.map(({ href, label, icono }) => {
     const activo = rutaActiva === href ? ' njs-nav__link--active' : '';

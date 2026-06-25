@@ -1,3 +1,11 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: modules/site/generarSitio.js
+ * Rol: forma parte del proyecto y separa responsabilidades para que el codigo sea mas facil de explicar y mantener.
+ * Idea clave: mantener este codigo separado ayuda a explicar que hace cada parte sin mezclar responsabilidades.
+ * Como defenderlo: explicar primero que datos entran, que proceso se aplica y que salida produce.
+ * Validacion: remarcar donde se controlan errores para que la app no falle con datos incorrectos.
+ */
 // Genera todos los archivos HTML del proyecto dentro de /pages.
 // Cada modulo aporta el contenido de su consigna y layout.js envuelve el resultado.
 
@@ -15,6 +23,7 @@ import { renderContenidoInicio } from '../consigna5/inicio.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE = path.join(__dirname, '..', '..');
 
+// generarSitio: Agrupa una parte de la logica para que el archivo sea mas facil de leer y defender.
 export async function generarSitio() {
   // Punto 5: inicio del sitio.
   escribirArchivo(path.join(BASE, 'pages', 'index.html'), renderLayout('Inicio', renderContenidoInicio(), '/'));

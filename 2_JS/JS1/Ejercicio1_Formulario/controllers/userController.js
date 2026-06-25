@@ -1,30 +1,31 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: Ejercicio1_Formulario/controllers/userController.js
+ * Rol: contiene la logica de validacion y respuesta del controlador usado por el servidor.
+ * Idea clave: las reglas de validacion fueron atomizadas en utils/validators.js.
+ * Como defenderlo: el controller recibe datos, consulta validadores, envia email y responde JSON.
+ * Validacion: si un dato no cumple, se corta el flujo con status 400 y mensaje claro.
+ */
 import { sendWelcomeEmail } from '../services/emailService.js';
-
-const isValidName = (str) => {
-  const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
-  return regex.test(str);
-};
+import { isValidEmailDomain, isValidName, VALID_TLDS } from '../utils/validators.js';
 
 export async function registerUser(req, res) {
   try {
     const { name, surname, email } = req.body;
 
-    if (!name || name.length < 3 || name.length > 100 || !isValidName(name)) {
-      return res.status(400).json({ error: 'El nombre es inválido. Debe tener entre 3 y 100 caracteres y no contener números.' });
+    if (!isValidName(name, 3, 100)) {
+      return res.status(400).json({ error: 'El nombre es invalido. Debe tener entre 3 y 100 caracteres y no contener numeros.' });
     }
 
-    if (!surname || surname.length < 2 || surname.length > 100 || !isValidName(surname)) {
-      return res.status(400).json({ error: 'El apellido es inválido. Debe tener entre 2 y 100 caracteres y no contener números.' });
+    if (!isValidName(surname, 2, 100)) {
+      return res.status(400).json({ error: 'El apellido es invalido. Debe tener entre 2 y 100 caracteres y no contener numeros.' });
     }
 
-    const validTlds = ['.com', '.ar', '.net', '.org', '.edu'];
-    const hasValidTld = validTlds.some((tld) => email?.endsWith(tld));
-    if (!email || !email.includes('@') || !hasValidTld) {
-      return res.status(400).json({ error: `El correo debe ser válido, contener "@" y terminar en uno de estos dominios: ${validTlds.join(', ')}.` });
+    if (!isValidEmailDomain(email)) {
+      return res.status(400).json({ error: `El correo debe ser valido, contener "@" y terminar en uno de estos dominios: ${VALID_TLDS.join(', ')}.` });
     }
 
     const newUser = { id: Date.now(), name, surname, email };
-
     await sendWelcomeEmail(email, name);
 
     return res.status(201).json({
