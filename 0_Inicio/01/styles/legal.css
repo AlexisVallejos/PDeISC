@@ -1,0 +1,77 @@
+/* Estilos específicos para páginas legales y de contacto */
+
+.articulo-hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.articulo-cuerpo {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem 4rem 1rem;
+  background-color: var(--blanco);
+  border-radius: 8px;
+  box-shadow: var(--sombra);
+  border: 1px solid var(--papel-oscuro);
+}
+
+.articulo-contenido {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--gris);
+}
+
+.articulo-contenido h3 {
+  font-family: 'Playfair Display', serif;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--tinta-oscura);
+  border-bottom: 1px solid var(--gris-claro);
+  padding-bottom: 0.5rem;
+}
+
+.articulo-contenido p {
+  margin-bottom: 1.5rem;
+}
+
+.articulo-contenido ul,
+.articulo-contenido ol {
+  margin-bottom: 1.5rem;
+  padding-left: 2rem;
+}
+
+.articulo-contenido a {
+  color: var(--acento);
+  text-decoration: underline;
+}
+
+.articulo-contenido a:hover {
+  text-decoration: none;
+}
+
+/* Ajustes para la página de Contacto */
+.contacto-form {
+  background: var(--papel-oscuro);
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid var(--gris-claro);
+  margin-top: 2rem;
+}
+
+.contacto-form .form-label {
+  font-weight: bold;
+  color: var(--tinta-oscura);
+}
+
+.contacto-form .btn-primary {
+  background-color: var(--acento);
+  border-color: var(--acento);
+  color: #fff;
+}
+
+.contacto-form .btn-primary:hover {
+  background-color: var(--tinta);
+  border-color: var(--tinta);
+}

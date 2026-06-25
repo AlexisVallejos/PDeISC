@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ejercicio metodo</title>
+  <title>Ejercicio 15 secreto</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11,31 +11,82 @@
   <link rel="stylesheet" href="/public/style.css" />
 </head>
 <body>
-  <div class="bg-deco bg-deco-a"></div>
-  <div class="bg-deco bg-deco-b"></div>
+  <!-- Animated Background Blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
 
-  <main class="container py-4 py-lg-5 app-shell">
-    <header class="hero mb-4">
-      <p class="eyebrow mb-2">Ejercicio Secreto</p>
-      <h1 class="display-title mb-2">Secreto In / Secreto Out</h1>
-      <p class="hero-copy mb-0">Elegi ejercicio, revisa codigo y compara resultado sin recargar la pagina.</p>
+  <!-- Navigation Bar -->
+  <nav class="top-nav">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a href="http://localhost:3000" class="back-link">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="me-2"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        Volver al Launcher
+      </a>
+      <span class="module-badge">Módulo 15</span>
+    </div>
+  </nav>
+
+  <main class="container-fluid px-4 px-xl-5 py-4 app-shell" style="max-width: 1800px;">
+    <header class="hero mb-4 text-center">
+      <div class="method-chip">Array.prototype</div>
+      <h1 id="title" class="display-title mb-2">Método</h1>
+      <p class="hero-copy mb-0">Entorno interactivo. Seleccioná una variante a la izquierda y evaluá los resultados en el panel principal.</p>
     </header>
 
-    <section class="panel mb-4">
-      <label for="secretInput" class="form-label">Secreto In</label>
-      <textarea id="secretInput" class="form-control" rows="4" required minlength="1" maxlength="500" placeholder="Ej: Hoy (.sh 22 sal a) (ed asac ne sominuer son) Marcelo."></textarea>
-      <small class="helper mt-2 d-block">Escribí el fragmento que querés decodificar o cifrar entre paréntesis. Ejemplo: <code>(otxet)</code>.</small>
-      <div class="d-flex flex-wrap gap-2 mt-3">
-        <button id="decodeBtn" class="btn btn-brand" type="button">Decodificar</button>
-        <button id="generateBtn" class="btn btn-ghost" type="button">Auto generar cifrado</button>
-      </div>
-      <p id="feedback" class="feedback mt-3 mb-0" role="status" aria-live="polite"></p>
-    </section>
+    <div class="row g-4">
+      <!-- PANEL LATERAL (CONTROLES) -->
+      <div class="col-lg-4 col-xl-3">
+        <section class="glass-panel control-panel mb-4" style="position: sticky; top: 100px;">
+          <h2 class="h5 fw-bold mb-3 d-flex align-items-center gap-2" style="color: var(--accent);">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg>
+            Configuración
+          </h2>
+          <div class="mb-3">
+            <label for="variant" class="form-label" style="color: #f8fafc; font-weight: 600; letter-spacing: 0.02em;">Variante del Ejercicio</label>
+            <select id="variant" class="form-select custom-select" required></select>
+          </div>
+          <p id="feedback" class="feedback mb-0 small" role="status" aria-live="polite" style="color: var(--muted);"></p>
 
-    <section class="result-card">
-      <p><strong>Secreto Out:</strong></p>
-      <pre id="secretOutput">Esperando texto para decodificar...</pre>
-    </section>
+          <hr style="border-color: var(--border); margin: 1.5rem 0;">
+
+          <div class="info-panel mt-4 p-4 rounded-4" style="background: linear-gradient(135deg, #1e293b, #0f172a); color: #ffffff; box-shadow: 0 10px 20px rgba(0,0,0,0.15);">
+            <h3 class="fw-bold d-flex align-items-center gap-2 mb-3" style="color: #818cf8; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6A4.997 4.997 0 0 1 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"/></svg>
+              Tip de Desarrollo
+            </h3>
+            <p class="mb-0" style="line-height: 1.6; font-size: 0.78rem; color: #f8fafc; font-weight: 400;">
+              Los métodos de arreglos son esenciales para manipular datos en JS. Recordá siempre verificar en la documentación si el método que estás usando <strong style="color: #fff; font-weight: 700;">muta</strong> (modifica) el arreglo original o si devuelve uno completamente nuevo.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <!-- ESPACIO DE TRABAJO (RESULTADOS) -->
+      <div class="col-lg-8 col-xl-9">
+        <!-- Secret Tools (Only visible in Ejercicio 15) -->
+        <section id="secretTools" class="glass-panel mb-4 d-none" aria-label="Herramientas secreto">
+          <h2 class="h5 fw-bold mb-3 d-flex align-items-center gap-2">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+            Herramientas Avanzadas
+          </h2>
+          <label for="secretInput" class="form-label text-muted">Texto a decodificar</label>
+          <textarea id="secretInput" class="form-control custom-textarea" rows="2" required minlength="3" maxlength="400" placeholder="Escribí texto con fragmentos entre paréntesis..."></textarea>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <button id="runCustom" class="btn btn-primary premium-btn" type="button">Decodificar</button>
+            <button id="runStep" class="btn btn-outline-secondary premium-btn-outline" type="button">Paso a paso</button>
+          </div>
+          <small class="text-muted mt-2 d-block">Validaciones activas: texto vacío y paréntesis mal cerrados.</small>
+          <pre id="secretResult" class="code-block mt-3 d-none"></pre>
+        </section>
+
+        <!-- Main Workspace (Result Card) -->
+        <section id="card" class="result-card">
+          <div class="card-body" id="cardBody">
+            <!-- Dynamic content injected by JS -->
+          </div>
+        </section>
+      </div>
+    </div>
   </main>
 
   <button id="themeBtn" class="fab-left" type="button" aria-label="Cambiar tema">

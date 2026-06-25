@@ -14,7 +14,7 @@ async function init() {
         <div class="card-body p-3 p-lg-4">
           <span class="method-pill mb-2">${e.método}</span>
           <h2 class="h4 mb-2">Ejercicio ${String(e.puerto - 3000).padStart(2, "0")}</h2>
-          <p class="mb-3 text-muted">Puerto dedicado: <strong>${e.puerto}</strong></p>
+          <p class="mb-3" style="color: var(--text); opacity: 0.9;">Puerto dedicado: <strong style="color: var(--accent);">${e.puerto}</strong></p>
           <a class="open-btn d-inline-flex align-items-center justify-content-center text-decoration-none" href="http://localhost:${e.puerto}" target="_blank" rel="noreferrer">Abrir ejercicio</a>
         </div>
       </div>

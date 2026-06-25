@@ -1,10 +1,12 @@
 [data-theme="dark"] {
-  --bg: #0f172a;
-  --surface: #1e293b;
-  --text: #f8fafc;
-  --muted: #cbd5e1;
-  --accent: #38bdf8;
-  --border: #334155;
+  --bg: #030712;
+  --surface: #111827;
+  --text: #f9fafb;
+  --muted: #9ca3af;
+  --accent: #818cf8;
+  --accent-hover: #6366f1;
+  --border: #374151;
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
 }
 
-body { transition: background-color .2s ease, color .2s ease; }
+body { transition: background-color .3s ease, color .3s ease; }

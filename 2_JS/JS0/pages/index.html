@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8" />
@@ -12,56 +12,80 @@
   <link rel="stylesheet" href="/styles/dark.css">
   <style>
     :root {
-      --surface: rgba(255,255,255,.85);
-      --border-soft: color-mix(in srgb, var(--border) 85%, transparent);
+      --surface: rgba(255, 255, 255, 0.7);
+      --border-soft: rgba(255, 255, 255, 0.4);
       --muted-soft: color-mix(in srgb, var(--muted) 90%, transparent);
-      --shadow: 0 22px 56px rgba(23, 41, 82, 0.14);
+    }
+    [data-theme="dark"] {
+      --surface: rgba(17, 24, 39, 0.7);
+      --border-soft: rgba(255, 255, 255, 0.05);
     }
     body {
       font-family: "Plus Jakarta Sans", sans-serif;
-      background: radial-gradient(1200px 700px at 15% -10%, color-mix(in srgb, var(--accent) 28%, transparent), transparent), var(--bg);
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.15), transparent 25%);
       color: var(--text);
       min-height: 100vh;
+      overflow-x: hidden;
     }
-    .hero { max-width: 980px; }
-    .launcher-shell { max-width: 1800px; margin-inline: auto; }
-    .hero h1 { font-weight: 800; line-height: 1.1; font-size: clamp(1.9rem, 3.8vw, 3rem); }
-    .hero p { color: var(--muted-soft); }
+    .launcher-shell { max-width: 1400px; margin-inline: auto; position: relative; z-index: 10; }
+    .hero { max-width: 800px; margin: 0 auto 4rem; text-align: center; }
+    .hero h1 { font-weight: 800; line-height: 1.1; font-size: clamp(2.5rem, 5vw, 4rem); letter-spacing: -0.02em; margin-bottom: 1rem; }
+    .hero p { color: var(--muted-soft); font-size: 1.1rem; line-height: 1.6; }
     .launcher-card {
       background: var(--surface);
       border: 1px solid var(--border-soft);
-      border-radius: 1rem;
+      border-radius: 20px;
+      padding: 24px;
       box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .launcher-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
     }
     .method-pill {
       display: inline-flex;
       align-items: center;
-      border: 1px solid var(--border-soft);
-      border-radius: 999px;
-      font-size: .78rem;
-      padding: .22rem .65rem;
-      color: var(--muted-soft);
+      background: color-mix(in srgb, var(--accent) 15%, transparent);
+      border-radius: 8px;
+      font-size: 0.85rem;
+      padding: 4px 12px;
+      color: var(--accent);
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: .04em;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
     }
     .open-btn {
-      min-height: 44px;
-      border-radius: .7rem;
+      min-height: 48px;
+      border-radius: 12px;
       font-weight: 700;
-      background: linear-gradient(140deg, var(--accent), color-mix(in srgb, var(--accent) 76%, black));
+      background: var(--accent);
       border: 0;
       color: #fff;
       width: 100%;
       cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: auto;
+    }
+    .open-btn:hover {
+      background: var(--accent-hover);
+      transform: scale(1.02);
     }
     .fab-left, .fab-right {
       position: fixed;
-      bottom: 16px;
-      width: 52px;
-      height: 52px;
-      border-radius: 999px;
+      bottom: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
       border: 1px solid var(--border-soft);
       background: var(--surface);
       color: var(--text);
@@ -70,27 +94,46 @@
       justify-content: center;
       z-index: 60;
       box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
       cursor: pointer;
+      transition: transform 0.2s ease;
     }
-    .fab-left { left: 16px; }
-    .fab-right { right: 16px; display: none; }
+    .fab-left:hover, .fab-right:hover {
+      transform: scale(1.1);
+    }
+    .fab-left { left: 24px; }
+    .fab-right { right: 24px; display: none; }
     .fab-left svg, .fab-right svg { width: 24px; height: 24px; fill: currentColor; }
-    @media (max-width: 575px) {
-      .fab-left, .fab-right { width: 48px; height: 48px; bottom: 12px; }
-      .fab-left { left: 12px; }
-      .fab-right { right: 12px; }
+    
+    /* Background animated blobs */
+    .blob {
+      position: fixed;
+      filter: blur(80px);
+      z-index: 0;
+      opacity: 0.5;
+      animation: float 20s infinite alternate;
+    }
+    .blob-1 { top: -10%; left: -10%; width: 500px; height: 500px; background: var(--accent); border-radius: 50%; }
+    .blob-2 { bottom: -10%; right: -10%; width: 600px; height: 600px; background: #0ea5e9; border-radius: 50%; animation-delay: -10s; }
+    
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50px, 50px) scale(1.1); }
     }
   </style>
 </head>
 <body>
-  <main class="container-fluid px-3 px-xl-4 py-4 py-lg-5 launcher-shell">
-    <header class="hero mb-4">
-      <p class="text-uppercase fw-bold mb-2" style="letter-spacing:.08em;color:var(--accent);font-size:.76rem;">Trabajo Integrador JS0</p>
-      <h1 class="mb-2">Launcher de ejercicios por puerto</h1>
-      <p class="mb-0">Cada metodo corre de forma independiente. Abri el que quieras y proba variantes sin mezclar ejercicios.</p>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+
+  <main class="container-fluid px-4 py-5 launcher-shell">
+    <header class="hero">
+      <span class="method-pill" style="margin-bottom: 1rem; background: var(--border); color: var(--text)">Node.js & Vanilla JS</span>
+      <h1>Mastering JS Arrays</h1>
+      <p>Entorno interactivo para dominar los métodos de arreglos en JavaScript. Cada módulo corre de forma aislada en su propio servidor de Node.js.</p>
     </header>
 
-    <section id="grid" class="row g-3"></section>
+    <section id="grid" class="row g-4"></section>
   </main>
 
   <button id="themeBtn" class="fab-left" type="button" aria-label="Cambiar tema">

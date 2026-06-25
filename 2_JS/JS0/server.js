@@ -66,7 +66,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (url.pathname === "/" || url.pathname.startsWith("/pages/") || url.pathname.startsWith("/scripts/") || url.pathname.startsWith("/styles/")) {
+  if (url.pathname === "/" || url.pathname.startsWith("/pages/") || url.pathname.startsWith("/scripts/") || url.pathname.startsWith("/styles/") || url.pathname.startsWith("/Context/")) {
     serveStatic(url.pathname, res);
     return;
   }

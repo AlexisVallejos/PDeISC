@@ -1,4 +1,4 @@
-﻿const onlyLetters = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+const onlyLetters = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
 
 function splitCsv(text) {
   return String(text || "").split(",").map((x) => x.trim()).filter(Boolean);
@@ -196,7 +196,9 @@ export function buildExercisePayload(method) {
       nombre: v.nombre,
       consigna: v.consigna,
       operacion: v.operacion,
+      operación: v.operacion, // Fallback for frontend typo
       codigo: v.codigo,
+      código: v.codigo, // Fallback for frontend typo
       campos: v.campos
     }))
   };
