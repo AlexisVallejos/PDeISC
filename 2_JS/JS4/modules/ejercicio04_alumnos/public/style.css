@@ -1,0 +1,143 @@
+.content-panel {
+  min-height: 420px;
+}
+
+.api-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(0, 1.6fr);
+  gap: 1rem;
+}
+
+.api-panel,
+.students-panel {
+  padding: 1.35rem;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+}
+
+.api-panel {
+  display: grid;
+  align-content: start;
+  gap: 1rem;
+}
+
+.students-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.api-panel h2,
+.students-heading h2 {
+  margin: 0;
+}
+
+.request-panel {
+  height: 100%;
+  padding: 1.2rem;
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.accent-panel {
+  background: linear-gradient(180deg, rgba(47, 138, 107, 0.08), rgba(255, 255, 255, 0.03));
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.panel-chip {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.route-box {
+  display: block;
+  padding: 1rem;
+  border-radius: 18px;
+  border: 1px dashed var(--line);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.students-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.count-chip {
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.request-panel .result-card {
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.4rem;
+  padding: 1rem 1.05rem;
+}
+
+.request-panel .result-card h3 {
+  font-size: 1.25rem;
+  line-height: 1.08;
+  margin-bottom: 0;
+}
+
+.request-panel .result-card .result-copy {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.request-panel .row {
+  margin-inline: 0;
+  flex: 1 1 auto;
+  align-content: flex-start;
+  max-height: 360px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.request-panel .row > [class*="col-"] {
+  padding-inline: 0;
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.request-panel .status-box {
+  min-height: auto;
+}
+
+@media (max-width: 991.98px) {
+  .api-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .students-heading {
+    flex-direction: column;
+  }
+}

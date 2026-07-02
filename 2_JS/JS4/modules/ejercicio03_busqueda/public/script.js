@@ -1,21 +1,37 @@
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: modules/ejercicio03_busqueda/public/script.js
+ * Rol: carga usuarios y permite filtrarlos con Fetch o Axios.
+ * Idea clave: el ejercicio muestra un conjunto cacheado y filtra en vivo sin volver a descargar datos.
+ * Como defenderlo: explicar el cambio de metodo, la cache local y el filtrado sobre el mismo arreglo.
+ * Validacion: el buscador se habilita solo cuando la consulta inicial ya termino.
+ */
 import {
   initializeThemeAndTop,
   renderPeople,
   renderStatus
 } from "/shared/common.js";
 
+// Remote source used by the search demo.
 const USERS_URL = "https://jsonplaceholder.typicode.com/users";
+// Action button that loads the users.
 const loadButton = document.getElementById("load-btn");
+// Tabs switch between Fetch and Axios before loading.
 const tabFetch = document.getElementById("tab-fetch");
 const tabAxios = document.getElementById("tab-axios");
+// Search box filters the cached list.
 const searchInput = document.getElementById("search-input");
+// Shared UI areas for the current status and results.
 const statusBox = document.getElementById("status");
 const results = document.getElementById("results");
 const resultCount = document.getElementById("result-count");
 
+// Cache the loaded data so filtering is instant.
 let cachedUsers = [];
+// Track the selected loading method.
 let currentMethod = "fetch";
 
+// Normalize the API payload into the shared card format.
 function mapUsers(users) {
   return users.map((user) => ({
     title: user.name,
@@ -23,10 +39,12 @@ function mapUsers(users) {
   }));
 }
 
+// Update the counter chip with the amount of visible users.
 function updateCount(count) {
   resultCount.textContent = count === 1 ? "1 usuario" : `${count} usuarios`;
 }
 
+// Filter the cached users by the typed search term.
 function filterUsers(term) {
   const normalized = term.trim().toLowerCase();
 
@@ -39,6 +57,7 @@ function filterUsers(term) {
   );
 }
 
+// Switch the active transport method and update the button label.
 function setActiveMethod(method) {
   currentMethod = method;
   tabFetch.classList.toggle("active", method === "fetch");
@@ -47,6 +66,7 @@ function setActiveMethod(method) {
     method === "fetch" ? "Cargar usuarios con Fetch" : "Cargar usuarios con Axios";
 }
 
+// Load the users using the selected transport method.
 async function loadUsers() {
   renderStatus(statusBox, `Cargando usuarios con ${currentMethod}...`, "info");
   results.innerHTML = "";
@@ -81,10 +101,14 @@ async function loadUsers() {
   }
 }
 
+// Wire the main load button.
 loadButton.addEventListener("click", loadUsers);
+// Select Fetch mode.
 tabFetch.addEventListener("click", () => setActiveMethod("fetch"));
+// Select Axios mode.
 tabAxios.addEventListener("click", () => setActiveMethod("axios"));
 
+// Filter the visible list as the user types.
 searchInput.addEventListener("input", () => {
   const filteredUsers = filterUsers(searchInput.value);
   renderStatus(
@@ -98,8 +122,10 @@ searchInput.addEventListener("input", () => {
   updateCount(filteredUsers.length);
 });
 
+// Start the page in Fetch mode.
 setActiveMethod("fetch");
 
+// Reuse the shared theme and scroll-to-top behavior.
 initializeThemeAndTop({
   themeButtonId: "theme-btn",
   topButtonId: "back-to-top",

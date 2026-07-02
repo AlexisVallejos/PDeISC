@@ -16,7 +16,7 @@
       <section class="hero-panel">
         <div>
           <p class="eyebrow">Punto 4</p>
-          <h1>API propia con Express</h1>
+          <h1>API propia con Express, Fetch y Axios</h1>
           <p class="muted-copy">
             Este servidor expone <code>/api/alumnos</code> y el frontend lo consume con Fetch.
           </p>
@@ -37,28 +37,70 @@
             <span class="panel-badge">Backend propio</span>
             <h2>Ruta disponible</h2>
             <p class="helper-copy">
-              El boton consulta una ruta creada en este mismo servidor Express.
+              La misma ruta <code>/api/alumnos</code> se consume de dos formas: con Fetch y con Axios.
             </p>
             <code class="route-box">GET /api/alumnos</code>
-            <button id="load-btn" class="btn btn-primary btn-lg w-100" type="button">
-              Mostrar alumnos
-            </button>
-            <div id="status" class="status-box" aria-live="polite">
-              Esperando consulta a la API.
-            </div>
+            <p class="helper-copy mb-0">
+              La pantalla muestra ambas respuestas para comparar el mismo dato con dos clientes distintos.
+            </p>
           </aside>
 
           <div class="students-panel">
             <div class="students-heading">
               <div>
-                <p class="eyebrow">Listado</p>
-                <h2>Alumnos registrados</h2>
+                <p class="eyebrow">Listado doble</p>
+                <h2>Fetch y Axios</h2>
               </div>
               <span id="student-count" class="count-chip">0 alumnos</span>
             </div>
-            <div id="results" class="row g-3 mt-1">
-              <div class="col-12">
-                <div class="empty-state">Pulsa el boton para cargar alumnos.</div>
+
+            <div class="row g-4">
+              <div class="col-12 col-xl-6">
+                <article class="request-panel">
+                  <div class="panel-head">
+                    <span class="panel-badge">Fetch</span>
+                    <span class="panel-chip">Nativo</span>
+                  </div>
+                  <h3>Consulta con fetch()</h3>
+                  <p class="helper-copy">
+                    Usa la API nativa del navegador para leer la respuesta JSON.
+                  </p>
+                  <button id="fetch-btn" class="btn btn-primary btn-lg w-100" type="button">
+                    Cargar con Fetch
+                  </button>
+                  <div id="fetch-status" class="status-box mt-3" aria-live="polite">
+                    Esperando consulta con Fetch.
+                  </div>
+                  <div id="fetch-results" class="row g-3 mt-1">
+                    <div class="col-12">
+                      <div class="empty-state">Pulsa el boton para cargar con Fetch.</div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+
+              <div class="col-12 col-xl-6">
+                <article class="request-panel accent-panel">
+                  <div class="panel-head">
+                    <span class="panel-badge success-tone">Axios</span>
+                    <span class="panel-chip">CDN</span>
+                  </div>
+                  <h3>Consulta con axios.get()</h3>
+                  <p class="helper-copy">
+                    Usa Axios para hacer la misma consulta con otra sintaxis.
+                  </p>
+                  <button id="axios-btn" class="btn btn-primary btn-lg w-100" type="button">
+                    Cargar con Axios
+                  </button>
+                  <div id="axios-status" class="status-box mt-3" aria-live="polite">
+                    Esperando consulta con Axios.
+                  </div>
+                  <div id="axios-results" class="row g-3 mt-1">
+                    <div class="col-12">
+                      <div class="empty-state">Pulsa el boton para cargar con Axios.</div>
+                    </div>
+                  </div>
+                </article>
               </div>
             </div>
           </div>
@@ -80,6 +122,7 @@
       <span class="sr-only">Subir</span>
     </button>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module" src="/script.js"></script>
   </body>
 </html>

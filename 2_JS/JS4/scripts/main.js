@@ -26,15 +26,24 @@ function createCard(item) {
 
 async function loadLauncher() {
   const response = await fetch("/api/launcher");
+  if (!response.ok) {
+    launcherGrid.innerHTML = `
+      <div class="col-12">
+        <div class="empty-state">No se pudo cargar el launcher.</div>
+      </div>
+    `;
+    return;
+  }
+
   const items = await response.json();
   launcherGrid.innerHTML = "";
   items.forEach((item) => launcherGrid.appendChild(createCard(item)));
 }
 
-loadLauncher();
-
 initializeThemeAndTop({
-  themeButtonId: "theme-btn",
-  topButtonId: "back-to-top",
+  themeButtonId: "themeBtn",
+  topButtonId: "toTop",
   themeKey: "js4-launcher-theme"
 });
+
+loadLauncher();

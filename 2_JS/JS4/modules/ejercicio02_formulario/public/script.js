@@ -1,19 +1,26 @@
-// Importa la función compartida que muestra el estado y administra tema/voler arriba.
+/**
+ * DOCUMENTACION PARA DEFENDER
+ * Archivo: modules/ejercicio02_formulario/public/script.js
+ * Rol: maneja dos formularios equivalentes, uno con Axios y otro con Fetch.
+ * Idea clave: separa validacion visual, envio HTTP y manejo de respuesta para cada metodo.
+ * Como defenderlo: mostrar que ambos flujos comparten reglas pero cambian solo en la forma de enviar.
+ * Validacion: el frontend valida antes de enviar y vuelve a pintar errores que devuelve el backend.
+ */
 import { initializeThemeAndTop, renderStatus } from "/shared/common.js";
 
-// Referencias a los formularios de axios y fetch en la página.
+// Form references for the Axios and Fetch variants.
 const forms = {
   axios: document.getElementById("axios-form"),
   fetch: document.getElementById("fetch-form")
 };
 
-// Referencias a los recuadros donde se muestra el estado de cada envío.
+// Status boxes show the latest message for each submission method.
 const statusBoxes = {
   axios: document.getElementById("axios-status"),
   fetch: document.getElementById("fetch-status")
 };
 
-// Referencias a los campos de nombre y email en cada formulario.
+// Store the input references for each form field.
 const fieldMap = {
   axios: {
     nombre: document.getElementById("axios-nombre"),
@@ -25,7 +32,7 @@ const fieldMap = {
   }
 };
 
-// Referencias a los mensajes de error debajo de cada campo.
+// Store the inline helper elements used to show validation errors.
 const messageMap = {
   axios: {
     nombre: document.getElementById("axios-nombre-error"),
@@ -37,15 +44,15 @@ const messageMap = {
   }
 };
 
-// Botones que envían los formularios con axios o fetch.
+// Submit buttons for each transport method.
 const axiosButton = document.getElementById("send-axios");
 const fetchButton = document.getElementById("send-fetch");
 
-// Expresiones regulares para validar nombre y email.
+// Shared validation rules used by both forms.
 const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ' ]+$/;
 const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-// Valida el campo de nombre y devuelve un mensaje de error si no es válido.
+// Validate the name field and return an error message or an empty string.
 function validateName(value = "") {
   const limpio = value.trim();
 
@@ -61,10 +68,10 @@ function validateName(value = "") {
     return "Solo se permiten letras, espacios y apostrofes.";
   }
 
-  return ""; // Sin error.
+  return "";
 }
 
-// Valida el campo de email y devuelve un mensaje de error si no es válido.
+// Validate the email field and return an error message or an empty string.
 function validateEmail(value = "") {
   const limpio = value.trim();
 
@@ -80,10 +87,10 @@ function validateEmail(value = "") {
     return "El email no puede tener puntos consecutivos.";
   }
 
-  return ""; // Sin error.
+  return "";
 }
 
-// Actualiza el estado visual del campo y el texto de ayuda según el mensaje.
+// Update the visual state of a field and its helper text.
 function setFieldState(methodKey, fieldName, message) {
   const input = fieldMap[methodKey][fieldName];
   const helper = messageMap[methodKey][fieldName];
@@ -92,7 +99,7 @@ function setFieldState(methodKey, fieldName, message) {
   input.classList.toggle("is-valid", !message && input.value.trim() !== "");
 }
 
-// Valida todos los campos de un formulario y actualiza su estado.
+// Validate all the fields for one form instance.
 function validateAll(methodKey) {
   const fields = fieldMap[methodKey];
   const errors = {
@@ -110,7 +117,7 @@ function validateAll(methodKey) {
   };
 }
 
-// Construye el payload JSON con los valores actuales de los campos.
+// Build the JSON payload that will be sent to the backend.
 function getPayload(methodKey) {
   const fields = fieldMap[methodKey];
   return {
@@ -119,7 +126,7 @@ function getPayload(methodKey) {
   };
 }
 
-// Resetea el formulario y limpia los mensajes y estilos de validación.
+// Reset a form after a successful submit.
 function resetFormState(methodKey) {
   forms[methodKey].reset();
   Object.keys(fieldMap[methodKey]).forEach((fieldName) => {
@@ -127,7 +134,7 @@ function resetFormState(methodKey) {
   });
 }
 
-// Muestra errores enviados desde el backend en los campos correspondientes.
+// Paint backend validation errors back into the corresponding inputs.
 function applyBackendErrors(methodKey, backendErrors = {}) {
   Object.entries(backendErrors).forEach(([fieldName, message]) => {
     if (fieldMap[methodKey][fieldName]) {
@@ -136,7 +143,7 @@ function applyBackendErrors(methodKey, backendErrors = {}) {
   });
 }
 
-// Adjunta validación en tiempo real mientras el usuario escribe.
+// Attach live validation so the user gets feedback while typing.
 function attachLiveValidation(methodKey) {
   const fields = fieldMap[methodKey];
 
@@ -149,13 +156,13 @@ function attachLiveValidation(methodKey) {
   });
 }
 
-// Envía el formulario usando axios hacia la ruta de backend.
+// Submit the form using Axios.
 async function submitWithAxios(methodKey) {
   const response = await window.axios.post("/api/usuarios", getPayload(methodKey));
   return response.data;
 }
 
-// Envía el formulario usando fetch hacia la ruta de backend.
+// Submit the form using Fetch.
 async function submitWithFetch(methodKey) {
   const response = await fetch("/api/usuarios", {
     method: "POST",
@@ -176,7 +183,7 @@ async function submitWithFetch(methodKey) {
   return data;
 }
 
-// Maneja el envío del formulario, ya sea con axios o con fetch.
+// Coordinate validation, request sending and response handling.
 async function handleSubmit(methodKey, sendMethod) {
   const validation = validateAll(methodKey);
 
@@ -220,28 +227,28 @@ async function handleSubmit(methodKey, sendMethod) {
   }
 }
 
-// Evita que el submit tradicional recargue la página al presionar Enter o clickear el botón.
+// Prevent the browser from reloading the page on submit.
 Object.values(forms).forEach((form) => {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
   });
 });
 
-// Evento del botón que envía con axios.
+// Bind the Axios submit button.
 axiosButton.addEventListener("click", () => {
   handleSubmit("axios", "axios.post()");
 });
 
-// Evento del botón que envía con fetch.
+// Bind the Fetch submit button.
 fetchButton.addEventListener("click", () => {
   handleSubmit("fetch", "fetch POST");
 });
 
-// Activa la validación en vivo para ambos métodos de envío.
+// Enable live validation for both forms.
 attachLiveValidation("axios");
 attachLiveValidation("fetch");
 
-// Inicializa el tema y el botón de volver arriba.
+// Reuse the shared theme and scroll-to-top helper.
 initializeThemeAndTop({
   themeButtonId: "theme-btn",
   topButtonId: "back-to-top",
