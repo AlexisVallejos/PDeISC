@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7efe7" />
+    <title>JS5 | alumnosDB</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+
+    <main class="shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">JS5 · alumnosDB · REST API</span>
+          <h1>Control de alumnos con una interfaz cálida y premium.</h1>
+          <p>
+            Crea la base <strong>alumnosDB</strong>, carga los 5 alumnos de ejemplo,
+            agrega nuevos registros y consume la API desde JavaScript con una vista clara y profesional.
+          </p>
+          <div class="hero-actions">
+            <button id="seedBtn" class="btn btn-primary" type="button">Cargar 5 ejemplos</button>
+            <button id="clearBtn" class="btn btn-secondary" type="button">Vaciar tabla</button>
+          </div>
+        </div>
+
+        <aside class="hero-panel">
+          <div class="stat-card">
+            <span class="stat-label">Base</span>
+            <strong>alumnosDB</strong>
+            <small>SQLite local</small>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Campos</span>
+            <strong>id, nombre, apellido, edad</strong>
+            <small>id autoincremental</small>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">API</span>
+            <strong>/api/alumnos</strong>
+            <small>JSON listo para consumir</small>
+          </div>
+        </aside>
+      </header>
+
+      <section class="grid">
+        <article class="panel panel-schema">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">Estructura</span>
+              <h2>Modelo de datos</h2>
+            </div>
+            <span class="chip">SQL</span>
+          </div>
+          <div class="schema">
+            <div><span>id</span><strong>INT PK AI</strong></div>
+            <div><span>nombre</span><strong>VARCHAR</strong></div>
+            <div><span>apellido</span><strong>VARCHAR</strong></div>
+            <div><span>edad</span><strong>INT</strong></div>
+          </div>
+          <pre class="code-block">CREATE TABLE alumnos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  nombre TEXT NOT NULL,
+  apellido TEXT NOT NULL,
+  edad INTEGER NOT NULL
+);</pre>
+        </article>
+
+        <article class="panel panel-form">
+          <div class="panel-head">
+            <div>
+              <span class="eyebrow">Alta</span>
+              <h2>Cargar alumno</h2>
+            </div>
+            <span class="chip">POST</span>
+          </div>
+
+          <form id="alumnoForm" class="student-form" autocomplete="off">
+            <label>
+              <span>Nombre</span>
+              <input id="nombre" name="nombre" type="text" placeholder="Ana" required />
+            </label>
+            <label>
+              <span>Apellido</span>
+              <input id="apellido" name="apellido" type="text" placeholder="Gomez" required />
+            </label>
+            <label>
+              <span>Edad</span>
+              <input id="edad" name="edad" type="number" min="1" step="1" placeholder="20" required />
+            </label>
+            <button id="saveBtn" class="btn btn-primary btn-wide" type="submit">Guardar alumno</button>
+          </form>
+
+          <div id="formStatus" class="status-box" role="status" aria-live="polite">
+            Listo para cargar alumnos.
+          </div>
+        </article>
+      </section>
+
+      <section class="panel panel-data">
+        <div class="panel-head panel-head-data">
+          <div>
+            <span class="eyebrow">API REST</span>
+            <h2>Datos cargados</h2>
+          </div>
+          <div class="meta-row">
+            <span id="countChip" class="chip chip-accent">0 alumnos</span>
+            <button id="refreshBtn" class="btn btn-ghost" type="button">Actualizar</button>
+          </div>
+        </div>
+
+        <div class="data-layout">
+          <div class="table-wrap">
+            <table class="students-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Apellido</th>
+                  <th>Edad</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+                <tr>
+                  <td colspan="4" class="empty-row">Todavía no hay alumnos cargados.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <aside class="json-panel">
+            <div class="panel-head">
+              <div>
+                <span class="eyebrow">JSON</span>
+                <h3>Respuesta API</h3>
+              </div>
+            </div>
+            <pre id="jsonPreview" class="json-preview">Pulsa “Actualizar” para ver la respuesta.</pre>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <button id="themeBtn" class="floating-btn floating-left" type="button" aria-label="Cambiar tema">
+      <svg class="floating-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3a1 1 0 0 1 1 1v1.1a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1Zm0 14a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm9-6a1 1 0 0 1-1 1h-1.1a1 1 0 1 1 0-2H20a1 1 0 0 1 1 1ZM6.2 6.2a1 1 0 0 1 0 1.4l-.8.8a1 1 0 1 1-1.4-1.4l.8-.8a1 1 0 0 1 1.4 0Zm12.2 0a1 1 0 0 1 1.4 0l.8.8a1 1 0 1 1-1.4 1.4l-.8-.8a1 1 0 0 1 0-1.4ZM4 11a1 1 0 1 1 0 2H2.9a1 1 0 1 1 0-2H4Zm1.4 6.2a1 1 0 0 1 1.4 1.4l-.8.8a1 1 0 0 1-1.4-1.4l.8-.8Zm13.2 0 .8.8a1 1 0 0 1-1.4 1.4l-.8-.8a1 1 0 0 1 1.4-1.4ZM12 18.9a1 1 0 0 1 1 1V21a1 1 0 1 1-2 0v-1.1a1 1 0 0 1 1-1Z"/>
+      </svg>
+      <span class="sr-only">Cambiar tema</span>
+    </button>
+    <button id="toTop" class="floating-btn floating-right" type="button" aria-label="Volver arriba">
+      <svg class="floating-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 5.3 4.6 12.7a1 1 0 0 0 1.4 1.4l5-5V20a1 1 0 1 0 2 0V9.1l5 5a1 1 0 0 0 1.4-1.4L12 5.3Z"/>
+      </svg>
+      <span class="sr-only">Subir</span>
+    </button>
+
+    <script type="module" src="/scripts/main.js"></script>
+  </body>
+</html>

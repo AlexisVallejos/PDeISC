@@ -1,0 +1,13 @@
+{
+  "name": "js5-alumnosdb-rest",
+  "version": "1.0.0",
+  "description": "JS5 - Base de datos alumnosDB, API REST y panel premium de carga.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
