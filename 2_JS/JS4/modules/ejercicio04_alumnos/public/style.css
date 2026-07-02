@@ -118,6 +118,27 @@
   max-height: 360px;
   overflow-y: auto;
   padding-right: 0.25rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+}
+
+.request-panel .row::-webkit-scrollbar {
+  width: 10px;
+}
+
+.request-panel .row::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.request-panel .row::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--accent), color-mix(in srgb, var(--accent) 55%, var(--text)));
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.request-panel .row::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--accent-strong), var(--accent));
 }
 
 .request-panel .row > [class*="col-"] {
