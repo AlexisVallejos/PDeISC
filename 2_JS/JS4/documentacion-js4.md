@@ -38,13 +38,13 @@ const PORT = process.env.PORT || 3400;
 - `app = express()` crea la aplicacion Express.
 - `PORT` usa el puerto del entorno si existe; si no, usa `3400`.
 
-### Datos del launcher
+### Datos del lanzador
 
 ```js
 const launcherItems = [ ... ];
 ```
 
-- Este array define las tarjetas del launcher.
+- Este array define las tarjetas del lanzador.
 - Cada objeto representa un punto del trabajo.
 - `id` identifica el punto.
 - `titulo` y `subtitulo` se muestran en la tarjeta.
@@ -59,7 +59,7 @@ app.use(express.static(__dirname));
 ```
 
 - Le dice a Express que puede servir archivos estaticos desde la carpeta raiz de `JS4`.
-- Gracias a esto puede entregar CSS, HTML y JS del launcher.
+- Gracias a esto puede entregar CSS, HTML y JS del lanzador.
 
 ### Ruta principal
 
@@ -74,22 +74,22 @@ app.get("/", (_req, res) => {
 - `res` es la respuesta.
 - `sendFile(...)` manda el archivo `pages/index.html`.
 
-### Ruta API del launcher
+### Ruta API del lanzador
 
 ```js
-app.get("/api/launcher", (_req, res) => {
+app.post("/api/launcher", (_req, res) => {
   res.json(launcherItems);
 });
 ```
 
-- Esta ruta devuelve el array del launcher como JSON.
-- El frontend lo usa para dibujar las tarjetas dinamicamente.
+- Esta ruta devuelve el array del lanzador como JSON mediante POST.
+- La interfaz lo usa para dibujar las tarjetas dinamicamente.
 
 ### Encendido del servidor
 
 ```js
 app.listen(PORT, () => {
-  console.log(`Launcher JS4 activo en http://localhost:${PORT}`);
+  console.log(`Lanzador JS4 activo en http://localhost:${PORT}`);
 });
 ```
 
@@ -98,7 +98,7 @@ app.listen(PORT, () => {
 
 ## 2. [scripts/main.js](/C:/Users/Alumnos/Downloads/PDeISC/JS4/scripts/main.js)
 
-Este archivo controla el launcher.
+Este archivo controla el lanzador.
 
 ### Referencias al DOM
 
@@ -153,17 +153,23 @@ function createCard(item) {
 
 ```js
 async function loadLauncher() {
-  const response = await fetch("/api/launcher");
+  const response = await fetch("/api/launcher", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({})
+  });
   const items = await response.json();
   launcherGrid.innerHTML = "";
   items.forEach((item) => launcherGrid.appendChild(createCard(item)));
 }
 ```
 
-- Pide al backend la lista de puntos.
+- Pide al servidor la lista de puntos.
 - Convierte la respuesta en JSON.
 - Limpia el contenedor.
-- Recorre el array y agrega una tarjeta por cada item.
+- Recorre el array y agrega una tarjeta por cada elemento.
 
 ### Funcion `setupTheme`
 
@@ -272,7 +278,7 @@ servers.forEach((server) => {
 
 ## 4. [modules/shared/serverFactory.js](/C:/Users/Alumnos/Downloads/PDeISC/JS4/modules/shared/serverFactory.js)
 
-Este es uno de los archivos mas importantes porque concentra la logica comun del backend.
+Este es uno de los archivos mas importantes porque concentra la logica comun del servidor.
 
 ### Importaciones
 
@@ -442,7 +448,7 @@ export function createExerciseServer({ port, title, exerciseRoot, registerRoutes
 
 ## 5. [modules/shared/public/common.js](/C:/Users/Alumnos/Downloads/PDeISC/JS4/modules/shared/public/common.js)
 
-Este archivo concentra utilidades de frontend reutilizables.
+Este archivo concentra utilidades de interfaz reutilizables.
 
 ### Funcion `initializeThemeAndTop`
 
@@ -611,7 +617,7 @@ function mapUsers(users) {
 ### Funcion `loadWithFetch`
 
 - Muestra un estado de carga.
-- Usa `fetch(USERS_URL)`.
+- Usa `fetch(USERS_URL, { method: "POST" })`.
 - Verifica `response.ok`.
 - Convierte la respuesta a JSON.
 - Mapea los usuarios.
@@ -619,7 +625,7 @@ function mapUsers(users) {
 
 ### Funcion `loadWithAxios`
 
-- Hace lo mismo, pero usando `window.axios.get(...)`.
+- Hace lo mismo, pero usando `window.axios.post(...)`.
 
 ### Eventos de botones
 
@@ -633,81 +639,22 @@ function mapUsers(users) {
 
 ## 8. [modules/ejercicio02_formulario/server.js](/C:/Users/Alumnos/Downloads/PDeISC/JS4/modules/ejercicio02_formulario/server.js)
 
-Este es el backend del punto 2.
+Este es el servidor del punto 2.
 
 ### Importaciones
 
 - Usa `createExerciseServer` para montar el servidor.
-- Usa `validateName` y `validateEmail` para validar datos.
 
 ### Configuracion base
 
 - Define `__dirname`.
 - Llama a `createExerciseServer`.
 
-### `registerRoutes(app)`
+### Envio al servicio externo
 
-```js
-registerRoutes(app) {
-```
-
-- Esta funcion agrega rutas propias al servidor del punto.
-
-### Ruta POST
-
-```js
-app.post("/api/usuarios", (req, res) => {
-```
-
-- Recibe nombre y email enviados desde el frontend.
-
-```js
-  const { nombre, email } = req.body;
-```
-
-- Extrae los dos campos del cuerpo de la peticion.
-
-```js
-  const errores = {
-    nombre: validateName(nombre),
-    email: validateEmail(email)
-  };
-```
-
-- Valida ambos campos usando funciones compartidas.
-
-```js
-  if (Object.values(errores).some(Boolean)) {
-```
-
-- Si algun valor del objeto contiene texto, entonces hay error.
-
-```js
-    return res.status(400).json({
-      ok: false,
-      mensaje: "Hay errores de validacion.",
-      errores
-    });
-```
-
-- Devuelve error `400` con detalle por campo.
-
-```js
-  return res.status(201).json({
-    ok: true,
-    usuario: {
-      id: Date.now(),
-      nombre: nombre.trim(),
-      email: email.trim().toLowerCase()
-    }
-  });
-```
-
-- Si todo esta bien:
-  crea un `id`,
-  limpia espacios,
-  pasa el email a minusculas
-  y responde con `201`.
+- El formulario manda los datos a `https://jsonplaceholder.typicode.com/users`.
+- JSONPlaceholder responde con una carga util simulada.
+- En pantalla se muestra `ID recibido: 11 (simulada)`.
 
 ## 9. [modules/ejercicio02_formulario/public/script.js](/C:/Users/Alumnos/Downloads/PDeISC/JS4/modules/ejercicio02_formulario/public/script.js)
 
@@ -738,7 +685,7 @@ const fetchButton = document.getElementById("send-fetch");
 
 ### `validateName`
 
-- Repite la logica del backend del lado del navegador.
+- Repite la logica del servidor del lado del navegador.
 - Esto da feedback inmediato al usuario.
 
 ### `validateEmail`
@@ -769,7 +716,7 @@ function setFieldState(methodKey, fieldName, message) {
 
 ### `getPayload`
 
-- Devuelve un objeto listo para enviar al backend.
+- Devuelve un objeto listo para enviar al servidor.
 
 ### `resetFormState`
 
@@ -778,7 +725,7 @@ function setFieldState(methodKey, fieldName, message) {
 
 ### `applyBackendErrors`
 
-- Si el backend devuelve errores, los refleja en el panel correcto.
+- Si el servidor devuelve errores, los refleja en el panel correcto.
 
 ### `attachLiveValidation`
 
@@ -795,7 +742,7 @@ function setFieldState(methodKey, fieldName, message) {
 - Hace un `POST` con `fetch`.
 - Envia JSON.
 - Convierte la respuesta a JSON.
-- Si el backend respondio mal, construye un error manual.
+- Si el servidor respondio mal, construye un error manual.
 
 ### `handleSubmit`
 
@@ -808,7 +755,7 @@ Paso a paso:
 3. muestra un mensaje de carga
 4. decide si envia con Axios o Fetch
 5. si sale bien, muestra el ID recibido
-6. si sale mal, pinta errores del backend y muestra mensaje
+6. si sale mal, pinta errores del servidor y muestra mensaje
 
 ### Prevencion del submit normal
 
@@ -910,7 +857,7 @@ const alumnos = [
 ### Ruta propia
 
 ```js
-app.get("/api/alumnos", (_req, res) => {
+app.post("/api/alumnos", (_req, res) => {
   res.json(alumnos);
 });
 ```
@@ -949,12 +896,12 @@ loadButton.addEventListener("click", async () => {
 
 Los archivos JavaScript de `JS4` se reparten asi:
 
-- `server.js`: launcher general
-- `scripts/main.js`: frontend del launcher
+- `server.js`: lanzador general
+- `scripts/main.js`: interfaz del lanzador
 - `tools/start-all.js`: arranque multiple
-- `modules/shared/serverFactory.js`: backend compartido
-- `modules/shared/public/common.js`: frontend compartido
+- `modules/shared/serverFactory.js`: servidor compartido
+- `modules/shared/public/common.js`: interfaz compartida
 - `modules/ejercicioXX/server.js`: arranque individual de cada punto
-- `modules/ejercicioXX/public/script.js`: logica del frontend de cada punto
+- `modules/ejercicioXX/public/script.js`: logica de la interfaz de cada punto
 
 Si quieres, en el siguiente paso te puedo generar una segunda version mas tipo "defensa oral", con frases cortas para explicar cada archivo frente al profesor.

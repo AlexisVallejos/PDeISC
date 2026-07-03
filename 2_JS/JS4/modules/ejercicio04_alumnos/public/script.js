@@ -12,7 +12,7 @@ import {
   renderStatus
 } from "/shared/common.js";
 
-// Controls for the two comparison panels.
+// Controles para los dos paneles de comparacion.
 const fetchButton = document.getElementById("fetch-btn");
 const axiosButton = document.getElementById("axios-btn");
 const fetchStatus = document.getElementById("fetch-status");
@@ -21,7 +21,7 @@ const fetchResults = document.getElementById("fetch-results");
 const axiosResults = document.getElementById("axios-results");
 const studentCount = document.getElementById("student-count");
 
-// Convert the API response into the shared render format.
+// Convierte la respuesta de la API al formato compartido de render.
 function mapStudents(students) {
   return students.map((student) => ({
     title: student.nombre,
@@ -29,23 +29,29 @@ function mapStudents(students) {
   }));
 }
 
-// Keep the counter chip synchronized with the rendered list.
+// Mantiene sincronizada la chapa del contador con la lista renderizada.
 function updateCounter(total) {
   studentCount.textContent = total === 1 ? "1 alumno" : `${total} alumnos`;
 }
 
-// Render a default empty state for one panel.
+// Renderiza un estado vacio por defecto para un panel.
 function clearPanel(statusBox, resultsContainer, defaultMessage) {
   renderStatus(statusBox, defaultMessage, "info");
   resultsContainer.innerHTML = "";
 }
 
-// Load the local API using Fetch.
+// Carga la API local usando Fetch.
 async function loadWithFetch() {
   renderStatus(fetchStatus, "Consultando alumnos con Fetch...", "info");
   fetchResults.innerHTML = "";
 
-  const response = await fetch("/api/alumnos");
+  const response = await fetch("/api/alumnos", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({})
+  });
   if (!response.ok) {
     throw new Error("La API de alumnos no respondio correctamente.");
   }
@@ -56,7 +62,7 @@ async function loadWithFetch() {
   updateCounter(students.length);
 }
 
-// Load the local API using Axios.
+// Carga la API local usando Axios.
 async function loadWithAxios() {
   renderStatus(axiosStatus, "Consultando alumnos con Axios...", "info");
   axiosResults.innerHTML = "";
@@ -65,14 +71,14 @@ async function loadWithAxios() {
     throw new Error("Axios no esta disponible. Revisa la conexion al CDN.");
   }
 
-  const response = await window.axios.get("/api/alumnos");
+  const response = await window.axios.post("/api/alumnos", {});
   const students = mapStudents(response.data);
   renderStatus(axiosStatus, `Se cargaron ${students.length} alumnos con Axios.`, "success");
   renderPeople(axiosResults, students, "Axios");
   updateCounter(students.length);
 }
 
-// Attach the Fetch action and keep its errors isolated.
+// Asocia la accion de Fetch y mantiene sus errores aislados.
 fetchButton.addEventListener("click", () => {
   loadWithFetch().catch((error) => {
     renderStatus(fetchStatus, error.message || "No se pudieron obtener los alumnos.", "error");
@@ -84,7 +90,7 @@ fetchButton.addEventListener("click", () => {
   });
 });
 
-// Attach the Axios action and keep its errors isolated.
+// Asocia la accion de Axios y mantiene sus errores aislados.
 axiosButton.addEventListener("click", () => {
   loadWithAxios().catch((error) => {
     renderStatus(axiosStatus, error.message || "No se pudieron obtener los alumnos.", "error");
@@ -96,12 +102,12 @@ axiosButton.addEventListener("click", () => {
   });
 });
 
-// Initialize both panels with placeholder content.
+// Inicializa ambos paneles con contenido de relleno.
 clearPanel(fetchStatus, fetchResults, "Esperando consulta con Fetch.");
 clearPanel(axiosStatus, axiosResults, "Esperando consulta con Axios.");
 updateCounter(0);
 
-// Reuse the shared theme and scroll-to-top behavior.
+// Reutiliza el tema compartido y el comportamiento de volver arriba.
 initializeThemeAndTop({
   themeButtonId: "theme-btn",
   topButtonId: "back-to-top",

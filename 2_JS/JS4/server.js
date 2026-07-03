@@ -10,13 +10,13 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Resolve the project root so the launcher can serve static files correctly.
+// Resuelve la raiz del proyecto para que el lanzador sirva los archivos estaticos correctamente.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3400;
 
-// Launcher data used to render the four exercise cards.
+// Datos del lanzador usados para renderizar las cuatro tarjetas de ejercicios.
 const launcherItems = [
   {
     id: "punto-1",
@@ -30,7 +30,7 @@ const launcherItems = [
     id: "punto-2",
     titulo: "Punto 2",
     subtitulo: "Formulario + POST",
-    descripcion: "Valida en frontend y backend con respuesta de ID.",
+    descripcion: "Valida en la interfaz y en el servidor con respuesta de ID.",
     puerto: 3402,
     ruta: "http://localhost:3402"
   },
@@ -52,23 +52,23 @@ const launcherItems = [
   }
 ];
 
-// Serve the launcher page assets.
+// Sirve los recursos de la pagina del lanzador.
 app.use(express.static(path.join(__dirname, "pages")));
 app.use("/styles", express.static(path.join(__dirname, "styles")));
 app.use("/scripts", express.static(path.join(__dirname, "scripts")));
 app.use("/shared", express.static(path.join(__dirname, "modules", "shared", "public")));
 
-// Return the launcher HTML on the root route.
+// Devuelve el HTML del lanzador en la ruta raiz.
 app.get("/", (_req, res) => {
   res.sendFile(path.join(__dirname, "pages", "index.html"));
 });
 
-// Return the launcher catalog to the frontend.
-app.get("/api/launcher", (_req, res) => {
+// Devuelve el catalogo del lanzador a la interfaz.
+app.post("/api/launcher", (_req, res) => {
   res.json(launcherItems);
 });
 
-// Start the main launcher server.
+// Inicia el servidor principal del lanzador.
 app.listen(PORT, () => {
   console.log(`Launcher JS4 activo en http://localhost:${PORT}`);
 });

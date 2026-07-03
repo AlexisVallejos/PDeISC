@@ -25,7 +25,13 @@ function createCard(item) {
 }
 
 async function loadLauncher() {
-  const response = await fetch("/api/launcher");
+  const response = await fetch("/api/launcher", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({})
+  });
   if (!response.ok) {
     launcherGrid.innerHTML = `
       <div class="col-12">

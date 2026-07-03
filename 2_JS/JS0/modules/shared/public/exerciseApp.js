@@ -8,11 +8,14 @@
  */
 
 // createState: guarda el payload recibido del servidor y la variante seleccionada.
+// state.data trae el ejercicio completo desde /api/ejercicio.
+// selectedOriginalIndex indica que variante esta viendo el alumno.
 function createState() {
   return { data: null, selectedOriginalIndex: 0 };
 }
 
 // getDomRefs: centraliza las referencias al DOM para que el resto del codigo sea mas legible.
+// Asi evitamos repetir document.getElementById por todo el archivo.
 function getDomRefs() {
   return {
     variantSel: document.getElementById("variant"),
@@ -25,6 +28,7 @@ function getDomRefs() {
   };
 }
 
+// getTheme y setTheme: leen y escriben el tema visual persistido en localStorage.
 function getTheme() {
   return localStorage.getItem("theme") || "light";
 }
@@ -34,14 +38,17 @@ function setTheme(theme) {
   localStorage.setItem("theme", theme);
 }
 
+// toggleTheme: invierte el tema actual entre claro y oscuro.
 function toggleTheme() {
   setTheme(getTheme() === "light" ? "dark" : "light");
 }
 
+// pretty: formatea cualquier valor de salida para mostrarlo en pantalla.
 function pretty(value) {
   return JSON.stringify(value, null, 2);
 }
 
+// helperText: explica al usuario el formato esperado para cada tipo de input.
 function helperText(field) {
   if (field.tipo === "textCsv") return "Solo texto, separado por comas.";
   if (field.tipo === "numberCsv") return "Solo numeros, separados por comas.";
@@ -51,11 +58,13 @@ function helperText(field) {
   return "";
 }
 
+// fieldInputHtml: arma el HTML del input segun el tipo del campo.
 function fieldInputHtml(field) {
   const type = field.tipo === "number" ? "number" : "text";
   return `<input class="form-control run-input" data-key="${field.key}" type="${type}" required />`;
 }
 
+// validateRunInput: da feedback visual rapido mientras el alumno escribe.
 function validateRunInput(input) {
   const value = input.value.trim();
   let ok = value !== "";
@@ -65,6 +74,7 @@ function validateRunInput(input) {
   return ok;
 }
 
+// collectInputs: junta los valores actuales del formulario para enviarlos al backend.
 function collectInputs() {
   const inputs = {};
   document.querySelectorAll(".run-input").forEach((input) => {
@@ -73,6 +83,7 @@ function collectInputs() {
   return inputs;
 }
 
+// getMethodName y getOperation: helpers cortos para mostrar datos del ejercicio en pantalla.
 function getMethodName(state) {
   return state.data?.metodo ?? "";
 }
@@ -82,6 +93,7 @@ function getOperation(variant) {
 }
 
 // renderVariantCard: dibuja consigna, codigo, formulario dinamico y panel de resultado.
+// Esta funcion arma toda la vista de la variante elegida.
 function renderVariantCard({ refs, state, variant, runVariant }) {
   const inputs = (variant.campos || []).map((field) => `
     <div class="mb-2">
@@ -121,10 +133,15 @@ function renderVariantCard({ refs, state, variant, runVariant }) {
 }
 
 // initExerciseApp: punto de entrada publico que inicializa cualquier pagina de ejercicio JS0.
+// Flujo general:
+// 1. Carga datos desde el backend.
+// 2. Dibuja selector y tarjeta actual.
+// 3. Habilita acciones del tema, scroll y ejecucion.
 export function initExerciseApp() {
   const state = createState();
   const refs = getDomRefs();
 
+  // runVariant: envia la variante seleccionada al backend y pinta el resultado.
   async function runVariant() {
     const variant = state.data.variantes[state.selectedOriginalIndex];
     const res = await fetch("/api/ejecutar", {
@@ -146,6 +163,7 @@ export function initExerciseApp() {
     runResult.textContent = pretty(data.resultado);
   }
 
+  // renderSelect: llena el combo con las variantes disponibles del metodo actual.
   function renderSelect() {
     refs.variantSel.innerHTML = state.data.variantes.map((variant, index) => {
       const selected = index === state.selectedOriginalIndex ? "selected" : "";
@@ -153,12 +171,15 @@ export function initExerciseApp() {
     }).join("");
   }
 
+  // renderCurrentVariant: redibuja la tarjeta con la variante que quedo seleccionada.
   function renderCurrentVariant() {
     const variant = state.data.variantes[state.selectedOriginalIndex];
     renderVariantCard({ refs, state, variant, runVariant });
     refs.feedback.textContent = `Mostrando ejercicio ${state.selectedOriginalIndex + 1} de ${state.data.variantes.length}.`;
   }
 
+  // runSecreto: maneja el flujo especial del ejercicio secreto.
+  // "normal" devuelve la decodificacion; "paso" agrega el detalle intermedio.
   async function runSecreto(modo) {
     const texto = (refs.secretInput?.value || "").trim();
     refs.secretResult.classList.remove("d-none");
@@ -177,6 +198,7 @@ export function initExerciseApp() {
     refs.feedback.textContent = "Decodificacion OK.";
   }
 
+  // loadData: trae la definicion del ejercicio y prepara la vista inicial.
   async function loadData() {
     const res = await fetch("/api/ejercicio");
     if (!res.ok) throw new Error("No se pudo cargar");
@@ -191,6 +213,7 @@ export function initExerciseApp() {
     else refs.secretTools.classList.add("d-none");
   }
 
+  // Eventos principales de la pagina: cambio de variante, tema, scroll y acciones secretas.
   refs.variantSel.addEventListener("change", () => {
     state.selectedOriginalIndex = Number(refs.variantSel.value || 0);
     renderCurrentVariant();
