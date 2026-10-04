@@ -5,6 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:ejercicio1": "npm --prefix Ejercicio1 run dev",
+    "dev:ejercicio2": "npm --prefix Ejercicio2 run dev",
+    "dev:ejercicio3": "npm --prefix Ejercicio3 run dev",
+    "dev:ejercicio4": "npm --prefix Ejercicio4 run dev",
+    "dev:ejercicio5": "npm --prefix Ejercicio5 run dev",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"

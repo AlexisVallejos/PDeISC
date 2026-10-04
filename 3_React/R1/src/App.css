@@ -24,11 +24,15 @@
 /* Grilla: dos columnas en pantallas anchas, una en celular */
 .app__grilla {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
   gap: 16px;
 }
 
 .seccion {
+  display: flex;
+  min-height: 245px;
+  flex-direction: column;
+  align-items: flex-start;
   padding: 24px;
   background: var(--tarjeta);
   border: 1px solid var(--linea);
@@ -38,21 +42,53 @@
   backdrop-filter: blur(20px) saturate(180%);
 }
 
-.seccion--ancha {
-  grid-column: 1 / -1; /* ocupa todo el ancho de la grilla */
-}
-
 .seccion h2 {
-  margin: 0 0 16px;
+  margin: 12px 0 8px;
   font-size: 1.25rem;
   letter-spacing: -0.02em;
 }
 
-.app__tarjetas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
+.ejercicio p {
+  margin: 0 0 24px;
+  color: var(--texto-suave);
+}
+
+.ejercicio__numero {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  color: var(--acento);
+  font-size: .8rem;
+  font-weight: 750;
+  background: color-mix(in srgb, var(--acento) 13%, transparent);
+  border-radius: 14px;
+}
+
+.ejercicio__boton {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;
+  padding: 0 16px;
+  color: #fff;
+  font-weight: 650;
+  text-decoration: none;
+  background: var(--acento);
+  border-radius: 12px;
+  transition: transform 160ms var(--ease-out), background-color 160ms ease;
+}
+
+.ejercicio__boton:hover {
+  color: #fff;
+  background: var(--acento-oscuro);
+  transform: translateY(-1px);
+}
+
+.ejercicio__boton:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--acento) 60%, transparent);
+  outline-offset: 3px;
 }
 
 /* Si el usuario pide menos transparencia, las secciones pasan a fondo sólido */

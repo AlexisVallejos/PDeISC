@@ -1,60 +1,63 @@
-// Pantalla principal: muestra los 5 ejercicios en secciones separadas, cada una con su título.
-import HolaMundo from './components/HolaMundo/HolaMundo.jsx'
-import TarjetaPresentacion from './components/TarjetaPresentacion/TarjetaPresentacion.jsx'
-import Contador from './components/Contador/Contador.jsx'
-import ListaTareas from './components/ListaTareas/ListaTareas.jsx'
-import FormularioSimple from './components/FormularioSimple/FormularioSimple.jsx'
-import avatarAna from './components/TarjetaPresentacion/avatar-ana.svg'
-import avatarLuis from './components/TarjetaPresentacion/avatar-luis.svg'
 import './App.css'
+
+const ejercicios = [
+  {
+    numero: '01',
+    titulo: 'Hola mundo',
+    descripcion: 'Primer componente y distintas formas de presentar el saludo.',
+    ruta: '/Ejercicio1/'
+  },
+  {
+    numero: '02',
+    titulo: 'Tarjeta de presentación',
+    descripcion: 'Componentes reutilizables con datos enviados mediante props.',
+    ruta: '/Ejercicio2/'
+  },
+  {
+    numero: '03',
+    titulo: 'Contador',
+    descripcion: 'Estado de React y eventos para sumar y restar.',
+    ruta: '/Ejercicio3/'
+  },
+  {
+    numero: '04',
+    titulo: 'Lista de tareas',
+    descripcion: 'Agregar tareas y cambiar su estado desde una lista.',
+    ruta: '/Ejercicio4/'
+  },
+  {
+    numero: '05',
+    titulo: 'Formulario simple',
+    descripcion: 'Capturar un nombre y mostrar una respuesta personalizada.',
+    ruta: '/Ejercicio5/'
+  },
+  {
+    numero: '06',
+    titulo: 'Ta-Te-Ti',
+    descripcion: 'Abrí el juego independiente que también está incluido en R1.',
+    ruta: '/tateti/'
+  }
+]
 
 function App() {
   return (
     <main className="app">
       <header className="app__encabezado">
         <h1>Inicio - R1</h1>
-        <p>Cinco ejercicios con componentes de React.</p>
+        <p>Elegí un ejercicio para abrir su proyecto independiente.</p>
       </header>
 
       <div className="app__grilla">
-        <section className="seccion seccion--ancha">
-          <h2>1. Hola mundo</h2>
-          <HolaMundo />
-        </section>
-
-        <section className="seccion seccion--ancha">
-          <h2>2. Tarjeta de presentación</h2>
-          <div className="app__tarjetas">
-            {/* Mismo componente, dos veces, con datos distintos pasados por props */}
-            <TarjetaPresentacion
-              nombre="Ana"
-              apellido="Gómez"
-              profesion="Diseñadora UX"
-              imagen={avatarAna}
-            />
-            <TarjetaPresentacion
-              nombre="Luis"
-              apellido="Pérez"
-              profesion="Desarrollador web"
-              imagen={avatarLuis}
-            />
-          </div>
-        </section>
-
-        <section className="seccion">
-          <h2>3. Contador</h2>
-          <Contador />
-        </section>
-
-        <section className="seccion">
-          <h2>4. Lista de tareas</h2>
-          <ListaTareas />
-        </section>
-
-        <section className="seccion seccion--ancha">
-          <h2>5. Formulario simple</h2>
-          <FormularioSimple />
-        </section>
+        {ejercicios.map((ejercicio) => (
+          <article className="seccion ejercicio" key={ejercicio.numero}>
+            <span className="ejercicio__numero">{ejercicio.numero}</span>
+            <h2>{ejercicio.titulo}</h2>
+            <p>{ejercicio.descripcion}</p>
+            <a className="ejercicio__boton" href={ejercicio.ruta}>
+              Abrir ejercicio <span aria-hidden="true">↗</span>
+            </a>
+          </article>
+        ))}
       </div>
     </main>
   )

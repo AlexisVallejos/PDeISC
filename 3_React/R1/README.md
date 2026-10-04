@@ -1,16 +1,24 @@
-# React + Vite
+# React R1
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+R1 tiene una portada con accesos a cada app Vite independiente, siguiendo la distribución de referencia.
 
-Currently, two official plugins are available:
+## Ejecutar
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Desde esta carpeta, `npm install` prepara la portada y sus dependencias. Para iniciar la portada: `npm run dev`.
 
-## React Compiler
+Para abrir un ejercicio por separado, desde su propia carpeta ejecutá `npm install` una vez y después `npm run dev`. También podés iniciarlos desde R1 con `npm run dev:ejercicio1` hasta `npm run dev:ejercicio5`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Cada proyecto tiene su propio `index.html`, `package.json`, `vite.config.js` y `src/` con sus componentes, estilos y punto de entrada. El diseño original de los cinco ejercicios se mantiene.
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```text
+R1/
+├── Ejercicio1/              # Hola mundo
+├── Ejercicio2/              # Tarjetas de presentación
+├── Ejercicio3/              # Contador
+├── Ejercicio4/              # Lista de tareas
+├── Ejercicio5/              # Formulario simple
+├── tateti/                  # Juego independiente
+├── src/                     # Inicio - R1, con los botones de acceso
+├── index.html
+└── package.json
+```
