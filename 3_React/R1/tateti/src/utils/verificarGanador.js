@@ -9,6 +9,7 @@ export const winningLines = [
   [2, 4, 6],
 ];
 
+// Busco si alguna combinación tiene tres fichas iguales.
 export function verificarGanador(board) {
   // Devuelve la línea ganadora para poder resaltarla en el tablero.
   return (

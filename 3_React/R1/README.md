@@ -1,6 +1,6 @@
 # React R1
 
-R1 tiene una portada con accesos a cada app Vite independiente, siguiendo la distribución de referencia.
+R1 tiene una portada con accesos a cada app Vite independiente, siguiendo la distribución de referencia. Todas las pantallas incluyen tema claro/oscuro persistente y navegación para volver al inicio y subir al comienzo de páginas largas.
 
 ## Ejecutar
 
@@ -8,7 +8,7 @@ Desde esta carpeta, `npm install` prepara la portada y sus dependencias. Para in
 
 Para abrir un ejercicio por separado, desde su propia carpeta ejecutá `npm install` una vez y después `npm run dev`. También podés iniciarlos desde R1 con `npm run dev:ejercicio1` hasta `npm run dev:ejercicio5`.
 
-Cada proyecto tiene su propio `index.html`, `package.json`, `vite.config.js` y `src/` con sus componentes, estilos y punto de entrada. El diseño original de los cinco ejercicios se mantiene.
+Cada proyecto tiene su propio `index.html`, `package.json`, `vite.config.js` y `src/` con sus componentes, estilos y punto de entrada. El diseño original de los cinco ejercicios se mantiene. La lista de tareas permite agregar, editar, completar y eliminar elementos, y los conserva en `localStorage`.
 
 ```text
 R1/

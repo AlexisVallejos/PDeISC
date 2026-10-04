@@ -1,101 +1,33 @@
-.tareas__formulario {
-  display: flex;
-  gap: 8px;
-}
+/* Alta y resumen de la lista. */
+.tareas { max-width: 720px; margin: 0 auto; }
+.tareas__resumen { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+.tareas__resumen span { padding: 7px 12px; color: var(--texto-suave); background: color-mix(in srgb, var(--acento) 8%, var(--fondo-suave)); border: 1px solid var(--linea); border-radius: 999px; font-size: .82rem; font-weight: 700; }
+.tareas__formulario { margin-bottom: 22px; }
+.tareas__etiqueta-campo { display: block; margin-bottom: 8px; font-size: .9rem; font-weight: 750; }
+.tareas__fila-alta { display: flex; gap: 10px; }
+.tareas__campo { width: 100%; min-width: 0; min-height: 48px; padding: 0 14px; color: var(--texto); background: var(--fondo-suave); border: 1px solid var(--linea); border-radius: 14px; transition: border-color .16s ease, box-shadow .16s ease; }
+.tareas__campo:focus { border-color: var(--acento); outline: 0; box-shadow: 0 0 0 4px color-mix(in srgb, var(--acento) 16%, transparent); }
+.tareas__campo--error { border-color: var(--error); }
+.tareas__ayuda,.tareas__error { min-height: 1.35rem; margin: 6px 2px 0; color: var(--texto-suave); font-size: .79rem; }
+.tareas__error { color: var(--error); }
+.tareas__boton { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; padding: 0 13px; color: var(--texto); background: var(--fondo-suave); border: 1px solid var(--linea); border-radius: 12px; font-size: .82rem; font-weight: 700; cursor: pointer; transition: transform .16s ease, border-color .16s ease, background .16s ease; }
+.tareas__boton:hover { transform: translateY(-1px); border-color: var(--acento); }
+.tareas__boton--principal { min-height: 48px; padding-inline: 18px; color: #fff; background: var(--acento); border-color: var(--acento); }
+.tareas__boton--principal:hover { color: #fff; background: var(--acento-oscuro); border-color: var(--acento-oscuro); }
+.tareas__boton--borrar:hover { color: var(--error); border-color: var(--error); background: color-mix(in srgb, var(--error) 8%, var(--fondo-suave)); }
 
-.tareas__vacio {
-  color: var(--texto-suave);
-  text-align: center;
-}
-
-.tareas__lista {
-  list-style: none;
-  margin: 16px 0 0;
-  padding: 0;
-}
-
-.tareas__item {
-  border-bottom: 1px solid var(--linea);
-  /* La tarea nueva aparece subiendo un poquito y haciéndose visible */
-  transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out);
-}
-
-@starting-style {
-  .tareas__item {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
-.tareas__etiqueta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 44px; /* tamaño mínimo para tocar cómodo con el dedo */
-  cursor: pointer;
-}
-
-.tareas__etiqueta input {
-  width: 20px;
-  height: 20px;
-  accent-color: var(--acento);
-}
-
-.tareas__texto {
-  overflow-wrap: anywhere; /* una tarea con texto larguísimo no rompe el diseño */
-  transition: color 160ms ease;
-}
-
-/* Tarea completada: texto tachado y más apagado */
-.tareas__texto--hecha {
-  color: var(--texto-suave);
-  text-decoration: line-through;
-}
-
-/* Botón propio de este ejercicio (así la carpeta es independiente) */
-.tareas__boton {
-  min-height: 44px; /* tamaño mínimo recomendado para tocar con el dedo */
-  padding: 0 20px;
-  font: inherit;
-  font-weight: 600;
-  color: #ffffff;
-  background: var(--acento);
-  border: 0;
-  border-radius: 12px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 160ms var(--ease-out), background-color 160ms ease;
-}
-
-/* El hover solo en dispositivos con mouse (en el celular se "pega" al tocar) */
-@media (hover: hover) and (pointer: fine) {
-  .tareas__boton:hover {
-    background: var(--acento-oscuro);
-  }
-}
-
-/* Al presionar, el botón se achica un poco: se siente que responde */
-.tareas__boton:active {
-  transform: scale(0.97);
-}
-
-/* Campo de texto propio de este ejercicio */
-.tareas__campo {
-  flex: 1;
-  min-width: 0; /* permite que el input se achique dentro de un flex en pantallas chicas */
-  min-height: 44px;
-  padding: 0 14px;
-  font: inherit;
-  font-size: 1rem; /* 16px o más evita el zoom automático de iPhone al enfocar */
-  color: var(--texto);
-  background: var(--fondo-suave);
-  border: 1px solid var(--linea);
-  border-radius: 12px;
-  transition: border-color 160ms ease, box-shadow 160ms ease;
-}
-
-.tareas__campo:focus-visible {
-  outline: none;
-  border-color: var(--acento);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acento) 30%, transparent);
-}
+/* Filas editables de tareas. */
+.tareas__lista { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.tareas__item { display: flex; min-height: 68px; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; background: var(--fondo-suave); border: 1px solid var(--linea); border-radius: 16px; animation: aparecer .22s var(--ease-out) both; }
+.tareas__etiqueta { display: flex; min-width: 0; flex: 1; align-items: center; gap: 12px; cursor: pointer; }
+.tareas__etiqueta input { width: 20px; height: 20px; flex: 0 0 20px; accent-color: var(--acento); cursor: pointer; }
+.tareas__texto { overflow-wrap: anywhere; font-weight: 620; }
+.tareas__texto--hecha { color: var(--texto-suave); text-decoration: line-through; }
+.tareas__acciones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+.tareas__edicion { width: 100%; }
+.tareas__edicion .tareas__campo { margin-bottom: 2px; }
+.tareas__edicion .tareas__acciones { justify-content: flex-start; }
+.tareas__vacio { margin: 28px 0 0; padding: 24px; color: var(--texto-suave); text-align: center; background: color-mix(in srgb, var(--acento) 5%, var(--fondo-suave)); border: 1px dashed var(--linea); border-radius: 17px; }
+@keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@media(max-width: 560px) { .tareas__fila-alta { flex-direction: column; } .tareas__fila-alta .tareas__boton { width: 100%; } .tareas__item { align-items: flex-start; flex-direction: column; gap: 10px; } .tareas__etiqueta { min-height: 38px; } .tareas__acciones { width: 100%; justify-content: flex-start; } }
+@media(prefers-reduced-motion: reduce) { .tareas__item { animation: none; } }
