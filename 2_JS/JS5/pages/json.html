@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f7efe7" />
+    <title>JS5 | JSON alumnosDB</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="/styles/main.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-a"></div>
+    <div class="ambient ambient-b"></div>
+
+    <main class="shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <span class="eyebrow">JS5 · visor JSON · POST only</span>
+          <h1>Respuesta cruda de la API.</h1>
+          <p>
+            Esta página consume la API con <strong>POST</strong> y muestra el JSON
+            separado del CRUD principal para revisar la respuesta sin ruido visual.
+          </p>
+          <div class="hero-actions">
+            <button id="refreshBtn" class="btn btn-primary" type="button">
+              <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5a7 7 0 0 1 6.32 4H16a1 1 0 1 0 0 2h4a1 1 0 0 0 1-1V6a1 1 0 1 0-2 0v1.61A9 9 0 0 0 3.12 12h2.03A7 7 0 0 1 12 5Zm8.88 7h-2.03A7 7 0 0 1 12 19a7 7 0 0 1-6.32-4H8a1 1 0 1 0 0-2H4a1 1 0 0 0-1 1v4a1 1 0 1 0 2 0v-1.61A9 9 0 0 0 20.88 12Z"/>
+              </svg>
+              <span>Actualizar JSON</span>
+            </button>
+            <a class="btn btn-secondary" href="index.php">
+              <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M10.79 5.21 4 12l6.79 6.79 1.42-1.42L7.84 13H20v-2H7.84l4.37-4.37-1.42-1.42Z"/>
+              </svg>
+              <span>Volver al CRUD</span>
+            </a>
+          </div>
+        </div>
+
+        <aside class="hero-panel">
+          <div class="stat-card">
+            <span class="stat-label">Origen</span>
+            <strong>api/alumnos.php</strong>
+            <small>Action list</small>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Método</span>
+            <strong>POST</strong>
+            <small>Sin GET</small>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Ruta</span>
+            <strong>json.php</strong>
+            <small>Otra página local</small>
+          </div>
+        </aside>
+      </header>
+
+      <section class="panel panel-data">
+        <div class="panel-head panel-head-data">
+          <div>
+            <span class="eyebrow">JSON</span>
+            <h2>Datos devueltos por la API</h2>
+          </div>
+          <span id="countChip" class="chip chip-accent">0 alumnos</span>
+        </div>
+
+        <div class="json-layout">
+          <div class="json-panel">
+            <pre id="jsonPreview" class="json-preview">Pulsa "Actualizar JSON" para cargar los alumnos.</pre>
+          </div>
+          <aside class="detail-stack">
+            <article class="detail-card">
+              <span class="detail-kicker">Lectura</span>
+              <h3>Snapshot técnico</h3>
+              <p>
+                El JSON se muestra tal como responde la API para que sea fácil de explicar
+                en una defensa oral o de comprobar con phpMyAdmin.
+              </p>
+            </article>
+            <article class="detail-card detail-card-soft">
+              <span class="detail-kicker">Uso</span>
+              <h3>Separado del CRUD</h3>
+              <p>
+                Esta vista evita mezclar la edición de datos con el análisis de la
+                respuesta, manteniendo el panel principal más limpio.
+              </p>
+            </article>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <button id="themeBtn" class="floating-btn floating-left" type="button" aria-label="Cambiar tema">
+      <svg class="floating-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3a1 1 0 0 1 1 1v1.1a1 1 0 1 1-2 0V4a1 1 0 0 1 1-1Zm0 14a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm9-6a1 1 0 0 1-1 1h-1.1a1 1 0 1 1 0-2H20a1 1 0 0 1 1 1ZM6.2 6.2a1 1 0 0 1 0 1.4l-.8.8a1 1 0 1 1-1.4-1.4l.8-.8a1 1 0 0 1 1.4 0Zm12.2 0a1 1 0 0 1 1.4 0l.8.8a1 1 0 1 1-1.4 1.4l-.8-.8a1 1 0 0 1 0-1.4ZM4 11a1 1 0 1 1 0 2H2.9a1 1 0 1 1 0-2H4Zm1.4 6.2a1 1 0 0 1 1.4 1.4l-.8.8a1 1 0 0 1-1.4-1.4l.8-.8Zm13.2 0 .8.8a1 1 0 0 1-1.4 1.4l-.8-.8a1 1 0 0 1 1.4-1.4ZM12 18.9a1 1 0 0 1 1 1V21a1 1 0 1 1-2 0v-1.1a1 1 0 0 1 1-1Z"/>
+      </svg>
+      <span class="sr-only">Cambiar tema</span>
+    </button>
+
+    <script type="module" src="/scripts/json.js"></script>
+  </body>
+</html>

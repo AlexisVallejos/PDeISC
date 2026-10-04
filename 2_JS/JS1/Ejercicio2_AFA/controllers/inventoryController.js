@@ -52,7 +52,7 @@ export async function addItem(req, res) {
       stock: parseInt(stock, 10),
       metodo_almacenaje
     };
-
+ 
     await sendInventoryEmail(email_contacto, encargado_nombre, nombre_producto);
 
     return res.status(201).json({

@@ -4,29 +4,29 @@
 
 JS4 ahora sigue la misma idea general de JS0:
 
-- un `server.js` principal funciona como launcher
+- un `server.js` principal funciona como lanzador
 - cada punto tiene su propio `server.js`
 - cada punto tiene su propia carpeta `public`
 - hay una carpeta compartida para reutilizar codigo comun
 
 La estructura activa queda asi:
 
-- `server.js`: launcher principal en el puerto `3400`
-- `pages/`, `scripts/`, `styles/`: interfaz del launcher
-- `modules/shared/serverFactory.js`: helper para crear servidores de ejercicios
+- `server.js`: lanzador principal en el puerto `3400`
+- `pages/`, `scripts/`, `styles/`: interfaz del lanzador
+- `modules/shared/serverFactory.js`: ayudante para crear servidores de ejercicios
 - `modules/shared/public/common.css`: estilos base compartidos
 - `modules/shared/public/common.js`: tema, boton subir y render comun
-- `modules/ejercicio01_fetch/`: servidor y frontend del punto 1
-- `modules/ejercicio02_formulario/`: servidor y frontend del punto 2
-- `modules/ejercicio03_busqueda/`: servidor y frontend del punto 3
-- `modules/ejercicio04_alumnos/`: servidor y frontend del punto 4
+- `modules/ejercicio01_fetch/`: servidor e interfaz del punto 1
+- `modules/ejercicio02_formulario/`: servidor e interfaz del punto 2
+- `modules/ejercicio03_busqueda/`: servidor e interfaz del punto 3
+- `modules/ejercicio04_alumnos/`: servidor e interfaz del punto 4
 - `tools/start-all.js`: arranca todos los servidores juntos
 
 ## 2. Puertos de trabajo
 
 Cada parte corre aislada:
 
-- launcher: `http://localhost:3400`
+- lanzador: `http://localhost:3400`
 - punto 1: `http://localhost:3401`
 - punto 2: `http://localhost:3402`
 - punto 3: `http://localhost:3403`
@@ -34,9 +34,9 @@ Cada parte corre aislada:
 
 Esto permite evaluar cada ejercicio de forma independiente.
 
-## 3. Como funciona el launcher
+## 3. Como funciona el lanzador
 
-El launcher muestra tarjetas con los cuatro puntos.
+El lanzador muestra tarjetas con los cuatro puntos.
 
 Cada tarjeta indica:
 
@@ -68,7 +68,7 @@ De esta forma los servidores de cada punto quedan cortos y claros.
 
 `modules/ejercicio01_fetch/server.js` levanta el servidor del primer punto.
 
-Su frontend vive en:
+Su interfaz vive en:
 
 - `public/index.html`
 - `public/script.js`
@@ -86,18 +86,18 @@ Hay dos botones:
 
 ## 6. Punto 2
 
-`modules/ejercicio02_formulario/server.js` maneja el formulario.
+`modules/ejercicio02_formulario/server.js` solo sirve la pagina del formulario.
 
-Su backend expone:
+El envio real va a:
 
-- `POST /api/usuarios`
+- `https://jsonplaceholder.typicode.com/users`
 
-Valida dos veces:
+La validacion sigue ocurriendo en dos niveles:
 
 - primero en JavaScript del navegador
-- despues en Express
+- despues se envian los datos a la API externa simulada
 
-Si esta todo bien, responde con un objeto que tiene `id`.
+Si esta todo bien, la interfaz muestra `ID recibido: 11 (simulada)`.
 
 ## 7. Punto 3
 
@@ -118,9 +118,9 @@ No vuelve a pedir datos en cada tecla.
 
 Expone:
 
-- `GET /api/alumnos`
+- `POST /api/alumnos`
 
-El frontend de ese mismo punto usa `fetch()` para consultar esa ruta y mostrar los alumnos.
+La interfaz de ese mismo punto usa `fetch()` para consultar esa ruta y mostrar los alumnos.
 
 ## 9. Tema y boton subir
 
@@ -173,10 +173,10 @@ La app ya no esta pensada como una sola pagina gigante.
 
 Ahora trabaja como un conjunto de ejercicios independientes con:
 
-- launcher principal
+- lanzador principal
 - servidores separados
-- frontend propio por punto
-- backend propio donde hace falta
+- interfaz propia por punto
+- servidor propio donde hace falta
 - codigo compartido solo para lo comun
 
 Ese enfoque queda mas alineado con la estructura de los otros trabajos.

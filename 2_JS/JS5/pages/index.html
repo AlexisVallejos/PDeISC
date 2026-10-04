@@ -16,15 +16,25 @@
     <main class="shell">
       <header class="hero">
         <div class="hero-copy">
-          <span class="eyebrow">JS5 · alumnosDB · REST API</span>
-          <h1>Control de alumnos con una interfaz cálida y premium.</h1>
+          <span class="eyebrow">JS5 · alumnosDB · CRUD POST</span>
+          <h1>Altas, edición y bajas con una interfaz más clara.</h1>
           <p>
-            Crea la base <strong>alumnosDB</strong>, carga los 5 alumnos de ejemplo,
-            agrega nuevos registros y consume la API desde JavaScript con una vista clara y profesional.
+            La base <strong>alumnosDB</strong> vive en MySQL. Todo el CRUD usa <strong>POST</strong>,
+            y el visor de JSON está en otra página local para separar la salida técnica del panel principal.
           </p>
           <div class="hero-actions">
-            <button id="seedBtn" class="btn btn-primary" type="button">Cargar 5 ejemplos</button>
-            <button id="clearBtn" class="btn btn-secondary" type="button">Vaciar tabla</button>
+            <button id="openFormBtn" class="btn btn-primary btn-compact" type="button">
+              <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M11 5a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6V5Z"/>
+              </svg>
+              <span>Nuevo alumno</span>
+            </button>
+            <a id="jsonLink" class="btn btn-ghost btn-compact" href="json.php">
+              <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8.5 7.5a1 1 0 0 0-1-1H6A2 2 0 0 0 4 8.5v7A2 2 0 0 0 6 17.5h1.5a1 1 0 1 0 0-2H6v-7h1.5a1 1 0 0 0 1-1Zm7 0a1 1 0 0 0 1 1H18v7h-1.5a1 1 0 1 0 0 2H18a2 2 0 0 0 2-2.5v-7A2 2 0 0 0 18 6.5h-1.5a1 1 0 0 0-1 1ZM10 8.5a1 1 0 0 0-1.95-.32l-2 8a1 1 0 0 0 1.9.64l2-8A1 1 0 0 0 10 8.5Zm4.2.1a1 1 0 0 0-1.4 1.42l1.58 1.58-1.58 1.58a1 1 0 1 0 1.4 1.42l2.3-2.3a1 1 0 0 0 0-1.42l-2.3-2.28Z"/>
+              </svg>
+              <span>Ver JSON</span>
+            </a>
           </div>
         </div>
 
@@ -32,54 +42,104 @@
           <div class="stat-card">
             <span class="stat-label">Base</span>
             <strong>alumnosDB</strong>
-            <small>SQLite local</small>
+            <small>MySQL en XAMPP</small>
           </div>
           <div class="stat-card">
-            <span class="stat-label">Campos</span>
-            <strong>id, nombre, apellido, edad</strong>
-            <small>id autoincremental</small>
+            <span class="stat-label">Acciones</span>
+            <strong>Crear, editar, eliminar</strong>
+            <small>Iconos + estados claros</small>
           </div>
           <div class="stat-card">
-            <span class="stat-label">API</span>
-            <strong>/api/alumnos</strong>
-            <small>JSON listo para consumir</small>
+            <span class="stat-label">Visor</span>
+            <strong>json.php</strong>
+            <small>Otra página local</small>
           </div>
         </aside>
       </header>
 
-      <section class="grid">
-        <article class="panel panel-schema">
-          <div class="panel-head">
-            <div>
-              <span class="eyebrow">Estructura</span>
-              <h2>Modelo de datos</h2>
-            </div>
-            <span class="chip">SQL</span>
+      <section class="panel panel-data">
+        <div class="panel-head panel-head-data">
+          <div class="data-heading">
+            <span class="eyebrow">CRUD</span>
+            <h2>Datos cargados</h2>
+            <p class="data-lead">
+              Revisa los alumnos, edita sus datos o elimínalos desde la misma tabla.
+            </p>
           </div>
-          <div class="schema">
-            <div><span>id</span><strong>INT PK AI</strong></div>
-            <div><span>nombre</span><strong>VARCHAR</strong></div>
-            <div><span>apellido</span><strong>VARCHAR</strong></div>
-            <div><span>edad</span><strong>INT</strong></div>
+          <div class="meta-row">
+            <span id="countChip" class="chip chip-accent">0 alumnos</span>
+            <span class="chip chip-soft">Sin GET</span>
           </div>
-          <pre class="code-block">CREATE TABLE alumnos (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  nombre TEXT NOT NULL,
-  apellido TEXT NOT NULL,
-  edad INTEGER NOT NULL
-);</pre>
-        </article>
+        </div>
 
-        <article class="panel panel-form">
-          <div class="panel-head">
-            <div>
-              <span class="eyebrow">Alta</span>
-              <h2>Cargar alumno</h2>
+        <div class="data-layout">
+          <div class="data-main">
+            <div class="table-toolbar" aria-label="Leyenda de acciones">
+              <div class="toolbar-pill toolbar-pill-edit">Editar alumno</div>
+              <div class="toolbar-pill toolbar-pill-delete">Eliminar alumno</div>
+              <div class="toolbar-pill toolbar-pill-live">Tabla viva</div>
             </div>
-            <span class="chip">POST</span>
+
+            <div class="table-wrap">
+              <table class="students-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Edad</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  <tr>
+                    <td colspan="5" class="empty-row">Todavía no hay alumnos cargados.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <form id="alumnoForm" class="student-form" autocomplete="off">
+          <aside class="detail-stack" aria-label="Resumen del panel">
+            <article class="detail-card">
+              <span class="detail-kicker">Flujo</span>
+              <h3>Editar y borrar con contexto</h3>
+              <p>
+                Los botones usan iconos SVG para que la acción se entienda al instante y
+                la edición mantenga foco en el formulario.
+              </p>
+            </article>
+            <article class="detail-card detail-card-soft">
+              <span class="detail-kicker">Diseño</span>
+              <h3>Paleta conservada</h3>
+              <p>
+                Se mantiene el mismo rango cálido de naranjas y crema, pero con mejor
+                contraste, jerarquía y separación entre secciones.
+              </p>
+            </article>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <section id="studentModal" class="modal-shell" aria-hidden="true" hidden>
+      <div class="modal-backdrop"></div>
+      <div class="modal-window" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <header class="modal-head">
+          <div>
+            <span class="eyebrow">Alta y edición</span>
+            <h2 id="modalTitle">Formulario de alumno</h2>
+          </div>
+          <button id="closeFormBtn" class="modal-close" type="button" aria-label="Cerrar ventana">
+            <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6.3 17.7a1 1 0 0 0 1.4 0L12 13.4l4.3 4.3a1 1 0 0 0 1.4-1.4L13.4 12l4.3-4.3a1 1 0 1 0-1.4-1.4L12 10.6 7.7 6.3a1 1 0 0 0-1.4 1.4l4.3 4.3-4.3 4.3a1 1 0 0 0 0 1.4Z"/>
+            </svg>
+          </button>
+        </header>
+
+        <form id="alumnoForm" class="student-form modal-form" autocomplete="off">
+          <input id="alumnoId" name="id" type="hidden" value="" />
+          <div class="form-grid">
             <label>
               <span>Nombre</span>
               <input id="nombre" name="nombre" type="text" placeholder="Ana" required />
@@ -88,62 +148,32 @@
               <span>Apellido</span>
               <input id="apellido" name="apellido" type="text" placeholder="Gomez" required />
             </label>
-            <label>
+            <label class="field-wide">
               <span>Edad</span>
               <input id="edad" name="edad" type="number" min="1" step="1" placeholder="20" required />
             </label>
-            <button id="saveBtn" class="btn btn-primary btn-wide" type="submit">Guardar alumno</button>
-          </form>
+          </div>
+          <div class="form-actions form-actions-inline">
+            <button id="saveBtn" class="btn btn-primary btn-wide" type="submit">
+              <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M11 5a1 1 0 0 1 2 0v6h6a1 1 0 1 1 0 2h-6v6a1 1 0 1 1-2 0v-6H5a1 1 0 1 1 0-2h6V5Z"/>
+              </svg>
+              <span>Guardar alumno</span>
+            </button>
+            <button id="cancelEditBtn" class="btn btn-secondary btn-wide" type="button" hidden>
+              <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6.3 17.7a1 1 0 0 0 1.4 0L12 13.4l4.3 4.3a1 1 0 0 0 1.4-1.4L13.4 12l4.3-4.3a1 1 0 1 0-1.4-1.4L12 10.6 7.7 6.3a1 1 0 0 0-1.4 1.4l4.3 4.3-4.3 4.3a1 1 0 0 0 0 1.4Z"/>
+              </svg>
+              <span>Cancelar edición</span>
+            </button>
+          </div>
+        </form>
 
-          <div id="formStatus" class="status-box" role="status" aria-live="polite">
-            Listo para cargar alumnos.
-          </div>
-        </article>
-      </section>
-
-      <section class="panel panel-data">
-        <div class="panel-head panel-head-data">
-          <div>
-            <span class="eyebrow">API REST</span>
-            <h2>Datos cargados</h2>
-          </div>
-          <div class="meta-row">
-            <span id="countChip" class="chip chip-accent">0 alumnos</span>
-            <button id="refreshBtn" class="btn btn-ghost" type="button">Actualizar</button>
-          </div>
+        <div id="formStatus" class="status-box modal-status" role="status" aria-live="polite">
+          Listo para cargar alumnos.
         </div>
-
-        <div class="data-layout">
-          <div class="table-wrap">
-            <table class="students-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Apellido</th>
-                  <th>Edad</th>
-                </tr>
-              </thead>
-              <tbody id="tableBody">
-                <tr>
-                  <td colspan="4" class="empty-row">Todavía no hay alumnos cargados.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <aside class="json-panel">
-            <div class="panel-head">
-              <div>
-                <span class="eyebrow">JSON</span>
-                <h3>Respuesta API</h3>
-              </div>
-            </div>
-            <pre id="jsonPreview" class="json-preview">Pulsa “Actualizar” para ver la respuesta.</pre>
-          </aside>
-        </div>
-      </section>
-    </main>
+      </div>
+    </section>
 
     <button id="themeBtn" class="floating-btn floating-left" type="button" aria-label="Cambiar tema">
       <svg class="floating-icon" viewBox="0 0 24 24" aria-hidden="true">

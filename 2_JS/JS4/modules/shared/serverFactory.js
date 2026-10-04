@@ -10,16 +10,16 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// Resolve the shared public folder used by every exercise.
+// Resuelve la carpeta publica compartida usada por todos los ejercicios.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const SHARED_PUBLIC = path.join(__dirname, "public");
 
-// Validation rules reused by the form exercise.
+// Reglas de validacion reutilizadas por el ejercicio del formulario.
 const nameRegex = /^[A-Za-z\u00C1\u00C9\u00CD\u00D3\u00DA\u00E1\u00E9\u00ED\u00F3\u00FA\u00D1\u00F1' ]{3,}$/;
 const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-// Validate a person name and return an empty string when it is valid.
+// Valida un nombre de persona y devuelve una cadena vacia cuando es valido.
 export function validateName(nombre = "") {
   const limpio = nombre.trim();
 
@@ -38,7 +38,7 @@ export function validateName(nombre = "") {
   return "";
 }
 
-// Validate an email address and return an empty string when it is valid.
+// Valida una direccion de correo y devuelve una cadena vacia cuando es valida.
 export function validateEmail(email = "") {
   const limpio = email.trim();
 
@@ -57,28 +57,28 @@ export function validateEmail(email = "") {
   return "";
 }
 
-// Create an Express server configured for one exercise folder.
+// Crea un servidor Express configurado para una carpeta de ejercicio.
 export function createExerciseServer({ port, title, exerciseRoot, registerRoutes }) {
   const app = express();
   const publicRoot = path.join(exerciseRoot, "public");
 
-  // Parse JSON and urlencoded bodies, then expose shared assets.
+  // Analiza cuerpos JSON y urlencoded, y luego expone los recursos compartidos.
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
   app.use("/shared", express.static(SHARED_PUBLIC));
   app.use(express.static(publicRoot));
 
-  // Serve the exercise homepage.
+  // Sirve la pagina principal del ejercicio.
   app.get("/", (_req, res) => {
     res.sendFile(path.join(publicRoot, "index.html"));
   });
 
-  // Let each exercise register its own custom routes.
+  // Permite que cada ejercicio registre sus propias rutas personalizadas.
   if (registerRoutes) {
     registerRoutes(app);
   }
 
-  // Start listening on the selected port.
+  // Comienza a escuchar en el puerto seleccionado.
   app.listen(port, () => {
     console.log(`${title} corriendo en http://localhost:${port}`);
   });

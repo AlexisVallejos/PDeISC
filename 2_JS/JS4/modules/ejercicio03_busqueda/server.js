@@ -10,10 +10,10 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { createExerciseServer } from "../shared/serverFactory.js";
 
-// Resolve the exercise folder so the shared server factory can serve it.
+// Resuelve la carpeta del ejercicio para que la fabrica compartida pueda servirla.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Launch point 3 using the shared server infrastructure.
+// Levanta el punto 3 usando la infraestructura compartida del servidor.
 createExerciseServer({
   port: 3403,
   title: "Punto 3 - Busqueda",

@@ -12,10 +12,10 @@ import {
   renderStatus
 } from "/shared/common.js";
 
-// Remote source used by the comparison demo.
+// Fuente remota usada por la demostracion comparativa.
 const USERS_URL = "https://jsonplaceholder.typicode.com/users";
 
-// Get the DOM nodes used by the two loaders.
+// Obtiene los nodos del DOM usados por los dos cargadores.
 const fetchButton = document.getElementById("fetch-btn");
 const axiosButton = document.getElementById("axios-btn");
 const fetchStatus = document.getElementById("fetch-status");
@@ -23,7 +23,7 @@ const axiosStatus = document.getElementById("axios-status");
 const fetchResults = document.getElementById("fetch-results");
 const axiosResults = document.getElementById("axios-results");
 
-// Convert the raw API payload to the shared card format.
+// Convierte la carga util cruda de la API al formato compartido de tarjetas.
 function mapUsers(users) {
   return users.map((user) => ({
     title: user.name,
@@ -31,7 +31,7 @@ function mapUsers(users) {
   }));
 }
 
-// Load users with the native Fetch API.
+// Carga usuarios con la API nativa Fetch.
 async function loadWithFetch() {
   renderStatus(fetchStatus, "Consultando usuarios con Fetch...", "info");
   fetchResults.innerHTML = "";
@@ -47,7 +47,7 @@ async function loadWithFetch() {
   renderPeople(fetchResults, users, "Fetch");
 }
 
-// Load users with Axios from the CDN.
+// Carga usuarios con Axios desde el CDN.
 async function loadWithAxios() {
   renderStatus(axiosStatus, "Consultando usuarios con Axios...", "info");
   axiosResults.innerHTML = "";
@@ -62,21 +62,21 @@ async function loadWithAxios() {
   renderPeople(axiosResults, users, "Axios");
 }
 
-// Bind the Fetch button and keep failures on its own panel.
+// Vincula el boton de Fetch y mantiene sus fallos en su propio panel.
 fetchButton.addEventListener("click", () => {
   loadWithFetch().catch((error) => {
     renderStatus(fetchStatus, error.message, "error");
   });
 });
 
-// Bind the Axios button and keep failures on its own panel.
+// Vincula el boton de Axios y mantiene sus fallos en su propio panel.
 axiosButton.addEventListener("click", () => {
   loadWithAxios().catch((error) => {
     renderStatus(axiosStatus, error.message || "No se pudieron obtener los datos.", "error");
   });
 });
 
-// Reuse the shared theme and scroll-to-top behavior.
+// Reutiliza el tema compartido y el comportamiento de volver arriba.
 initializeThemeAndTop({
   themeButtonId: "theme-btn",
   topButtonId: "back-to-top",

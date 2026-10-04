@@ -7,13 +7,13 @@
  * Validacion: el tema persiste en localStorage y el boton de volver arriba se activa por scroll.
  */
 
-// Set up the shared floating controls on the current page.
+// Configura los controles flotantes compartidos en la pagina actual.
 export function initializeThemeAndTop({ themeButtonId, topButtonId, themeKey }) {
-  // Locate the floating buttons for theme and scroll-to-top.
+  // Ubica los botones flotantes de tema y de volver arriba.
   const themeButton = document.getElementById(themeButtonId);
   const topButton = document.getElementById(topButtonId);
 
-  // Apply the requested theme and persist it in localStorage.
+  // Aplica el tema pedido y lo guarda en localStorage.
   function applyTheme(theme) {
     const selectedTheme = theme === "dark" ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", selectedTheme);
@@ -24,33 +24,33 @@ export function initializeThemeAndTop({ themeButtonId, topButtonId, themeKey }) 
     themeButton.setAttribute("title", nextLabel);
   }
 
-  // Restore the saved theme on page load.
+  // Restaura el tema guardado al cargar la pagina.
   applyTheme(localStorage.getItem(themeKey) || "light");
 
-  // Toggle between light and dark mode.
+  // Alterna entre modo claro y modo oscuro.
   themeButton.addEventListener("click", () => {
     const current = localStorage.getItem(themeKey) || "light";
     applyTheme(current === "light" ? "dark" : "light");
   });
 
-  // Show the top button only when the page is scrolled.
+  // Muestra el boton superior solo cuando la pagina se desplaza.
   window.addEventListener("scroll", () => {
     topButton.classList.toggle("show", window.scrollY > 240);
   });
 
-  // Smoothly return to the top of the page.
+  // Vuelve suavemente al inicio de la pagina.
   topButton.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
 
-// Paint a status box with the correct tone and text.
+// Pinta una caja de estado con el tono y el texto correctos.
 export function renderStatus(container, message, type = "info") {
   container.className = `status-box status-${type}`;
   container.textContent = message;
 }
 
-// Wrap a card inside a Bootstrap column.
+// Envuelve una tarjeta dentro de una columna de Bootstrap.
 function createColumn(content) {
   const column = document.createElement("div");
   column.className = "col-md-6";
@@ -58,11 +58,11 @@ function createColumn(content) {
   return column;
 }
 
-// Render a list of people using the shared card layout.
+// Renderiza una lista de personas usando el mismo diseño de tarjetas.
 export function renderPeople(container, items, label = "Registro") {
   container.innerHTML = "";
 
-  // Render an empty state when there is nothing to show.
+  // Renderiza un estado vacio cuando no hay nada para mostrar.
   if (!items.length) {
     container.innerHTML = `
       <div class="col-12">
@@ -72,7 +72,7 @@ export function renderPeople(container, items, label = "Registro") {
     return;
   }
 
-  // Build one result card per item.
+  // Construye una tarjeta de resultado por cada elemento.
   items.forEach((item) => {
     const card = document.createElement("article");
     card.className = "result-card";

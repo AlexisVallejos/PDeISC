@@ -12,26 +12,26 @@ import {
   renderStatus
 } from "/shared/common.js";
 
-// Remote source used by the search demo.
+// Fuente remota usada por la demostracion de busqueda.
 const USERS_URL = "https://jsonplaceholder.typicode.com/users";
-// Action button that loads the users.
+// Boton de accion que carga los usuarios.
 const loadButton = document.getElementById("load-btn");
-// Tabs switch between Fetch and Axios before loading.
+// Las pestañas cambian entre Fetch y Axios antes de cargar.
 const tabFetch = document.getElementById("tab-fetch");
 const tabAxios = document.getElementById("tab-axios");
-// Search box filters the cached list.
+// El cuadro de busqueda filtra la lista en cache.
 const searchInput = document.getElementById("search-input");
-// Shared UI areas for the current status and results.
+// Areas de interfaz compartidas para el estado actual y los resultados.
 const statusBox = document.getElementById("status");
 const results = document.getElementById("results");
 const resultCount = document.getElementById("result-count");
 
-// Cache the loaded data so filtering is instant.
+// Guarda los datos cargados para que el filtrado sea inmediato.
 let cachedUsers = [];
-// Track the selected loading method.
+// Lleva el control del metodo de carga seleccionado.
 let currentMethod = "fetch";
 
-// Normalize the API payload into the shared card format.
+// Normaliza la carga util de la API al formato compartido de tarjetas.
 function mapUsers(users) {
   return users.map((user) => ({
     title: user.name,
@@ -39,12 +39,12 @@ function mapUsers(users) {
   }));
 }
 
-// Update the counter chip with the amount of visible users.
+// Actualiza la chapa del contador con la cantidad de usuarios visibles.
 function updateCount(count) {
   resultCount.textContent = count === 1 ? "1 usuario" : `${count} usuarios`;
 }
 
-// Filter the cached users by the typed search term.
+// Filtra los usuarios en cache por el termino escrito.
 function filterUsers(term) {
   const normalized = term.trim().toLowerCase();
 
@@ -57,7 +57,7 @@ function filterUsers(term) {
   );
 }
 
-// Switch the active transport method and update the button label.
+// Cambia el metodo de transporte activo y actualiza el texto del boton.
 function setActiveMethod(method) {
   currentMethod = method;
   tabFetch.classList.toggle("active", method === "fetch");
@@ -66,7 +66,7 @@ function setActiveMethod(method) {
     method === "fetch" ? "Cargar usuarios con Fetch" : "Cargar usuarios con Axios";
 }
 
-// Load the users using the selected transport method.
+// Carga los usuarios usando el metodo de transporte seleccionado.
 async function loadUsers() {
   renderStatus(statusBox, `Cargando usuarios con ${currentMethod}...`, "info");
   results.innerHTML = "";
@@ -101,14 +101,14 @@ async function loadUsers() {
   }
 }
 
-// Wire the main load button.
+// Conecta el boton principal de carga.
 loadButton.addEventListener("click", loadUsers);
-// Select Fetch mode.
+// Selecciona el modo Fetch.
 tabFetch.addEventListener("click", () => setActiveMethod("fetch"));
-// Select Axios mode.
+// Selecciona el modo Axios.
 tabAxios.addEventListener("click", () => setActiveMethod("axios"));
 
-// Filter the visible list as the user types.
+// Filtra la lista visible a medida que el usuario escribe.
 searchInput.addEventListener("input", () => {
   const filteredUsers = filterUsers(searchInput.value);
   renderStatus(
@@ -122,10 +122,10 @@ searchInput.addEventListener("input", () => {
   updateCount(filteredUsers.length);
 });
 
-// Start the page in Fetch mode.
+// Inicia la pagina en modo Fetch.
 setActiveMethod("fetch");
 
-// Reuse the shared theme and scroll-to-top behavior.
+// Reutiliza el tema compartido y el comportamiento de volver arriba.
 initializeThemeAndTop({
   themeButtonId: "theme-btn",
   topButtonId: "back-to-top",
