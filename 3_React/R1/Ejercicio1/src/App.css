@@ -1,9 +1,22 @@
-.ejercicio { width: min(1000px, calc(100% - 40px)); margin: 0 auto; padding: 94px 0 88px; }
-.ejercicio__encabezado { margin-bottom: 28px; }
-.ejercicio__encabezado > p { margin: 0 0 10px; color: var(--acento); font-size: .72rem; font-weight: 800; letter-spacing: .16em; }
-.ejercicio__encabezado h1 { margin: 0; font-size: clamp(2.35rem, 6vw, 4.4rem); line-height: 1; letter-spacing: -.06em; }
-.ejercicio__encabezado span { display: block; margin-top: 14px; color: var(--texto-suave); font-size: 1.02rem; }
-.ejercicio__panel { min-height: 190px; padding: clamp(22px, 5vw, 42px); background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 26px; box-shadow: var(--sombra); backdrop-filter: blur(18px); }
-.tarjetas { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
-@media(max-width:560px) { .ejercicio { width: min(100% - 28px, 480px); padding-top: 88px; } .ejercicio__panel { padding: 20px; border-radius: 21px; } }
-@media(prefers-reduced-transparency: reduce) { .ejercicio__panel { background: var(--fondo-suave); backdrop-filter: none; } }
+.ejercicio { width: min(1000px, calc(100% - 40px)); margin: 0 auto; padding: clamp(48px, 9vh, 96px) 0 96px; flex: 1; }
+
+/* Encabezado: título grande con tracking negativo, como en las apps de Apple. */
+.ejercicio__encabezado { margin-bottom: 32px; animation: aparecer-pagina .6s var(--ease-out) both; }
+.ejercicio__encabezado > p { margin: 0 0 8px; color: var(--acento); font-size: .95rem; font-weight: 600; letter-spacing: 0; }
+.ejercicio__encabezado h1 { margin: 0; font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 700; line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; }
+.ejercicio__encabezado span { display: block; max-width: 560px; margin-top: 12px; color: var(--texto-suave); font-size: clamp(1.05rem, 2vw, 1.2rem); line-height: 1.4; letter-spacing: -.015em; }
+
+/* Panel principal: superficie sólida con sombra suave. */
+.ejercicio__panel {
+  display: grid; min-height: 190px; align-content: center; padding: clamp(24px, 5vw, 48px); background: var(--tarjeta); border-radius: 24px; box-shadow: var(--sombra);
+  transition: background-color .35s ease; animation: aparecer-pagina .6s var(--ease-out) 80ms both;
+}
+.tarjetas { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+@keyframes aparecer-pagina { from { opacity: 0; transform: translateY(12px); } }
+
+@media (max-width: 560px) {
+  .ejercicio { width: calc(100% - 32px); padding-top: 36px; }
+  .ejercicio__panel { padding: 20px; border-radius: 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .ejercicio__encabezado, .ejercicio__panel { animation-name: aparecer-suave; } }
+@keyframes aparecer-suave { from { opacity: 0; } }

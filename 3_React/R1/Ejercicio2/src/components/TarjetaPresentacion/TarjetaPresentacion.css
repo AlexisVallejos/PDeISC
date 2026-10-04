@@ -2,29 +2,35 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 220px;
-  padding: 24px 16px;
+  width: 230px;
+  padding: 28px 18px 24px;
   text-align: center;
-  background: var(--fondo-suave);
-  border: 1px solid var(--linea);
-  border-radius: 20px;
+  background: var(--fondo);
+  border-radius: 22px;
+  transition: transform .45s var(--ease-out), background-color .35s ease;
 }
+
+/* Respuesta inmediata al tocar la tarjeta */
+.tarjeta-presentacion:active { transform: scale(.97); transition-duration: .1s; }
 
 .tarjeta-presentacion__imagen {
   width: 96px;
   height: 96px;
   object-fit: cover; /* la imagen se recorta para llenar el círculo sin deformarse */
   border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--tarjeta), 0 6px 18px rgba(0,0,0,.12);
 }
 
 .tarjeta-presentacion__nombre {
-  margin: 16px 0 4px;
-  font-size: 1.15rem;
-  letter-spacing: -0.01em;
+  margin: 18px 0 2px;
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
   overflow-wrap: anywhere; /* si el nombre es larguísimo, se corta en vez de romper la tarjeta */
 }
 
 .tarjeta-presentacion__profesion {
   margin: 0;
   color: var(--texto-suave);
+  font-size: .95rem;
 }

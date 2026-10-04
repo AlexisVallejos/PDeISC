@@ -7,6 +7,8 @@ const root = path.dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   plugins: [react()],
+  // Uso una sola copia de React aunque tateti tenga su propio node_modules.
+  resolve: { dedupe: ['react', 'react-dom'] },
   build: {
     rolldownOptions: {
       input: {

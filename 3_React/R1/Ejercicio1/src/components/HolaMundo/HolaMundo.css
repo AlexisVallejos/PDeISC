@@ -2,7 +2,7 @@
 .hola-contenedor {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 20px 28px;
   align-items: center;
   justify-content: center;
 }
@@ -11,32 +11,32 @@
 .hola {
   margin: 0;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 
 /* Variante 1: color y subrayado grueso */
 .hola--clasico {
   color: var(--acento);
   font-size: 2rem;
-  border-bottom: 3px solid var(--acento);
+  text-decoration: underline 3px;
+  text-underline-offset: 8px;
 }
 
 /* Variante 2: letra más grande con degradado de color como relleno del texto */
 .hola--degradado {
-  font-size: 2.5rem;
-  background: linear-gradient(90deg, #ff375f, #ff9f0a, #0071e3);
+  font-size: 2.6rem;
+  background: linear-gradient(90deg, var(--rosa), var(--naranja), var(--azul));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Variante 3: fondo, borde redondeado y sombra */
+/* Variante 3: material translúcido, bordes redondeados y sombra */
 .hola--tarjeta {
   font-size: 1.75rem;
-  padding: 12px 24px;
+  padding: 14px 26px;
   color: var(--texto);
-  background: var(--fondo-suave);
-  border: 2px solid var(--linea);
-  border-radius: 16px;
-  box-shadow: var(--sombra);
+  background: var(--campo);
+  border-radius: 18px;
 }

@@ -3,6 +3,7 @@ import Controles from './components/Controles.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import EstadoPartida from './components/EstadoPartida.jsx'
 import Tablero from './components/Tablero.jsx'
+import Fondo from './components/Fondo.jsx'
 import ThemeToggle from './components/ThemeToggle.jsx'
 import { verificarGanador } from './utils/verificarGanador.js'
 
@@ -36,12 +37,15 @@ export default function App() {
 
   return (
     <>
-      <ThemeToggle />
+      <Fondo />
+      <nav className="barra" aria-label="Principal">
+        <a className="volver-inicio" href="/" aria-label="Volver a Inicio - R1"><span aria-hidden="true">‹</span><span>Inicio</span></a>
+        <ThemeToggle />
+      </nav>
       <main className="tateti-page">
         <div className="tateti-contenido">
-          <a className="volver-inicio" href="/" aria-label="Volver a Inicio - R1" title="Volver a Inicio - R1"><span aria-hidden="true">⌂</span><span>Inicio - R1</span></a>
           <section className="game" aria-labelledby="titulo-tateti">
-            <p className="eyebrow">JUEGO LOCAL · REACT</p>
+            <p className="eyebrow">Juego local · React</p>
             <h1 id="titulo-tateti">Tatetí</h1>
             <EstadoPartida winner={lineaGanadora} tie={empate} turn={turno} board={tablero} />
             <Tablero board={tablero} winningLine={lineaGanadora} onPlay={jugar} ended={partidaTerminada} />
