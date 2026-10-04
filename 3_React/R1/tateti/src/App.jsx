@@ -1,56 +1,56 @@
-import { useEffect, useState } from "react";
-import Tablero from "./components/Tablero";
-import EstadoPartida from "./components/EstadoPartida";
-import Controles from "./components/Controles";
-import ThemeToggle from "./components/ThemeToggle";
-import { verificarGanador } from "./utils/verificarGanador";
-import "./global.css";
+import { useState } from 'react'
+import Controles from './components/Controles.jsx'
+import ScrollToTop from './components/ScrollToTop.jsx'
+import EstadoPartida from './components/EstadoPartida.jsx'
+import Tablero from './components/Tablero.jsx'
+import ThemeToggle from './components/ThemeToggle.jsx'
+import { verificarGanador } from './utils/verificarGanador.js'
 
-const emptyBoard = () => Array(9).fill(null);
+// Armo las nueve casillas vacías para una partida nueva.
+function crearTableroVacio() {
+  return Array(9).fill(null)
+}
 
+// Coordino el tablero, los turnos y el resultado del tatetí.
 export default function App() {
-  const [dark, setDark] = useState(false);
-  const [board, setBoard] = useState(emptyBoard);
-  const [turn, setTurn] = useState("X");
-  const winningLine = verificarGanador(board);
-  const tie = !winningLine && board.every(Boolean);
-  const ended = Boolean(winningLine) || tie;
-  useEffect(() => {
-    document.documentElement.dataset.theme = dark ? "dark" : "light";
-  }, [dark]);
-  const play = (index) => {
-    if (board[index] || ended) return;
-    const nextBoard = [...board];
-    nextBoard[index] = turn;
-    setBoard(nextBoard);
-    setTurn(turn === "X" ? "O" : "X");
-  };
-  const reset = () => {
-    setBoard(emptyBoard());
-    setTurn("X");
-  };
-  // El tablero y el turno vuelven a sus valores iniciales al reiniciar.
+  const [tablero, setTablero] = useState(crearTableroVacio)
+  const [turno, setTurno] = useState('X')
+  const lineaGanadora = verificarGanador(tablero)
+  const empate = !lineaGanadora && tablero.every(Boolean)
+  const partidaTerminada = Boolean(lineaGanadora) || empate
+
+  // Coloco la ficha actual y luego cambio el turno.
+  function jugar(indice) {
+    if (tablero[indice] || partidaTerminada) return
+    const siguienteTablero = [...tablero]
+    siguienteTablero[indice] = turno
+    setTablero(siguienteTablero)
+    setTurno(turno === 'X' ? 'O' : 'X')
+  }
+
+  // Vuelvo al estado inicial para empezar otra partida.
+  function reiniciar() {
+    setTablero(crearTableroVacio())
+    setTurno('X')
+  }
+
   return (
-    <main>
-      <ThemeToggle dark={dark} onToggle={() => setDark((value) => !value)} />
-      <section className="game">
-        <p className="eyebrow">Juego local · React</p>
-        <h1>Tatetí</h1>
-        <EstadoPartida
-          winner={winningLine}
-          tie={tie}
-          turn={turn}
-          board={board}
-        />
-        <Tablero
-          board={board}
-          winningLine={winningLine}
-          onPlay={play}
-          ended={ended}
-        />
-        <Controles onReset={reset} />
-        <p className="hint">Dos jugadores · X comienza</p>
-      </section>
-    </main>
-  );
+    <>
+      <ThemeToggle />
+      <main className="tateti-page">
+        <div className="tateti-contenido">
+          <a className="volver-inicio" href="/" aria-label="Volver a Inicio - R1" title="Volver a Inicio - R1"><span aria-hidden="true">⌂</span><span>Inicio - R1</span></a>
+          <section className="game" aria-labelledby="titulo-tateti">
+            <p className="eyebrow">JUEGO LOCAL · REACT</p>
+            <h1 id="titulo-tateti">Tatetí</h1>
+            <EstadoPartida winner={lineaGanadora} tie={empate} turn={turno} board={tablero} />
+            <Tablero board={tablero} winningLine={lineaGanadora} onPlay={jugar} ended={partidaTerminada} />
+            <Controles onReset={reiniciar} />
+            <p className="hint">Dos jugadores · X empieza</p>
+          </section>
+        </div>
+      </main>
+      <ScrollToTop />
+    </>
+  )
 }

@@ -1,3 +1,4 @@
+// Muestro el turno actual o el resultado de la partida.
 export default function EstadoPartida({ winner, tie, turn, board }) {
   const message = winner
     ? `Ganó ${board[winner[0]]}`

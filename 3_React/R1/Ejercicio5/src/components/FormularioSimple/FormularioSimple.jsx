@@ -1,44 +1,62 @@
-// Ejercicio 5: formulario que pide un nombre y muestra un mensaje de bienvenida.
 import { useState } from 'react'
 import './FormularioSimple.css'
 
+const PATRON_NOMBRE = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]{2,40}$/
+
+// Valido el nombre con las mismas reglas del formulario.
+function validarNombre(valor) {
+  if (!valor.trim()) return 'El nombre es obligatorio.'
+  if (!PATRON_NOMBRE.test(valor.trim())) return 'Usá entre 2 y 40 letras; no agregues números ni símbolos.'
+  return ''
+}
+
+// Administro la escritura, validación y respuesta de bienvenida.
 function FormularioSimple() {
-  // Lo que se escribe en el input (input controlado: su valor viene del estado).
   const [nombre, setNombre] = useState('')
-  // Nombre ya enviado. Mientras esté vacío no se muestra ningún mensaje.
+  const [error, setError] = useState('')
   const [bienvenido, setBienvenido] = useState('')
 
-  // Se ejecuta al enviar el formulario (botón o tecla Enter).
+  // Actualizo el campo y muestro el error mientras se escribe.
+  function manejarCambio(evento) {
+    const valor = evento.target.value
+    setNombre(valor)
+    setBienvenido('')
+    setError(valor.length > 0 ? validarNombre(valor) : '')
+  }
+
+  // Detengo el envío cuando el nombre no cumple las reglas.
   function manejarEnvio(evento) {
-    evento.preventDefault() // evita que la página se recargue
-    setBienvenido(nombre.trim()) // guardo el nombre para mostrar el mensaje
+    evento.preventDefault()
+    const errorActual = validarNombre(nombre)
+    setError(errorActual)
+    if (errorActual) return
+    setBienvenido(nombre.trim())
   }
 
   return (
-    <form className="formulario" onSubmit={manejarEnvio}>
-      <label className="formulario__etiqueta" htmlFor="nombre-usuario">
-        Tu nombre
-      </label>
+    <form className="formulario" onSubmit={manejarEnvio} noValidate>
+      <label className="formulario__etiqueta" htmlFor="nombre-usuario">Tu nombre</label>
       <div className="formulario__fila">
         <input
           id="nombre-usuario"
-          className="formulario__campo"
+          className={`formulario__campo${error ? ' formulario__campo--error' : ''}`}
           type="text"
           value={nombre}
-          onChange={(evento) => setNombre(evento.target.value)}
+          onChange={manejarCambio}
           autoComplete="given-name"
+          minLength={2}
+          maxLength={40}
+          pattern="[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]{2,40}"
+          required
+          aria-invalid={Boolean(error)}
+          aria-describedby="error-nombre"
         />
-        <button className="formulario__boton" type="submit">
-          Enviar
-        </button>
+        <button className="formulario__boton" type="submit">Enviar</button>
       </div>
-
-      {/* Renderizado condicional: el mensaje aparece solo si hay un nombre enviado */}
-      {bienvenido !== '' && (
-        <p className="formulario__mensaje" role="status">
-          ¡Bienvenido, {bienvenido}!
-        </p>
-      )}
+      <p className={error ? 'formulario__error' : 'formulario__ayuda'} id="error-nombre" role="status">
+        {error || 'Ingresá de 2 a 40 letras.'}
+      </p>
+      {bienvenido && <p className="formulario__mensaje" role="status">¡Bienvenido, {bienvenido}!</p>}
     </form>
   )
 }
