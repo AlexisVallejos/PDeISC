@@ -9,12 +9,14 @@ import {
   StyleSheet,
   Text,
   View,
+  useWindowDimensions,
   type TextInput,
 } from 'react-native';
 import Animated, {
   Easing,
   FadeIn,
   FadeInDown,
+  FadeInRight,
   FadeOut,
   LinearTransition,
   useAnimatedStyle,
@@ -42,6 +44,9 @@ function haptic(type: Haptics.NotificationFeedbackType) {
 export function LoginScreen({ navigation }: LoginScreenProps) {
   const insets = useSafeAreaInsets();
   const reduceMotion = useReducedMotion();
+  const { width } = useWindowDimensions();
+  // Ancho (web, tablet, apaisado): marca a la izquierda y hoja de ingreso al costado.
+  const wide = width >= 820;
   const claveRef = useRef<TextInput>(null);
 
   const [usuario, setUsuario] = useState('');
@@ -99,7 +104,7 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
     <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <StatusBar style="light" />
       <ScrollView
-        contentContainerStyle={styles.scroll}
+        contentContainerStyle={[styles.scroll, wide && styles.scrollWide]}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="interactive"
         bounces={false}
@@ -107,10 +112,10 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
         contentInsetAdjustmentBehavior="never"
       >
         {/* Panel de marca: edge to edge, el contenido se separa del notch con los insets */}
-        <View style={[styles.brand, { paddingTop: insets.top + space.xl }]}>
+        <View style={[styles.brand, wide && styles.brandWide, { paddingTop: insets.top + space.xl }]}>
           <GridBackground color="rgba(255,255,255,0.045)" />
           <View style={styles.topBar} />
-          <Logo3D size={68} variant="dark" delay={200} />
+          <Logo3D size={wide ? 96 : 68} variant="dark" delay={200} />
           <Animated.Text entering={entrada(900)} style={styles.brandLine}>
             Accesorios de aluminio
           </Animated.Text>
@@ -121,10 +126,16 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
 
         {/* Hoja de acceso */}
         <Animated.View
-          entering={entrada(120)}
-          style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, space.lg) + space.md }]}
+          entering={wide ? (reduceMotion ? FadeIn.duration(200) : FadeInRight.delay(120).duration(420).easing(EASE_OUT)) : entrada(120)}
+          style={[
+            styles.sheet,
+            wide && styles.sheetWide,
+            wide
+              ? { paddingTop: insets.top + space.xxxl, paddingBottom: Math.max(insets.bottom, space.lg) + space.xxl }
+              : { paddingBottom: Math.max(insets.bottom, space.lg) + space.md },
+          ]}
         >
-          <View style={styles.grabber} accessibilityElementsHidden importantForAccessibility="no" />
+          {!wide && <View style={styles.grabber} accessibilityElementsHidden importantForAccessibility="no" />}
 
           <Text style={styles.title} accessibilityRole="header">
             Ingresar
@@ -215,6 +226,7 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.carbonDeep },
   scroll: { flexGrow: 1 },
+  scrollWide: { flexDirection: 'row', alignItems: 'stretch' },
   brand: {
     flex: 1,
     minHeight: 300,
@@ -224,6 +236,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.carbonDeep,
     overflow: 'hidden',
   },
+  brandWide: { flex: 1.15, minHeight: '100%', paddingBottom: 0 },
   topBar: { position: 'absolute', top: 0, left: 0, right: 0, height: 4, backgroundColor: colors.primary },
   brandLine: { ...t.eyebrow, marginTop: space.lg, color: colors.onCarbonSecondary, textAlign: 'center' },
   brandHint: { ...t.caption, marginTop: space.sm, color: colors.onCarbonTertiary, textAlign: 'center' },
@@ -239,6 +252,19 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 520,
     alignSelf: 'center',
+  },
+  sheetWide: {
+    flex: 1,
+    marginTop: 0,
+    maxWidth: 560,
+    minWidth: 400,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+    borderTopLeftRadius: radius.sheet,
+    borderTopRightRadius: 0,
+    borderBottomLeftRadius: radius.sheet,
+    paddingHorizontal: space.xxxl + space.md,
+    boxShadow: '-16px 0 48px rgba(0,0,0,0.45)',
   },
   grabber: {
     alignSelf: 'center',
