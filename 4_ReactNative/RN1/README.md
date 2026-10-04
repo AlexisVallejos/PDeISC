@@ -89,7 +89,7 @@ Easypanel
        └── /  (web compilada)
 ```
 
-La API crea la tabla `usuarios` y los usuarios de prueba sola al arrancar:
+La API crea la tabla aislada `damac_usuarios` y los usuarios de prueba al arrancar:
 no hace falta importar `database.sql`.
 
 ### Pasos
@@ -129,7 +129,7 @@ no hace falta importar `database.sql`.
 8. Probar `https://<tu-dominio>/api/health`: debe responder
    `{"ok":true,"db":"conectada"}`. Después abrir `https://<tu-dominio>/`.
 
-La aplicación crea automáticamente la tabla y los usuarios iniciales. No hace falta
+La aplicación crea automáticamente la tabla `damac_usuarios` y los usuarios iniciales. No hace falta
 importar `api/database.sql` en EasyPanel.
 
 ### App en el celular (Expo Go) contra Easypanel

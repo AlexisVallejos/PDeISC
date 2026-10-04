@@ -49,7 +49,7 @@ app.post('/api/login', async (req, res) => {
     // Consulta parametrizada: evita inyección SQL.
     const [rows] = await pool.execute(
       `SELECT id, nombre, usuario, email, rol, ultimo_acceso
-         FROM usuarios
+         FROM damac_usuarios
         WHERE usuario = ? AND clave = SHA2(?, 256)
         LIMIT 1`,
       [usuario, clave],
@@ -60,7 +60,7 @@ app.post('/api/login', async (req, res) => {
     }
 
     const u = rows[0];
-    await pool.execute('UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = ?', [u.id]);
+    await pool.execute('UPDATE damac_usuarios SET ultimo_acceso = NOW() WHERE id = ?', [u.id]);
 
     res.json({
       ok: true,
@@ -93,7 +93,7 @@ async function prepararBase(intentos = 60) {
   for (let i = 1; i <= intentos; i++) {
     try {
       await pool.query(`
-        CREATE TABLE IF NOT EXISTS usuarios (
+        CREATE TABLE IF NOT EXISTS damac_usuarios (
           id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
           nombre        VARCHAR(100) NOT NULL,
           usuario       VARCHAR(50)  NOT NULL UNIQUE,
@@ -103,10 +103,10 @@ async function prepararBase(intentos = 60) {
           ultimo_acceso DATETIME     NULL,
           creado_en     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
         ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4`);
-      const [[{ total }]] = await pool.query('SELECT COUNT(*) AS total FROM usuarios');
+      const [[{ total }]] = await pool.query('SELECT COUNT(*) AS total FROM damac_usuarios');
       if (total === 0) {
         await pool.query(`
-          INSERT INTO usuarios (nombre, usuario, email, rol, clave) VALUES
+          INSERT INTO damac_usuarios (nombre, usuario, email, rol, clave) VALUES
             ('Administrador DAMAC', 'admin',  'admin@damac.com',  'Administrador', SHA2('1234', 256)),
             ('Alexis Vallejos',     'alexis', 'alexis@damac.com', 'Supervisor',    SHA2('damac2026', 256)),
             ('María López',         'maria',  'maria@damac.com',  'Operador',      SHA2('maria123', 256))`);

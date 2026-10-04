@@ -8,9 +8,9 @@ CREATE DATABASE IF NOT EXISTS damac_acceso
 
 USE damac_acceso;
 
-DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS damac_usuarios;
 
-CREATE TABLE usuarios (
+CREATE TABLE damac_usuarios (
   id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nombre        VARCHAR(100) NOT NULL,
   usuario       VARCHAR(50)  NOT NULL UNIQUE,
@@ -22,7 +22,7 @@ CREATE TABLE usuarios (
 ) ENGINE = InnoDB;
 
 -- Las contraseñas se guardan hasheadas, nunca en texto plano.
-INSERT INTO usuarios (nombre, usuario, email, rol, clave) VALUES
+INSERT INTO damac_usuarios (nombre, usuario, email, rol, clave) VALUES
   ('Administrador DAMAC', 'admin',  'admin@damac.com',  'Administrador', SHA2('1234', 256)),
   ('Alexis Vallejos',     'alexis', 'alexis@damac.com', 'Supervisor',    SHA2('damac2026', 256)),
   ('María López',         'maria',  'maria@damac.com',  'Operador',      SHA2('maria123', 256));
