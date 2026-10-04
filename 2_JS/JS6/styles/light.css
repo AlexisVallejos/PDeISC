@@ -1,0 +1,27 @@
+/* Tema claro: solo tokens de color; la estructura vive en base.css. */
+:root {
+  color-scheme: light;
+  --bg: #eef2f8;
+  --bg-brillo-1: rgba(37, 99, 235, 0.14);
+  --bg-brillo-2: rgba(220, 38, 38, 0.1);
+  --cuadricula: rgba(15, 23, 42, 0.05);
+  --card: #ffffff;
+  --card-2: #f1f5fb;
+  --lienzo: radial-gradient(120% 90% at 50% 15%, #ffffff 0%, #dbe4f2 75%);
+  --ink: #0f172a;
+  --muted: #475569;
+  --line: rgba(15, 23, 42, 0.1);
+  --primario: #dc2626;
+  --primario-hover: #b91c1c;
+  --primario-texto: #b91c1c;
+  --secundario: #2563eb;
+  --secundario-texto: #1d4ed8;
+  --exito: #16a34a;
+  --exito-texto: #15803d;
+  --tecla: #ffffff;
+  --tecla-borde: #c3cddc;
+  --tecla-hover: #e8eef8;
+  --casilla: #f8fafc;
+  --sombra: 0 16px 40px rgba(15, 23, 42, 0.1);
+  --foco: #2563eb;
+}

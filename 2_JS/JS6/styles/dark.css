@@ -1,0 +1,27 @@
+/* Tema oscuro: solo tokens de color; la estructura vive en base.css. */
+:root {
+  color-scheme: dark;
+  --bg: #0b1020;
+  --bg-brillo-1: rgba(37, 99, 235, 0.22);
+  --bg-brillo-2: rgba(220, 38, 38, 0.16);
+  --cuadricula: rgba(148, 163, 184, 0.06);
+  --card: #131b2e;
+  --card-2: #1a2440;
+  --lienzo: radial-gradient(120% 90% at 50% 15%, #1e2a4a 0%, #0f1628 70%);
+  --ink: #f8fafc;
+  --muted: #9fb0c8;
+  --line: rgba(255, 255, 255, 0.09);
+  --primario: #dc2626;
+  --primario-hover: #ef4444;
+  --primario-texto: #f87171;
+  --secundario: #3b82f6;
+  --secundario-texto: #93c5fd;
+  --exito: #22c55e;
+  --exito-texto: #4ade80;
+  --tecla: #1e293b;
+  --tecla-borde: #0b1222;
+  --tecla-hover: #27354f;
+  --casilla: #0f172a;
+  --sombra: 0 18px 50px rgba(0, 0, 0, 0.45);
+  --foco: #facc15;
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Avatar de Ana">
+  <rect width="120" height="120" fill="#ffd9c7"/>
+  <circle cx="60" cy="48" r="22" fill="#f2b394"/>
+  <path d="M36 52c0-20 10-30 24-30s24 10 24 30c-6-10-14-14-24-14s-18 4-24 14z" fill="#5a3426"/>
+  <path d="M18 120c2-26 20-38 42-38s40 12 42 38z" fill="#0071e3"/>
+</svg>

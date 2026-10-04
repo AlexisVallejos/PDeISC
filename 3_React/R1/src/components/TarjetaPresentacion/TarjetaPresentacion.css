@@ -1,0 +1,30 @@
+.tarjeta-presentacion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 220px;
+  padding: 24px 16px;
+  text-align: center;
+  background: var(--fondo-suave);
+  border: 1px solid var(--linea);
+  border-radius: 20px;
+}
+
+.tarjeta-presentacion__imagen {
+  width: 96px;
+  height: 96px;
+  object-fit: cover; /* la imagen se recorta para llenar el círculo sin deformarse */
+  border-radius: 50%;
+}
+
+.tarjeta-presentacion__nombre {
+  margin: 16px 0 4px;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere; /* si el nombre es larguísimo, se corta en vez de romper la tarjeta */
+}
+
+.tarjeta-presentacion__profesion {
+  margin: 0;
+  color: var(--texto-suave);
+}

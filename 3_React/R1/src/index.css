@@ -1,0 +1,66 @@
+/* Colores y valores compartidos por todos los componentes (modo claro) */
+:root {
+  --fondo: #f5f5f7;
+  --fondo-suave: #ffffff;
+  --tarjeta: rgba(255, 255, 255, 0.72);
+  --texto: #1d1d1f;
+  --texto-suave: #6e6e73;
+  --linea: rgba(0, 0, 0, 0.1);
+  --acento: #0071e3;
+  --acento-oscuro: #0058b0;
+  --exito-texto: #1a7f37;
+  --exito-fondo: rgba(52, 199, 89, 0.15);
+  --sombra: 0 8px 30px rgba(0, 0, 0, 0.08);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* curva que arranca rápido y frena suave */
+  color-scheme: light dark;
+}
+
+/* Mismos valores pero para modo oscuro (según la configuración del sistema) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fondo: #000000;
+    --fondo-suave: #1c1c1e;
+    --tarjeta: rgba(28, 28, 30, 0.72);
+    --texto: #f5f5f7;
+    --texto-suave: #a1a1a6;
+    --linea: rgba(255, 255, 255, 0.14);
+    --acento: #0a84ff;
+    --acento-oscuro: #409cff;
+    --exito-texto: #6ee087;
+    --exito-fondo: rgba(52, 199, 89, 0.18);
+    --sombra: 0 8px 30px rgba(0, 0, 0, 0.5);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh; /* dvh evita el salto de altura en celulares con barra del navegador */
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--texto);
+  background: var(--fondo);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Anillo de foco visible para quien navega con teclado */
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--acento) 60%, transparent);
+  outline-offset: 2px;
+}
+
+/* Si el usuario pidió menos movimiento, se quitan los desplazamientos (quedan los cambios de color) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+}

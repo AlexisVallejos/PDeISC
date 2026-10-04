@@ -1,0 +1,60 @@
+.contador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.contador__valor {
+  min-width: 3ch;
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  font-variant-numeric: tabular-nums; /* todos los dígitos ocupan el mismo ancho: el número no "baila" */
+}
+
+
+/* Botón propio de este ejercicio (así la carpeta es independiente) */
+.contador__boton {
+  min-height: 44px; /* tamaño mínimo recomendado para tocar con el dedo */
+  padding: 0 20px;
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--acento);
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms var(--ease-out), background-color 160ms ease;
+}
+
+/* El hover solo en dispositivos con mouse (en el celular se "pega" al tocar) */
+@media (hover: hover) and (pointer: fine) {
+  .contador__boton:hover {
+    background: var(--acento-oscuro);
+  }
+}
+
+/* Al presionar, el botón se achica un poco: se siente que responde */
+.contador__boton:active {
+  transform: scale(0.97);
+}
+
+/* Variante del botón de restar: fondo suave en lugar de color pleno */
+.contador__boton--restar {
+  color: var(--acento);
+  background: color-mix(in srgb, var(--acento) 14%, transparent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .contador__boton--restar:hover {
+    background: color-mix(in srgb, var(--acento) 24%, transparent);
+  }
+}
+
+/* Tamaño de los botones + y − (va al final para que gane sobre "font: inherit") */
+.contador__boton {
+  width: 56px;
+  font-size: 1.5rem;
+}

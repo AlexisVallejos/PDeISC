@@ -1,0 +1,76 @@
+.formulario__etiqueta {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.formulario__fila {
+  display: flex;
+  gap: 8px;
+}
+
+.formulario__mensaje {
+  margin: 16px 0 0;
+  padding: 12px 16px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+  color: var(--exito-texto);
+  background: var(--exito-fondo);
+  border-radius: 12px;
+  transition: opacity 220ms var(--ease-out), transform 220ms var(--ease-out);
+}
+
+@starting-style {
+  .formulario__mensaje {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* Botón propio de este ejercicio (así la carpeta es independiente) */
+.formulario__boton {
+  min-height: 44px; /* tamaño mínimo recomendado para tocar con el dedo */
+  padding: 0 20px;
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--acento);
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 160ms var(--ease-out), background-color 160ms ease;
+}
+
+/* El hover solo en dispositivos con mouse (en el celular se "pega" al tocar) */
+@media (hover: hover) and (pointer: fine) {
+  .formulario__boton:hover {
+    background: var(--acento-oscuro);
+  }
+}
+
+/* Al presionar, el botón se achica un poco: se siente que responde */
+.formulario__boton:active {
+  transform: scale(0.97);
+}
+
+/* Campo de texto propio de este ejercicio */
+.formulario__campo {
+  flex: 1;
+  min-width: 0; /* permite que el input se achique dentro de un flex en pantallas chicas */
+  min-height: 44px;
+  padding: 0 14px;
+  font: inherit;
+  font-size: 1rem; /* 16px o más evita el zoom automático de iPhone al enfocar */
+  color: var(--texto);
+  background: var(--fondo-suave);
+  border: 1px solid var(--linea);
+  border-radius: 12px;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.formulario__campo:focus-visible {
+  outline: none;
+  border-color: var(--acento);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--acento) 30%, transparent);
+}

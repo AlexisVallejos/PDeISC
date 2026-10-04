@@ -1,0 +1,42 @@
+/* Contenedor: acomoda los tres saludos en una fila (y en columna si no entran) */
+.hola-contenedor {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Estilo común a las tres variantes */
+.hola {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Variante 1: color y subrayado grueso */
+.hola--clasico {
+  color: var(--acento);
+  font-size: 2rem;
+  border-bottom: 3px solid var(--acento);
+}
+
+/* Variante 2: letra más grande con degradado de color como relleno del texto */
+.hola--degradado {
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, #ff375f, #ff9f0a, #0071e3);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Variante 3: fondo, borde redondeado y sombra */
+.hola--tarjeta {
+  font-size: 1.75rem;
+  padding: 12px 24px;
+  color: var(--texto);
+  background: var(--fondo-suave);
+  border: 2px solid var(--linea);
+  border-radius: 16px;
+  box-shadow: var(--sombra);
+}
