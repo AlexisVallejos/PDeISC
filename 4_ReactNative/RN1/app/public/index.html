@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <!-- viewport-fit=cover: la página pasa por debajo del notch; los insets los maneja safe-area-context.
+         interactive-widget=resizes-content: el teclado achica el viewport también en Android Chrome.
+         Nunca user-scalable=no: el zoom se evita con inputs de 16 px o más. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <meta name="theme-color" content="#0E0F11" />
+    <meta name="color-scheme" content="light" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>%WEB_TITLE%</title>
+    <style id="expo-reset">
+      html,
+      body {
+        height: 100%;
+        background: #0e0f11;
+      }
+      html {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-text-size-adjust: 100%;
+        overscroll-behavior: none;
+      }
+      body {
+        overflow: hidden;
+        margin: 0;
+      }
+      #root {
+        display: flex;
+        flex: 1;
+        height: 100%;
+        /* 100dvh sigue a la barra del navegador; 100% queda como fallback. */
+        height: 100dvh;
+      }
+      input,
+      textarea,
+      select {
+        font-size: 16px;
+      }
+      button,
+      a,
+      [role='button'] {
+        touch-action: manipulation;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+      }
+      input:focus-visible {
+        outline: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <noscript>Necesitás habilitar JavaScript para usar DAMAC Acceso.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

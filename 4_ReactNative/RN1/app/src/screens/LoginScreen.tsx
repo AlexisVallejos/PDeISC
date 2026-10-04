@@ -12,8 +12,11 @@ import {
   type TextInput,
 } from 'react-native';
 import Animated, {
+  Easing,
   FadeIn,
   FadeInDown,
+  FadeOut,
+  LinearTransition,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
@@ -22,13 +25,15 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Field } from '../components/Field';
+import { FormFooter, FormGroup, FormRow } from '../components/Form';
 import { GridBackground } from '../components/GridBackground';
 import { Logo3D } from '../components/Logo3D';
 import { PressableScale } from '../components/PressableScale';
 import { login } from '../services/api';
-import { colors, font, springs } from '../theme';
+import { colors, radius, space, springs, type as t } from '../theme';
 import type { LoginScreenProps } from '../types/navigation';
+
+const EASE_OUT = Easing.bezier(0.23, 1, 0.32, 1);
 
 function haptic(type: Haptics.NotificationFeedbackType) {
   if (Platform.OS !== 'web') Haptics.notificationAsync(type);
@@ -45,24 +50,27 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
   const [cargando, setCargando] = useState(false);
 
   const shake = useSharedValue(0);
-  const shakeStyle = useAnimatedStyle(() => ({ transform: [{ translateX: shake.value }] }));
+  const shakeStyle = useAnimatedStyle(() => ({ transform: [{ translateX: shake.get() }] }));
 
   const fallar = (mensaje: string) => {
     setError(mensaje);
     haptic(Haptics.NotificationFeedbackType.Error);
     if (reduceMotion) return;
-    shake.value = withSequence(
-      withTiming(-10, { duration: 50 }),
-      withTiming(10, { duration: 70 }),
-      withTiming(-6, { duration: 60 }),
-      withSpring(0, springs.momentum),
+    // Sacudida corta que decae: 3 golpes y un spring que absorbe la energía.
+    shake.set(
+      withSequence(
+        withTiming(-8, { duration: 50 }),
+        withTiming(8, { duration: 70 }),
+        withTiming(-5, { duration: 60 }),
+        withSpring(0, springs.momentum),
+      ),
     );
   };
 
   const ingresar = async () => {
     if (cargando) return;
     if (!usuario.trim() || !clave) {
-      fallar('Completá usuario y contraseña');
+      fallar('Completá usuario y contraseña.');
       return;
     }
 
@@ -80,90 +88,124 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
     }
   };
 
-  const entrada = (ms: number) => (reduceMotion ? FadeIn.duration(200) : FadeInDown.delay(ms).springify().duration(550).dampingRatio(1));
+  const puedeIngresar = usuario.trim().length > 0 && clave.length > 0 && !cargando;
+
+  // Entradas: ease-out fuerte, cortas. El formulario no espera al logo.
+  const entrada = (ms: number) =>
+    reduceMotion ? FadeIn.duration(200) : FadeInDown.delay(ms).duration(420).easing(EASE_OUT);
+  const layout = reduceMotion ? undefined : LinearTransition.duration(220).easing(EASE_OUT);
 
   return (
     <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <StatusBar style="light" />
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled" bounces={false}>
-        {/* Panel de marca */}
-        <View style={[styles.brand, { paddingTop: insets.top + 32 }]}>
-          <GridBackground color="rgba(255,255,255,0.05)" />
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        bounces={false}
+        overScrollMode="never"
+        contentInsetAdjustmentBehavior="never"
+      >
+        {/* Panel de marca: edge to edge, el contenido se separa del notch con los insets */}
+        <View style={[styles.brand, { paddingTop: insets.top + space.xl }]}>
+          <GridBackground color="rgba(255,255,255,0.045)" />
           <View style={styles.topBar} />
-          <Logo3D size={68} variant="dark" delay={250} />
-          <Animated.Text entering={entrada(1900)} style={styles.tagline}>
-            Industrial · Técnico · Moderno
+          <Logo3D size={68} variant="dark" delay={200} />
+          <Animated.Text entering={entrada(900)} style={styles.brandLine}>
+            Accesorios de aluminio
           </Animated.Text>
-          <Animated.Text entering={entrada(2000)} style={styles.hint}>
-            Arrastrá o tocá el logo
+          <Animated.Text entering={entrada(1000)} style={styles.brandHint}>
+            Tocá o arrastrá el logo
           </Animated.Text>
         </View>
 
         {/* Hoja de acceso */}
-        <Animated.View entering={entrada(1200)} style={[styles.sheet, { paddingBottom: insets.bottom + 28 }]}>
-          <Animated.View style={shakeStyle}>
-            <Text style={styles.kicker}>Acceso</Text>
-            <Text style={styles.title}>Ingresá al sistema</Text>
-            <View style={styles.rule} />
+        <Animated.View
+          entering={entrada(120)}
+          style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, space.lg) + space.md }]}
+        >
+          <View style={styles.grabber} accessibilityElementsHidden importantForAccessibility="no" />
 
-            <Field
-              label="Usuario"
-              value={usuario}
-              onChangeText={(t) => {
-                setUsuario(t);
-                if (error) setError('');
-              }}
-              placeholder="usuario"
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoComplete="username"
-              textContentType="username"
-              returnKeyType="next"
-              onSubmitEditing={() => claveRef.current?.focus()}
-              invalid={!!error}
-              editable={!cargando}
-            />
-            <Field
-              ref={claveRef}
-              label="Contraseña"
-              password
-              value={clave}
-              onChangeText={(t) => {
-                setClave(t);
-                if (error) setError('');
-              }}
-              placeholder="••••••"
-              autoComplete="password"
-              textContentType="password"
-              returnKeyType="go"
-              onSubmitEditing={ingresar}
-              invalid={!!error}
-              editable={!cargando}
-            />
+          <Text style={styles.title} accessibilityRole="header">
+            Ingresar
+          </Text>
+          <Text style={styles.subtitle}>Sistema de acceso para el equipo DAMAC.</Text>
+
+          <Animated.View style={shakeStyle} layout={layout}>
+            <FormGroup invalid={!!error}>
+              <FormRow
+                label="Usuario"
+                value={usuario}
+                onChangeText={(v) => {
+                  setUsuario(v);
+                  if (error) setError('');
+                }}
+                placeholder="requerido"
+                autoCapitalize="none"
+                autoCorrect={false}
+                spellCheck={false}
+                autoComplete="username"
+                textContentType="username"
+                inputMode="text"
+                returnKeyType="next"
+                enterKeyHint="next"
+                blurOnSubmit={false}
+                onSubmitEditing={() => claveRef.current?.focus()}
+                editable={!cargando}
+              />
+              <FormRow
+                ref={claveRef}
+                label="Contraseña"
+                password
+                last
+                value={clave}
+                onChangeText={(v) => {
+                  setClave(v);
+                  if (error) setError('');
+                }}
+                placeholder="requerida"
+                autoCapitalize="none"
+                autoCorrect={false}
+                autoComplete="current-password"
+                textContentType="password"
+                returnKeyType="go"
+                enterKeyHint="go"
+                onSubmitEditing={ingresar}
+                editable={!cargando}
+              />
+            </FormGroup>
 
             {!!error && (
-              <Animated.View entering={FadeIn.duration(150)} style={styles.error} accessibilityLiveRegion="polite">
-                <View style={styles.errorDot} />
-                <Text style={styles.errorText}>{error}</Text>
+              <Animated.View entering={FadeIn.duration(150)} exiting={FadeOut.duration(120)}>
+                <FormFooter error>{error}</FormFooter>
               </Animated.View>
             )}
+          </Animated.View>
 
+          <Animated.View layout={layout}>
             <PressableScale
               onPress={ingresar}
-              disabled={cargando}
+              disabled={!puedeIngresar}
               style={styles.button}
               accessibilityRole="button"
               accessibilityLabel="Ingresar"
+              accessibilityState={{ disabled: !puedeIngresar, busy: cargando }}
             >
-              {cargando ? (
-                <ActivityIndicator color={colors.white} />
-              ) : (
-                <Text style={styles.buttonText}>Ingresar</Text>
+              {/* El texto queda invisible (no desmontado): el ancho no salta al cargar. */}
+              <Text style={[styles.buttonText, cargando && styles.invisible]}>Ingresar</Text>
+              {cargando && (
+                <Animated.View entering={FadeIn.duration(120)} style={StyleSheet.absoluteFill}>
+                  <View style={styles.center}>
+                    <ActivityIndicator color={colors.white} />
+                  </View>
+                </Animated.View>
               )}
             </PressableScale>
-
-            <Text style={styles.footer}>© DAMAC · Industrial Solutions</Text>
           </Animated.View>
+
+          <Text style={styles.legal} selectable>
+            © {new Date().getFullYear()} DAMAC · Aluminio y herrajes
+          </Text>
         </Animated.View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -175,82 +217,51 @@ const styles = StyleSheet.create({
   scroll: { flexGrow: 1 },
   brand: {
     flex: 1,
-    minHeight: 320,
+    minHeight: 300,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 56,
+    paddingBottom: space.xxxl + radius.sheet,
     backgroundColor: colors.carbonDeep,
     overflow: 'hidden',
   },
-  topBar: { position: 'absolute', top: 0, left: 0, right: 0, height: 5, backgroundColor: colors.primary },
-  tagline: {
-    fontFamily: font,
-    marginTop: 18,
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 3.6,
-    textTransform: 'uppercase',
-    color: 'rgba(255,255,255,0.55)',
-  },
-  hint: { fontFamily: font, marginTop: 8, fontSize: 12, color: 'rgba(255,255,255,0.3)' },
+  topBar: { position: 'absolute', top: 0, left: 0, right: 0, height: 4, backgroundColor: colors.primary },
+  brandLine: { ...t.eyebrow, marginTop: space.lg, color: colors.onCarbonSecondary, textAlign: 'center' },
+  brandHint: { ...t.caption, marginTop: space.sm, color: colors.onCarbonTertiary, textAlign: 'center' },
   sheet: {
-    marginTop: -28,
-    backgroundColor: colors.card,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingHorizontal: 28,
-    paddingTop: 32,
-    boxShadow: '0 -12px 40px rgba(0,0,0,0.35)',
+    marginTop: -radius.sheet,
+    backgroundColor: colors.groupedBackground,
+    borderTopLeftRadius: radius.sheet,
+    borderTopRightRadius: radius.sheet,
+    borderCurve: 'continuous',
+    paddingHorizontal: space.xl,
+    paddingTop: space.sm,
+    boxShadow: '0 -16px 48px rgba(0,0,0,0.45)',
     width: '100%',
     maxWidth: 520,
     alignSelf: 'center',
   },
-  kicker: {
-    fontFamily: font,
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 3.3,
-    textTransform: 'uppercase',
-    color: colors.primary,
+  grabber: {
+    alignSelf: 'center',
+    width: 36,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: 'rgba(60, 60, 67, 0.22)',
+    marginBottom: space.xl,
   },
-  title: {
-    fontFamily: font,
-    marginTop: 4,
-    fontSize: 28,
-    lineHeight: 32,
-    fontWeight: '800',
-    letterSpacing: -0.6,
-    color: colors.carbon,
-  },
-  rule: { width: 40, height: 3, borderRadius: 2, backgroundColor: colors.primary, marginTop: 10, marginBottom: 24 },
-  error: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: 'rgba(227, 6, 20, 0.07)',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 4,
-  },
-  errorDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.primary },
-  errorText: { fontFamily: font, flex: 1, fontSize: 14, fontWeight: '600', color: colors.primaryDark },
+  title: { ...t.largeTitle, color: colors.label },
+  subtitle: { ...t.subhead, marginTop: space.xs, marginBottom: space.xl, color: colors.secondaryLabel },
   button: {
-    marginTop: 16,
-    height: 54,
-    borderRadius: 14,
+    marginTop: space.xl,
+    height: 50,
+    borderRadius: radius.md,
+    borderCurve: 'continuous',
     backgroundColor: colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 8px 20px rgba(227, 6, 20, 0.35)',
+    boxShadow: '0 6px 18px rgba(227, 6, 20, 0.28)',
   },
-  buttonText: {
-    fontFamily: font,
-    fontSize: 14,
-    fontWeight: '800',
-    letterSpacing: 2.8,
-    textTransform: 'uppercase',
-    color: colors.white,
-  },
-  footer: { fontFamily: font, marginTop: 24, textAlign: 'center', fontSize: 11, color: '#A3A3A3' },
+  buttonText: { ...t.headline, color: colors.white },
+  invisible: { opacity: 0 },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  legal: { ...t.caption, marginTop: space.xxl, textAlign: 'center', color: colors.tertiaryLabel },
 });

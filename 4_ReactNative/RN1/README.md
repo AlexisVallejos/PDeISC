@@ -11,9 +11,12 @@ damac-acceso/
 └── app/                  App Expo (TypeScript)
     ├── App.tsx           Navegación (stack Login → Bienvenida)
     └── src/
-        ├── screens/LoginScreen.tsx       Formulario de ingreso
+        ├── screens/LoginScreen.tsx       Formulario de ingreso (hoja sobre panel de marca)
         ├── screens/BienvenidaScreen.tsx  Recibe los datos y los pasa por props a <Bienvenida />
+        ├── components/Form.tsx           Formulario "inset grouped" estilo iOS
         ├── components/Logo3D.tsx         Logo 3D animado e interactivo
+        ├── components/PressableScale.tsx Botón con respuesta al press-in + háptica
+        ├── theme.ts                      Colores semánticos, escala tipográfica, springs
         ├── services/api.ts               Llamada a la API
         └── types/                        Tipos de usuario y navegación
 ```
@@ -68,6 +71,19 @@ npx expo start
 | maria   | maria123   |
 
 Las contraseñas se guardan como hash SHA-256 y la consulta es parametrizada (sin inyección SQL).
+
+## Diseño (Apple × industrial)
+
+- **Tipografía del sistema** (SF / Roboto) con tracking por tamaño: negativo en títulos, ~0 en cuerpo.
+- **Formulario agrupado** estilo iOS: etiqueta arriba, valor abajo, separador fino. Los valores largos
+  envuelven en vez de truncarse. Inputs de 17 pt (nunca disparan el zoom de Safari).
+- **Movimiento**: springs con `dampingRatio: 1` por defecto; `0.8` solo cuando hubo momentum (soltar el
+  logo). Entradas con ease-out fuerte `cubic-bezier(0.23, 1, 0.32, 1)` y menos de 450 ms. El
+  formulario aparece a los 120 ms: no espera al logo. Transición entre pantallas: la nativa de la
+  plataforma; con "reducir movimiento", fundido.
+- **Respuesta al presionar** en el press-in (escala 0.97 + háptica de selección), no al soltar.
+- **Web móvil** (`app/public/index.html`): `viewport-fit=cover`, `100dvh`, sin flash gris al tocar,
+  `overscroll-behavior: none`, `theme-color` igual al panel de marca. Nunca `user-scalable=no`.
 
 ## Logo 3D
 

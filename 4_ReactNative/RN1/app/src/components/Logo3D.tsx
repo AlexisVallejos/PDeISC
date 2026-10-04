@@ -190,7 +190,7 @@ export function Logo3D({ size = 72, variant = 'dark', interactive = true, delay 
   const zero = useSharedValue(0);
 
   const amacPalette = variant === 'dark' ? WHITE : RED;
-  const shadowStrength = variant === 'dark' ? 0.6 : 0.3;
+  const shadowStrength = variant === 'dark' ? 0.6 : 0.18;
 
   useEffect(() => {
     if (reduceMotion) return;

@@ -7,29 +7,47 @@ import { springs } from '../theme';
 interface PressableScaleProps extends Omit<PressableProps, 'style' | 'children'> {
   style?: StyleProp<ViewStyle>;
   children: ReactNode;
+  /** Escala al presionar. 0.97 para botones grandes, 0.94 para controles chicos. */
+  pressedScale?: number;
+  /** Vibración al presionar (una sola por acción, en el mismo frame que el visual). */
+  haptic?: boolean;
 }
 
-/** Botón con respuesta inmediata al presionar (no al soltar), como en iOS. */
-export function PressableScale({ style, children, onPressIn, onPressOut, disabled, ...rest }: PressableScaleProps) {
+/** Respuesta en el press-in (no al soltar), como en iOS. */
+export function PressableScale({
+  style,
+  children,
+  onPressIn,
+  onPressOut,
+  disabled,
+  pressedScale = 0.97,
+  haptic = true,
+  ...rest
+}: PressableScaleProps) {
   const scale = useSharedValue(1);
-  const animated = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  const animated = useAnimatedStyle(() => ({ transform: [{ scale: scale.get() }] }));
 
   return (
     <Pressable
       {...rest}
       disabled={disabled}
-      hitSlop={10}
+      hitSlop={8}
+      pressRetentionOffset={20}
+      style={webControl}
       onPressIn={(e) => {
-        scale.value = withSpring(0.97, springs.press);
-        if (Platform.OS !== 'web') Haptics.selectionAsync();
+        scale.set(withSpring(pressedScale, springs.press));
+        if (haptic && Platform.OS !== 'web') Haptics.selectionAsync();
         onPressIn?.(e);
       }}
       onPressOut={(e) => {
-        scale.value = withSpring(1, springs.ui);
+        scale.set(withSpring(1, springs.ui));
         onPressOut?.(e);
       }}
     >
-      <Animated.View style={[style, animated, disabled && { opacity: 0.7 }]}>{children}</Animated.View>
+      <Animated.View style={[style, animated, disabled && { opacity: 0.55 }]}>{children}</Animated.View>
     </Pressable>
   );
 }
+
+// Web: sin selección de texto en controles, sin demora de 300 ms al tocar.
+const webControl = Platform.OS === 'web' ? ({ userSelect: 'none', touchAction: 'manipulation' } as ViewStyle) : undefined;
