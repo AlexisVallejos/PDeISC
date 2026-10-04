@@ -1,0 +1,18 @@
+/* paleta del tema oscuro */
+[data-tema="oscuro"] {
+  color-scheme: dark;
+  --color-fondo: #171c19;
+  --color-superficie: #202722;
+  --color-superficie-secundaria: #29332c;
+  --color-texto: #f0f0e9;
+  --color-texto-suave: #a9b0a9;
+  --color-borde: #39423b;
+  --color-acento: #a8c2a7;
+  --color-acento-hover: #c0d3bd;
+  --color-acento-suave: #2b382f;
+  --color-exito: #a8c2a7;
+  --color-exito-suave: #2b382f;
+  --color-peligro: #f19d92;
+  --color-peligro-suave: #432b29;
+  --sombra-tarjeta: 0 12px 34px rgba(0, 0, 0, 0.2);
+}

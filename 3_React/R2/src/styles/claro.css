@@ -1,0 +1,19 @@
+/* paleta del tema claro */
+:root,
+[data-tema="claro"] {
+  color-scheme: light;
+  --color-fondo: #fbfaf7;
+  --color-superficie: #fffefa;
+  --color-superficie-secundaria: #f2f3ec;
+  --color-texto: #202923;
+  --color-texto-suave: #777b75;
+  --color-borde: #e7e6df;
+  --color-acento: #183d2e;
+  --color-acento-hover: #25543f;
+  --color-acento-suave: #edf1e9;
+  --color-exito: #527b61;
+  --color-exito-suave: #edf3eb;
+  --color-peligro: #a8443d;
+  --color-peligro-suave: #f8e9e5;
+  --sombra-tarjeta: 0 12px 34px rgba(32, 41, 35, 0.08);
+}
