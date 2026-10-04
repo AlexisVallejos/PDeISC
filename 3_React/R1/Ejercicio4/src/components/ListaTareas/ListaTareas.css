@@ -1,33 +1,47 @@
 /* Alta y resumen de la lista. */
 .tareas { max-width: 720px; margin: 0 auto; }
-.tareas__resumen { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
-.tareas__resumen span { padding: 7px 12px; color: var(--texto-suave); background: color-mix(in srgb, var(--acento) 8%, var(--fondo-suave)); border: 1px solid var(--linea); border-radius: 999px; font-size: .82rem; font-weight: 700; }
-.tareas__formulario { margin-bottom: 22px; }
-.tareas__etiqueta-campo { display: block; margin-bottom: 8px; font-size: .9rem; font-weight: 750; }
+.tareas__resumen { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.tareas__resumen span { padding: 6px 12px; color: var(--texto-suave); background: var(--campo); border-radius: 999px; font-size: .82rem; font-weight: 600; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.tareas__formulario { margin-bottom: 20px; }
+.tareas__etiqueta-campo { display: block; margin: 0 0 8px 4px; color: var(--texto-suave); font-size: .85rem; font-weight: 600; letter-spacing: 0; }
 .tareas__fila-alta { display: flex; gap: 10px; }
-.tareas__campo { width: 100%; min-width: 0; min-height: 48px; padding: 0 14px; color: var(--texto); background: var(--fondo-suave); border: 1px solid var(--linea); border-radius: 14px; transition: border-color .16s ease, box-shadow .16s ease; }
-.tareas__campo:focus { border-color: var(--acento); outline: 0; box-shadow: 0 0 0 4px color-mix(in srgb, var(--acento) 16%, transparent); }
-.tareas__campo--error { border-color: var(--error); }
-.tareas__ayuda,.tareas__error { min-height: 1.35rem; margin: 6px 2px 0; color: var(--texto-suave); font-size: .79rem; }
+.tareas__campo { width: 100%; min-width: 0; min-height: 48px; padding: 0 16px; color: var(--texto); background: var(--campo); border: 0; border-radius: 12px; font-size: 1.02rem; transition: background-color .2s ease, box-shadow .2s ease; }
+.tareas__campo:focus { background: var(--tarjeta); outline: 0; box-shadow: 0 0 0 2px var(--acento), 0 0 0 6px color-mix(in srgb, var(--acento) 18%, transparent); }
+.tareas__campo--error, .tareas__campo--error:focus { box-shadow: 0 0 0 2px var(--error); }
+.tareas__ayuda,.tareas__error { min-height: 1.35rem; margin: 7px 4px 0; color: var(--texto-suave); font-size: .8rem; letter-spacing: 0; }
 .tareas__error { color: var(--error); }
-.tareas__boton { display: inline-flex; min-height: 40px; align-items: center; justify-content: center; padding: 0 13px; color: var(--texto); background: var(--fondo-suave); border: 1px solid var(--linea); border-radius: 12px; font-size: .82rem; font-weight: 700; cursor: pointer; transition: transform .16s ease, border-color .16s ease, background .16s ease; }
-.tareas__boton:hover { transform: translateY(-1px); border-color: var(--acento); }
-.tareas__boton--principal { min-height: 48px; padding-inline: 18px; color: #fff; background: var(--acento); border-color: var(--acento); }
-.tareas__boton--principal:hover { color: #fff; background: var(--acento-oscuro); border-color: var(--acento-oscuro); }
-.tareas__boton--borrar:hover { color: var(--error); border-color: var(--error); background: color-mix(in srgb, var(--error) 8%, var(--fondo-suave)); }
 
-/* Filas editables de tareas. */
-.tareas__lista { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
-.tareas__item { display: flex; min-height: 68px; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 14px; background: var(--fondo-suave); border: 1px solid var(--linea); border-radius: 16px; animation: aparecer .22s var(--ease-out) both; }
-.tareas__etiqueta { display: flex; min-width: 0; flex: 1; align-items: center; gap: 12px; cursor: pointer; }
-.tareas__etiqueta input { width: 20px; height: 20px; flex: 0 0 20px; accent-color: var(--acento); cursor: pointer; }
-.tareas__texto { overflow-wrap: anywhere; font-weight: 620; }
+/* Botones: relleno gris del sistema, respuesta inmediata al presionar. */
+.tareas__boton { display: inline-flex; min-height: 36px; align-items: center; justify-content: center; padding: 0 14px; color: var(--acento); background: var(--campo); border: 0; border-radius: 999px; font-size: .85rem; font-weight: 600; letter-spacing: 0; cursor: pointer; user-select: none; transition: transform .35s var(--ease-out), background-color .2s ease; }
+.tareas__boton:active { transform: scale(.95); transition-duration: .08s; }
+.tareas__boton--principal { min-height: 48px; padding-inline: 22px; color: #fff; background: var(--acento); border-radius: 12px; font-size: 1rem; }
+.tareas__edicion .tareas__boton--principal { min-height: 36px; padding-inline: 16px; border-radius: 999px; font-size: .85rem; }
+.tareas__boton--borrar { color: var(--error); }
+@media (hover: hover) and (pointer: fine) {
+  .tareas__boton:hover { background: var(--campo-activo); }
+  .tareas__boton--principal:hover { background: var(--acento-oscuro); }
+  .tareas__boton--borrar:hover { background: color-mix(in srgb, var(--error) 14%, transparent); }
+}
+
+/* Lista agrupada al estilo de iOS: un bloque con separadores finos. */
+.tareas__lista { margin: 0; padding: 0; overflow: hidden; list-style: none; background: var(--fondo); border-radius: 16px; transition: background-color .35s ease; }
+.tareas__item { position: relative; display: flex; min-height: 60px; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 16px; animation: aparecer .4s var(--ease-out) both; }
+.tareas__item + .tareas__item::before { content: ""; position: absolute; top: 0; right: 0; left: 52px; height: 1px; background: var(--linea); }
+.tareas__etiqueta { display: flex; min-width: 0; flex: 1; align-items: center; gap: 14px; cursor: pointer; }
+
+/* Casilla circular como en Recordatorios. */
+.tareas__etiqueta input { display: grid; width: 22px; height: 22px; flex: 0 0 22px; margin: 0; place-items: center; appearance: none; -webkit-appearance: none; border: 1.5px solid color-mix(in srgb, var(--texto-suave) 70%, transparent); border-radius: 50%; cursor: pointer; transition: background-color .2s ease, border-color .2s ease, transform .35s var(--ease-out); }
+.tareas__etiqueta input::after { content: ""; width: 6px; height: 11px; margin-top: -2px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg) scale(0); transition: transform .3s var(--ease-out); }
+.tareas__etiqueta input:checked { background: var(--acento); border-color: var(--acento); }
+.tareas__etiqueta input:checked::after { transform: rotate(45deg) scale(1); }
+.tareas__etiqueta input:active { transform: scale(.88); transition-duration: .08s; }
+.tareas__texto { overflow-wrap: anywhere; font-size: 1.02rem; font-weight: 500; transition: color .2s ease; }
 .tareas__texto--hecha { color: var(--texto-suave); text-decoration: line-through; }
-.tareas__acciones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 7px; }
+.tareas__acciones { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
 .tareas__edicion { width: 100%; }
 .tareas__edicion .tareas__campo { margin-bottom: 2px; }
 .tareas__edicion .tareas__acciones { justify-content: flex-start; }
-.tareas__vacio { margin: 28px 0 0; padding: 24px; color: var(--texto-suave); text-align: center; background: color-mix(in srgb, var(--acento) 5%, var(--fondo-suave)); border: 1px dashed var(--linea); border-radius: 17px; }
-@keyframes aparecer { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-@media(max-width: 560px) { .tareas__fila-alta { flex-direction: column; } .tareas__fila-alta .tareas__boton { width: 100%; } .tareas__item { align-items: flex-start; flex-direction: column; gap: 10px; } .tareas__etiqueta { min-height: 38px; } .tareas__acciones { width: 100%; justify-content: flex-start; } }
+.tareas__vacio { margin: 28px 0 0; padding: 32px 24px; color: var(--texto-suave); text-align: center; background: var(--fondo); border-radius: 16px; }
+@keyframes aparecer { from { opacity: 0; transform: translateY(6px); } }
+@media(max-width: 560px) { .tareas__fila-alta { flex-direction: column; } .tareas__fila-alta .tareas__boton { width: 100%; } .tareas__item { align-items: flex-start; flex-direction: column; gap: 10px; } .tareas__etiqueta { min-height: 36px; } .tareas__acciones { width: 100%; justify-content: flex-start; padding-left: 36px; } .tareas__edicion .tareas__acciones { padding-left: 0; } }
 @media(prefers-reduced-motion: reduce) { .tareas__item { animation: none; } }

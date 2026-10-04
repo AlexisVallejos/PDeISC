@@ -1,36 +1,94 @@
-/* Tokens de color para los dos temas. */
+/* Tokens de color para los dos temas, inspirados en la paleta de sistema de Apple. */
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, "Segoe UI", Roboto, sans-serif;
+  font-size: 100%;
   color-scheme: light;
-  --fondo: #f3f6fa; --fondo-suave: #fff; --tarjeta: rgba(255,255,255,.82);
-  --texto: #182536; --texto-suave: #637287; --linea: rgba(26,49,76,.12);
-  --acento: #1769d2; --acento-oscuro: #0d51ac; --exito-texto: #16704b;
-  --exito-fondo: rgba(28,160,104,.12); --error: #bb384d;
-  --sombra: 0 18px 55px rgba(26,50,80,.09); --ease-out: cubic-bezier(.2,.8,.2,1);
+  --fondo: #f5f5f7; --fondo-suave: #fff; --tarjeta: #fff;
+  --material: rgba(250,250,252,.72); --material-borde: rgba(0,0,0,.08);
+  --texto: #1d1d1f; --texto-suave: #6e6e73; --linea: rgba(0,0,0,.08);
+  --acento: #0071e3; --acento-oscuro: #0058b0;
+  --azul: #007aff; --violeta: #af52de; --naranja: #ff9500; --verde: #34c759; --rosa: #ff2d55; --turquesa: #30b0c7;
+  --sombra: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.06);
+  --sombra-alta: 0 2px 4px rgba(0,0,0,.05), 0 18px 40px rgba(0,0,0,.10);
+  --exito-texto: #248a3d; --exito-fondo: rgba(52,199,89,.12); --error: #d70015;
+  --campo: rgba(118,118,128,.12); --campo-activo: rgba(118,118,128,.18);
+  --ease-out: cubic-bezier(.22,1,.36,1);
 }
 :root[data-theme="oscuro"] {
-  color-scheme: dark; --fondo: #0d1520; --fondo-suave: #151f2d;
-  --tarjeta: rgba(23,35,50,.88); --texto: #edf3fa; --texto-suave: #a3b1c2;
-  --linea: rgba(203,220,240,.14); --acento: #76b5ff; --acento-oscuro: #9bcbff;
-  --exito-texto: #8fe0b6; --exito-fondo: rgba(51,176,119,.16);
-  --error: #ff8d9d; --sombra: 0 20px 60px rgba(0,0,0,.24);
+  color-scheme: dark;
+  --fondo: #000; --fondo-suave: #1c1c1e; --tarjeta: #1c1c1e;
+  --material: rgba(22,22,24,.72); --material-borde: rgba(255,255,255,.1);
+  --texto: #f5f5f7; --texto-suave: #a1a1a6; --linea: rgba(255,255,255,.1);
+  --acento: #2997ff; --acento-oscuro: #64b5ff;
+  --azul: #0a84ff; --violeta: #bf5af2; --naranja: #ff9f0a; --verde: #30d158; --rosa: #ff375f; --turquesa: #40c8e0;
+  --sombra: 0 0 0 1px rgba(255,255,255,.06);
+  --sombra-alta: 0 0 0 1px rgba(255,255,255,.12), 0 18px 40px rgba(0,0,0,.5);
+  --exito-texto: #30d158; --exito-fondo: rgba(48,209,88,.16); --error: #ff453a;
+  --campo: rgba(118,118,128,.24); --campo-activo: rgba(118,118,128,.32);
 }
 *, *::before, *::after { box-sizing: border-box; }
-html { min-width: 320px; scroll-behavior: smooth; }
-body { min-width: 320px; min-height: 100vh; margin: 0; color: var(--texto);
-  background: radial-gradient(ellipse at 50% -18%, color-mix(in srgb,var(--acento) 11%,transparent),transparent 48%),var(--fondo);
-  line-height: 1.55; -webkit-font-smoothing: antialiased; transition: color .2s ease,background-color .2s ease; }
-button, input { font: inherit; } button { color: inherit; } a { color: var(--acento); }
-:focus-visible { outline: 3px solid color-mix(in srgb,var(--acento) 62%,transparent); outline-offset: 3px; }
-#root { min-height: 100vh; }
+html { min-width: 320px; scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  min-width: 320px; min-height: 100vh; margin: 0; color: var(--texto); background: var(--fondo);
+  line-height: 1.47; letter-spacing: -.01em; -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  transition: color .35s ease, background-color .35s ease;
+}
+button, input { font: inherit; letter-spacing: inherit; } button { color: inherit; } a { color: var(--acento); }
+:focus-visible { outline: 3px solid color-mix(in srgb,var(--acento) 60%,transparent); outline-offset: 3px; }
+#root { display: flex; min-height: 100vh; flex-direction: column; }
 
-/* Controles globales de tema y navegación vertical. */
-.theme-toggle { position: fixed; z-index: 20; top: 16px; right: 18px; display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px; padding: 0 14px; color: var(--texto); background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 999px; box-shadow: var(--sombra); backdrop-filter: blur(16px); cursor: pointer; transition: transform .18s ease,border-color .18s ease; }
-.theme-toggle:hover { transform: translateY(-2px); border-color: var(--acento); }
-.theme-toggle__icon { color: var(--acento); font-size: 1.15rem; line-height: 1; }
-.back-to-top { position: fixed; z-index: 20; right: 20px; bottom: 20px; display: grid; width: 50px; height: 50px; place-items: center; color: #fff; background: var(--acento); border: 0; border-radius: 17px; box-shadow: 0 12px 28px color-mix(in srgb,var(--acento) 28%,transparent); font-size: 1.6rem; font-weight: 700; cursor: pointer; transition: transform .18s ease,background .18s ease; }
-.back-to-top:hover { transform: translateY(-3px); background: var(--acento-oscuro); }
-.volver-inicio { display: inline-flex; min-height: 42px; align-items: center; gap: 8px; margin-bottom: 28px; color: var(--texto-suave); font-size: .9rem; font-weight: 650; text-decoration: none; }
-.volver-inicio:hover { color: var(--acento); }
-@media (max-width: 560px) { .theme-toggle { top: 12px; right: 12px; min-height: 42px; padding-inline: 12px; font-size: .84rem; } .back-to-top { right: 14px; bottom: 14px; width: 46px; height: 46px; } }
-@media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto!important; transition-duration: .01ms!important; animation-duration: .01ms!important; } }
+/* Fondo topográfico fijo detrás de todo el contenido. */
+.fondo { position: fixed; z-index: -1; inset: 0; pointer-events: none; }
+
+/* Barra superior translúcida: el contenido se desplaza por debajo. */
+.barra {
+  position: sticky; z-index: 20; top: 0; display: flex; height: 52px; align-items: center; justify-content: space-between;
+  padding: 0 max(20px, calc((100% - 1080px) / 2));
+  background: var(--material); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 1px 0 var(--material-borde); transition: background-color .35s ease;
+}
+.barra__marca { color: var(--texto); font-size: 1.15rem; font-weight: 700; letter-spacing: -.02em; text-decoration: none; }
+
+/* Botón "volver" al estilo de la navegación de iOS. */
+.volver-inicio {
+  display: inline-flex; min-height: 44px; align-items: center; gap: 2px; margin-left: -6px; padding: 0 6px;
+  color: var(--acento); font-size: 1.02rem; font-weight: 500; text-decoration: none; transition: opacity .15s ease;
+}
+.volver-inicio > span:first-child { font-size: 1.7rem; font-weight: 400; line-height: 1; transform: translateY(-1px); }
+.volver-inicio:active { opacity: .45; transition: none; }
+
+/* Control de tema: pastilla compacta dentro de la barra. */
+.theme-toggle {
+  display: inline-flex; min-height: 34px; align-items: center; gap: 6px; padding: 0 12px;
+  color: var(--texto); font-size: .82rem; font-weight: 500; letter-spacing: 0;
+  background: color-mix(in srgb, var(--texto) 7%, transparent); border: 0; border-radius: 999px; cursor: pointer;
+  transition: transform .1s ease-out, background-color .2s ease;
+}
+.theme-toggle:active { transform: scale(.95); }
+.theme-toggle__icon { color: var(--acento); font-size: 1rem; line-height: 1; }
+@media (hover: hover) and (pointer: fine) { .theme-toggle:hover { background: color-mix(in srgb, var(--texto) 12%, transparent); } }
+
+/* Botón para volver arriba: material de vidrio que se materializa. */
+.back-to-top {
+  position: fixed; z-index: 20; right: 20px; bottom: 20px; display: grid; width: 48px; height: 48px; place-items: center;
+  color: var(--texto); background: var(--material); border: 1px solid var(--material-borde); border-radius: 50%;
+  box-shadow: var(--sombra-alta); backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+  font-size: 1.3rem; font-weight: 600; cursor: pointer;
+  animation: materializar .35s var(--ease-out); transition: transform .1s ease-out;
+}
+.back-to-top:active { transform: scale(.92); }
+@keyframes materializar { from { opacity: 0; transform: scale(.8); filter: blur(6px); } }
+
+@media (max-width: 560px) { .back-to-top { right: 14px; bottom: 14px; width: 46px; height: 46px; } }
+@media (max-width: 380px) { .theme-toggle { width: 34px; padding: 0; justify-content: center; } .theme-toggle > span:last-child { display: none; } }
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { scroll-behavior: auto!important; animation-duration: .01ms!important; transition-duration: .01ms!important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .barra, .back-to-top { background: var(--fondo-suave); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  :root { --linea: rgba(0,0,0,.4); --material-borde: rgba(0,0,0,.4); --texto-suave: #3a3a3c; }
+  :root[data-theme="oscuro"] { --linea: rgba(255,255,255,.45); --material-borde: rgba(255,255,255,.45); --texto-suave: #d1d1d6; }
+}

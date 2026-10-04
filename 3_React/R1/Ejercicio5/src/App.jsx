@@ -1,4 +1,5 @@
 import FormularioSimple from './components/FormularioSimple/FormularioSimple.jsx'
+import Fondo from './components/Fondo.jsx'
 import ThemeToggle from './components/ThemeToggle.jsx'
 import ScrollToTop from './components/ScrollToTop.jsx'
 import './App.css'
@@ -8,10 +9,13 @@ import './styles/global.css'
 export default function App() {
   return (
     <>
-      <ThemeToggle />
+      <Fondo />
+      <nav className="barra" aria-label="Principal">
+        <a className="volver-inicio" href="/" aria-label="Volver a Inicio - R1"><span aria-hidden="true">‹</span><span>Inicio</span></a>
+        <ThemeToggle />
+      </nav>
       <main className="ejercicio">
-        <a className="volver-inicio" href="/" aria-label="Volver a Inicio - R1" title="Volver a Inicio - R1"><span aria-hidden="true">⌂</span><span>Inicio - R1</span></a>
-        <header className="ejercicio__encabezado"><p>REACT · R1 · EJERCICIO 5</p><h1>Formulario simple</h1><span>Ingresá tu nombre para ver el mensaje personalizado.</span></header>
+        <header className="ejercicio__encabezado"><p>Ejercicio 5</p><h1>Formulario simple</h1><span>Ingresá tu nombre para ver el mensaje personalizado.</span></header>
         <section className="ejercicio__panel"><FormularioSimple /></section>
       </main>
       <ScrollToTop />
