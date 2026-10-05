@@ -1,0 +1,20 @@
+.auth-shell .form {
+  position: relative;
+}
+.auth-theme {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 40px !important;
+  min-height: 40px !important;
+  padding: 0 !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 50% !important;
+  background: var(--surface-soft) !important;
+  color: var(--ink) !important;
+  box-shadow: none !important;
+}
+.auth-theme svg {
+  width: 18px;
+  height: 18px;
+}

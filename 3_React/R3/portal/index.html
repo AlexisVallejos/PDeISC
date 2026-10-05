@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f6f7fb" />
+    <meta name="description" content="Tres diseños del sistema de usuarios R3, cada uno disponible con useState y React Router." />
+    <title>R3 · Sistema de usuarios</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#inicio" aria-label="R3, volver al inicio"><span class="brand-mark">R3</span><span>Laboratorio de interfaces</span></a>
+      <nav aria-label="Navegación principal"><a href="#sistemas">Explorar sistemas</a><a href="#estructura">Estructura</a></nav>
+    </header>
+
+    <main id="inicio">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <span class="eyebrow"><span class="eyebrow-line"></span> REACT · API · SQL</span>
+          <h1 id="hero-title">Un proyecto.<br /><span>Tres formas de verlo.</span></h1>
+          <p>Elegí un diseño y abrilo en la versión que quieras. Los tres comparten las mismas funciones, usuarios y base de datos.</p>
+          <a class="hero-link" href="#sistemas">Ver los sistemas <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="hero-summary" aria-label="Resumen del proyecto">
+          <div><strong>03</strong><span>diseños completos</span></div>
+          <div><strong>02</strong><span>versiones por diseño</span></div>
+          <div><strong>01</strong><span>base SQL compartida</span></div>
+        </div>
+      </section>
+
+      <section class="systems" id="sistemas" aria-labelledby="systems-title">
+        <div class="section-heading"><div><span class="eyebrow">ELIGE UNA EXPERIENCIA</span><h2 id="systems-title">Los tres sistemas</h2></div><p>En cada tarjeta podés abrir la versión con estado local o la versión con rutas.</p></div>
+        <div class="system-grid">
+          <article class="system-card control">
+            <div class="card-top"><span>01 / SISTEMA</span><span class="card-dot"></span></div>
+            <div class="preview"><img src="/assets/control-nocturno.png" alt="Vista previa de Control nocturno: interfaz oscura con acento lima y directorio compacto" /></div>
+            <div class="card-content"><span class="card-kicker">OSCURO · PRECISO</span><h3>Control nocturno</h3><p>Un centro de control con navegación superior y una lista clara para administrar personas.</p>
+              <div class="card-actions"><a class="primary-action" href="http://localhost:5173/">Abrir con useState <span aria-hidden="true">↗</span></a><a class="secondary-action" href="http://localhost:5174/">React Router <span aria-hidden="true">↗</span></a></div>
+            </div>
+          </article>
+          <article class="system-card editorial">
+            <div class="card-top"><span>02 / SISTEMA</span><span class="card-dot"></span></div>
+            <div class="preview"><img src="/assets/estudio-editorial.png" alt="Vista previa de Estudio editorial: fondo marfil, títulos de revista y acento coral" loading="lazy" /></div>
+            <div class="card-content"><span class="card-kicker">EDITORIAL · EXPRESIVO</span><h3>Estudio editorial</h3><p>Tipografía protagonista, mucho aire y un directorio presentado como una publicación.</p>
+              <div class="card-actions"><a class="primary-action" href="http://localhost:5175/">Abrir con useState <span aria-hidden="true">↗</span></a><a class="secondary-action" href="http://localhost:5176/">React Router <span aria-hidden="true">↗</span></a></div>
+            </div>
+          </article>
+          <article class="system-card atelier">
+            <div class="card-top"><span>03 / SISTEMA</span><span class="card-dot"></span></div>
+            <div class="preview"><img src="/assets/atelier-modular.png" alt="Vista previa de Atelier modular: fondo lavanda, tarjetas de usuarios y acento azul" loading="lazy" /></div>
+            <div class="card-content"><span class="card-kicker">MODULAR · CERCANO</span><h3>Atelier modular</h3><p>Un espacio luminoso de tarjetas, perfiles y bloques visuales fáciles de recorrer.</p>
+              <div class="card-actions"><a class="primary-action" href="http://localhost:5177/">Abrir con useState <span aria-hidden="true">↗</span></a><a class="secondary-action" href="http://localhost:5178/">React Router <span aria-hidden="true">↗</span></a></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="structure" id="estructura" aria-labelledby="structure-title"><div><span class="eyebrow">UNA BASE EN COMÚN</span><h2 id="structure-title">Mismo sistema,<br />distinta cara.</h2></div><p>Registro e inicio de sesión, perfil, búsqueda y gestión de usuarios. Los seis clientes usan la misma API, la misma base SQL y las mismas reglas de protección de datos.</p></section>
+    </main>
+    <footer><span>R3 · Sistema de usuarios</span><span>React · Express · SQL</span></footer>
+  </body>
+</html>

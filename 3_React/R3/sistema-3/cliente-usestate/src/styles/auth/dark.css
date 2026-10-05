@@ -1,0 +1,24 @@
+/* Login y registro en modo oscuro: mismo fondo que los paneles (#0D1117, paleta DePaso). */
+:root[data-theme="dark"] body:has(.auth-main) {
+  background: #0d1117;
+}
+:root[data-theme="dark"] .auth-main .auth-shell,
+:root[data-theme="dark"] .auth-main .auth-shell .form,
+:root[data-theme="dark"] .auth-main .auth-art {
+  background: #0d1117;
+}
+:root[data-theme="dark"] .auth-main .auth-shell .form {
+  border-left: 1px solid #2a3544;
+}
+:root[data-theme="dark"] .auth-art::before,
+:root[data-theme="dark"] .auth-art::after {
+  display: none;
+}
+:root[data-theme="dark"] .auth-shell .form > button:not(.auth-theme) {
+  background: #b7ff1a;
+  color: #1a1341;
+}
+:root[data-theme="dark"] .auth-switch button,
+:root[data-theme="dark"] .auth-shell .form a {
+  color: #b7ff1a !important;
+}

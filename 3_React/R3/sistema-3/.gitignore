@@ -1,0 +1,26 @@
+# dependencias
+node_modules/
+
+# entorno (los secretos no se suben)
+.env
+.env.*
+!.env.example
+
+# builds
+dist/
+build/
+.next/
+
+# logs
+*.log
+
+# skills / agentes / ia
+.skills/
+skills/
+.agents/
+.agent/
+.ai/
+.codex/
+.claude/
+.cursor/
+.windsurf/

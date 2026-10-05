@@ -1,0 +1,57 @@
+@media (max-width: 720px) {
+  .auth-main .auth-shell .form {
+    align-content: start !important;
+    padding: 1rem 1.85rem !important;
+    gap: 0.5rem !important;
+  }
+  .auth-main .auth-shell .form > h1 {
+    margin: 0.15rem 0 0 !important;
+    font-size: 2rem !important;
+    line-height: 1 !important;
+  }
+  .auth-main .auth-shell .form > p {
+    margin: 0 0 0.55rem !important;
+    font-size: 0.88rem !important;
+  }
+  .auth-mark {
+    height: 42px !important;
+  }
+  .brand-isotype {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .auth-mark strong {
+    font-size: 1.3rem !important;
+  }
+  .auth-theme {
+    top: 0.8rem !important;
+    right: 1rem !important;
+  }
+  .field {
+    gap: 0.25rem !important;
+    font-size: 0.82rem !important;
+  }
+  .field input {
+    min-height: 40px !important;
+    padding: 0.48rem 0.7rem !important;
+  }
+  .live-rules {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.16rem 0.5rem !important;
+    margin: -0.25rem 0 0.05rem !important;
+    font-size: 0.66rem !important;
+    line-height: 1.25;
+  }
+  .live-rules.compact {
+    grid-template-columns: 1fr;
+    margin-top: -0.25rem !important;
+  }
+  .auth-shell .form button {
+    min-height: 40px !important;
+    margin-top: 0.2rem !important;
+  }
+  .auth-switch {
+    margin-top: 0.15rem !important;
+    font-size: 0.8rem !important;
+  }
+}

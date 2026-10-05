@@ -1,0 +1,49 @@
+.auth-main .auth-shell .form {
+  padding-block: clamp(1.35rem, 3.2vh, 2.2rem) !important;
+  gap: 0.62rem !important;
+}
+.auth-main .auth-shell .form > h1 {
+  font-size: clamp(2rem, 3vw, 2.9rem) !important;
+  line-height: 1.02 !important;
+}
+.auth-main .auth-shell .form > p {
+  margin: 0 0 0.35rem !important;
+  font-size: 0.88rem !important;
+}
+.auth-main .field {
+  gap: 0.28rem !important;
+}
+.auth-main .field input {
+  min-height: 42px !important;
+  padding: 0.5rem 0.7rem !important;
+}
+.live-rules {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.18rem 0.7rem !important;
+  margin: -0.2rem 0 0.08rem !important;
+  font-size: 0.7rem !important;
+  line-height: 1.25;
+}
+.live-rules.compact {
+  grid-template-columns: 1fr;
+}
+.auth-main .auth-shell .form button {
+  min-height: 40px !important;
+  margin-top: 0.12rem !important;
+}
+.auth-main .auth-switch {
+  margin-top: 0.1rem !important;
+}
+@media (max-width: 720px) {
+  .auth-main .auth-shell .form {
+    padding: 1rem 1.85rem !important;
+    gap: 0.45rem !important;
+  }
+  .auth-main .auth-shell .form > h1 {
+    font-size: 1.8rem !important;
+  }
+  .live-rules {
+    font-size: 0.64rem !important;
+    gap: 0.14rem 0.38rem !important;
+  }
+}

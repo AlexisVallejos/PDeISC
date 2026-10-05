@@ -1,0 +1,8 @@
+node_modules/
+**/node_modules/
+**/dist/
+*.tsbuildinfo
+api/.env
+api/database/*.sqlite
+api/database/*.sqlite-*
+*.log

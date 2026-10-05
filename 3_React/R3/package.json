@@ -1,0 +1,11 @@
+{
+  "name": "r3-sistema-usuarios",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k -n API,S1-ESTADO,S1-ROUTER,S2-ESTADO,S2-ROUTER,S3-ESTADO,S3-ROUTER \"npm --prefix api run dev\" \"npm --prefix sistema-1/cliente-usestate run dev\" \"npm --prefix sistema-1/cliente-router run dev\" \"npm --prefix sistema-2/cliente-usestate run dev\" \"npm --prefix sistema-2/cliente-router run dev\" \"npm --prefix sistema-3/cliente-usestate run dev\" \"npm --prefix sistema-3/cliente-router run dev\"",
+    "build": "npm --prefix api run build && npm --prefix sistema-1/cliente-usestate run build && npm --prefix sistema-1/cliente-router run build && npm --prefix sistema-2/cliente-usestate run build && npm --prefix sistema-2/cliente-router run build && npm --prefix sistema-3/cliente-usestate run build && npm --prefix sistema-3/cliente-router run build",
+    "seed": "npm --prefix api run seed"
+  },
+  "devDependencies": { "concurrently": "^9.1.2" }
+}

@@ -1,0 +1,15 @@
+/* Estilos del login y el registro (los paneles usan panel.css, que se importa aparte en main.jsx) */
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap");
+
+@import "./theme.css";
+@import "./base.css";
+@import "./auth/layout.css";
+@import "./auth/viewport.css";
+@import "./auth/theme-button.css";
+@import "./auth/brand.css";
+@import "./auth/fixes.css";
+@import "./auth/no-scroll.css";
+@import "./auth/validation.css";
+@import "./auth/compact.css";
+@import "./auth/fit.css";
+@import "./auth/dark.css";
