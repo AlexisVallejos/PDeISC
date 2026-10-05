@@ -1,0 +1,25 @@
+# Prueba local equivalente a Easypanel: docker compose up --build  →  http://localhost:8080
+services:
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: portfolio
+      MYSQL_DATABASE: portfolio
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  app:
+    build: .
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: portfolio
+      DB_NAME: portfolio
+      ADMIN_TOKEN: cambiame
+    ports:
+      - "8080:3000"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:
