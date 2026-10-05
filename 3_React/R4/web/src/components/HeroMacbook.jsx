@@ -25,39 +25,26 @@ const ENCENDIDO = [96, 128]
 
 // El fotograma sigue al scroll con un resorte sin rebote: la apertura es continua aunque
 // la rueda del mouse avance a saltos, y se puede invertir en cualquier momento.
-const RESPUESTA = 0.1 // segundos
+const RESPUESTA = 0.07 // segundos (el scroll ya llega suavizado por Lenis)
 
-const FONDO = '246, 245, 248' // #f6f5f8, el fondo medido en los fotogramas y el de la página
 const tramo = (v, desde, hasta) => Math.min(1, Math.max(0, (v - desde) / (hasta - desde)))
 const suave = (t) => t * t * (3 - 2 * t)
+const mezclar = (a, b, t) => a + (b - a) * t
 
-// Si el fotograma no llega a un borde del escenario, su sombra terminaría en un corte recto:
-// un degradé hacia el color de la página en cada borde visible lo disimula.
-function difuminarBordes(ctx, x, y, w, h) {
-  const borde = h * 0.12
-  const { width: cw, height: ch } = ctx.canvas
-  const bordes = [
-    y > 0 && [x, y, x, y + borde, x, y, w, borde],
-    y + h < ch && [x, y + h, x, y + h - borde, x, y + h - borde, w, borde],
-    x > 0 && [x, y, x + borde, y, x, y, borde, h],
-    x + w < cw && [x + w, y, x + w - borde, y, x + w - borde, y, borde, h],
-  ]
-  for (const b of bordes) {
-    if (!b) continue
-    const [x0, y0, x1, y1, rx, ry, rw, rh] = b
-    const degrade = ctx.createLinearGradient(x0, y0, x1, y1)
-    degrade.addColorStop(0, `rgb(${FONDO})`)
-    degrade.addColorStop(1, `rgba(${FONDO}, 0)`)
-    ctx.fillStyle = degrade
-    ctx.fillRect(rx, ry, rw, rh)
-  }
-}
+// Los fotogramas tienen fondo transparente, así que la capa entera puede girar en 3D sin que
+// se vea un rectángulo: la MacBook queda de tres cuartos como en la referencia (el lado
+// derecho más cerca). Cerrada está casi de frente y termina de girar mientras se abre.
+const GIRO_Y = [-6, -19] // grados: cerrada → abierta
+const GIRO_X = 7
+const INCLINACION_PUNTERO = 3 // grados máximos hacia el mouse
 
 export default function HeroMacbook({ perfil, estadisticas }) {
   const pistaRef = useRef(null)
   const escenarioRef = useRef(null)
   const zonaRef = useRef(null)
   const canvasRef = useRef(null)
+  const capaRef = useRef(null)
+  const brilloRef = useRef(null)
   const pantallaRef = useRef(null)
   const indicadorRef = useRef(null)
   const reducir = useReducirMovimiento()
@@ -68,7 +55,18 @@ export default function HeroMacbook({ perfil, estadisticas }) {
   const imagenes = useRef([])
   // geo: dónde va la imagen completa dentro del escenario, en px CSS.
   const geo = useRef({ x: 0, y: 0, w: 0, h: 0 })
-  const fisica = useRef({ objetivo: 0, actual: 0, frame: 0, ultimo: 0, dibujado: null, pantalla: -1 })
+  const fisica = useRef({
+    objetivo: 0,
+    actual: 0,
+    inclX: 0,
+    inclY: 0,
+    objX: 0,
+    objY: 0,
+    frame: 0,
+    ultimo: 0,
+    dibujado: null,
+    pantalla: -1,
+  })
 
   // Dibuja el fotograma i, o el cargado más cercano si ese todavía no llegó.
   const dibujar = useCallback((i, forzar = false) => {
@@ -94,7 +92,6 @@ export default function HeroMacbook({ perfil, estadisticas }) {
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     ctx.imageSmoothingQuality = 'high'
     ctx.drawImage(imagen, x * dpr, y * dpr, w * dpr, h * dpr)
-    difuminarBordes(ctx, x * dpr, y * dpr, w * dpr, h * dpr)
   }, [])
 
   // Ubica el mini sitio sobre la pantalla del fotograma i (las esquinas salen de data/pantalla.json).
@@ -119,6 +116,10 @@ export default function HeroMacbook({ perfil, estadisticas }) {
       const i = fotogramaDe(p)
       dibujar(i, forzar)
       ubicarPantalla(i, forzar)
+      const f = fisica.current
+      const giroY = mezclar(GIRO_Y[0], GIRO_Y[1], suave(p)) + f.inclY
+      const giroX = GIRO_X + f.inclX
+      capaRef.current.style.transform = `perspective(1700px) rotateX(${giroX}deg) rotateY(${giroY}deg)`
       if (indicadorRef.current) indicadorRef.current.style.transform = `translate3d(0, ${p * 72}px, 0)`
     },
     [dibujar, ubicarPantalla],
@@ -129,9 +130,18 @@ export default function HeroMacbook({ perfil, estadisticas }) {
       const f = fisica.current
       const dt = Math.min(0.05, (ahora - (f.ultimo || ahora)) / 1000)
       f.ultimo = ahora
-      f.actual += (f.objetivo - f.actual) * (1 - Math.exp(-dt / RESPUESTA))
+      const k = 1 - Math.exp(-dt / RESPUESTA)
+      f.actual += (f.objetivo - f.actual) * k
+      // La inclinación hacia el mouse responde más lento: se siente como un objeto con peso.
+      const kGiro = 1 - Math.exp(-dt / 0.25)
+      f.inclX += (f.objX - f.inclX) * kGiro
+      f.inclY += (f.objY - f.inclY) * kGiro
 
-      if (Math.abs(f.objetivo - f.actual) < 0.0005) {
+      const quieto =
+        Math.abs(f.objetivo - f.actual) < 0.0005 &&
+        Math.abs(f.objX - f.inclX) < 0.01 &&
+        Math.abs(f.objY - f.inclY) < 0.01
+      if (quieto) {
         f.actual = f.objetivo
         f.frame = 0
         f.ultimo = 0
@@ -143,12 +153,31 @@ export default function HeroMacbook({ perfil, estadisticas }) {
     [pintar],
   )
 
+  const despertar = useCallback(() => {
+    const f = fisica.current
+    if (!f.frame) f.frame = requestAnimationFrame(paso)
+  }, [paso])
+
   useProgresoScroll(pistaRef, (p) => {
     if (reducir) return
-    const f = fisica.current
-    f.objetivo = p
-    if (!f.frame) f.frame = requestAnimationFrame(paso)
+    fisica.current.objetivo = p
+    despertar()
   })
+
+  // Con mouse, la MacBook se inclina apenas hacia el puntero (en pantallas táctiles no).
+  function alMoverPuntero(evento) {
+    if (reducir || evento.pointerType !== 'mouse') return
+    const caja = evento.currentTarget.getBoundingClientRect()
+    fisica.current.objY = ((evento.clientX - caja.left) / caja.width - 0.5) * 2 * INCLINACION_PUNTERO
+    fisica.current.objX = -((evento.clientY - caja.top) / caja.height - 0.5) * 2 * INCLINACION_PUNTERO
+    despertar()
+  }
+
+  function alSalirPuntero() {
+    fisica.current.objX = 0
+    fisica.current.objY = 0
+    despertar()
+  }
 
   // Precarga: primero el fotograma que se ve al entrar, después el resto en orden.
   useEffect(() => {
@@ -191,6 +220,14 @@ export default function HeroMacbook({ perfil, estadisticas }) {
       const cx = z.left - e.left + z.width / 2
       const cy = z.top - e.top + z.height / 2
       geo.current = { x: cx - CENTRO_MAC[0] * w, y: cy - CENTRO_MAC[1] * h, w, h }
+      // La capa gira alrededor del centro de la MacBook; el brillo (modo oscuro) va detrás de ella.
+      capaRef.current.style.transformOrigin = `${cx}px ${cy}px`
+      Object.assign(brilloRef.current.style, {
+        left: `${cx}px`,
+        top: `${cy}px`,
+        width: `${anchoMac * 1.6}px`,
+        height: `${anchoMac * 1.1}px`,
+      })
       pintar(fisica.current.actual, true)
     }
 
@@ -214,9 +251,17 @@ export default function HeroMacbook({ perfil, estadisticas }) {
 
   return (
     <section id="inicio" className={reducir ? 'hero hero--quieto' : 'hero'} ref={pistaRef} aria-label="Presentación">
-      <div className="hero-escenario" ref={escenarioRef}>
-        <canvas ref={canvasRef} className="hero-canvas" role="img" aria-label="Una MacBook que se abre" />
-        <PantallaSitio perfil={perfil} refPantalla={pantallaRef} />
+      <div
+        className="hero-escenario"
+        ref={escenarioRef}
+        onPointerMove={alMoverPuntero}
+        onPointerLeave={alSalirPuntero}
+      >
+        <div className="hero-brillo" ref={brilloRef} aria-hidden="true" />
+        <div className="hero-capa-mac" ref={capaRef}>
+          <canvas ref={canvasRef} className="hero-canvas" role="img" aria-label="Una MacBook que se abre" />
+          <PantallaSitio perfil={perfil} refPantalla={pantallaRef} />
+        </div>
         <div className="hero-planta" aria-hidden="true" />
 
         <div className="contenedor hero-contenido">

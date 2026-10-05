@@ -1,6 +1,7 @@
 import { Check, LoaderCircle, Star, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useReducirMovimiento } from '../hooks/useReducirMovimiento'
+import { pausarScroll, reanudarScroll } from '../utils/scrollSuave'
 
 const VACIO = { nombre: '', rol: '', texto: '', puntaje: 5 }
 const MAXIMO = 600
@@ -34,6 +35,7 @@ export default function DialogoResena({ abierto, alCerrar, alPublicar }) {
     if (abierto && !dialogo.open) {
       dialogo.classList.remove('es-saliendo')
       dialogo.showModal()
+      pausarScroll()
     }
   }, [abierto])
 
@@ -43,6 +45,7 @@ export default function DialogoResena({ abierto, alCerrar, alPublicar }) {
     const terminar = () => {
       dialogo.classList.remove('es-saliendo')
       dialogo.close()
+      reanudarScroll()
       alCerrar()
       if (estado.tipo === 'exito') {
         setValores(VACIO)
@@ -119,6 +122,7 @@ export default function DialogoResena({ abierto, alCerrar, alPublicar }) {
     <dialog
       ref={dialogoRef}
       className="dialogo"
+      data-lenis-prevent
       aria-labelledby="resena-titulo"
       onCancel={(evento) => {
         evento.preventDefault()

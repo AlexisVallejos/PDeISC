@@ -2,6 +2,7 @@ import { ArrowUpRight, Menu, X } from 'lucide-react'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useSeccionActiva } from '../hooks/useSeccionActiva'
 import { primerNombre } from '../utils/texto'
+import BotonTema from './BotonTema'
 
 export const SECCIONES = [
   { id: 'inicio', texto: 'Inicio' },
@@ -69,6 +70,7 @@ export default function BarraNav({ nombre }) {
           <li className="barra-indicador" ref={puntoRef} aria-hidden="true" />
         </ul>
 
+        <BotonTema />
         <a className="boton boton--oscuro boton--chico barra-cta" href="#contacto">
           Hablemos <ArrowUpRight size={15} aria-hidden="true" />
         </a>

@@ -1,14 +1,20 @@
 /* =========================================================================
    Portfolio · diseño de la referencia + criterios de Apple
-   - Fondo #f6f5f8 en toda la página: el color medido en los fotogramas de la MacBook
+   - Modo claro (#f5f5f7) y oscuro (#000): los fotogramas de la MacBook tienen fondo transparente
    - Inter (con tamaño óptico) y acentos en Instrument Serif itálica
    - Tracking negativo en títulos grandes, ~0 en el cuerpo
    - Movimiento: ease-out fuerte, solo transform y opacity, y "reducir movimiento"
    ========================================================================= */
 
 :root {
-  --fondo: #f6f5f8; /* medido en public/macbook/*: así el canvas no deja ningún borde */
+  --fondo: #f5f5f7;
   --tarjeta: #ffffff;
+  --vidrio: rgba(255, 255, 255, 0.72);
+  --contorno-fondo: rgba(255, 255, 255, 0.4);
+  --insignia-fondo: rgba(255, 255, 255, 0.7);
+  --hoja-brillo: rgba(255, 255, 255, 0.9);
+  --punto-inactivo: #d1d1d6;
+  --estrella-vacia: #c7c7cc;
   --relleno: rgba(0, 0, 0, 0.05);
   --relleno-fuerte: rgba(0, 0, 0, 0.09);
 
@@ -20,11 +26,12 @@
 
   --oscuro: #111113;
   --oscuro-hover: #2a2a2e;
+  --sobre-oscuro: #ffffff;
   --verde: #1d8a3a;
   --rojo: #d70015;
   --rojo-suave: rgba(255, 59, 48, 0.08);
 
-  --material-barra: rgba(246, 245, 248, 0.74);
+  --material-barra: rgba(245, 245, 247, 0.74);
   --sombra-tarjeta: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 40px rgba(0, 0, 0, 0.05);
 
   --fuente: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -41,6 +48,46 @@
   color-scheme: light;
 }
 
+/* Modo oscuro: negro puro como las páginas de producto de Apple. El botón principal se invierte
+   (píldora clara con texto negro) para seguir siendo lo más visible de la pantalla. */
+:root[data-tema='oscuro'] {
+  --fondo: #000000;
+  --tarjeta: #161617;
+  --vidrio: rgba(28, 28, 30, 0.72);
+  --contorno-fondo: rgba(255, 255, 255, 0.04);
+  --insignia-fondo: rgba(255, 255, 255, 0.06);
+  --hoja-brillo: rgba(255, 255, 255, 0.08);
+  --punto-inactivo: #3a3a3c;
+  --estrella-vacia: #48484a;
+  --relleno: rgba(255, 255, 255, 0.08);
+  --relleno-fuerte: rgba(255, 255, 255, 0.15);
+
+  --texto: #f5f5f7;
+  --texto-secundario: #a1a1a6;
+  --texto-terciario: #86868b;
+  --borde: rgba(255, 255, 255, 0.12);
+  --borde-fuerte: rgba(255, 255, 255, 0.26);
+
+  --oscuro: #f5f5f7;
+  --oscuro-hover: #d2d2d7;
+  --sobre-oscuro: #000000;
+  --verde: #30d158;
+  --rojo: #ff453a;
+  --rojo-suave: rgba(255, 69, 58, 0.14);
+
+  --material-barra: rgba(22, 22, 23, 0.72);
+  --sombra-tarjeta: none;
+
+  color-scheme: dark;
+}
+
+/* Cambio de tema: un círculo que crece desde el botón (ver TemaContext). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 /* ---------- Base ---------- */
 
 *,
@@ -49,8 +96,9 @@
   box-sizing: border-box;
 }
 
+/* El desplazamiento suave lo hace Lenis (utils/scrollSuave.js); el nativo tiene que quedar en auto. */
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   scroll-padding-top: var(--alto-barra);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
@@ -148,7 +196,7 @@ em {
   padding: 10px 16px;
   border-radius: 999px;
   background: var(--oscuro);
-  color: #fff;
+  color: var(--sobre-oscuro);
   transform: translateY(-160%);
   transition: transform 200ms var(--ease-out);
 }
@@ -224,11 +272,11 @@ em {
 
 .boton--oscuro {
   background: var(--oscuro);
-  color: #fff;
+  color: var(--sobre-oscuro);
 }
 
 .boton--contorno {
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--contorno-fondo);
   border-color: var(--borde-fuerte);
   color: var(--texto);
 }
@@ -248,7 +296,7 @@ em {
     background: var(--oscuro-hover);
   }
   .boton--contorno:hover {
-    background: #fff;
+    background: var(--tarjeta);
     border-color: var(--texto);
   }
   .boton:hover svg.lucide-arrow-up-right:not(.flecha-girada) {
@@ -282,12 +330,12 @@ em {
   padding: 7px 14px;
   border: 1px solid var(--borde);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--insignia-fondo);
   font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #2c2c30;
+  color: var(--texto);
 }
 
 .insignia-punto {
@@ -468,12 +516,37 @@ em {
   overflow: clip;
 }
 
+.hero-capa-mac {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
 .hero-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: block;
+}
+
+/* Halo detrás de la MacBook: solo en modo oscuro, para separarla del negro */
+.hero-brillo {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -45%);
+  background: radial-gradient(closest-side, rgba(88, 120, 210, 0.3), rgba(88, 120, 210, 0.08) 55%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+
+:root[data-tema='oscuro'] .hero-brillo {
+  opacity: 1;
+}
+
+:root[data-tema='oscuro'] .hero-planta {
+  opacity: 0.18;
 }
 
 .hero-contenido {
@@ -914,7 +987,7 @@ em {
   background: var(--fondo);
   border-radius: 40px 40px 0 0;
   box-shadow:
-    0 -1px 0 rgba(255, 255, 255, 0.9),
+    0 -1px 0 var(--hoja-brillo),
     0 -28px 60px -28px rgba(0, 0, 0, 0.12);
 }
 
@@ -1565,7 +1638,7 @@ em {
   padding: 26px 24px 22px;
   border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--vidrio);
   box-shadow: var(--sombra-tarjeta);
 }
 
@@ -1590,7 +1663,7 @@ em {
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: -0.03em;
-  color: #26262a;
+  color: var(--texto);
 }
 
 .resenas-cabecera {
@@ -1677,7 +1750,7 @@ em {
   padding: 0;
   border: 1px solid var(--borde);
   border-radius: 50%;
-  background: #fff;
+  background: var(--tarjeta);
   transition:
     transform 120ms ease-out,
     opacity 200ms ease,
@@ -1737,7 +1810,7 @@ em {
 .carrusel-diapositiva blockquote {
   font-size: 0.875rem;
   line-height: 1.5;
-  color: #2f2f34;
+  color: var(--texto);
   text-wrap: pretty;
 }
 
@@ -1764,7 +1837,7 @@ em {
   padding: 0;
   border: 0;
   border-radius: 999px;
-  background: #d1d1d6;
+  background: var(--punto-inactivo);
   transition:
     width 300ms var(--ease-out),
     background-color 200ms ease;
@@ -1784,7 +1857,7 @@ em {
   padding: 0;
   border: 0;
   border-radius: 28px;
-  background: #fff;
+  background: var(--tarjeta);
   color: var(--texto);
   box-shadow: 0 40px 100px -24px rgba(0, 0, 0, 0.4);
   overflow: auto;
@@ -1953,7 +2026,7 @@ em {
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  color: #c7c7cc;
+  color: var(--estrella-vacia);
   cursor: pointer;
   transition:
     color 150ms ease,
@@ -2218,7 +2291,7 @@ em {
   height: 14px;
   border-radius: 50%;
   background: var(--texto);
-  border: 3px solid #fff;
+  border: 3px solid var(--tarjeta);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   transform: translate(-50%, -50%);
 }
@@ -2507,8 +2580,8 @@ em {
 .campo textarea:focus {
   outline: none;
   border-color: var(--texto);
-  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.06);
-  background: #fff;
+  box-shadow: 0 0 0 4px var(--relleno);
+  background: var(--tarjeta);
 }
 
 .campo.tiene-error input,
@@ -2652,7 +2725,7 @@ em {
   }
   .tarjeta-confianza,
   .insignia--clara {
-    background: #fff;
+    background: var(--tarjeta);
     backdrop-filter: none;
   }
 }
@@ -2666,5 +2739,197 @@ em {
   .barra {
     background: var(--fondo);
     box-shadow: 0 1px 0 var(--texto);
+  }
+}
+
+/* ---------- Tema oscuro: tarjetas con color ---------- */
+
+:root[data-tema='oscuro'] .proyecto--oscuro,
+:root[data-tema='oscuro'] .tile--oscuro,
+:root[data-tema='oscuro'] .tile--cta,
+:root[data-tema='oscuro'] .tile--retrato {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+:root[data-tema='oscuro'] .proyecto--arena,
+:root[data-tema='oscuro'] .tile--arena {
+  background: linear-gradient(135deg, #2b251e 0%, #1b1713 100%);
+  color: #f2ece4;
+}
+
+:root[data-tema='oscuro'] .tile--arena .logro-valor {
+  background-image: linear-gradient(180deg, #f2ece4 35%, #8f806f);
+}
+
+:root[data-tema='oscuro'] .tile--arena .logro-detalle {
+  color: rgba(242, 236, 228, 0.66);
+}
+
+:root[data-tema='oscuro'] .proyecto--niebla {
+  background: linear-gradient(135deg, #1d222a 0%, #12151a 100%);
+  color: #eef1f5;
+}
+
+:root[data-tema='oscuro'] .tile--ubicacion {
+  background: linear-gradient(160deg, #1b2028 0%, #10141a 100%);
+}
+
+:root[data-tema='oscuro'] .ubicacion-mapa {
+  background-image: radial-gradient(rgba(235, 240, 248, 0.22) 1.2px, transparent 1.7px);
+}
+
+:root[data-tema='oscuro'] .proyecto--arena:hover .boton-circulo svg,
+:root[data-tema='oscuro'] .proyecto--niebla:hover .boton-circulo svg {
+  color: #111;
+}
+
+/* ---------- Botón de tema ---------- */
+
+.boton-tema {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--texto);
+  transition:
+    background-color 200ms ease,
+    transform 120ms ease-out;
+}
+
+.boton-tema:active {
+  transform: scale(0.92);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .boton-tema:hover {
+    background: var(--relleno);
+  }
+}
+
+/* Los dos íconos se cruzan: el que entra gira desde -90°, el que sale se va a 90°. */
+.boton-tema svg {
+  position: absolute;
+  transition:
+    transform 450ms var(--ease-out),
+    opacity 250ms ease;
+}
+
+.boton-tema-sol {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+}
+
+:root[data-tema='oscuro'] .boton-tema-sol {
+  opacity: 1;
+  transform: none;
+}
+
+:root[data-tema='oscuro'] .boton-tema-luna {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+}
+
+.barra-interior .boton-tema {
+  margin-left: auto;
+}
+
+.barra-enlaces + .boton-tema {
+  margin-left: 0;
+}
+
+@media (max-width: 900px) {
+  .barra-interior .boton-tema {
+    margin-left: auto;
+  }
+  .barra-interior .boton-tema + .barra-cta {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Botón para volver arriba ---------- */
+
+.boton-subir {
+  position: fixed;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: calc(20px + env(safe-area-inset-bottom));
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--material-barra);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  box-shadow:
+    0 0 0 0.5px var(--borde),
+    0 10px 30px rgba(0, 0, 0, 0.12);
+  color: var(--texto);
+  opacity: 0;
+  transform: translateY(14px) scale(0.9);
+  pointer-events: none;
+  transition:
+    opacity 250ms ease,
+    transform 400ms var(--ease-out);
+}
+
+.boton-subir.es-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.boton-subir.es-visible:active {
+  transform: scale(0.92);
+  transition-duration: 100ms;
+}
+
+.boton-subir svg:first-child {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.boton-subir-pista,
+.boton-subir-anillo {
+  fill: none;
+  stroke-width: 2;
+}
+
+.boton-subir-pista {
+  stroke: var(--borde);
+}
+
+.boton-subir-anillo {
+  stroke: var(--texto);
+  stroke-linecap: round;
+}
+
+.boton-subir .lucide {
+  transition: transform 250ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .boton-subir:hover .lucide {
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boton-subir,
+  .boton-subir.es-visible {
+    transform: none;
+  }
+  .boton-tema svg {
+    transition: opacity 200ms ease;
   }
 }

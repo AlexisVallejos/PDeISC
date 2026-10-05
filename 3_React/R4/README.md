@@ -140,18 +140,20 @@ Prueba local equivalente con Docker: `docker compose up --build` → http://loca
 
 ## Diseño y movimiento
 
-- **Fondo `#f6f5f8`**: es el color medido en los fotogramas (no `#f5f5f7`); con el mismo valor exacto, el canvas no
-  deja ningún borde visible.
-- **Hero con fotogramas**: la sección mide 320vh y el escenario queda `sticky`. El recorrido del scroll (0 a 1) elige
-  uno de los 150 fotogramas. El fotograma sigue al scroll con un resorte sin rebote (la apertura es continua aunque
-  la rueda avance a saltos), el canvas usa la resolución real de la pantalla y la MacBook se ubica en el hueco
-  `.hero-zona-mac` del layout, así el diseño se arma con CSS en escritorio y en celular.
-- **Pantalla que se enciende**: `data/pantalla.json` tiene las 4 esquinas de la pantalla en los fotogramas 80–149
-  (detectadas automáticamente en los fotogramas). `utils/perspectiva.js` calcula la homografía que lleva el mini
-  sitio (1000×677 px) a esas esquinas, y entre los fotogramas 96 y 128 aparece con un fundido.
+- **Modo claro y oscuro**: botón sol/luna en la barra. El cambio se revela como un círculo que crece desde el botón
+  (View Transitions) y se recuerda en `localStorage`; la primera vez sigue la apariencia del sistema.
+- **Scroll suave** con [Lenis](https://github.com/darkroomengineering/lenis) (`src/utils/scrollSuave.js`): la rueda
+  del mouse y el trackpad se deslizan en vez de saltar, y los enlaces del menú llevan a cada sección con el mismo
+  movimiento. En el celular queda el scroll nativo y con "reducir movimiento" se desactiva solo.
+- **Botón para volver arriba** (como en R1 y R2): aparece pasada la primera pantalla y su anillo muestra cuánto de
+  la página llevás recorrido.
+- **MacBook de tres cuartos**: los fotogramas tienen **fondo transparente** (`herramientas/quitar-fondo.mjs` separa
+  la MacBook del fondo y convierte la sombra en negro semitransparente). Así la capa puede girar en 3D
+  (`rotateY` de −6° cerrada a −19° abierta) sin que se vea un rectángulo, se apoya igual sobre gris claro y sobre
+  negro, y con el mouse se inclina apenas hacia el puntero.
+- **Pantalla que se enciende**: `data/pantalla.json` tiene las 4 esquinas de la pantalla en los fotogramas 80–149;
+  `utils/perspectiva.js` calcula la homografía que lleva el mini sitio a esas esquinas.
 - **Apple**: respuesta al presionar (escala 0,97), curvas ease-out fuertes, solo `transform`/`opacity`, hover solo
-  con mouse, carrusel con `scroll-snap` (inercia nativa al deslizar), barra translúcida, tracking negativo en
-  títulos grandes.
-- **Accesibilidad**: con "reducir movimiento" el hero muestra la MacBook ya abierta y encendida, sin animar. También
-  respeta "reducir transparencia" y "aumentar contraste"; el carrusel se maneja con teclado y las cifras se leen con
-  su valor final.
+  con mouse, barra translúcida, tracking negativo en títulos grandes.
+- **Accesibilidad**: con "reducir movimiento" la MacBook aparece abierta y encendida, sin animar; también respeta
+  "reducir transparencia" y "aumentar contraste".
