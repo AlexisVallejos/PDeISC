@@ -1,21 +1,17 @@
 import Aparecer from './Aparecer'
-import Subseccion from './Subseccion'
+import LineaTiempo from './LineaTiempo'
+import Seccion from './Seccion'
+import TarjetaResenas from './TarjetaResenas'
 
-export default function Experiencia({ experiencias }) {
+export default function Experiencia({ experiencias, habilidades, resenas }) {
   return (
-    <Subseccion titulo="Experiencia">
-      <ol className="linea-tiempo">
-        {experiencias.map((e, i) => (
-          <Aparecer as="li" key={`${e.rol}-${i}`} orden={i} className="hito">
-            <span className="hito-periodo">{e.periodo}</span>
-            <div className="hito-cuerpo">
-              <h3 className="tarjeta-titulo">{e.rol}</h3>
-              <p className="hito-lugar">{e.lugar}</p>
-              <p className="texto-secundario">{e.descripcion}</p>
-            </div>
-          </Aparecer>
-        ))}
-      </ol>
-    </Subseccion>
+    <Seccion id="experiencia" sobretitulo="Experiencia" titulo="Un recorrido por diseño, código y *curiosidad*." lateral>
+      <div className="experiencia">
+        <LineaTiempo experiencias={experiencias} />
+        <Aparecer orden={1}>
+          <TarjetaResenas habilidades={habilidades} resenas={resenas} />
+        </Aparecer>
+      </div>
+    </Seccion>
   )
 }

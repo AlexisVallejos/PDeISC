@@ -1,9 +1,11 @@
 # React R4 — Portfolio
 
-Portfolio de una sola página hecho con React + Vite. Presenta datos personales, habilidades, experiencia, logros y
-proyectos. El inicio es una **MacBook en 3D que se abre con el scroll**: la tapa gira sobre la bisagra, la pantalla
-se enciende con tu foto y al final se acerca para dar paso al titular. Todo el contenido vive en **MySQL** y lo sirve
-una API Node; el formulario de contacto guarda los mensajes en la misma base.
+Portfolio de una sola página hecho con React + Vite, con el diseño de la referencia (titular con una palabra en
+serif itálica, botones tipo píldora, tarjetas de proyecto temáticas, línea de tiempo) y criterios de Apple.
+El hero es una **MacBook que se abre con el scroll**: 150 fotogramas dibujados en un `<canvas>` dentro de una
+sección `sticky`. Al terminar de abrirse, **la pantalla se enciende con una mini versión del sitio**, deformada con
+`matrix3d` para calzar en las cuatro esquinas de la pantalla de cada fotograma. Después vienen Proyectos,
+Experiencia, Sobre mí y Contacto. Todo el contenido vive en **MySQL** y lo sirve una API Node.
 
 ```text
 R4/
@@ -12,14 +14,17 @@ R4/
 │   ├── semilla.json        Contenido inicial que se carga en MySQL
 │   └── database.sql        Crea la base (para XAMPP)
 ├── web/                    Frontend React + Vite
-│   ├── public/             favicon y foto.jpg (tu foto)
+│   ├── public/             favicon, foto.jpg (tu foto) y macbook/ (los 150 fotogramas)
+│   │   └── macbook/        frames-webp (1920×1080) y frames-webp-mobile (960×540)
 │   └── src/
-│       ├── components/     HeroMacbook, Macbook, BarraNav, SobreMi, Habilidades,
-│       │                   Experiencia, Logros, Proyectos, Contacto, Pie…
+│       ├── components/     HeroMacbook, PantallaSitio, Estadisticas, BarraNav, Proyectos,
+│       │                   Mockup, Experiencia, LineaTiempo, TarjetaResenas, DialogoResena,
+│       │                   SobreMi (bento), Habilidades, Contacto, Pie…
 │       ├── hooks/          usePortfolio, useProgresoScroll, useAparecer,
-│       │                   useSeccionActiva, useReducirMovimiento, useLocalStorage
-│       ├── context/        TemaContext (claro / oscuro)
-│       ├── data/           portfolio.json (copia local por si la API no responde)
+│       │                   useSeccionActiva, useReducirMovimiento
+│       ├── data/           portfolio.json (copia local por si la API no responde) y
+│       │                   pantalla.json (esquinas de la pantalla en los fotogramas 80–149)
+│       ├── utils/          perspectiva.js (homografía → matrix3d), texto.jsx (*énfasis*)
 │       └── styles/         index.css
 ├── Dockerfile              Un contenedor: API + web (para Easypanel)
 ├── docker-compose.yml      Prueba local con MySQL
@@ -30,17 +35,23 @@ R4/
 
 | Pide | Dónde está |
 | --- | --- |
-| Una sola página con componentes | `App.jsx` arma la página con un componente por sección |
-| Datos, habilidades, logros, experiencias, proyectos | `SobreMi`, `Habilidades`, `Logros`, `Experiencia`, `Proyectos` |
-| **Animaciones** | MacBook 3D guiada por el scroll, entradas escalonadas al aparecer, barras de nivel, menú móvil, brillo que sigue al puntero |
-| **Hooks** | `useState`, `useEffect`, `useRef`, `useMemo`, `useCallback`, `useContext` y 6 hooks propios en `src/hooks/` |
-| **Eventos** | `scroll`, `resize`, `pointermove`/`pointerleave` (inclinación de la MacBook y brillo de tarjetas), `click` (filtros, tema, menú), `submit`/`change`/`blur` (formulario), `keydown` (Escape cierra el menú), `storage` |
+| Una sola página con componentes | `App.jsx`: hero → `Proyectos` → `Experiencia` → `SobreMi` → `Contacto` |
+| Datos, habilidades, logros, experiencias, proyectos | Hero (datos y cifras), `Proyectos`, `Experiencia` (línea de tiempo + reseñas), `SobreMi` (bento con bio, logros, ubicación y `Habilidades`) |
+| **Animaciones** | MacBook que se abre con el scroll y pantalla que se enciende, línea de tiempo que se dibuja con el scroll, cifras que cuentan, diálogo de reseña, punto de la barra que se desliza, entradas escalonadas, barras de nivel, carrusel, hover de tarjetas |
+| **Hooks** | `useState`, `useEffect`, `useLayoutEffect`, `useRef`, `useMemo`, `useCallback` y 7 hooks propios en `src/hooks/` (`useAlScrollear`, `useHora`, …) |
+| **Eventos** | `scroll`/`resize` (fotograma, carrusel), `load` de cada fotograma, `click` (ver todos, carrusel, menú), `keydown` (flechas del carrusel, Escape del menú), `pointerdown`, `submit`/`change`/`blur` (formulario) |
 | Host con BBDD | Easypanel: servicio MySQL + app Docker. Las tablas `portfolio_*` guardan todo el contenido, los mensajes y las visitas |
 
 ## Poner tu foto
 
-Guardá tu foto como `web/public/foto.jpg` (cuadrada, ~800×800). Aparece en la pantalla de la MacBook y en
-"Sobre mí". Si no hay foto, se muestran tus iniciales. También podés usar una URL: cambiá la columna `foto`
+Guardá tu foto como `web/public/foto.jpg` (vertical, ~1000×1250). Aparece en blanco y negro en la pantalla de la
+MacBook y en "Sobre mí". Sin foto se muestran tus iniciales.
+
+Para usar una imagen real en una tarjeta de proyecto, completá la columna `imagen` de `portfolio_proyectos`
+(por ejemplo `/proyectos/ahorcado.jpg` dentro de `web/public`). Sin imagen se dibuja un dispositivo con CSS.
+
+Las palabras entre asteriscos del titular y de los títulos (`Interfaces que *mueven* personas.`) se muestran en
+serif itálica. Si no hay foto, se muestran tus iniciales. También podés usar una URL: cambiá la columna `foto`
 de `portfolio_perfil`.
 
 ## Ejecutar en local
@@ -70,6 +81,26 @@ Si lo cambiás, copialo también a `web/src/data/portfolio.json` para que la cop
 Los mensajes del formulario quedan en `portfolio_mensajes`. Con `ADMIN_TOKEN` configurado también se leen en
 `GET /api/mensajes` enviando el header `x-admin-token`.
 
+## Reseñas
+
+Las visitas dejan su reseña desde Experiencia → "Dejar una reseña" (nombre, rol opcional, 1 a 5 estrellas y texto).
+Se guardan en `portfolio_resenas` **pendientes** y se publican cuando las aprobás, así nadie puede publicar cualquier
+cosa en tu portfolio. Con `RESENAS_AUTOAPROBAR=true` se publican al instante.
+
+Para moderar hace falta `ADMIN_TOKEN` en el entorno:
+
+```bash
+# ver las pendientes
+curl "https://<tu-dominio>/api/resenas?estado=pendientes" -H "x-admin-token: <ADMIN_TOKEN>"
+# aprobar (o {"aprobada": false} para ocultar)
+curl -X PATCH "https://<tu-dominio>/api/resenas/<id>" -H "x-admin-token: <ADMIN_TOKEN>" \
+     -H "Content-Type: application/json" -d '{"aprobada": true}'
+# borrar
+curl -X DELETE "https://<tu-dominio>/api/resenas/<id>" -H "x-admin-token: <ADMIN_TOKEN>"
+```
+
+También se puede desde phpMyAdmin: `UPDATE portfolio_resenas SET aprobada = 1 WHERE id = <id>;`
+
 ## Deploy en Easypanel
 
 ```
@@ -98,7 +129,8 @@ Easypanel
    DB_USER=<usuario de Credentials>
    DB_PASSWORD=<contraseña de Credentials>
    DB_NAME=portfolio
-   ADMIN_TOKEN=<una clave larga, opcional>
+   ADMIN_TOKEN=<una clave larga: la usás para leer mensajes y aprobar reseñas>
+   RESENAS_AUTOAPROBAR=false
    ```
 6. **Domains**: dominio automático o propio, protocolo HTTP, puerto `3000`, HTTPS activado.
 7. **Deploy**. Probar `https://<tu-dominio>/api/health` → `{"ok":true,"db":"conectada"}` y después abrir
@@ -108,14 +140,18 @@ Prueba local equivalente con Docker: `docker compose up --build` → http://loca
 
 ## Diseño y movimiento
 
-- **Estilo Apple**: fuente del sistema con tracking negativo en títulos grandes, fondos que alternan, barra
-  translúcida con desenfoque, tarjetas de 28 px de radio, acento azul y tema claro/oscuro (plata o negro
-  espacial para la MacBook).
-- **MacBook 3D** hecha con caras de CSS 3D (sin modelos ni librerías): tapa con pantalla, dorso y bordes; base con
-  teclado, parlantes, trackpad y frente. El scroll mueve un valor de 0 a 1 que sigue un resorte sin rebote,
-  así que el movimiento es suave y se puede invertir en cualquier momento. Las transformaciones se aplican por
-  `ref` en cada frame, sin re-renderizar React.
-- Con mouse, la MacBook se inclina apenas hacia el puntero; en pantallas táctiles no.
-- **Accesibilidad**: con "reducir movimiento" la MacBook queda abierta y quieta y las entradas son fundidos
-  cortos. También respeta "reducir transparencia" y "aumentar contraste", y tiene enlace para saltar al
-  contenido, foco visible y validación del formulario al salir de cada campo.
+- **Fondo `#f6f5f8`**: es el color medido en los fotogramas (no `#f5f5f7`); con el mismo valor exacto, el canvas no
+  deja ningún borde visible.
+- **Hero con fotogramas**: la sección mide 320vh y el escenario queda `sticky`. El recorrido del scroll (0 a 1) elige
+  uno de los 150 fotogramas. El fotograma sigue al scroll con un resorte sin rebote (la apertura es continua aunque
+  la rueda avance a saltos), el canvas usa la resolución real de la pantalla y la MacBook se ubica en el hueco
+  `.hero-zona-mac` del layout, así el diseño se arma con CSS en escritorio y en celular.
+- **Pantalla que se enciende**: `data/pantalla.json` tiene las 4 esquinas de la pantalla en los fotogramas 80–149
+  (detectadas automáticamente en los fotogramas). `utils/perspectiva.js` calcula la homografía que lleva el mini
+  sitio (1000×677 px) a esas esquinas, y entre los fotogramas 96 y 128 aparece con un fundido.
+- **Apple**: respuesta al presionar (escala 0,97), curvas ease-out fuertes, solo `transform`/`opacity`, hover solo
+  con mouse, carrusel con `scroll-snap` (inercia nativa al deslizar), barra translúcida, tracking negativo en
+  títulos grandes.
+- **Accesibilidad**: con "reducir movimiento" el hero muestra la MacBook ya abierta y encendida, sin animar. También
+  respeta "reducir transparencia" y "aumentar contraste"; el carrusel se maneja con teclado y las cifras se leen con
+  su valor final.

@@ -2,7 +2,8 @@
   "perfil": {
     "nombre": "Alexis Vallejos",
     "rol": "Desarrollador web full stack",
-    "titular": "Diseño y programo interfaces que se sienten simples.",
+    "titular": "Interfaces que *mueven* personas.",
+    "resumen": "desarrollador full stack y diseñador de interfaces. Creo experiencias digitales que se sienten simples, cuidadas y humanas.",
     "bio": "Estudiante de programación. Me gusta llevar una idea desde la base de datos hasta el último detalle de la interfaz: que cargue rápido, que responda al instante y que se vea cuidada en cualquier pantalla.",
     "ubicacion": "Argentina",
     "foto": "/foto.jpg",
@@ -11,18 +12,76 @@
     "email": "",
     "disponible": true
   },
+  "estadisticas": [
+    {
+      "valor": "2+",
+      "etiqueta": "Años programando"
+    },
+    {
+      "valor": "20+",
+      "etiqueta": "Proyectos entregados"
+    },
+    {
+      "valor": "11",
+      "etiqueta": "Tecnologías que uso"
+    }
+  ],
   "habilidades": [
-    { "categoria": "Frontend", "nombre": "React", "nivel": 85 },
-    { "categoria": "Frontend", "nombre": "JavaScript", "nivel": 88 },
-    { "categoria": "Frontend", "nombre": "HTML y CSS", "nivel": 90 },
-    { "categoria": "Frontend", "nombre": "React Native · Expo", "nivel": 70 },
-    { "categoria": "Backend", "nombre": "Node.js · Express", "nivel": 80 },
-    { "categoria": "Backend", "nombre": "MySQL", "nivel": 75 },
-    { "categoria": "Backend", "nombre": "PHP", "nivel": 55 },
-    { "categoria": "Herramientas", "nombre": "Git y GitHub", "nivel": 80 },
-    { "categoria": "Herramientas", "nombre": "Docker · EasyPanel", "nivel": 60 },
-    { "categoria": "Herramientas", "nombre": "Vite", "nivel": 75 },
-    { "categoria": "Herramientas", "nombre": "Three.js", "nivel": 50 }
+    {
+      "categoria": "Frontend",
+      "nombre": "React",
+      "nivel": 85
+    },
+    {
+      "categoria": "Frontend",
+      "nombre": "JavaScript",
+      "nivel": 88
+    },
+    {
+      "categoria": "Frontend",
+      "nombre": "HTML y CSS",
+      "nivel": 90
+    },
+    {
+      "categoria": "Frontend",
+      "nombre": "React Native · Expo",
+      "nivel": 70
+    },
+    {
+      "categoria": "Backend",
+      "nombre": "Node.js · Express",
+      "nivel": 80
+    },
+    {
+      "categoria": "Backend",
+      "nombre": "MySQL",
+      "nivel": 75
+    },
+    {
+      "categoria": "Backend",
+      "nombre": "PHP",
+      "nivel": 55
+    },
+    {
+      "categoria": "Herramientas",
+      "nombre": "Git y GitHub",
+      "nivel": 80
+    },
+    {
+      "categoria": "Herramientas",
+      "nombre": "Docker · EasyPanel",
+      "nivel": 60
+    },
+    {
+      "categoria": "Herramientas",
+      "nombre": "Vite",
+      "nivel": 75
+    },
+    {
+      "categoria": "Herramientas",
+      "nombre": "Three.js",
+      "nivel": 50
+    }
   ],
   "experiencias": [
     {
@@ -51,53 +110,112 @@
     }
   ],
   "logros": [
-    { "valor": "20+", "titulo": "Proyectos entregados", "detalle": "Entre JavaScript, Node, React y React Native." },
-    { "valor": "3D", "titulo": "Ahorcado en Three.js", "detalle": "Juego con muñeco 3D, modo de dos jugadores y ranking en MySQL." },
-    { "valor": "Online", "titulo": "Apps en la nube", "detalle": "Deploy con Docker en EasyPanel, API y web en el mismo dominio." },
-    { "valor": "A11y", "titulo": "Interfaces accesibles", "detalle": "Tema oscuro, reducir movimiento y diseño adaptable en todas las apps." }
+    {
+      "valor": "20+",
+      "titulo": "Proyectos entregados",
+      "detalle": "Entre JavaScript, Node, React y React Native."
+    },
+    {
+      "valor": "3D",
+      "titulo": "Ahorcado en Three.js",
+      "detalle": "Juego con muñeco 3D, modo de dos jugadores y ranking en MySQL."
+    },
+    {
+      "valor": "Online",
+      "titulo": "Apps en la nube",
+      "detalle": "Deploy con Docker en EasyPanel, API y web en el mismo dominio."
+    },
+    {
+      "valor": "A11y",
+      "titulo": "Interfaces accesibles",
+      "detalle": "Tema oscuro, reducir movimiento y diseño adaptable en todas las apps."
+    }
   ],
   "proyectos": [
     {
       "titulo": "Ahorcado 3D",
+      "tipo": "Juego web",
+      "lema": "Adiviná la palabra, en 3D.",
       "descripcion": "Juego con muñeco en Three.js. El servidor guarda la palabra secreta, valida cada intento y MySQL registra los puntajes, descargables en PDF.",
-      "tecnologias": ["JavaScript", "Three.js", "Node.js", "MySQL"],
+      "tecnologias": [
+        "JavaScript",
+        "Three.js",
+        "Node.js",
+        "MySQL"
+      ],
       "repo": "https://github.com/AlexisVallejos/PDeISC/tree/main/2_JS/JS6",
-      "demo": ""
+      "demo": "",
+      "imagen": ""
     },
     {
       "titulo": "DAMAC · Acceso",
+      "tipo": "App móvil",
+      "lema": "Un acceso que se siente nativo.",
       "descripcion": "Login en React Native con logo 3D interactivo. Consulta una API Node con MySQL y pasa los datos del usuario por props.",
-      "tecnologias": ["React Native", "Expo", "Node.js", "MySQL"],
+      "tecnologias": [
+        "React Native",
+        "Expo",
+        "Node.js",
+        "MySQL"
+      ],
       "repo": "https://github.com/AlexisVallejos/PDeISC/tree/main/4_ReactNative/RN1",
-      "demo": ""
+      "demo": "",
+      "imagen": ""
     },
     {
       "titulo": "Mis Tareas",
+      "tipo": "Web app",
+      "lema": "Tus tareas, sin ruido.",
       "descripcion": "Gestor de tareas con rutas, contexto, filtros y tema claro/oscuro. Diseño inspirado en Recordatorios de iOS.",
-      "tecnologias": ["React", "React Router", "Vite"],
+      "tecnologias": [
+        "React",
+        "React Router",
+        "Vite"
+      ],
       "repo": "https://github.com/AlexisVallejos/PDeISC/tree/main/3_React/R2",
-      "demo": ""
+      "demo": "",
+      "imagen": ""
     },
     {
       "titulo": "React R1",
+      "tipo": "Sitio web",
+      "lema": "Cinco apps, una portada.",
       "descripcion": "Portada con cinco apps independientes: tarjetas, contador, lista de tareas, formulario y ta-te-ti.",
-      "tecnologias": ["React", "Vite"],
+      "tecnologias": [
+        "React",
+        "Vite"
+      ],
       "repo": "https://github.com/AlexisVallejos/PDeISC/tree/main/3_React/R1",
-      "demo": ""
+      "demo": "",
+      "imagen": ""
     },
     {
       "titulo": "alumnosDB",
+      "tipo": "Sistema",
+      "lema": "Los alumnos, en orden.",
       "descripcion": "ABM de alumnos con API en PHP y Node sobre MySQL, listo para Apache.",
-      "tecnologias": ["JavaScript", "PHP", "MySQL"],
+      "tecnologias": [
+        "JavaScript",
+        "PHP",
+        "MySQL"
+      ],
       "repo": "https://github.com/AlexisVallejos/PDeISC/tree/main/2_JS/JS5",
-      "demo": ""
+      "demo": "",
+      "imagen": ""
     },
     {
       "titulo": "Proyectos DOM",
+      "tipo": "Ejercicios",
+      "lema": "El DOM, paso a paso.",
       "descripcion": "Seis mini proyectos con Express: eventos, nodos, atributos, innerHTML y un formulario de registro.",
-      "tecnologias": ["JavaScript", "Node.js"],
+      "tecnologias": [
+        "JavaScript",
+        "Node.js"
+      ],
       "repo": "https://github.com/AlexisVallejos/PDeISC/tree/main/1_NodeJS/NJS3",
-      "demo": ""
+      "demo": "",
+      "imagen": ""
     }
-  ]
+  ],
+  "resenas": []
 }

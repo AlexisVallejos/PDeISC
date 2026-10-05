@@ -87,11 +87,11 @@ export default function Contacto() {
   }
 
   return (
-    <Seccion id="contacto" sobretitulo="Contacto" titulo="Hablemos.">
+    <Seccion id="contacto" sobretitulo="Contacto" titulo="Hablemos de tu *próximo proyecto*." lateral>
       <Aparecer className="contacto">
-        <p className="texto-destacado contacto-intro">
-          ¿Tenés un proyecto o una propuesta? Dejame un mensaje: se guarda en la base de datos y te respondo a la
-          brevedad.
+        <p className="contacto-intro">
+          ¿Tenés una idea, una propuesta o una pregunta? Dejame un mensaje: queda guardado en la base de datos y te
+          respondo a la brevedad.
         </p>
         <form className="formulario tarjeta" onSubmit={alEnviar} noValidate>
           {campo('nombre', 'Nombre', { autoComplete: 'name', maxLength: 80 })}
@@ -99,7 +99,7 @@ export default function Contacto() {
           {campo('mensaje', 'Mensaje', { as: 'textarea', rows: 5, maxLength: 2000 })}
 
           <div className="formulario-pie">
-            <button type="submit" className="boton boton--primario" disabled={enviando}>
+            <button type="submit" className="boton boton--oscuro" disabled={enviando}>
               {enviando ? <LoaderCircle size={17} className="girando" aria-hidden="true" /> : null}
               {enviando ? 'Enviando…' : 'Enviar mensaje'}
             </button>

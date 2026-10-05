@@ -1,88 +1,96 @@
 import { ArrowUpRight, Github } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import Aparecer from './Aparecer'
+import Mockup from './Mockup'
 import Seccion from './Seccion'
 
-const TODAS = 'Todos'
+const DESTACADOS = 3
 
 export default function Proyectos({ proyectos }) {
-  const [filtro, setFiltro] = useState(TODAS)
-
-  // Las tecnologías más usadas primero, para que el filtro muestre lo relevante.
-  const tecnologias = useMemo(() => {
-    const cuenta = new Map()
-    proyectos.forEach((p) => p.tecnologias.forEach((t) => cuenta.set(t, (cuenta.get(t) ?? 0) + 1)))
-    return [TODAS, ...[...cuenta].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([t]) => t)]
-  }, [proyectos])
-
-  const visibles = filtro === TODAS ? proyectos : proyectos.filter((p) => p.tecnologias.includes(filtro))
+  const [verTodos, setVerTodos] = useState(false)
+  const visibles = verTodos ? proyectos : proyectos.slice(0, DESTACADOS)
+  const hayMas = proyectos.length > DESTACADOS
 
   return (
-    <Seccion id="proyectos" sobretitulo="Proyectos" titulo="Cosas que hice.">
-      <Aparecer className="filtros" role="group" aria-label="Filtrar por tecnología">
-        {tecnologias.map((t) => (
+    <Seccion
+      id="proyectos"
+      sobretitulo="Proyectos destacados"
+      titulo="Proyectos con *impacto real*."
+      descripcion="Desarrollo web, apps móviles y bases de datos: proyectos hechos de punta a punta, del servidor a la interfaz."
+      accion={
+        hayMas && (
           <button
-            key={t}
             type="button"
-            className={filtro === t ? 'filtro es-activo' : 'filtro'}
-            aria-pressed={filtro === t}
-            onClick={() => setFiltro(t)}
+            className="boton boton--contorno"
+            aria-expanded={verTodos}
+            aria-controls="grilla-proyectos"
+            onClick={() => setVerTodos((v) => !v)}
           >
-            {t}
+            {verTodos ? 'Ver menos' : 'Ver todos los proyectos'}
+            <ArrowUpRight size={16} aria-hidden="true" className={verTodos ? 'flecha-girada' : ''} />
           </button>
-        ))}
-      </Aparecer>
-
-      <div className="grilla-proyectos" aria-live="polite">
+        )
+      }
+    >
+      <div className="grilla-proyectos" id="grilla-proyectos">
         {visibles.map((p, i) => (
-          <TarjetaProyecto key={p.titulo} proyecto={p} orden={i} />
+          <TarjetaProyecto key={p.titulo} proyecto={p} indice={i} />
         ))}
       </div>
     </Seccion>
   )
 }
 
-function TarjetaProyecto({ proyecto, orden }) {
-  // Un brillo sigue al puntero sobre la tarjeta (solo con mouse; ver CSS).
-  function alMoverPuntero(evento) {
-    const caja = evento.currentTarget.getBoundingClientRect()
-    evento.currentTarget.style.setProperty('--x', `${evento.clientX - caja.left}px`)
-    evento.currentTarget.style.setProperty('--y', `${evento.clientY - caja.top}px`)
-  }
+const TEMAS = ['oscuro', 'arena', 'niebla']
 
-  const enlacePrincipal = proyecto.demo || proyecto.repo
+function TarjetaProyecto({ proyecto, indice }) {
+  const tema = TEMAS[indice % TEMAS.length]
+  const enlace = proyecto.demo || proyecto.repo
 
   return (
-    <Aparecer as="article" orden={orden} className="tarjeta proyecto" onPointerMove={alMoverPuntero}>
-      <div className="proyecto-portada" aria-hidden="true">
-        <span>{proyecto.titulo.slice(0, 1)}</span>
-      </div>
-      <h3 className="tarjeta-titulo">
-        {enlacePrincipal ? (
-          <a href={enlacePrincipal} target="_blank" rel="noreferrer" className="proyecto-enlace-principal">
+    <Aparecer as="article" orden={indice % DESTACADOS} className="proyecto-envoltura">
+      <div className={`proyecto proyecto--${tema}`}>
+        <header className="proyecto-cabecera">
+          <span className="proyecto-nombre">
+            <span className="proyecto-logo" aria-hidden="true">
+              {proyecto.titulo.slice(0, 1)}
+            </span>
             {proyecto.titulo}
-          </a>
-        ) : (
-          proyecto.titulo
-        )}
-      </h3>
-      <p className="texto-secundario">{proyecto.descripcion}</p>
-      <ul className="etiquetas" aria-label="Tecnologías">
-        {proyecto.tecnologias.map((t) => (
-          <li key={t}>{t}</li>
-        ))}
-      </ul>
-      <div className="proyecto-acciones">
-        {proyecto.repo && (
-          <a href={proyecto.repo} target="_blank" rel="noreferrer">
-            <Github size={15} aria-hidden="true" /> Código
-          </a>
-        )}
-        {proyecto.demo && (
-          <a href={proyecto.demo} target="_blank" rel="noreferrer">
-            Ver demo <ArrowUpRight size={15} aria-hidden="true" />
-          </a>
-        )}
+          </span>
+          <span className="proyecto-tipo">{proyecto.tipo}</span>
+        </header>
+
+        <div className="proyecto-texto">
+          <h3 className="proyecto-lema">
+            {enlace ? (
+              <a href={enlace} target="_blank" rel="noreferrer" className="proyecto-enlace">
+                {proyecto.lema || proyecto.titulo}
+              </a>
+            ) : (
+              proyecto.lema || proyecto.titulo
+            )}
+          </h3>
+          <p className="proyecto-descripcion">{proyecto.descripcion}</p>
+        </div>
+
+        <div className="proyecto-pie">
+          <span className="boton-circulo" aria-hidden="true">
+            <ArrowUpRight size={16} />
+          </span>
+          {proyecto.repo && proyecto.demo && (
+            <a className="proyecto-repo" href={proyecto.repo} target="_blank" rel="noreferrer">
+              <Github size={14} aria-hidden="true" /> Código
+            </a>
+          )}
+        </div>
+
+        <div className="proyecto-visual" aria-hidden="true">
+          {proyecto.imagen ? (
+            <img src={proyecto.imagen} alt="" loading="lazy" />
+          ) : (
+            <Mockup proyecto={proyecto} tema={tema} indice={indice} />
+          )}
+        </div>
       </div>
     </Aparecer>
   )

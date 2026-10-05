@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import Aparecer from './Aparecer'
-import Subseccion from './Subseccion'
 
 export default function Habilidades({ habilidades }) {
   // Agrupo por categoría respetando el orden en que vienen de la base.
@@ -14,14 +13,15 @@ export default function Habilidades({ habilidades }) {
   }, [habilidades])
 
   return (
-    <Subseccion titulo="Habilidades">
+    <div className="habilidades">
+      <h3 className="sobretitulo">Habilidades</h3>
       <div className="grilla-habilidades">
         {grupos.map(([categoria, lista], i) => (
-          <Aparecer key={categoria} orden={i} className="tarjeta tarjeta-habilidades">
-            <h3 className="tarjeta-titulo">{categoria}</h3>
-            <ul className="lista-habilidades">
+          <Aparecer key={categoria} orden={i} className="grupo-habilidades">
+            <h4>{categoria}</h4>
+            <ul>
               {lista.map((h, j) => (
-                <li key={h.nombre} style={{ '--nivel': h.nivel / 100, '--retardo-barra': `${120 + j * 60}ms` }}>
+                <li key={h.nombre} style={{ '--nivel': h.nivel / 100, '--retardo-barra': `${150 + j * 60}ms` }}>
                   <div className="habilidad-fila">
                     <span>{h.nombre}</span>
                     <span className="habilidad-nivel">{h.nivel}%</span>
@@ -42,6 +42,6 @@ export default function Habilidades({ habilidades }) {
           </Aparecer>
         ))}
       </div>
-    </Subseccion>
+    </div>
   )
 }
