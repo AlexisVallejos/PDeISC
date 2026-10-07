@@ -15,7 +15,7 @@ body.admin-ui .atelier-nav .active { border-bottom: 2px solid var(--ed-coral); }
 body.admin-ui .atelier-theme-button { display: grid; width: 34px; height: 34px; place-items: center; color: var(--ed-muted); }
 body.admin-ui .atelier-logout { display: inline-flex; gap: 7px; align-items: center; }.atelier-logout svg { color: var(--ed-coral); }
 .editorial-layout { display: grid; grid-template-columns: minmax(320px, 37%) minmax(0, 1fr); gap: 35px; padding-top: 34px; }
-.editorial-intro { position: relative; display: flex; flex-direction: column; min-height: 760px; padding-top: 10px; background: url("/editorial-motif.png") left bottom / min(100%, 570px) auto no-repeat; }
+.editorial-intro { position: relative; display: flex; flex-direction: column; min-height: 760px; padding-top: 10px; background: none; }
 .editorial-title-block h1 { margin: 0; color: var(--ed-text); font-family: "Playfair Display", Georgia, serif; font-size: clamp(63px, 5.8vw, 106px); font-weight: 600; letter-spacing: -.065em; line-height: .99; }
 .editorial-title-block h1 em { color: var(--ed-coral); font-style: italic; }
 .editorial-intro > p { max-width: 390px; margin-top: 24px !important; color: var(--ed-muted); font-family: "Playfair Display", Georgia, serif; font-size: 22px; line-height: 1.4; }
@@ -33,8 +33,59 @@ body.admin-ui .editorial-create { display: flex; align-items: center; gap: 17px;
 .editorial-user-actions { display: flex; gap: 8px; justify-content: flex-end; }body.admin-ui .editorial-user-actions button { display: grid; width: 35px; height: 35px; place-items: center; border-radius: 50%; background: #eeecea; color: var(--ed-text); }body.admin-ui .editorial-user-actions .delete { background: var(--ed-coral); color: #fff; }
 .editorial-empty { display: grid; min-height: 160px; place-items: center; border-bottom: 1px solid var(--ed-line); color: var(--ed-muted); text-align: center; }
 .atelier-profile-layout { display: grid; grid-template-columns: minmax(260px,.8fr) minmax(0,1.5fr); gap: 28px; padding-top: 45px; }.atelier-welcome { display: flex; flex-direction: column; align-items: flex-start; gap: 17px; padding: 35px; border: 1px solid var(--ed-line); background: var(--ed-surface); }.atelier-welcome .atelier-eyebrow { color: var(--ed-coral); font-size: 12px; font-weight: 700; letter-spacing: .15em; }.atelier-welcome .atelier-avatar { display: grid; width: 90px; height: 90px; place-items: center; border-radius: 50%; background: var(--ed-coral); color: #fff; font-family: "Playfair Display", Georgia, serif; font-size: 27px; }.atelier-welcome h1 { color: var(--ed-text); font-family: "Playfair Display", Georgia, serif; font-size: 42px; }.atelier-welcome p, .atelier-welcome-detail { color: var(--ed-muted); }.atelier-welcome-detail { display: flex; align-items: center; gap: 8px; overflow-wrap: anywhere; }.atelier-welcome .atelier-role { padding: 6px 14px; border-radius: 99px; background: var(--accent-soft); color: var(--ed-coral); font-size: 12px; }.atelier-profile-form { border-radius: 0; background: var(--ed-surface); }
-.auth-main .auth-shell { grid-template-columns: 54% 46%; }.auth-main .auth-art { display: flex; align-items: flex-start; padding: 7vw; background: var(--ed-bg) url("/editorial-motif.png") left bottom / 80% auto no-repeat; }.auth-art::before,.auth-art::after { display: none; }.atelier-auth-art-copy > span { color: var(--ed-coral); font-size: 12px; letter-spacing: .18em; }.atelier-auth-art-copy h2 { color: var(--ed-text); font-family: "Playfair Display", Georgia, serif; font-size: clamp(55px, 6vw, 100px); line-height: .98; letter-spacing: -.06em; }.atelier-auth-art-copy h2 em { color: var(--ed-coral); }.atelier-auth-art-copy p { max-width: 380px; color: var(--ed-muted); font-family: "Playfair Display", Georgia, serif; font-size: 21px; }.auth-main .auth-shell .form { background: var(--ed-surface); }.auth-mark strong { color: var(--ed-text); font-family: "Playfair Display", Georgia, serif; font-size: 25px; }.auth-mark strong em { color: var(--ed-coral); font-style: normal; }.auth-shell .form > h1 { color: var(--ed-text); font-family: "Playfair Display", Georgia, serif; }.auth-shell .form > button:not(.auth-theme) { background: var(--ed-coral); color: #fff; border-radius: 4px; box-shadow: none; }.auth-switch button { color: var(--ed-coral) !important; }
+.auth-main .auth-shell { grid-template-columns: 54% 46%; }.auth-main .auth-art { display: flex; align-items: flex-start; padding: 7vw; background: var(--ed-bg); }.auth-art::before,.auth-art::after { display: none; }.atelier-auth-art-copy > span { color: var(--ed-coral); font-size: 12px; letter-spacing: .18em; }.atelier-auth-art-copy h2 { color: var(--ed-text); font-family: "Playfair Display", Georgia, serif; font-size: clamp(55px, 6vw, 100px); line-height: .98; letter-spacing: -.06em; }.atelier-auth-art-copy h2 em { color: var(--ed-coral); }.atelier-auth-art-copy p { max-width: 380px; color: var(--ed-muted); font-family: "Playfair Display", Georgia, serif; font-size: 21px; }.auth-main .auth-shell .form { background: var(--ed-surface); }.auth-mark strong { color: var(--ed-text); font-family: "Playfair Display", Georgia, serif; font-size: 25px; }.auth-mark strong em { color: var(--ed-coral); font-style: normal; }.auth-shell .form > h1 { color: var(--ed-text); font-family: "Playfair Display", Georgia, serif; }.auth-shell .form > button:not(.auth-theme) { background: var(--ed-coral); color: #fff; border-radius: 4px; box-shadow: none; }.auth-switch button { color: var(--ed-coral) !important; }
 :root[data-theme="dark"] .auth-main .auth-shell, :root[data-theme="dark"] .auth-main .auth-shell .form, :root[data-theme="dark"] .auth-main .auth-art { background-color: var(--ed-surface); }.auth-main .auth-art { background-color: var(--ed-bg) !important; }
 @media (max-width: 1260px) { .editorial-layout { grid-template-columns: 310px minmax(0,1fr); gap: 20px; }.editorial-title-block h1 { font-size: 69px; }.editorial-columns,.editorial-user-row { grid-template-columns: minmax(110px,1fr) 105px minmax(140px,1.2fr) 65px 75px; gap: 8px; }.editorial-user-row h2 { font-size: 25px; }.atelier-brand strong { font-size: 23px; }.atelier-brand strong span { font-size: 19px; } }
 @media (max-width: 900px) { .atelier-shell { padding: 12px 10px 40px; }.atelier-header { flex-wrap: wrap; }.atelier-nav { margin-left: auto; gap: 24px; }.atelier-header-actions { margin-left: 0; gap: 15px; }.editorial-layout { grid-template-columns: 1fr; }.editorial-intro { min-height: 300px; background-size: 280px auto; background-position: right bottom; }.editorial-title-block h1 { font-size: 67px; }.editorial-intro > p { max-width: 500px; }.editorial-create { margin-top: 20px !important; margin-bottom: 18px !important; }.auth-main .auth-shell { grid-template-columns: 1fr; }.auth-main .auth-art { display: none; } }
 @media (max-width: 620px) { body.admin-ui main { padding: 0 .6rem; }.atelier-brand { width: 100%; }.atelier-brand strong { font-size: 22px; }.atelier-nav { margin-left: 0; gap: 22px; }.atelier-header-actions { margin-left: auto; }.editorial-intro { min-height: 290px; }.editorial-title-block h1 { font-size: 55px; }.editorial-columns { display: none; }.editorial-user-row { grid-template-columns: 1fr auto; gap: 9px; min-height: 115px; padding: 16px 0; }.editorial-user-row h2 { font-size: 30px; }.editorial-user-row p { grid-column: 1; grid-row: 2; }.editorial-user-row .editorial-role { grid-column: 1; grid-row: 3; }.editorial-user-row time { grid-column: 1; grid-row: 4; }.editorial-user-actions { grid-column: 2; grid-row: 1 / 5; }.atelier-profile-layout { grid-template-columns: 1fr; } }
+
+/* ---------- arte vectorial (reemplaza al PNG): ver components/common/Artwork.tsx ---------- */
+:root { --ed-coral-deep: #e23f37; --ed-coral-soft: #f8b6ae; --ed-grain-opacity: 0.05; }
+:root[data-theme="dark"] { --ed-coral-deep: #e8645a; --ed-coral-soft: #6e3a34; --ed-grain-opacity: 0.08; }
+
+/* papel: grano muy sutil detrás de todo (no se anima, no tapa texto) */
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: var(--ed-grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  content: "";
+}
+:root[data-theme="dark"] body::before { filter: invert(1); }
+body.admin-ui, body:has(.auth-main) { background: var(--ed-bg); }
+@media (prefers-reduced-transparency: reduce) { body::before { display: none; } }
+
+/* login: el texto arriba, la composición abajo y apoyada en el borde; nunca se superponen */
+:root .auth-main .auth-art,
+:root[data-theme] .auth-main .auth-art {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 9vh 6vw 0;
+  background: transparent !important;
+}
+.auth-art .atelier-auth-art-copy { flex-shrink: 0; }
+.auth-art .auth-editorial { display: block; flex: 1 1 auto; min-height: 0; max-height: 52dvh; width: 100%; margin-top: 4vh; }
+:root[data-theme="dark"] .auth-main .auth-shell .form { border-left: 1px solid var(--ed-line); }
+:root:not([data-theme="dark"]) .auth-main .auth-shell .form { border-left: 1px solid var(--ed-line); }
+
+/* directorio: la composición ocupa el espacio libre entre el texto y "Nuevo usuario" */
+.editorial-intro { background: none; }
+.editorial-intro .intro-editorial { display: block; flex: 1 1 auto; width: 100%; min-height: 0; max-height: 380px; margin-top: 28px; }
+body.admin-ui .editorial-create { margin-top: 26px; }
+
+@media (max-width: 900px) {
+  .editorial-intro { min-height: 0; }
+  .editorial-intro .intro-editorial { position: absolute; right: 0; bottom: 70px; width: 210px; height: auto; margin: 0; opacity: 0.9; }
+  .editorial-intro > p { max-width: calc(100% - 220px); }
+}
+@media (max-width: 620px) {
+  .editorial-intro .intro-editorial { display: none; }
+  .editorial-intro > p { max-width: none; }
+}
+
+/* tema oscuro: el botón y los enlaces del login venían en lima (de otra plantilla); van en coral */
+:root[data-theme="dark"] .auth-shell .form > button:not(.auth-theme) { background: var(--ed-coral); color: #211917; }
+:root[data-theme="dark"] .auth-switch button, :root[data-theme="dark"] .auth-shell .form a { color: var(--ed-coral) !important; }

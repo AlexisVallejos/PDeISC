@@ -1,8 +1,8 @@
+import { NexoMark } from "@/components/common/Artwork";
 export function AuthBrand() {
   return (
     <div className="auth-mark">
-      <img className="brand-isotype" src="/control-logo.png" alt="" />
-      <strong>NEXO</strong>
+      <NexoMark className="auth-nexo" />
     </div>
   );
 }

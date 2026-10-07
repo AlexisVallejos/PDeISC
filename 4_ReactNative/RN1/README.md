@@ -11,12 +11,14 @@ damac-acceso/
 └── app/                  App Expo (TypeScript)
     ├── App.tsx           Navegación (stack Login → Bienvenida)
     └── src/
-        ├── screens/LoginScreen.tsx       Formulario de ingreso (hoja sobre panel de marca)
+        ├── screens/LoginScreen.tsx       Formulario de ingreso (hoja junto al video de marca)
         ├── screens/BienvenidaScreen.tsx  Recibe los datos y los pasa por props a <Bienvenida />
         ├── components/Form.tsx           Formulario "inset grouped" estilo iOS
-        ├── components/Logo3D.tsx         Logo 3D animado e interactivo
+        ├── components/VideoMarca.tsx     Video de marca del login (mudo, en bucle)
+        ├── components/Logo3D.tsx         Logo 3D animado e interactivo (pantalla de Bienvenida)
         ├── components/PressableScale.tsx Botón con respuesta al press-in + háptica
         ├── theme.ts                      Colores semánticos, escala tipográfica, springs
+        └── assets/video/                 damac-login.mp4 + póster (panel de video del login)
         ├── services/api.ts               Llamada a la API
         └── types/                        Tipos de usuario y navegación
 ```
@@ -78,14 +80,27 @@ Las contraseñas se guardan como hash SHA-256 y la consulta es parametrizada (si
 - **Formulario agrupado** estilo iOS: etiqueta arriba, valor abajo, separador fino. Los valores largos
   envuelven en vez de truncarse. Inputs de 17 pt (nunca disparan el zoom de Safari).
 - **Movimiento**: springs con `dampingRatio: 1` por defecto; `0.8` solo cuando hubo momentum (soltar el
-  logo). Entradas con ease-out fuerte `cubic-bezier(0.23, 1, 0.32, 1)` y menos de 450 ms. El
-  formulario aparece a los 120 ms: no espera al logo. Transición entre pantallas: la nativa de la
+  logo 3D de Bienvenida). Entradas con ease-out fuerte `cubic-bezier(0.23, 1, 0.32, 1)` y menos de
+  450 ms. El formulario aparece a los 120 ms. Transición entre pantallas: la nativa de la
   plataforma; con "reducir movimiento", fundido.
 - **Respuesta al presionar** en el press-in (escala 0.97 + háptica de selección), no al soltar.
 - **Web móvil** (`app/public/index.html`): `viewport-fit=cover`, `100dvh`, sin flash gris al tocar,
   `overscroll-behavior: none`, `theme-color` igual al panel de marca. Nunca `user-scalable=no`.
 
-## Logo 3D
+## Video del login
+
+- El login muestra `app/assets/video/damac-login.mp4` (960×1080, 36 s, **sin audio**, en bucle) a la izquierda
+  del formulario; en pantallas angostas va arriba, detrás de la hoja. Es el panel `DamacArLoginPanel` del proyecto
+  Remotion `damac-login-video` (Accesorios Damac SRL). Ya trae el logo y la bajada, por eso no hay logo aparte.
+- Reproduce con `expo-video` (iOS, Android y web): mudo, `mixWithOthers` (no corta la música del usuario),
+  `contentFit: cover` (el logo está en el centro, así que el recorte lo respeta).
+- Se pausa cuando el login pierde el foco (por ejemplo, al entrar a Bienvenida) y se reanuda al volver.
+- El póster (`damac-login-poster.jpg`) queda debajo: se ve al instante y mientras el video carga. Con "reducir
+  movimiento" se muestra solo el póster.
+- Para cambiar el video: reemplazar los dos archivos de `app/assets/video/` por una salida nueva de Remotion
+  (`npm run render:ar` y `npm run poster:ar`).
+
+## Logo 3D (pantalla de Bienvenida)
 
 - Extrusión de 14 capas cuyo desplazamiento depende de la rotación: la profundidad gira con la letra.
 - Entrada: la "D" llega girando en 3D; "AMAC" aparece letra por letra; un reflejo recorre el logo.

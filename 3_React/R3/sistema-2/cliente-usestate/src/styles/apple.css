@@ -1,0 +1,356 @@
+/* Capa "Apple": movimiento, materiales, tipografía y ajustes para celular.
+   Se importa al final de main.tsx y es igual en los seis clientes de R3;
+   cada sistema aporta sus colores con los tokens de siempre (--canvas, --surface, --line, --accent...).
+   Reglas que sigue:
+   - feedback al presionar (:active), no al soltar; hover solo con mouse
+   - resortes sin rebote para la interfaz (damping 1.0); nada aparece desde scale(0)
+   - entra y sale por el mismo camino; la salida es más rápida que la entrada
+   - barras translúcidas (backdrop-filter) con el contenido pasando por debajo
+   - movimiento reducido = fundidos cortos, no "cero feedback" */
+
+/* ---------- curvas ---------- */
+:root {
+  /* resorte críticamente amortiguado (damping 1.0, response ~0.35s) */
+  --spring: linear(0, 0.057, 0.179, 0.32, 0.454, 0.572, 0.67, 0.749, 0.811, 0.86, 0.896, 0.924, 0.945, 0.96, 0.971, 0.98, 0.986, 0.99, 0.993, 0.995, 0.997, 0.998, 0.999, 1);
+  /* resorte con rebote leve (damping 0.8): solo para lo que "se lanza" */
+  --spring-bouncy: linear(0, 0.032, 0.111, 0.216, 0.33, 0.445, 0.552, 0.648, 0.731, 0.801, 0.858, 0.904, 0.939, 0.965, 0.984, 0.998, 1.006, 1.012, 1.015, 1.014, 1.01, 1.006, 1.003, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --press: 120ms;
+  --enter: 380ms;
+  --exit: 170ms;
+  --material-blur: blur(20px) saturate(180%);
+}
+
+/* ---------- plataforma (mobile-native) ---------- */
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+a,
+[role="button"],
+[role="tab"],
+label:has(input[type="checkbox"]) {
+  touch-action: manipulation;
+}
+
+button,
+[role="button"],
+.atelier-nav,
+.auth-switch button {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+[data-slot="dialog-content"],
+[data-slot="alert-dialog-content"],
+[data-slot="select-content"] {
+  overscroll-behavior: contain;
+}
+
+/* ---------- tipografía: tracking según tamaño ---------- */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* los números grandes no "bailan" cuando cambian */
+strong,
+.control-metrics strong,
+.atelier-stat strong {
+  font-variant-numeric: tabular-nums;
+}
+
+/* texto chico: un poco más de aire */
+small,
+.error,
+.live-rules,
+.control-joined,
+.atelier-joined {
+  letter-spacing: 0.005em;
+}
+
+/* ---------- presión: respuesta instantánea ---------- */
+button,
+body.admin-ui button,
+body.admin-ui [role="button"],
+[data-slot="button"] {
+  transition:
+    transform var(--press) var(--ease-out),
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
+}
+
+button:not(:disabled):active,
+body.admin-ui button:not(:disabled):active,
+body.admin-ui [role="button"]:active {
+  transform: scale(0.97);
+  transition-duration: 60ms;
+}
+
+/* los botones de ícono chiquitos se notan más con un poco más de escala */
+body.admin-ui :is(.atelier-theme-button, .atelier-logout, .control-user-actions button, .editorial-user-actions button, .atelier-user-actions button):not(:disabled):active {
+  transform: scale(0.92);
+}
+
+/* el ojo de la contraseña ya usa translateY(-50%): se suma la escala sin perder el centrado */
+.auth-shell .form .password-wrap .password-toggle:active {
+  transform: translateY(-50%) scale(0.9);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.admin-ui :is(.atelier-theme-button, .atelier-logout):hover {
+    background: var(--surface-soft);
+    color: var(--ink);
+  }
+
+  body.admin-ui :is(.control-user-actions, .editorial-user-actions, .atelier-user-actions) button:hover {
+    background: var(--surface-soft);
+  }
+
+  :is(.control-user-row, .editorial-user-row, .atelier-user-card) {
+    transition:
+      border-color 200ms ease,
+      box-shadow 240ms var(--ease-out),
+      transform 240ms var(--ease-out);
+  }
+
+  :is(.control-user-row, .editorial-user-row, .atelier-user-card):hover {
+    border-color: color-mix(in srgb, var(--accent) 38%, var(--line));
+    box-shadow: 0 10px 28px rgb(0 0 0 / 0.07);
+  }
+
+  .atelier-user-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+/* ---------- foco visible y suave ---------- */
+:is(button, a, input, select, textarea, [role="button"]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  transition: outline-offset 160ms var(--ease-out);
+}
+
+/* ---------- materiales: barra superior translúcida ---------- */
+.atelier-header {
+  position: sticky;
+  top: var(--header-top, 0px);
+  z-index: 30;
+  isolation: isolate;
+  background: transparent;
+}
+
+/* el material va en un pseudo-elemento: si el backdrop-filter estuviera en el header,
+   los hijos con position: fixed (la barra de pestañas en celular) quedarían atrapados adentro */
+.atelier-header::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--header-tint, var(--canvas)) 74%, transparent);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  /* borde superior brillante = la luz que toca el material */
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06);
+  content: "";
+  pointer-events: none;
+}
+
+/* scrim de los diálogos: atenúa para enfocar */
+.apple-scrim {
+  background: rgb(8 12 20 / 0.32);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  backdrop-filter: blur(6px) saturate(140%);
+}
+
+/* hoja del diálogo: superficie más "gruesa" que las tarjetas */
+.apple-sheet {
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.05) inset,
+    0 24px 60px rgb(0 0 0 / 0.22),
+    0 4px 14px rgb(0 0 0 / 0.08);
+}
+
+.apple-popover {
+  box-shadow: 0 14px 34px rgb(0 0 0 / 0.16), 0 2px 6px rgb(0 0 0 / 0.06);
+}
+
+/* ---------- diálogos y menús: se materializan ---------- */
+@keyframes apple-scrim-in { from { opacity: 0; } }
+@keyframes apple-scrim-out { to { opacity: 0; } }
+
+/* nada nace de scale(0): arranca casi entero, desenfocado, y se asienta con resorte */
+@keyframes apple-sheet-in {
+  from { opacity: 0; transform: scale(0.96); filter: blur(6px); }
+}
+@keyframes apple-sheet-out {
+  to { opacity: 0; transform: scale(0.97); filter: blur(4px); }
+}
+
+/* menús: crecen desde el disparador (transform-origin lo pone Radix) */
+@keyframes apple-pop-in {
+  from { opacity: 0; transform: scale(0.95); }
+}
+@keyframes apple-pop-out {
+  to { opacity: 0; transform: scale(0.97); }
+}
+
+.apple-scrim[data-state="open"] { animation: apple-scrim-in 240ms ease-out; }
+.apple-scrim[data-state="closed"] { animation: apple-scrim-out var(--exit) ease-out forwards; }
+.apple-sheet[data-state="open"] { animation: apple-sheet-in var(--enter) var(--spring); }
+.apple-sheet[data-state="closed"] { animation: apple-sheet-out var(--exit) var(--ease-exit) forwards; }
+.apple-popover[data-state="open"] { animation: apple-pop-in 220ms var(--spring); }
+.apple-popover[data-state="closed"] { animation: apple-pop-out 120ms var(--ease-exit) forwards; }
+
+/* ---------- cambio de pantalla: entra sin saltos ---------- */
+@keyframes apple-rise {
+  from { opacity: 0; transform: translateY(10px); filter: blur(3px); }
+}
+
+.control-layout,
+.editorial-layout,
+.atelier-directory,
+.atelier-profile-layout {
+  animation: apple-rise 460ms var(--spring) backwards;
+}
+
+/* el login entra por partes (es una vez por sesión: puede tener un poco de encanto) */
+.auth-shell .form > * {
+  animation: apple-rise 520ms var(--spring) backwards;
+}
+.auth-shell .form > :nth-child(2) { animation-delay: 30ms; }
+.auth-shell .form > :nth-child(3) { animation-delay: 60ms; }
+.auth-shell .form > :nth-child(4) { animation-delay: 90ms; }
+.auth-shell .form > :nth-child(5) { animation-delay: 120ms; }
+.auth-shell .form > :nth-child(n + 6) { animation-delay: 150ms; }
+
+.auth-art > * {
+  animation: apple-art-in 900ms var(--spring) backwards;
+}
+@keyframes apple-art-in {
+  from { opacity: 0; transform: scale(0.985); }
+}
+
+/* listas de usuarios: cascada corta, solo los primeros (el resto aparece junto) */
+:is(.control-user-list, .editorial-directory, .atelier-user-grid) > * {
+  animation: apple-rise 420ms var(--spring) backwards;
+}
+:is(.control-user-list, .editorial-directory, .atelier-user-grid) > :nth-child(2) { animation-delay: 35ms; }
+:is(.control-user-list, .editorial-directory, .atelier-user-grid) > :nth-child(3) { animation-delay: 70ms; }
+:is(.control-user-list, .editorial-directory, .atelier-user-grid) > :nth-child(4) { animation-delay: 105ms; }
+:is(.control-user-list, .editorial-directory, .atelier-user-grid) > :nth-child(5) { animation-delay: 140ms; }
+:is(.control-user-list, .editorial-directory, .atelier-user-grid) > :nth-child(n + 6) { animation-delay: 170ms; }
+
+/* avisos (guardado, error): bajan desde donde se leen */
+[data-slot="alert"],
+.auth-error {
+  animation: apple-rise 320ms var(--spring) backwards;
+}
+
+/* checklist de contraseña: el ítem que se cumple da un pequeño "clic" visual */
+.live-rules li {
+  transition: color 200ms ease;
+}
+
+/* ---------- botón flotante "volver arriba" ---------- */
+.apple-float {
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px)) !important;
+  right: calc(1.5rem + env(safe-area-inset-right, 0px)) !important;
+  animation: apple-float-in 360ms var(--spring-bouncy) backwards;
+}
+@keyframes apple-float-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.9); }
+}
+
+/* ---------- cambio de tema: fundido, sin saltos de brillo ---------- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: ease;
+}
+
+/* ---------- celular ---------- */
+@media (max-width: 720px) {
+  .auth-main .auth-shell .form {
+    padding-top: max(1rem, env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* ---------- accesibilidad ---------- */
+
+/* movimiento reducido: sin desplazamientos ni escalas, quedan fundidos cortos */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 160ms !important;
+    animation-duration: 160ms !important;
+    animation-delay: 0ms !important;
+  }
+
+  @keyframes apple-rise { from { opacity: 0; } }
+  @keyframes apple-sheet-in { from { opacity: 0; } }
+  @keyframes apple-sheet-out { to { opacity: 0; } }
+  @keyframes apple-pop-in { from { opacity: 0; } }
+  @keyframes apple-pop-out { to { opacity: 0; } }
+  @keyframes apple-art-in { from { opacity: 0; } }
+  @keyframes apple-float-in { from { opacity: 0; } }
+
+  button:not(:disabled):active,
+  body.admin-ui button:not(:disabled):active,
+  body.admin-ui [role="button"]:active,
+  .atelier-user-card:hover {
+    transform: none !important;
+  }
+
+  .auth-shell .form .password-wrap .password-toggle:active {
+    transform: translateY(-50%) !important;
+  }
+}
+
+/* menos transparencia: materiales sólidos */
+@media (prefers-reduced-transparency: reduce) {
+  .atelier-header::before {
+    background: var(--header-tint, var(--canvas));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .apple-scrim {
+    background: rgb(8 12 20 / 0.6);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* más contraste: bordes definidos */
+@media (prefers-contrast: more) {
+  .atelier-header { border-bottom: 1px solid var(--ink); }
+  .atelier-header::before {
+    background: var(--header-tint, var(--canvas));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  :is(.control-user-row, .editorial-user-row, .atelier-user-card, .apple-sheet, .apple-popover) {
+    border: 1px solid var(--ink);
+  }
+}

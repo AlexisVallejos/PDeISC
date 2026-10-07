@@ -36,7 +36,7 @@ body.admin-ui .atelier-nav .active { background: #142b27; color: var(--control-l
 body.admin-ui .atelier-theme-button, body.admin-ui .atelier-logout { display: grid; width: 39px; height: 39px; place-items: center; border: 1px solid var(--control-stroke); border-radius: 11px; color: var(--control-muted); }
 .atelier-header-avatar { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 50%; background: var(--control-lime); color: var(--control-lime-ink); font-size: 12px; font-weight: 800; }
 .control-layout { display: grid; grid-template-columns: minmax(310px, 28%) minmax(0, 1fr); gap: 38px; padding-top: 35px; }
-.control-hero { position: relative; min-height: 650px; padding: 15px 0 0 5px; background: url("/control-orbit.png") left bottom / min(100%, 510px) auto no-repeat; }
+.control-hero { position: relative; min-height: 650px; padding: 15px 0 0 5px; background: none; }
 .control-eyebrow { display: inline-block; margin-bottom: 28px; padding: 5px 11px; border: 1px solid var(--control-stroke); border-radius: 8px; color: var(--control-muted); font-size: 11px; letter-spacing: .14em; }
 .control-title-block h1 { margin: 0; color: var(--control-text); font-size: clamp(55px, 5.4vw, 91px); font-weight: 800; letter-spacing: -.07em; line-height: .98; }
 .control-title-block h1 em { color: var(--control-lime); font-style: normal; }
@@ -74,10 +74,360 @@ body.admin-ui .control-user-actions button.delete { color: #ff788a; }
 .atelier-welcome .atelier-role { padding: 6px 12px; border-radius: 99px; background: var(--accent-soft); color: var(--control-lime); font-size: 12px; }
 .atelier-profile-form { border-radius: 18px; background: var(--control-surface); }
 
-.auth-main .auth-shell { grid-template-columns: 53% 47%; }.auth-main .auth-art { display: flex; align-items: center; padding: 7vw; background: var(--control-bg) url("/control-orbit.png") left bottom / 80% auto no-repeat; }
+.auth-main .auth-shell { grid-template-columns: 53% 47%; }.auth-main .auth-art { display: flex; align-items: center; padding: 7vw; background: var(--control-bg); }
 .auth-art::before, .auth-art::after { display: none; }.atelier-auth-art-copy { position: relative; z-index: 1; align-self: flex-start; margin-top: 9vh; }.atelier-auth-art-copy > span { color: var(--control-lime); font-size: 12px; letter-spacing: .2em; }.atelier-auth-art-copy h2 { color: var(--control-text); font-size: clamp(60px, 7vw, 108px); line-height: .94; letter-spacing: -.07em; }.atelier-auth-art-copy p { max-width: 320px; color: var(--control-muted); font-size: 20px; }
 .auth-main .auth-shell .form { background: var(--surface); }.auth-mark .brand-isotype { width: 100px; height: 52px; object-fit: contain; }.auth-mark strong { font-size: 24px; }.auth-shell .form > button:not(.auth-theme) { background: var(--control-lime); color: var(--control-lime-ink); border-radius: 12px; box-shadow: none; }.auth-switch button { color: var(--control-lime) !important; }
 :root[data-theme="dark"] .auth-main .auth-shell, :root[data-theme="dark"] .auth-main .auth-shell .form, :root[data-theme="dark"] .auth-main .auth-art { background-color: var(--surface); }.auth-main .auth-art { background-color: var(--control-bg) !important; }
 @media (max-width: 1200px) { .control-layout { grid-template-columns: 285px minmax(0, 1fr); gap: 20px; }.control-title-block h1 { font-size: 60px; }.control-user-row { grid-template-columns: 38px minmax(120px,1fr) minmax(150px,1.3fr) 100px 70px; }.control-joined { display: none; }.control-metrics > div { padding: 4px 8px; }.atelier-brand span { display: none; } }
 @media (max-width: 900px) { .atelier-shell { padding: 12px 4px 40px; }.atelier-header { flex-wrap: wrap; }.atelier-nav { order: 3; width: 100%; justify-content: center; }.control-layout { grid-template-columns: 1fr; }.control-hero { min-height: 260px; background-size: 270px auto; background-position: right bottom; }.control-hero > p { max-width: 350px; }.control-metrics { margin-top: 0; }.auth-main .auth-shell { grid-template-columns: 1fr; }.auth-main .auth-art { display: none; } }
 @media (max-width: 620px) { body.admin-ui main { padding: 0 .6rem; }.atelier-brand img { width: 75px; }.atelier-header-actions { margin-left: auto; }.atelier-header-avatar { display: none; } body.admin-ui .atelier-nav :is(button,span) { min-width: 0; flex: 1; padding: 10px 7px; }.control-hero { min-height: 220px; background-size: 180px auto; }.control-title-block h1 { font-size: 54px; }.control-metrics { grid-template-columns: repeat(2,1fr); gap: 12px; }.control-metrics > div { border: 1px solid var(--control-stroke); border-radius: 12px; padding: 11px; }.control-toolbar { flex-direction: column; align-items: stretch; }.control-search { flex: auto; }.control-user-row { grid-template-columns: 38px minmax(0,1fr) auto; gap: 8px; }.control-user-row p { grid-column: 2 / -1; grid-row: 2; }.control-role { grid-column: 2; grid-row: 3; }.control-user-actions { grid-column: 3; grid-row: 1 / 4; }.control-joined { display: none; }.atelier-profile-layout { grid-template-columns: 1fr; } }
+
+/* ---------- arte vectorial (reemplaza los PNG): ver components/common/Artwork.tsx ---------- */
+:root {
+  --orbit-sphere-hi: #f4f8f2; --orbit-sphere: #e3eae6; --orbit-sphere-lo: #c9d5d1;
+  --orbit-dot: rgb(50 91 57 / 0.32); --orbit-line: rgb(16 33 59 / 0.14); --orbit-line-strong: rgb(50 91 57 / 0.55); --orbit-core: #ffffff;
+  --control-glow: rgb(117 185 85 / 0.16); --control-grid: rgb(16 33 59 / 0.09);
+}
+:root[data-theme="dark"] {
+  --orbit-sphere-hi: #16272a; --orbit-sphere: #0b1620; --orbit-sphere-lo: #050a11;
+  --orbit-dot: rgb(199 255 88 / 0.5); --orbit-line: rgb(155 170 194 / 0.2); --orbit-line-strong: rgb(199 255 88 / 0.7); --orbit-core: #f1ffd0;
+  --control-glow: rgb(199 255 88 / 0.11); --control-grid: rgb(155 170 194 / 0.1);
+}
+
+/* logo: el SVG toma el color del texto; la X va en el acento */
+.nexo-mark { display: block; width: auto; overflow: visible; color: var(--control-text); }
+.nexo-x { fill: var(--control-lime); }
+.auth-mark .auth-nexo { height: 30px; }
+.atelier-brand .header-nexo { height: 24px; flex-shrink: 0; }
+
+/* fondo del panel: un brillo suave arriba, sin imágenes */
+body.admin-ui {
+  background:
+    radial-gradient(70rem 32rem at 88% -12%, var(--control-glow), transparent 70%),
+    var(--control-bg);
+  background-attachment: fixed;
+}
+
+/* columna del login: cielo nocturno con grilla de puntos que se desvanece */
+:root .auth-main .auth-art,
+:root[data-theme] .auth-main .auth-art {
+  position: relative;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 9vh 7vw;
+  background:
+    radial-gradient(42rem 30rem at 12% 108%, var(--control-glow), transparent 70%),
+    radial-gradient(30rem 22rem at 100% 0%, color-mix(in srgb, var(--control-glow) 60%, transparent), transparent 70%),
+    var(--control-bg) !important;
+}
+:root .auth-main .auth-art::before {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: radial-gradient(var(--control-grid) 1.2px, transparent 1.6px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 30% 35%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(ellipse 70% 60% at 30% 35%, #000 20%, transparent 75%);
+  content: "";
+}
+.atelier-auth-art-copy { margin-top: 0; }
+.auth-art .auth-orbit {
+  position: absolute;
+  left: 0;
+  bottom: -7%;
+  z-index: 0;
+  width: min(60%, 480px);
+  height: auto;
+  pointer-events: none;
+}
+
+
+/* columna del directorio: el orbe se apoya en el borde izquierdo y en el fondo de la pantalla */
+.control-hero { display: flex; flex-direction: column; background: none; }
+.control-hero .control-orbit {
+  width: calc(100% + 48px);
+  max-width: 560px;
+  height: auto;
+  margin: auto 0 -40px -48px;
+  pointer-events: none;
+}
+.control-hero > .control-quote {
+  position: absolute;
+  left: 4px;
+  bottom: 0;
+  z-index: 1;
+  max-width: none;
+  margin: 0 !important;
+  padding: 2px 0 2px 26px;
+  border-left: 2px solid var(--control-lime);
+  color: var(--control-text);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.75;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .control-hero { min-height: 0; }
+  .control-hero .control-orbit { position: absolute; right: -24px; bottom: -30px; width: 250px; margin: 0; }
+  .control-hero > .control-quote { display: none; }
+}
+@media (max-width: 620px) {
+  .control-hero { min-height: 0; }
+  .control-hero .control-orbit { display: none; }
+  .atelier-brand .header-nexo { height: 20px; }
+}
+
+/* tema claro: la pestaña activa y el rol de administrador usaban colores pensados solo para el oscuro */
+:root:not([data-theme="dark"]) body.admin-ui .atelier-nav .active { background: var(--accent-soft); color: var(--control-lime); }
+:root:not([data-theme="dark"]) .control-role { background: #eef2f7; color: #47566c; }
+:root:not([data-theme="dark"]) .control-role.admin { background: var(--accent-soft); color: var(--control-lime); }
+
+/* login: el subtítulo pegado al título, así el orbe no lo cruza */
+.auth-art .atelier-auth-art-copy h2 { margin-bottom: 0; }
+.auth-art .atelier-auth-art-copy p { margin-top: 18px !important; }
+
+/* ======================================================================
+   Celular: encabezado compacto, barra de pestañas abajo (como una app),
+   orbe detrás del título y login con franja ilustrada arriba.
+   ====================================================================== */
+body.admin-ui .atelier-nav :is(button, span) { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+
+@media (max-width: 620px) {
+  body.admin-ui main { padding: 0 !important; }
+  .atelier-shell { padding: 0 16px calc(104px + env(safe-area-inset-bottom, 0px)); }
+
+  /* encabezado: solo logo y acciones, pegado arriba y respetando el notch */
+  .atelier-header {
+    flex-wrap: nowrap;
+    gap: 12px;
+    min-height: 0;
+    margin: 0 -16px;
+    padding: calc(env(safe-area-inset-top, 0px) + 10px) 16px 10px;
+    border-bottom: 1px solid color-mix(in srgb, var(--control-stroke) 70%, transparent);
+  }
+  .atelier-brand > div { display: none; }
+  .atelier-brand .header-nexo { height: 21px; }
+  .atelier-header-actions { gap: 8px; margin-left: auto; }
+  body.admin-ui :is(.atelier-theme-button, .atelier-logout) { width: 38px; height: 38px; border-radius: 12px; }
+
+  /* navegación: barra de pestañas flotante y translúcida */
+  .atelier-nav,
+  .atelier-nav:is(*) {
+    position: fixed;
+    right: 12px;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    left: 12px;
+    z-index: 40;
+    order: 0;
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    width: auto;
+    margin: 0;
+    padding: 6px;
+    border: 1px solid color-mix(in srgb, var(--control-stroke) 80%, transparent);
+    border-radius: 24px;
+    background: color-mix(in srgb, var(--control-surface) 78%, transparent);
+    -webkit-backdrop-filter: var(--material-blur);
+    backdrop-filter: var(--material-blur);
+    box-shadow: 0 14px 40px rgb(0 0 0 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.05);
+  }
+  body.admin-ui .atelier-nav :is(button, span) {
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    min-height: 54px;
+    padding: 6px 4px;
+    border-radius: 18px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  /* un usuario común solo tiene "Mi perfil": no hace falta barra */
+  .atelier-nav:has(> span:only-child) { display: none; }
+
+  /* el botón "volver arriba" queda por encima de la barra */
+  body.admin-ui .apple-float { bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important; right: 16px !important; }
+
+  /* portada del directorio: el orbe asoma por la derecha detrás del título */
+  .control-layout { gap: 18px; padding-top: 0; }
+  .control-hero {
+    position: relative;
+    min-height: 0;
+    margin: 0 -16px;
+    padding: 26px 16px 6px;
+    overflow: hidden;
+  }
+  .control-hero > * { position: relative; z-index: 1; }
+  .control-hero .control-orbit,
+  .control-hero > .control-orbit {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: -84px;
+    bottom: 0;
+    z-index: 0;
+    width: auto;
+    height: 100%;
+    margin: 0;
+    opacity: 0.6;
+    transform: scaleX(-1);
+  }
+  .control-eyebrow { margin-bottom: 16px; font-size: 10px; }
+  .control-title-block h1 { font-size: clamp(42px, 12.5vw, 52px); letter-spacing: -0.06em; }
+  .control-hero > p { max-width: 240px; margin-top: 12px !important; font-size: 16px; }
+
+  /* métricas: tarjetas de 2 × 2 más compactas */
+  .control-metrics { gap: 10px; margin: 4px 0 16px; }
+  .control-metrics > div { grid-template-columns: 28px 1fr; padding: 12px; border-radius: 16px; background: color-mix(in srgb, var(--control-surface) 60%, transparent); }
+  .control-metrics svg { width: 22px; height: 22px; }
+  .control-metrics strong { font-size: 22px; }
+  .control-metrics span { font-size: 11.5px; line-height: 1.3; }
+
+  .control-toolbar { gap: 10px; }
+  .control-search { height: 50px; border-radius: 14px; }
+  body.admin-ui .control-create { min-height: 50px; border-radius: 14px; justify-content: center; }
+
+  .control-user-row { padding: 12px; border-radius: 16px; }
+
+  /* perfil */
+  .atelier-profile-layout { gap: 14px; padding-top: 18px; }
+  .atelier-welcome { gap: 12px; padding: 22px; border-radius: 20px; }
+  .atelier-welcome .atelier-avatar { width: 64px; height: 64px; font-size: 22px; }
+  .atelier-welcome h1 { font-size: 30px; line-height: 1.1; }
+  .atelier-profile-form [data-slot="card-footer"] { display: flex; }
+  .atelier-profile-form [data-slot="card-footer"] > * { flex: 1 1 0; min-width: 0; }
+}
+
+/* ---------- login en celular y tablet: franja con el orbe + formulario con scroll ---------- */
+@media (max-width: 900px) {
+  html:has(.auth-main),
+  body:has(.auth-main) { height: auto; overflow: auto; }
+  :root .auth-main { height: auto !important; min-height: 100dvh; overflow: visible; }
+  :root .auth-main .auth-shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    height: auto;
+    min-height: 100dvh !important;
+    background: var(--control-bg);
+  }
+  :root .auth-main .auth-art,
+  :root[data-theme] .auth-main .auth-art {
+    display: block !important;
+    height: clamp(170px, 28dvh, 260px);
+    min-height: 0;
+    padding: 0;
+  }
+  .auth-art .atelier-auth-art-copy { display: none; }
+  .auth-art .auth-orbit { left: -10px; bottom: auto; top: 18px; width: min(88vw, 400px); }
+  :root .auth-main .auth-shell .form,
+  :root[data-theme] .auth-main .auth-shell .form {
+    align-content: start !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    margin-top: -36px;
+    padding: 0 24px calc(28px + env(safe-area-inset-bottom, 0px)) !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+  .auth-shell .form > .auth-mark { justify-content: flex-start; height: auto !important; }
+  .auth-shell .form > h1, .auth-shell .form > p:not(.auth-switch) { text-align: left; }
+  .auth-main .auth-shell .form > h1 { font-size: 32px !important; }
+  .auth-mark .auth-nexo { height: 24px; }
+  .auth-shell .form > button:not(.auth-theme) { min-height: 50px !important; border-radius: 14px; }
+  .auth-main .field input { min-height: 48px !important; border-radius: 12px; }
+  /* el botón de tema flota arriba a la derecha, sobre la franja */
+  .auth-theme {
+    position: fixed !important;
+    top: calc(env(safe-area-inset-top, 0px) + 12px) !important;
+    right: 16px !important;
+    z-index: 5;
+    background: color-mix(in srgb, var(--surface) 70%, transparent) !important;
+    -webkit-backdrop-filter: var(--material-blur);
+    backdrop-filter: var(--material-blur);
+  }
+}
+
+/* shadcn redefine --muted como color de fondo dentro del panel: el texto secundario usa el gris del tema */
+body.admin-ui { --muted-foreground: var(--control-muted); }
+
+/* ======================================================================
+   Anclaje del orbe: siempre sale por bordes reales de la pantalla
+   (nunca se desvanece en el aire ni lo corta el borde de una caja).
+   ====================================================================== */
+
+/* escritorio · directorio: fijo en la esquina inferior izquierda de la ventana */
+@media (min-width: 901px) {
+  .control-hero .control-orbit,
+  .control-hero > .control-orbit {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 0;
+    width: min(30vw, 520px, 52vh);
+    height: auto;
+    margin: 0;
+  }
+  .control-hero > :not(.control-orbit),
+  .control-main { position: relative; z-index: 1; }
+  .control-hero > .control-quote { position: fixed; left: 48px; bottom: 36px; }
+}
+
+/* escritorio · login: apoyado en la esquina inferior izquierda de la columna ilustrada */
+@media (min-width: 901px) {
+  .auth-art .auth-orbit { left: 0; bottom: 0; width: min(54%, 440px, 50vh); }
+}
+
+/* celular y tablet: entra desde la esquina superior derecha, girado,
+   y se ve a través del encabezado translúcido */
+@media (max-width: 900px) {
+  .atelier-shell { position: relative; overflow-x: clip; }
+  .control-hero,
+  .control-hero:is(*) { position: static; overflow: visible; }
+  .control-hero .control-orbit,
+  .control-hero > .control-orbit {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    z-index: 0;
+    width: min(60vw, 250px);
+    height: auto;
+    margin: 0;
+    opacity: 0.42;
+    transform: rotate(180deg);
+    pointer-events: none;
+  }
+  .control-hero > :not(.control-orbit) { position: relative; z-index: 1; }
+
+  :root .auth-main .auth-art,
+  :root[data-theme] .auth-main .auth-art {
+    overflow: visible;
+    background: transparent !important;
+  }
+  :root .auth-main .auth-art::before { display: none; }
+  :root .auth-main .auth-shell { overflow: hidden; }
+  .auth-art .auth-orbit {
+    top: 0;
+    right: 0;
+    bottom: auto;
+    left: auto;
+    width: min(64vw, 270px);
+    transform: rotate(180deg);
+  }
+  :root .auth-main .auth-art,
+  :root[data-theme] .auth-main .auth-art { height: clamp(210px, 32dvh, 290px); }
+  :root .auth-main .auth-shell .form,
+  :root[data-theme] .auth-main .auth-shell .form { margin-top: 0; }
+}

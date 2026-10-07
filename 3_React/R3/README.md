@@ -62,4 +62,15 @@ La API y la portada comparten el puerto **4000**. `npm run build` compila la API
 | API + React, fetch / Axios | Axios en `src/services/api.ts` llama a Express; la consigna permite cualquiera de las dos opciones |
 | Protección de datos | bcrypt, cookie `httpOnly` con JWT de 8 horas, consultas parametrizadas, validación en API, roles comprobados en BBDD, `helmet`, CORS y límite de intentos |
 
+## Diseño y movimiento
+
+Los seis clientes comparten `src/styles/apple.css`, que se importa al final de `main.tsx` y toma los colores de cada sistema:
+
+- feedback al presionar (`:active`), hover solo con mouse, sin el destello gris al tocar en el celular
+- diálogos y menús que se materializan con una curva de resorte y crecen desde su disparador; el fondo se atenúa y desenfoca
+- barra superior translúcida (`backdrop-filter`) con el contenido pasando por debajo
+- cambio claro/oscuro con fundido (View Transitions) y `theme-color` que sigue al tema
+- ilustraciones y fondos sin imágenes PNG: cada sistema dibuja su arte en `src/components/common/Artwork.tsx` (SVG/CSS), nítido en cualquier pantalla y con colores de tema claro y oscuro
+- respeta `prefers-reduced-motion` (quedan fundidos cortos), `prefers-reduced-transparency` y `prefers-contrast`
+
 La sesión permanece en una cookie protegida y el tema en `localStorage`. Los administradores gestionan usuarios; los usuarios comunes pueden actualizar su propio perfil.

@@ -28,9 +28,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FormFooter, FormGroup, FormRow } from '../components/Form';
-import { GridBackground } from '../components/GridBackground';
-import { Logo3D } from '../components/Logo3D';
 import { PressableScale } from '../components/PressableScale';
+import { VideoMarca } from '../components/VideoMarca';
 import { login } from '../services/api';
 import { colors, radius, space, springs, type as t } from '../theme';
 import type { LoginScreenProps } from '../types/navigation';
@@ -111,17 +110,10 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
         overScrollMode="never"
         contentInsetAdjustmentBehavior="never"
       >
-        {/* Panel de marca: edge to edge, el contenido se separa del notch con los insets */}
-        <View style={[styles.brand, wide && styles.brandWide, { paddingTop: insets.top + space.xl }]}>
-          <GridBackground color="rgba(255,255,255,0.045)" />
+        {/* Panel de marca: video edge to edge (el logo y la bajada ya están dentro del video) */}
+        <View style={[styles.brand, wide && styles.brandWide]}>
+          <VideoMarca style={StyleSheet.absoluteFill} />
           <View style={styles.topBar} />
-          <Logo3D size={wide ? 96 : 68} variant="dark" delay={200} />
-          <Animated.Text entering={entrada(900)} style={styles.brandLine}>
-            Accesorios de aluminio
-          </Animated.Text>
-          <Animated.Text entering={entrada(1000)} style={styles.brandHint}>
-            Tocá o arrastrá el logo
-          </Animated.Text>
         </View>
 
         {/* Hoja de acceso */}
@@ -229,17 +221,12 @@ const styles = StyleSheet.create({
   scrollWide: { flexDirection: 'row', alignItems: 'stretch' },
   brand: {
     flex: 1,
-    minHeight: 300,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingBottom: space.xxxl + radius.sheet,
+    minHeight: 320,
     backgroundColor: colors.carbonDeep,
     overflow: 'hidden',
   },
   brandWide: { flex: 1.15, minHeight: '100%', paddingBottom: 0 },
   topBar: { position: 'absolute', top: 0, left: 0, right: 0, height: 4, backgroundColor: colors.primary },
-  brandLine: { ...t.eyebrow, marginTop: space.lg, color: colors.onCarbonSecondary, textAlign: 'center' },
-  brandHint: { ...t.caption, marginTop: space.sm, color: colors.onCarbonTertiary, textAlign: 'center' },
   sheet: {
     marginTop: -radius.sheet,
     backgroundColor: colors.groupedBackground,

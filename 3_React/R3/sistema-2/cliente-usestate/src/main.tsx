@@ -5,6 +5,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import "./styles/index.css";
 import "./styles/panel.css";
 import "./styles/editorial.css";
+import "./styles/apple.css";
 
 createRoot(document.getElementById("root")!).render(
   <ThemeProvider>

@@ -1,3 +1,4 @@
+import { OrbitArt } from "@/components/common/Artwork";
 import { useState } from "react";
 import { ShieldCheck, UsersRound, UserPlus, Clock3 } from "lucide-react";
 import { PanelShell } from "@/components/common/PanelShell";
@@ -48,7 +49,7 @@ export function AdminPanel({ onLogout, theme, onToggleTheme }: AdminPanelProps) 
     <PanelShell theme={theme} onToggleTheme={onToggleTheme} onLogout={onLogout} activeView={view} onViewChange={setView} user={user}>
       {view === "profile" && user ? <div className="atelier-profile-layout"><WelcomeCard user={user} /><ProfileForm user={user} onUpdated={setUser} /></div> :
       <div className="control-layout">
-        <aside className="control-hero"><AdminTitle total={users.length} onNew={openCreate} /><p>Un equipo organizado hace grandes cosas.</p></aside>
+        <aside className="control-hero"><AdminTitle total={users.length} onNew={openCreate} /><p>Un equipo organizado hace grandes cosas.</p><OrbitArt className="control-orbit" /><p className="control-quote" aria-hidden="true">“Personas<br />ideas<br />resultados”</p></aside>
         <section className="control-main" aria-label="Gestión de personas">
           <div className="control-metrics" aria-label="Resumen de usuarios">
             <div><UsersRound size={24} /><strong>{users.length}</strong><span>Personas registradas</span></div>

@@ -1,3 +1,4 @@
+import { EditorialArt } from "@/components/common/Artwork";
 import { useState } from "react";
 import { PanelShell } from "@/components/common/PanelShell";
 import { Notice } from "@/components/common/Notice";
@@ -47,7 +48,7 @@ export function AdminPanel({ onLogout, theme, onToggleTheme }: AdminPanelProps) 
     <PanelShell theme={theme} onToggleTheme={onToggleTheme} onLogout={onLogout} activeView={view} onViewChange={setView} user={user}>
       {view === "profile" && user ? <div className="atelier-profile-layout"><WelcomeCard user={user} /><ProfileForm user={user} onUpdated={setUser} /></div> :
       <div className="editorial-layout">
-        <aside className="editorial-intro"><AdminTitle total={users.length} onNew={openCreate} /><p>Gestioná el equipo, da acceso y mantené el estudio en movimiento.</p><button type="button" className="editorial-create" onClick={openCreate}><span>＋</span> NUEVO USUARIO <span aria-hidden="true">→</span></button></aside>
+        <aside className="editorial-intro"><AdminTitle total={users.length} onNew={openCreate} /><p>Gestioná el equipo, da acceso y mantené el estudio en movimiento.</p><EditorialArt className="intro-editorial" /><button type="button" className="editorial-create" onClick={openCreate}><span>＋</span> NUEVO USUARIO <span aria-hidden="true">→</span></button></aside>
         <section className="editorial-results" aria-label="Directorio de usuarios"><UserSearch value={search} onChange={setSearch} onSearch={() => load()} /><Notice notice={notice} /><UserTable users={users} onEdit={openEdit} onDelete={setUserToDelete} /></section>
       </div>}
 
