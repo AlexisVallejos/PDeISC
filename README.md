@@ -125,7 +125,7 @@ no hace falta importar `database.sql`.
 
 ### Pasos
 
-1. Subir `4_ReactNative/RN1` al repositorio de GitHub `AlexisVallejos/PDeISC`.
+1. Usar la rama [`easypanel-rn1`](https://github.com/AlexisVallejos/PDeISC/tree/easypanel-rn1) del repositorio `AlexisVallejos/PDeISC`. Esta rama contiene solo RN1 en su raíz. La rama `main` incluye todo el monorepo y su archivo de GitHub es mucho más grande.
 2. En Easypanel: **Create Project** → nombre `damac`.
 3. Crear la base desde **+ Service → MySQL**:
    - Service name: `damac-db`.
@@ -137,8 +137,8 @@ no hace falta importar `database.sql`.
    - Service name: `damac-app`.
    - Source: **GitHub**.
    - Repository: `AlexisVallejos/PDeISC`.
-   - Branch: `main`.
-   - Build Path: `/4_ReactNative/RN1`.
+   - Branch: `easypanel-rn1`.
+   - Build Path: `/` (raíz del repositorio).
    - Builder: **Dockerfile**.
    - Dockerfile: `Dockerfile`.
 5. En **Environment**, pegar estas variables reemplazando los valores de MySQL:
