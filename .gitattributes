@@ -1,2 +1,12 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Keep GitHub source archives small for the RN1 EasyPanel deployment.
+# These paths remain available when cloning the repository.
+/0_Inicio/** export-ignore
+/1_NodeJS/** export-ignore
+/2_JS/** export-ignore
+/3_React/** export-ignore
+/4_ReactNative/RN0/** export-ignore
+/.claude/** export-ignore
+/package-lock.json export-ignore
