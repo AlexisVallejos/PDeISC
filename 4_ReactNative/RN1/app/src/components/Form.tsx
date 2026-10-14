@@ -17,6 +17,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { useTheme } from '../ThemeContext';
 import { colors, radius, type as t, tapTarget } from '../theme';
 
 /**
@@ -34,6 +35,7 @@ interface FormGroupProps {
 }
 
 export function FormGroup({ children, invalid, style }: FormGroupProps) {
+  const { palette } = useTheme();
   const alert = useSharedValue(invalid ? 1 : 0);
   useEffect(() => {
     alert.set(withTiming(invalid ? 1 : 0, { duration: 180, easing: EASE_OUT }));
@@ -43,7 +45,11 @@ export function FormGroup({ children, invalid, style }: FormGroupProps) {
     borderColor: interpolateColor(alert.get(), [0, 1], ['rgba(60, 60, 67, 0.0)', colors.primary]),
   }));
 
-  return <Animated.View style={[styles.group, style, frame]}>{children}</Animated.View>;
+  return (
+    <Animated.View style={[styles.group, { backgroundColor: palette.surface, boxShadow: palette.shadow }, style, frame]}>
+      {children}
+    </Animated.View>
+  );
 }
 
 interface FormRowProps extends TextInputProps {
@@ -58,15 +64,16 @@ export const FormRow = forwardRef<TextInput, FormRowProps>(function FormRow(
   { label, password, last, onFocus, onBlur, editable = true, ...input },
   ref,
 ) {
+  const { palette } = useTheme();
   const focus = useSharedValue(0);
   const [hidden, setHidden] = useState(true);
 
   const labelStyle = useAnimatedStyle(() => ({
-    color: interpolateColor(focus.get(), [0, 1], [colors.secondaryLabel, colors.primary]),
+    color: interpolateColor(focus.get(), [0, 1], [palette.secondaryLabel, colors.primary]),
   }));
 
   return (
-    <View style={[styles.row, !last && styles.divider, !editable && styles.rowDisabled]}>
+    <View style={[styles.row, !last && styles.divider, !last && { borderBottomColor: palette.separator }, !editable && styles.rowDisabled]}>
       <View style={styles.field}>
         <Animated.Text style={[styles.label, labelStyle]} numberOfLines={1}>
           {label}
@@ -76,10 +83,10 @@ export const FormRow = forwardRef<TextInput, FormRowProps>(function FormRow(
           {...input}
           editable={editable}
           secureTextEntry={password && hidden}
-          placeholderTextColor={colors.placeholder}
+          placeholderTextColor={palette.placeholder}
           selectionColor={colors.primary}
           cursorColor={colors.primary}
-          style={styles.input}
+          style={[styles.input, { color: palette.label }]}
           allowFontScaling
           onFocus={(e) => {
             focus.set(withTiming(1, { duration: 150, easing: EASE_OUT }));
@@ -108,8 +115,9 @@ export const FormRow = forwardRef<TextInput, FormRowProps>(function FormRow(
 
 /** Pie de grupo: ayuda o error, en footnote con margen izquierdo igual al del texto. */
 export function FormFooter({ children, error }: { children: ReactNode; error?: boolean }) {
+  const { palette } = useTheme();
   return (
-    <Text style={[styles.footer, error && styles.footerError]} accessibilityLiveRegion="polite">
+    <Text style={[styles.footer, { color: palette.secondaryLabel }, error && styles.footerError]} accessibilityLiveRegion="polite">
       {children}
     </Text>
   );
@@ -117,13 +125,10 @@ export function FormFooter({ children, error }: { children: ReactNode; error?: b
 
 const styles = StyleSheet.create({
   group: {
-    backgroundColor: colors.elevated,
     borderRadius: radius.md,
     borderWidth: 1.5,
     borderColor: 'transparent',
     overflow: 'hidden',
-    // Sombra muy leve: separa del fondo agrupado sin leerse como "tarjeta".
-    boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
   },
   row: {
     flexDirection: 'row',
@@ -134,12 +139,11 @@ const styles = StyleSheet.create({
   },
   field: { flex: 1, paddingVertical: 8 },
   rowDisabled: { opacity: 0.6 },
-  divider: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.separator },
+  divider: { borderBottomWidth: StyleSheet.hairlineWidth },
   label: { ...t.footnote, fontWeight: '500', paddingRight: 8 },
   input: {
     ...t.body,
     // 17 pt nunca dispara el zoom de iOS Safari (mínimo 16).
-    color: colors.label,
     paddingVertical: Platform.OS === 'web' ? 4 : 2,
     paddingRight: 8,
     textAlign: 'left',
@@ -147,6 +151,6 @@ const styles = StyleSheet.create({
   } as TextStyle,
   toggle: { minHeight: tapTarget, paddingHorizontal: 8, justifyContent: 'center' },
   toggleText: { ...t.subhead, fontWeight: '600', color: colors.primary },
-  footer: { ...t.footnote, color: colors.secondaryLabel, paddingHorizontal: 16, marginTop: 8 },
+  footer: { ...t.footnote, paddingHorizontal: 16, marginTop: 8 },
   footerError: { color: colors.primary, fontWeight: '500' },
 });

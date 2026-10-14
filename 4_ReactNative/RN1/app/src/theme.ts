@@ -44,6 +44,47 @@ export const colors = {
   input: '#FFFFFF',
 };
 
+/** Colores de interfaz. El panel del video conserva la identidad oscura en ambos modos. */
+export const themeColors = {
+  light: {
+    background: '#F2F2F7',
+    surface: '#FFFFFF',
+    label: '#111113',
+    secondaryLabel: '#62626B',
+    tertiaryLabel: '#86868F',
+    placeholder: '#85858D',
+    separator: 'rgba(60, 60, 67, 0.18)',
+    grid: 'rgba(60, 60, 67, 0.07)',
+    shadow: '0 10px 30px rgba(14, 15, 17, 0.08)',
+    sheetShadow: '0 -16px 48px rgba(0, 0, 0, 0.30)',
+    control: '#FFFFFF',
+    controlBorder: 'rgba(60, 60, 67, 0.16)',
+    successBackground: 'rgba(52, 199, 89, 0.14)',
+    successLabel: '#1E7F3A',
+    destructiveBackground: 'rgba(227, 6, 20, 0.10)',
+  },
+  dark: {
+    background: '#111316',
+    surface: '#1E2126',
+    label: '#F7F7F9',
+    secondaryLabel: '#B4B8C1',
+    tertiaryLabel: '#8B909A',
+    placeholder: '#9297A1',
+    separator: 'rgba(255, 255, 255, 0.13)',
+    grid: 'rgba(255, 255, 255, 0.055)',
+    shadow: '0 12px 32px rgba(0, 0, 0, 0.24)',
+    sheetShadow: '0 -16px 48px rgba(0, 0, 0, 0.48)',
+    control: '#292D34',
+    controlBorder: 'rgba(255, 255, 255, 0.15)',
+    successBackground: 'rgba(52, 199, 89, 0.17)',
+    successLabel: '#7DDEA0',
+    destructiveBackground: 'rgba(255, 96, 104, 0.16)',
+  },
+};
+
+export type ThemeMode = keyof typeof themeColors;
+export type ThemePalette = (typeof themeColors)['light'];
+
 export const font = Platform.select({
   ios: 'System',
   android: 'sans-serif',

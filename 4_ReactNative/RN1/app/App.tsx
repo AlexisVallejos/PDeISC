@@ -1,8 +1,9 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useReducedMotion } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ThemeProvider, useTheme } from './src/ThemeContext';
 import { BienvenidaScreen } from './src/screens/BienvenidaScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { colors } from './src/theme';
@@ -11,12 +12,34 @@ import type { RootStackParamList } from './src/types/navigation';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  return (
+    <ThemeProvider>
+      <AppNavigation />
+    </ThemeProvider>
+  );
+}
+
+function AppNavigation() {
   const reduceMotion = useReducedMotion();
+  const { mode, palette } = useTheme();
+  const navigationTheme = mode === 'dark' ? DarkTheme : DefaultTheme;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <NavigationContainer>
+        <NavigationContainer
+          theme={{
+            ...navigationTheme,
+            colors: {
+              ...navigationTheme.colors,
+              primary: colors.primary,
+              background: palette.background,
+              card: palette.surface,
+              text: palette.label,
+              border: palette.separator,
+            },
+          }}
+        >
           <Stack.Navigator
             initialRouteName="Login"
             screenOptions={{
@@ -30,7 +53,7 @@ export default function App() {
             <Stack.Screen
               name="Bienvenida"
               component={BienvenidaScreen}
-              options={{ title: 'DAMAC — Bienvenida', gestureEnabled: false, contentStyle: { backgroundColor: colors.groupedBackground } }}
+              options={{ title: 'DAMAC — Bienvenida', gestureEnabled: false, contentStyle: { backgroundColor: palette.background } }}
             />
           </Stack.Navigator>
         </NavigationContainer>

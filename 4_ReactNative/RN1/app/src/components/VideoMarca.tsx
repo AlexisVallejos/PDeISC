@@ -1,7 +1,8 @@
 import { useFocusEffect } from '@react-navigation/native';
+import { useEvent } from 'expo';
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { useCallback } from 'react';
-import { Image, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Image, Platform, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { useReducedMotion } from 'react-native-reanimated';
 import { colors } from '../theme';
 
@@ -14,7 +15,7 @@ const POSTER = require('../../assets/video/damac-login-poster.jpg');
  * - El póster queda debajo: se ve al instante y mientras el video carga.
  * - Se pausa cuando la pantalla pierde el foco (por ejemplo, al entrar a Bienvenida).
  * - Con "reducir movimiento" se muestra solo el póster, sin reproducir.
- * - contentFit "cover": llena el panel; el logo está en el centro, así que el recorte lo respeta.
+ * - contentFit "contain": conserva el logo y la bajada completos en cualquier proporción.
  */
 export function VideoMarca({ style }: { style?: StyleProp<ViewStyle> }) {
   const reducirMovimiento = useReducedMotion();
@@ -25,6 +26,7 @@ export function VideoMarca({ style }: { style?: StyleProp<ViewStyle> }) {
     p.volume = 0;
     p.audioMixingMode = 'mixWithOthers';
   });
+  const { isPlaying } = useEvent(player, 'playingChange', { isPlaying: player.playing });
 
   useFocusEffect(
     useCallback(() => {
@@ -32,8 +34,16 @@ export function VideoMarca({ style }: { style?: StyleProp<ViewStyle> }) {
         player.pause();
         return;
       }
-      player.play();
-      return () => player.pause();
+      const syncPlayback = () => {
+        if (Platform.OS === 'web' && document.visibilityState !== 'visible') player.pause();
+        else player.play();
+      };
+      syncPlayback();
+      if (Platform.OS === 'web') document.addEventListener('visibilitychange', syncPlayback);
+      return () => {
+        if (Platform.OS === 'web') document.removeEventListener('visibilitychange', syncPlayback);
+        player.pause();
+      };
     }, [player, reducirMovimiento]),
   );
 
@@ -44,16 +54,17 @@ export function VideoMarca({ style }: { style?: StyleProp<ViewStyle> }) {
       accessibilityRole="image"
       accessibilityLabel="DAMAC. Accesorios para aberturas de aluminio y PVC."
     >
-      <Image source={POSTER} style={styles.poster} />
       {!reducirMovimiento && (
         <VideoView
           player={player}
           nativeControls={false}
-          contentFit="cover"
+          contentFit="contain"
           allowsPictureInPicture={false}
           style={styles.video}
-          pointerEvents="none"
         />
+      )}
+      {(reducirMovimiento || !isPlaying) && (
+        <Image source={POSTER} resizeMode="contain" style={styles.poster} />
       )}
     </View>
   );
@@ -62,7 +73,7 @@ export function VideoMarca({ style }: { style?: StyleProp<ViewStyle> }) {
 const styles = StyleSheet.create({
   // En web, expo-video pinta un <video> con este estilo tal cual: sin width/height al 100% queda en su tamaño
   // natural (960×1080) y "cover" no tiene efecto. En iOS y Android es inofensivo.
-  video: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, width: '100%', height: '100%' },
+  video: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' },
   marco: { overflow: 'hidden', backgroundColor: colors.carbonDeep },
-  poster: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, width: '100%', height: '100%', resizeMode: 'cover' },
+  poster: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, width: '100%', height: '100%' },
 });

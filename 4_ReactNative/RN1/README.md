@@ -79,24 +79,28 @@ Las contraseñas se guardan como hash SHA-256 y la consulta es parametrizada (si
 - **Tipografía del sistema** (SF / Roboto) con tracking por tamaño: negativo en títulos, ~0 en cuerpo.
 - **Formulario agrupado** estilo iOS: etiqueta arriba, valor abajo, separador fino. Los valores largos
   envuelven en vez de truncarse. Inputs de 17 pt (nunca disparan el zoom de Safari).
+- **Modo claro y oscuro**: sigue el ajuste del sistema al abrir la app. El botón de tema en Ingreso y
+  Bienvenida permite cambiarlo durante la sesión; formularios, fondos, textos y barra de estado se adaptan.
+- **Diseño responsive**: el video y el formulario se apilan en teléfonos y pantallas bajas; en escritorio
+  usan dos columnas. Bienvenida también separa la identidad y los datos de la cuenta en pantallas anchas.
 - **Movimiento**: springs con `dampingRatio: 1` por defecto; `0.8` solo cuando hubo momentum (soltar el
   logo 3D de Bienvenida). Entradas con ease-out fuerte `cubic-bezier(0.23, 1, 0.32, 1)` y menos de
   450 ms. El formulario aparece a los 120 ms. Transición entre pantallas: la nativa de la
   plataforma; con "reducir movimiento", fundido.
 - **Respuesta al presionar** en el press-in (escala 0.97 + háptica de selección), no al soltar.
 - **Web móvil** (`app/public/index.html`): `viewport-fit=cover`, `100dvh`, sin flash gris al tocar,
-  `overscroll-behavior: none`, `theme-color` igual al panel de marca. Nunca `user-scalable=no`.
+  `overscroll-behavior: none`, `theme-color` acorde al tema activo. Nunca `user-scalable=no`.
 
 ## Video del login
 
 - El login muestra `app/assets/video/damac-login.mp4` (960×1080, 36 s, **sin audio**, en bucle) a la izquierda
   del formulario; en pantallas angostas va arriba, detrás de la hoja. Es el panel `DamacArLoginPanel` del proyecto
-  Remotion `damac-login-video` (Accesorios Damac SRL). Ya trae el logo y la bajada, por eso no hay logo aparte.
+  Remotion `damac-login-video` (Accesorios Damac SRL). Una marca pequeña permanece visible sobre el video.
 - Reproduce con `expo-video` (iOS, Android y web): mudo, `mixWithOthers` (no corta la música del usuario),
-  `contentFit: cover` (el logo está en el centro, así que el recorte lo respeta).
+  `contentFit: contain` para que el logo y la bajada entren completos sin recortes.
 - Se pausa cuando el login pierde el foco (por ejemplo, al entrar a Bienvenida) y se reanuda al volver.
-- El póster (`damac-login-poster.jpg`) queda debajo: se ve al instante y mientras el video carga. Con "reducir
-  movimiento" se muestra solo el póster.
+- El póster (`damac-login-poster.jpg`) se muestra mientras el video carga o queda en pausa (por ejemplo,
+  cuando el navegador bloquea la reproducción en segundo plano). Con "reducir movimiento" se muestra solo el póster.
 - Para cambiar el video: reemplazar los dos archivos de `app/assets/video/` por una salida nueva de Remotion
   (`npm run render:ar` y `npm run poster:ar`).
 

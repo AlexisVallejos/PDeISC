@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import Animated, { Easing, FadeIn, FadeInDown, useReducedMotion } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GridBackground } from '../components/GridBackground';
 import { Logo3D } from '../components/Logo3D';
 import { PressableScale } from '../components/PressableScale';
+import { ThemeToggle } from '../components/ThemeToggle';
+import { useTheme } from '../ThemeContext';
 import { colors, radius, space, type as t } from '../theme';
 import type { BienvenidaScreenProps } from '../types/navigation';
 
@@ -61,6 +63,9 @@ function formatearAcceso(iso: string | null) {
 export function Bienvenida({ nombre, usuario, email, rol, ultimoAcceso, onCerrarSesion }: BienvenidaProps) {
   const insets = useSafeAreaInsets();
   const reduceMotion = useReducedMotion();
+  const { width } = useWindowDimensions();
+  const { mode, palette } = useTheme();
+  const wide = width >= 850;
 
   const nombreVisible = nombre.trim() || usuario.trim() || 'Usuario';
   const rolVisible = rol.trim() ? rol.trim() : '—';
@@ -69,9 +74,9 @@ export function Bienvenida({ nombre, usuario, email, rol, ultimoAcceso, onCerrar
     reduceMotion ? FadeIn.duration(200) : FadeInDown.delay(ms).duration(420).easing(EASE_OUT);
 
   return (
-    <View style={styles.root}>
-      <StatusBar style="dark" />
-      <GridBackground color="rgba(60, 60, 67, 0.07)" />
+    <View style={[styles.root, { backgroundColor: palette.background }]}>
+      <StatusBar style={mode === 'dark' ? 'light' : 'dark'} />
+      <GridBackground color={palette.grid} />
       <ScrollView
         contentContainerStyle={[
           styles.content,
@@ -79,48 +84,59 @@ export function Bienvenida({ nombre, usuario, email, rol, ultimoAcceso, onCerrar
         ]}
         contentInsetAdjustmentBehavior="never"
       >
-        <View style={styles.header}>
-          <Logo3D size={30} variant="light" />
+        <View style={[styles.header, wide && styles.headerWide]}>
+          <Logo3D size={wide ? 34 : 26} variant={mode === 'dark' ? 'dark' : 'light'} />
+          <ThemeToggle />
         </View>
 
-        <Animated.View entering={entrada(60)} style={styles.avatar}>
-          <Text style={styles.avatarText} allowFontScaling={false}>
-            {iniciales(nombre, usuario)}
-          </Text>
-        </Animated.View>
+        <View style={[styles.main, wide && styles.mainWide]}>
+          <View style={[styles.identity, wide && styles.identityWide]}>
+            <Animated.View entering={entrada(60)} style={styles.avatar}>
+              <Text style={styles.avatarText} allowFontScaling={false}>
+                {iniciales(nombre, usuario)}
+              </Text>
+            </Animated.View>
 
-        <Animated.Text entering={entrada(110)} style={styles.kicker}>
-          {saludo()}
-        </Animated.Text>
-        <Animated.Text
-          entering={entrada(150)}
-          style={[styles.name, nombreVisible.length > 22 && styles.nameLong]}
-          numberOfLines={3}
-          accessibilityRole="header"
-        >
-          {nombreVisible}
-        </Animated.Text>
+            <Animated.Text entering={entrada(110)} style={[styles.kicker, { color: palette.secondaryLabel }]}>
+              {saludo()}
+            </Animated.Text>
+            <Animated.Text
+              entering={entrada(150)}
+              style={[styles.name, nombreVisible.length > 22 && styles.nameLong, wide && styles.nameWide, { color: palette.label }]}
+              numberOfLines={3}
+              accessibilityRole="header"
+            >
+              {nombreVisible}
+            </Animated.Text>
 
-        <Animated.View entering={entrada(220)} style={styles.statusPill}>
-          <View style={styles.statusDot} />
-          <Text style={styles.statusText}>Sesión iniciada</Text>
-        </Animated.View>
-
-        <Animated.View entering={entrada(300)} style={styles.groupWrap}>
-          <Text style={styles.groupHeader}>Cuenta</Text>
-          <View style={styles.group}>
-            <Row label="Usuario" value={`@${usuario}`} mono />
-            <Row label="Email" value={email || '—'} />
-            <Row label="Rol" value={rolVisible} />
-            <Row label="Último acceso" value={formatearAcceso(ultimoAcceso)} last />
+            <Animated.View entering={entrada(220)} style={[styles.statusPill, { backgroundColor: palette.successBackground }]}>
+              <View style={styles.statusDot} />
+              <Text style={[styles.statusText, { color: palette.successLabel }]}>Sesión iniciada</Text>
+            </Animated.View>
           </View>
-        </Animated.View>
 
-        <Animated.View entering={entrada(380)} style={styles.groupWrap}>
-          <PressableScale onPress={onCerrarSesion} style={styles.logout} accessibilityRole="button">
-            <Text style={styles.logoutText}>Cerrar sesión</Text>
-          </PressableScale>
-        </Animated.View>
+          <View style={styles.account}>
+            <Animated.View entering={entrada(300)} style={[styles.groupWrap, wide && styles.groupWrapWide]}>
+              <Text style={[styles.groupHeader, { color: palette.secondaryLabel }]}>Cuenta</Text>
+              <View style={[styles.group, { backgroundColor: palette.surface, boxShadow: palette.shadow }]}>
+                <Row label="Usuario" value={`@${usuario}`} mono />
+                <Row label="Email" value={email || '—'} />
+                <Row label="Rol" value={rolVisible} />
+                <Row label="Último acceso" value={formatearAcceso(ultimoAcceso)} last />
+              </View>
+            </Animated.View>
+
+            <Animated.View entering={entrada(380)} style={styles.groupWrap}>
+              <PressableScale
+                onPress={onCerrarSesion}
+                style={[styles.logout, { backgroundColor: palette.destructiveBackground }]}
+                accessibilityRole="button"
+              >
+                <Text style={styles.logoutText}>Cerrar sesión</Text>
+              </PressableScale>
+            </Animated.View>
+          </View>
+        </View>
       </ScrollView>
     </View>
   );
@@ -131,10 +147,11 @@ export function Bienvenida({ nombre, usuario, email, rol, ultimoAcceso, onCerrar
  * (emails, nombres) envuelven en vez de truncarse. El valor es seleccionable.
  */
 function Row({ label, value, last, mono }: { label: string; value: string; last?: boolean; mono?: boolean }) {
+  const { palette } = useTheme();
   return (
-    <View style={[styles.row, !last && styles.rowDivider]}>
-      <Text style={styles.rowLabel}>{label}</Text>
-      <Text style={[styles.rowValue, mono && styles.rowMono]} selectable>
+    <View style={[styles.row, !last && styles.rowDivider, !last && { borderBottomColor: palette.separator }]}>
+      <Text style={[styles.rowLabel, { color: palette.secondaryLabel }]}>{label}</Text>
+      <Text style={[styles.rowValue, mono && styles.rowMono, { color: palette.label }]} selectable>
         {value}
       </Text>
     </View>
@@ -142,9 +159,15 @@ function Row({ label, value, last, mono }: { label: string; value: string; last?
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.groupedBackground },
+  root: { flex: 1 },
   content: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: space.xl },
-  header: { width: '100%', alignItems: 'center', marginBottom: space.md },
+  header: { width: '100%', maxWidth: 980, alignItems: 'center', gap: space.sm, marginBottom: space.xl },
+  headerWide: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: space.xxxl },
+  main: { width: '100%', alignItems: 'center' },
+  mainWide: { maxWidth: 980, flexDirection: 'row', alignItems: 'center', gap: space.xxxl },
+  identity: { width: '100%', alignItems: 'center' },
+  identityWide: { flex: 1, alignItems: 'flex-start' },
+  account: { width: '100%', maxWidth: 440 },
   avatar: {
     width: 88,
     height: 88,
@@ -155,8 +178,9 @@ const styles = StyleSheet.create({
     boxShadow: '0 12px 28px rgba(227, 6, 20, 0.30), inset 0 1px 0 rgba(255,255,255,0.35)',
   },
   avatarText: { ...t.title1, fontSize: 32, lineHeight: 38, fontWeight: '700', letterSpacing: -0.5, color: colors.white },
-  kicker: { ...t.subhead, marginTop: space.xl, color: colors.secondaryLabel },
-  name: { ...t.largeTitle, marginTop: 2, color: colors.label, textAlign: 'center', maxWidth: 440 },
+  kicker: { ...t.subhead, marginTop: space.xl },
+  name: { ...t.largeTitle, marginTop: 2, textAlign: 'center', maxWidth: 440 },
+  nameWide: { textAlign: 'left' },
   // Nombres largos bajan un escalón tipográfico en vez de truncarse antes.
   nameLong: { ...t.title1, textAlign: 'center' },
   statusPill: {
@@ -167,29 +191,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: radius.pill,
-    backgroundColor: 'rgba(52, 199, 89, 0.14)',
   },
   statusDot: { width: 7, height: 7, borderRadius: 4, backgroundColor: colors.success },
-  statusText: { ...t.footnote, fontWeight: '600', color: '#1E7F3A' },
+  statusText: { ...t.footnote, fontWeight: '600' },
   groupWrap: { width: '100%', maxWidth: 440, marginTop: space.xxl },
-  groupHeader: { ...t.footnote, textTransform: 'uppercase', letterSpacing: 0.4, color: colors.secondaryLabel, paddingHorizontal: 16, marginBottom: 7 },
+  groupWrapWide: { marginTop: 0 },
+  groupHeader: { ...t.footnote, textTransform: 'uppercase', letterSpacing: 0.4, paddingHorizontal: 16, marginBottom: 7 },
   group: {
-    backgroundColor: colors.elevated,
     borderRadius: radius.md,
     borderCurve: 'continuous',
     overflow: 'hidden',
-    boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
   },
   row: { paddingLeft: 16, paddingRight: 16, paddingVertical: 11, gap: 2 },
-  rowDivider: { borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.separator, marginLeft: 0 },
-  rowLabel: { ...t.footnote, color: colors.secondaryLabel },
-  rowValue: { ...t.body, color: colors.label },
+  rowDivider: { borderBottomWidth: StyleSheet.hairlineWidth, marginLeft: 0 },
+  rowLabel: { ...t.footnote },
+  rowValue: { ...t.body },
   rowMono: { fontVariant: ['tabular-nums'] },
   logout: {
     height: 50,
     borderRadius: radius.md,
     borderCurve: 'continuous',
-    backgroundColor: colors.primaryTint,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -29,7 +29,9 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FormFooter, FormGroup, FormRow } from '../components/Form';
 import { PressableScale } from '../components/PressableScale';
+import { ThemeToggle } from '../components/ThemeToggle';
 import { VideoMarca } from '../components/VideoMarca';
+import { useTheme } from '../ThemeContext';
 import { login } from '../services/api';
 import { colors, radius, space, springs, type as t } from '../theme';
 import type { LoginScreenProps } from '../types/navigation';
@@ -43,9 +45,12 @@ function haptic(type: Haptics.NotificationFeedbackType) {
 export function LoginScreen({ navigation }: LoginScreenProps) {
   const insets = useSafeAreaInsets();
   const reduceMotion = useReducedMotion();
-  const { width } = useWindowDimensions();
-  // Ancho (web, tablet, apaisado): marca a la izquierda y hoja de ingreso al costado.
-  const wide = width >= 820;
+  const { width, height } = useWindowDimensions();
+  const { palette } = useTheme();
+  // Una pantalla apaisada baja mantiene el diseño apilado para que el formulario respire.
+  const wide = width >= 900 && height >= 620;
+  const compact = width < 360;
+  const brandHeight = Math.max(250, Math.min(390, height * 0.4, width * 0.92));
   const claveRef = useRef<TextInput>(null);
 
   const [usuario, setUsuario] = useState('');
@@ -111,9 +116,13 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
         contentInsetAdjustmentBehavior="never"
       >
         {/* Panel de marca: video edge to edge (el logo y la bajada ya están dentro del video) */}
-        <View style={[styles.brand, wide && styles.brandWide]}>
+        <View style={[styles.brand, wide ? styles.brandWide : { height: brandHeight }]}>
           <VideoMarca style={StyleSheet.absoluteFill} />
           <View style={styles.topBar} />
+          <View pointerEvents="none" style={[styles.brandMark, { top: Math.max(insets.top, 12) + 14 }]}>
+            <Text style={styles.brandWord}><Text style={styles.brandD}>D</Text>AMAC</Text>
+            <Text style={styles.brandCaption}>ACCESORIOS PARA ABERTURAS</Text>
+          </View>
         </View>
 
         {/* Hoja de acceso */}
@@ -122,17 +131,21 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
           style={[
             styles.sheet,
             wide && styles.sheetWide,
+            { backgroundColor: palette.background, boxShadow: palette.sheetShadow },
             wide
               ? { paddingTop: insets.top + space.xxxl, paddingBottom: Math.max(insets.bottom, space.lg) + space.xxl }
               : { paddingBottom: Math.max(insets.bottom, space.lg) + space.md },
           ]}
         >
-          {!wide && <View style={styles.grabber} accessibilityElementsHidden importantForAccessibility="no" />}
+          {!wide && <View style={[styles.grabber, { backgroundColor: palette.separator }]} accessibilityElementsHidden importantForAccessibility="no" />}
 
-          <Text style={styles.title} accessibilityRole="header">
-            Ingresar
-          </Text>
-          <Text style={styles.subtitle}>Sistema de acceso para el equipo DAMAC.</Text>
+          <View style={styles.headingRow}>
+            <Text style={[styles.title, compact && styles.titleCompact, { color: palette.label }]} accessibilityRole="header">
+              Ingresar
+            </Text>
+            <ThemeToggle />
+          </View>
+          <Text style={[styles.subtitle, { color: palette.secondaryLabel }]}>Sistema de acceso para el equipo DAMAC.</Text>
 
           <Animated.View style={shakeStyle} layout={layout}>
             <FormGroup invalid={!!error}>
@@ -206,7 +219,7 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
             </PressableScale>
           </Animated.View>
 
-          <Text style={styles.legal} selectable>
+          <Text style={[styles.legal, { color: palette.tertiaryLabel }]} selectable>
             © {new Date().getFullYear()} DAMAC · Aluminio y herrajes
           </Text>
         </Animated.View>
@@ -220,24 +233,29 @@ const styles = StyleSheet.create({
   scroll: { flexGrow: 1 },
   scrollWide: { flexDirection: 'row', alignItems: 'stretch' },
   brand: {
-    flex: 1,
-    minHeight: 320,
+    flexShrink: 0,
     backgroundColor: colors.carbonDeep,
     overflow: 'hidden',
   },
   brandWide: { flex: 1.15, minHeight: '100%', paddingBottom: 0 },
   topBar: { position: 'absolute', top: 0, left: 0, right: 0, height: 4, backgroundColor: colors.primary },
+  brandMark: {
+    position: 'absolute', left: 20, paddingHorizontal: 12, paddingVertical: 9,
+    borderRadius: 12, backgroundColor: 'rgba(14, 15, 17, 0.76)',
+    borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.14)',
+  },
+  brandWord: { ...t.title2, fontWeight: '900', letterSpacing: 1.3, color: colors.white },
+  brandD: { color: colors.primary },
+  brandCaption: { ...t.caption, fontSize: 9, letterSpacing: 1.25, color: colors.onCarbonSecondary },
   sheet: {
     marginTop: -radius.sheet,
-    backgroundColor: colors.groupedBackground,
     borderTopLeftRadius: radius.sheet,
     borderTopRightRadius: radius.sheet,
     borderCurve: 'continuous',
     paddingHorizontal: space.xl,
     paddingTop: space.sm,
-    boxShadow: '0 -16px 48px rgba(0,0,0,0.45)',
     width: '100%',
-    maxWidth: 520,
+    maxWidth: 640,
     alignSelf: 'center',
   },
   sheetWide: {
@@ -251,18 +269,18 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
     borderBottomLeftRadius: radius.sheet,
     paddingHorizontal: space.xxxl + space.md,
-    boxShadow: '-16px 0 48px rgba(0,0,0,0.45)',
   },
   grabber: {
     alignSelf: 'center',
     width: 36,
     height: 5,
     borderRadius: 3,
-    backgroundColor: 'rgba(60, 60, 67, 0.22)',
     marginBottom: space.xl,
   },
-  title: { ...t.largeTitle, color: colors.label },
-  subtitle: { ...t.subhead, marginTop: space.xs, marginBottom: space.xl, color: colors.secondaryLabel },
+  headingRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.sm },
+  title: { ...t.largeTitle, flexShrink: 1 },
+  titleCompact: { ...t.title1 },
+  subtitle: { ...t.subhead, marginTop: space.xs, marginBottom: space.xl },
   button: {
     marginTop: space.xl,
     height: 50,
@@ -276,5 +294,5 @@ const styles = StyleSheet.create({
   buttonText: { ...t.headline, color: colors.white },
   invisible: { opacity: 0 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  legal: { ...t.caption, marginTop: space.xxl, textAlign: 'center', color: colors.tertiaryLabel },
+  legal: { ...t.caption, marginTop: space.xxl, textAlign: 'center' },
 });
