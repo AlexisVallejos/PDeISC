@@ -1,0 +1,14 @@
+{
+  "name": "sistema-usuarios-oauth",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm --prefix api run dev\" \"npm --prefix cliente-router run dev\"",
+    "build": "npm --prefix cliente-router run build",
+    "seed": "npm --prefix api run seed",
+    "test": "npm --prefix api test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
