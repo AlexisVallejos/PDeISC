@@ -1,10 +1,11 @@
 {
-  "name": "sistema-usuarios-oauth",
+  "name": "r5-sistema-usuarios-oauth",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npm --prefix api run dev\" \"npm --prefix cliente-router run dev\"",
-    "build": "npm --prefix cliente-router run build",
+    "dev": "concurrently -k -n API,S1-ESTADO,S1-ROUTER,S1-NEXT,S2-ESTADO,S2-ROUTER,S2-NEXT,S3-ESTADO,S3-ROUTER,S3-NEXT \"npm --prefix api run dev\" \"npm --prefix sistema-1/cliente-usestate run dev\" \"npm --prefix sistema-1/cliente-router run dev\" \"npm --prefix sistema-1/cliente-next run dev\" \"npm --prefix sistema-2/cliente-usestate run dev\" \"npm --prefix sistema-2/cliente-router run dev\" \"npm --prefix sistema-2/cliente-next run dev\" \"npm --prefix sistema-3/cliente-usestate run dev\" \"npm --prefix sistema-3/cliente-router run dev\" \"npm --prefix sistema-3/cliente-next run dev\"",
+    "dev:next": "concurrently -k -n API,S1-NEXT,S2-NEXT,S3-NEXT \"npm --prefix api run dev\" \"npm --prefix sistema-1/cliente-next run dev\" \"npm --prefix sistema-2/cliente-next run dev\" \"npm --prefix sistema-3/cliente-next run dev\"",
+    "build": "npm --prefix api run build && npm --prefix sistema-1/cliente-usestate run build && npm --prefix sistema-1/cliente-router run build && npm --prefix sistema-1/cliente-next run build && npm --prefix sistema-2/cliente-usestate run build && npm --prefix sistema-2/cliente-router run build && npm --prefix sistema-2/cliente-next run build && npm --prefix sistema-3/cliente-usestate run build && npm --prefix sistema-3/cliente-router run build && npm --prefix sistema-3/cliente-next run build",
     "seed": "npm --prefix api run seed",
     "test": "npm --prefix api test"
   },

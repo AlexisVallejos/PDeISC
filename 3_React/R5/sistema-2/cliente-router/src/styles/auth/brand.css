@@ -1,0 +1,45 @@
+.brand-frame {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 154px !important;
+  height: 48px !important;
+  overflow: hidden !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 12px !important;
+  background: var(--surface-raised) !important;
+  box-shadow: 0 5px 14px rgb(17 26 81/0.08) !important;
+}
+.brand-frame img {
+  display: block;
+  width: 190px !important;
+  max-width: none !important;
+  height: auto !important;
+  transform: scale(1.7);
+  transform-origin: center;
+  mix-blend-mode: normal !important;
+  filter: none !important;
+}
+:root[data-theme="dark"] .auth-art {
+  background:
+    radial-gradient(
+      circle at 17% 14%,
+      rgb(185 211 255/0.2) 0 1.1rem,
+      transparent 1.2rem
+    ),
+    radial-gradient(
+      circle at 13% -12%,
+      rgb(87 117 170/0.18) 0 37%,
+      transparent 37.2%
+    ),
+    radial-gradient(
+      circle at 91% 108%,
+      rgb(0 0 0/0.22) 0 27%,
+      transparent 27.2%
+    ),
+    #111a51;
+}
+:root[data-theme="dark"] .auth-art img {
+  opacity: 0.88;
+  filter: drop-shadow(0 20px 30px rgb(0 0 0/0.38)) !important;
+}

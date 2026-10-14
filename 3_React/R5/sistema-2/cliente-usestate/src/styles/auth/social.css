@@ -1,0 +1,129 @@
+/* Botones para ingresar con Google, Facebook, X, GitHub, Discord y Twitch.
+   Va al final del index.css: pisa los estilos de botón del formulario. */
+
+/* con los botones el formulario puede no entrar en pantallas bajas: que scrollee por dentro */
+.auth-main .auth-shell .form {
+  align-content: safe center;
+  overflow-y: auto;
+}
+
+.social {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.social-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.social-divider::before,
+.social-divider::after {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  content: "";
+}
+
+.social-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.auth-shell .form .social-btn {
+  min-width: 0;
+  min-height: 42px;
+  margin: 0;
+  padding: 0.5rem 0.4rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.85rem;
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .auth-shell .form .social-btn {
+  border-color: var(--line);
+  background: var(--surface-soft);
+  color: var(--ink);
+}
+
+.provider-icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .auth-shell .form .social-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    box-shadow: none;
+  }
+}
+
+/* redes que todavía no están habilitadas: se ven apagadas pero se pueden tocar para ver el aviso */
+.auth-shell .form .social-btn.is-soon {
+  border-style: dashed;
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+/* en oscuro el color pleno de arriba tiene más peso: hay que igualarlo para que el apagado se note */
+:root[data-theme="dark"] .auth-shell .form .social-btn.is-soon {
+  color: var(--muted);
+}
+
+.social-btn.is-soon .provider-icon {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .auth-shell .form .social-btn.is-soon:hover:not(:disabled) {
+    border-color: var(--line);
+    background: var(--surface);
+    transform: none;
+  }
+}
+
+/* pantallas bajas (notebook, celular apaisado): gano alto para que el registro entre sin scroll */
+@media (max-height: 800px) {
+  .auth-main .auth-shell .form > p:not(.auth-switch) {
+    display: none;
+  }
+
+  .social,
+  .social-list {
+    gap: 0.4rem;
+  }
+}
+
+@media (max-height: 700px) {
+  .social {
+    gap: 0.2rem;
+  }
+
+  .social-list {
+    gap: 0.3rem;
+  }
+}
+
+/* celular: botones cómodos para tocar con el dedo (mínimo recomendado 44 px) */
+@media (max-width: 720px) {
+  .auth-main .auth-shell .form .social-btn {
+    min-height: 44px !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .auth-shell .form .social-btn {
+    font-size: 0.78rem;
+    gap: 0.35rem;
+  }
+}

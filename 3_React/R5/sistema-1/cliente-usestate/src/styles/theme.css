@@ -1,0 +1,46 @@
+/* Tokens compartidos para login, registro y paneles. */
+:root {
+  --canvas: #e7ecf2;
+  --surface: #f5f7fa;
+  --surface-soft: #e9eef4;
+  --surface-raised: #eef2f6;
+  --ink: #17233d;
+  --muted: #5e6a80;
+  --line: #cbd5e1;
+  --accent: #315edb;
+  --accent-ink: #fff;
+  --accent-soft: #e0e8ff;
+  --danger: #c83954;
+  --danger-soft: #fdecef;
+  --focus: #d9773f;
+  --shadow: 0 18px 45px rgb(31 47 81 / 0.12);
+  --panel-background: #e7ecf2;
+  --panel-card: #f5f7fa;
+  --panel-popover: #f5f7fa;
+  --panel-secondary: #e2e8f0;
+  --panel-muted: #e2e8f0;
+  --panel-border: #cbd5e1;
+}
+
+:root[data-theme="dark"] {
+  --canvas: #0d1117;
+  --surface: #111821;
+  --surface-soft: #18202b;
+  --surface-raised: #1e2835;
+  --ink: #f7f9fc;
+  --muted: #aab4c3;
+  --line: #2a3544;
+  --accent: #8ba7ff;
+  --accent-ink: #101827;
+  --accent-soft: #26375f;
+  --danger: #ff9aae;
+  --danger-soft: #482334;
+  --focus: #ffbd82;
+  --shadow: 0 18px 45px rgb(0 0 0 / 0.27);
+  --panel-background: #0d1117;
+  --panel-card: #111821;
+  --panel-popover: #1e2835;
+  --panel-secondary: #18202b;
+  --panel-muted: #18202b;
+  --panel-border: #2a3544;
+}

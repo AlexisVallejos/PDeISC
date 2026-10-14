@@ -1,27 +1,10 @@
-# dependencias
 node_modules/
-
-# entorno (los secretos no se suben)
-.env
-.env.*
-!.env.example
-
-# builds
-dist/
-build/
-.next/
+**/node_modules/
+**/dist/
 *.tsbuildinfo
-
-# logs
+api/.env
+api/database/*.sqlite
+api/database/*.sqlite-*
 *.log
-
-# skills / agentes / ia
-.skills/
-skills/
-.agents/
-.agent/
-.ai/
-.codex/
-.claude/
-.cursor/
-.windsurf/
+**/.next/
+**/next-env.d.ts

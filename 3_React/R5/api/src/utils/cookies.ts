@@ -2,6 +2,8 @@ import type { CookieOptions, Response } from "express";
 import type { PublicUser } from "../types/user.js";
 import { createToken } from "./token.js";
 
+export const SESSION_COOKIE = "r5_session";
+
 export const cookieOptions: CookieOptions = {
   httpOnly: true,
   sameSite: "lax",
@@ -11,5 +13,5 @@ export const cookieOptions: CookieOptions = {
 
 // guarda la sesión en una cookie httpOnly y responde con el usuario
 export function sendSession(res: Response, user: PublicUser, status = 200): void {
-  res.cookie("session", createToken(user), cookieOptions).status(status).json({ user });
+  res.cookie(SESSION_COOKIE, createToken(user), cookieOptions).status(status).json({ user });
 }

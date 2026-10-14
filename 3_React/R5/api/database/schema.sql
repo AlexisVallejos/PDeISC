@@ -19,10 +19,9 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE TABLE IF NOT EXISTS identidades_oauth (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   usuario_id INT UNSIGNED NOT NULL,
-  proveedor VARCHAR(20) NOT NULL,
-  proveedor_uid VARCHAR(100) NOT NULL,
-  creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT uq_identidad_proveedor_uid UNIQUE (proveedor, proveedor_uid),
-  CONSTRAINT uq_identidad_usuario_proveedor UNIQUE (usuario_id, proveedor),
+  proveedor VARCHAR(30) NOT NULL,
+  proveedor_uid VARCHAR(255) NOT NULL,
+  UNIQUE KEY uq_proveedor_uid (proveedor, proveedor_uid),
+  UNIQUE KEY uq_usuario_proveedor (usuario_id, proveedor),
   CONSTRAINT fk_identidad_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

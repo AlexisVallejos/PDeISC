@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { cookieOptions } from "../../utils/cookies.js";
+import { cookieOptions, SESSION_COOKIE } from "../../utils/cookies.js";
 
 export function logout(_req: Request, res: Response): void {
-  res.clearCookie("session", cookieOptions).json({ message: "Sesión cerrada." });
+  res.clearCookie(SESSION_COOKIE, cookieOptions).json({ message: "Sesión cerrada." });
 }

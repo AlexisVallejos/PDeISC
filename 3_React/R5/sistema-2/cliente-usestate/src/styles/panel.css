@@ -1,0 +1,122 @@
+/* Tailwind + shadcn/ui, aislado del CSS del resto de la app.
+   - Sin preflight de Tailwind (no rompe login/registro ni los otros paneles).
+   - Utilidades con !important para ganarle a los estilos globales de elementos (button, td, ...).
+   - Tema y reset se aplican solo cuando <body> tiene la clase .admin-ui (la pone AdminPanel). */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) important;
+@import "tw-animate-css";
+@source "./";
+@custom-variant dark (&:is([data-theme="dark"] *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+/* Paleta oficial de DePaso -> tokens de shadcn */
+body.admin-ui {
+  --depaso-navy: #1a1341;
+  --depaso-blue: #6290c3;
+  --depaso-mint: #c2e7da;
+  --depaso-cream: #f1ffe2;
+  --depaso-lime: #b7ff1a;
+
+  --radius: 0.75rem;
+  --background: var(--panel-background);
+  --foreground: #1a1341;
+  --card: var(--panel-card);
+  --card-foreground: #1a1341;
+  --popover: var(--panel-popover);
+  --popover-foreground: #1a1341;
+  --primary: var(--depaso-navy);
+  --primary-foreground: #ffffff;
+  --secondary: var(--panel-secondary);
+  --secondary-foreground: #1a1341;
+  --muted: var(--panel-muted);
+  --muted-foreground: #64748b;
+  --accent: var(--depaso-mint);
+  --accent-foreground: #1a1341;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: var(--panel-border);
+  --input: var(--panel-border);
+  --ring: var(--depaso-blue);
+}
+:root[data-theme="dark"] body.admin-ui {
+  --background: var(--panel-background);
+  --foreground: #f7f9fc;
+  --card: var(--panel-card);
+  --card-foreground: #f7f9fc;
+  --popover: var(--panel-popover);
+  --popover-foreground: #f7f9fc;
+  --primary: var(--depaso-lime);
+  --primary-foreground: #1a1341;
+  --secondary: var(--panel-secondary);
+  --secondary-foreground: #f7f9fc;
+  --muted: var(--panel-muted);
+  --muted-foreground: #aab4c3;
+  --accent: #173c39;
+  --accent-foreground: #f7f9fc;
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: var(--panel-border);
+  --input: var(--panel-border);
+  --ring: #76a5d5;
+}
+
+/* Reset local: neutraliza los estilos globales de elementos de la app anterior */
+body.admin-ui {
+  color: var(--foreground);
+  background: var(--background);
+}
+body.admin-ui main {
+  width: 100%;
+  max-width: none;
+  padding: 0 1rem;
+}
+body.admin-ui :is(button, input, select, textarea) {
+  all: unset;
+  box-sizing: border-box;
+}
+body.admin-ui button {
+  cursor: pointer;
+}
+body.admin-ui button:disabled {
+  cursor: not-allowed;
+}
+body.admin-ui :is(table, thead, tbody, tfoot, tr, th, td) {
+  all: revert;
+  border-color: var(--border);
+}
+body.admin-ui :is(h1, h2, h3, p) {
+  margin: 0;
+}
+body.admin-ui table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  text-indent: 0;
+}
+body.admin-ui * {
+  border-color: var(--border);
+}

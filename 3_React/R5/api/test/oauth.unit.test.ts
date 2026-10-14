@@ -18,7 +18,7 @@ process.env.TWITCH_CLIENT_ID = "tid";
 process.env.TWITCH_CLIENT_SECRET = "tsec";
 process.env.JWT_SECRET = "secreto-de-prueba";
 // el .env real no debe cambiar el resultado: fijo la dirección del cliente
-process.env.CLIENT_URL = "http://localhost:5175";
+process.env.PUBLIC_URL = "http://localhost:4005";
 process.env.DB_HOST = "127.0.0.1";
 process.env.DB_USER = "root";
 process.env.DB_NAME = "r5";
@@ -52,7 +52,7 @@ test("cada proveedor arma su URL con state y la URL de retorno del cliente", () 
     const url = new URL(getProvider(name).buildUrl("estado123", redirectUri(name), "desafio"));
     assert.equal(url.host, host);
     assert.equal(url.searchParams.get("state"), "estado123");
-    assert.equal(url.searchParams.get("redirect_uri"), `http://localhost:5175/auth/${name}/callback`);
+    assert.equal(url.searchParams.get("redirect_uri"), `http://localhost:4005/api/auth/oauth/return/${name}`);
   }
 });
 
@@ -65,7 +65,7 @@ test("un proveedor inexistente se rechaza", () => {
 test("el state vuelve igual solo si coincide con la cookie y se usa una vez", () => {
   const res = fakeRes();
   const { state } = startState(res, "google");
-  const req = { cookies: { oauth_state: res.cookies.oauth_state } } as unknown as Request;
+  const req = { cookies: { r5_oauth_state: res.cookies.r5_oauth_state } } as unknown as Request;
 
   assert.doesNotThrow(() => checkState(req, fakeRes(), "google", state));
   assert.throws(() => checkState(req, fakeRes(), "google", "otro-state"), /seguridad/);
@@ -82,7 +82,7 @@ test("X usa PKCE: el desafío va en la URL y el verificador vuelve de la cookie"
   assert.equal(url.searchParams.get("code_challenge"), codeChallenge);
   assert.match(url.searchParams.get("scope") || "", /users.email/);
 
-  const verifier = checkState({ cookies: { oauth_state: res.cookies.oauth_state } } as unknown as Request, fakeRes(), "x", state);
+  const verifier = checkState({ cookies: { r5_oauth_state: res.cookies.r5_oauth_state } } as unknown as Request, fakeRes(), "x", state);
   assert.equal(createHash("sha256").update(verifier).digest("base64url"), codeChallenge);
 });
 
@@ -90,7 +90,7 @@ test("sin PKCE el state vuelve sin verificador", () => {
   const res = fakeRes();
   const { state, codeChallenge } = startState(res, "google");
   assert.equal(codeChallenge, "");
-  assert.equal(checkState({ cookies: { oauth_state: res.cookies.oauth_state } } as unknown as Request, fakeRes(), "google", state), "");
+  assert.equal(checkState({ cookies: { r5_oauth_state: res.cookies.r5_oauth_state } } as unknown as Request, fakeRes(), "google", state), "");
 });
 
 test("la lista de redes dice cuáles están habilitadas y no expone claves", async () => {

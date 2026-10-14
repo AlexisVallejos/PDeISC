@@ -3,7 +3,15 @@
 import test, { after } from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 
+const testDir = mkdtempSync(join(tmpdir(), "r5-oauth-test-"));
+process.env.DB_DRIVER = "sqlite";
+process.env.DB_FILE = join(testDir, "r5.sqlite");
+process.env.JWT_SECRET = "secreto-de-prueba-largo";
+process.env.PUBLIC_URL = "http://localhost:4005";
 process.env.GOOGLE_CLIENT_ID = "gid";
 process.env.GOOGLE_CLIENT_SECRET = "gsec";
 process.env.GITHUB_CLIENT_ID = "hid";
@@ -20,8 +28,7 @@ process.env.TWITCH_CLIENT_SECRET = "tsec";
 const { default: app } = await import("../src/app.js");
 const { pool } = await import("../src/services/db.js");
 
-const dbReady = await pool.query("SELECT 1 FROM identidades_oauth LIMIT 1").then(() => true, () => false);
-const options = { skip: dbReady ? false : "MySQL apagado o base sin crear (npm run seed)" };
+await pool.query(readFileSync(new URL("../database/schema.sqlite.sql", import.meta.url), "utf8"));
 const MAIL = "@oauth.test";
 
 // fetch falso: responde lo que cada proveedor diría; lo demás (la propia API) pasa de largo
@@ -91,38 +98,50 @@ const x = (id: string, name: string, confirmed_email: string | undefined) => {
   fake["https://api.x.com/2/users/me"] = { body: { data: { id, name, username: "user" + id, confirmed_email } } };
 };
 
-const clean = () => pool.query("DELETE FROM usuarios WHERE email LIKE ?", [`%${MAIL}`]);
-if (dbReady) await clean();
+const clean = () => pool.execute("DELETE FROM usuarios WHERE email LIKE ?", [`%${MAIL}`]);
+await clean();
 
-test("Google: crea la cuenta con rol usuario, abre sesión y el segundo ingreso es la misma cuenta", options, async () => {
+test("Google: crea la cuenta con rol usuario, abre sesión y el segundo ingreso es la misma cuenta", async () => {
   google("g-1", "Ana Pérez", `ana${MAIL}`);
   const web = browser();
   const first = await web.loginWith("google");
   assert.equal(first.status, 200);
   assert.equal(first.data.user.rol, "usuario");
   assert.equal(first.data.user.nombre, "Ana Pérez");
-  assert.ok(web.jar.session, "abre la cookie de sesión");
+  assert.ok(web.jar.r5_session, "abre la cookie de sesión");
   assert.equal((await web.post("/sesion", {})).data.user.email, `ana${MAIL}`);
 
   const second = await browser().loginWith("google");
   assert.equal(second.data.user.id, first.data.user.id);
 });
 
-test("GitHub: con el mismo correo verificado se vincula a la cuenta existente", options, async () => {
+test("la URL de retorno común vuelve al cliente que inició el ingreso", async () => {
+  google("g-1", "Ana Pérez", `ana${MAIL}`);
+  const web = browser();
+  const { data } = await web.post("/oauth/url", { provider: "google", clientOrigin: "http://localhost:5184" });
+  const state = new URL(data.url).searchParams.get("state");
+  const cookie = Object.entries(web.jar).map(([name, value]) => `${name}=${value}`).join("; ");
+  const response = await realFetch(`${base}/oauth/return/google?code=abc&state=${state}`, { headers: { Cookie: cookie }, redirect: "manual" });
+  assert.equal(response.status, 303);
+  assert.equal(response.headers.get("location"), `http://localhost:5184/auth/google/callback?code=abc&state=${state}`);
+  assert.equal((await web.post("/oauth/callback", { provider: "google", code: "abc", state })).status, 200);
+});
+
+test("GitHub: con el mismo correo verificado se vincula a la cuenta existente", async () => {
   const anaId = (await browser().loginWith("google")).data.user.id;
   github(555, "ana1980", [{ email: "otro@x.com", primary: false, verified: true }, { email: `ana${MAIL}`, primary: true, verified: true }]);
   const result = await browser().loginWith("github");
   assert.equal(result.data.user.id, anaId);
 });
 
-test("GitHub sin correo verificado se rechaza", options, async () => {
+test("GitHub sin correo verificado se rechaza", async () => {
   github(999, "zed", [{ email: "zed@x.com", primary: true, verified: false }]);
   const result = await browser().loginWith("github");
   assert.equal(result.status, 400);
   assert.match(result.data.message, /correo verificado/);
 });
 
-test("Discord: crea la cuenta y limpia el nombre; sin verificar o sin correo se rechaza", options, async () => {
+test("Discord: crea la cuenta y limpia el nombre; sin verificar o sin correo se rechaza", async () => {
   discord("777", "Luis 2000 Gómez", `luis${MAIL}`);
   const ok = await browser().loginWith("discord");
   assert.equal(ok.status, 200);
@@ -135,7 +154,7 @@ test("Discord: crea la cuenta y limpia el nombre; sin verificar o sin correo se 
   assert.equal((await browser().loginWith("discord")).status, 400);
 });
 
-test("Facebook: crea la cuenta; sin correo se rechaza", options, async () => {
+test("Facebook: crea la cuenta; sin correo se rechaza", async () => {
   facebook("f-1", "Marta Facebook", `marta${MAIL}`);
   const ok = await browser().loginWith("facebook");
   assert.equal(ok.status, 200);
@@ -145,7 +164,7 @@ test("Facebook: crea la cuenta; sin correo se rechaza", options, async () => {
   assert.equal((await browser().loginWith("facebook")).status, 400);
 });
 
-test("Twitch: crea la cuenta y limpia el nombre; sin correo se rechaza", options, async () => {
+test("Twitch: crea la cuenta y limpia el nombre; sin correo se rechaza", async () => {
   twitch("t-1", "Gamer 99 Pro", `gamer${MAIL}`);
   const ok = await browser().loginWith("twitch");
   assert.equal(ok.status, 200);
@@ -155,7 +174,7 @@ test("Twitch: crea la cuenta y limpia el nombre; sin correo se rechaza", options
   assert.equal((await browser().loginWith("twitch")).status, 400);
 });
 
-test("X: manda el verificador PKCE y crea la cuenta con el correo confirmado", options, async () => {
+test("X: manda el verificador PKCE y crea la cuenta con el correo confirmado", async () => {
   x("x-1", "Pablo Equis", `pablo${MAIL}`);
   const web = browser();
   const { data } = await web.post("/oauth/url", { provider: "x" });
@@ -182,7 +201,7 @@ test("X: manda el verificador PKCE y crea la cuenta con el correo confirmado", o
   assert.equal((await browser().loginWith("x")).status, 400);
 });
 
-test("seguridad del state: distinto, sin cookie, repetido o de otro proveedor", options, async () => {
+test("seguridad del state: distinto, sin cookie, repetido o de otro proveedor", async () => {
   google("g-1", "Ana Pérez", `ana${MAIL}`);
   assert.equal((await browser().loginWith("google", { state: "x".repeat(48) })).status, 400);
   assert.equal((await browser().post("/oauth/callback", { provider: "google", code: "c", state: "s" })).status, 400);
@@ -199,7 +218,7 @@ test("seguridad del state: distinto, sin cookie, repetido o de otro proveedor", 
   assert.equal((await other.post("/oauth/callback", { provider: "github", code: "c", state: googleState })).status, 400);
 });
 
-test("si el proveedor rechaza el código, la API responde 502 con un mensaje claro", options, async (t) => {
+test("si el proveedor rechaza el código, la API responde 502 con un mensaje claro", async (t) => {
   t.mock.method(console, "error", () => {});
   fake["https://oauth2.googleapis.com/token"] = { status: 400, body: { error: "invalid_grant" } };
   const result = await browser().loginWith("google");
@@ -207,12 +226,13 @@ test("si el proveedor rechaza el código, la API responde 502 con un mensaje cla
   assert.match(result.data.message, /Google/);
 });
 
-test("una cuenta creada por una red no entra con contraseña", options, async () => {
+test("una cuenta creada por una red no entra con contraseña", async () => {
   const result = await browser().post("/login", { email: `ana${MAIL}`, password: "Cualquiera1!" });
-  assert.equal(result.status, 401);
+  assert.equal(result.status, 409);
+  assert.equal(result.data.oauthProvider, "google");
 });
 
-test("un usuario con contraseña se vincula si el correo llega verificado, y no si no lo está", options, async () => {
+test("un usuario con contraseña se vincula si el correo llega verificado, y no si no lo está", async () => {
   await browser().post("/registro", { nombre: "Local Uno", email: `local${MAIL}`, password: "Clave123!x" });
   google("g-2", "Local", `local${MAIL}`, true);
   assert.equal((await browser().loginWith("google")).data.user.nombre, "Local Uno");
@@ -221,14 +241,15 @@ test("un usuario con contraseña se vincula si el correo llega verificado, y no 
   assert.equal((await browser().loginWith("google")).status, 400);
 });
 
-test("borrar un usuario borra sus identidades", options, async () => {
+test("borrar un usuario borra sus identidades", async () => {
   await clean();
-  const [[row]]: any = await pool.query("SELECT COUNT(*) AS n FROM identidades_oauth WHERE proveedor_uid IN ('g-1', 'g-2', '555', '777', 'f-1', 't-1', 'x-1')");
+  const [[row]]: any = await pool.execute("SELECT COUNT(*) AS n FROM identidades_oauth WHERE proveedor_uid IN ('g-1', 'g-2', '555', '777', 'f-1', 't-1', 'x-1')");
   assert.equal(row.n, 0);
 });
 
 after(async () => {
-  if (dbReady) await clean();
+  await clean();
   server.close();
   await pool.end();
+  rmSync(testDir, { recursive: true, force: true });
 });

@@ -1,0 +1,87 @@
+/* Aviso «Próximamente» de las redes que todavía no están habilitadas (usa <dialog>) */
+
+.soon-dialog {
+  width: min(400px, calc(100vw - 32px));
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 28px 75px rgb(0 0 0 / 0.35);
+}
+
+.soon-dialog::backdrop {
+  background: rgb(6 10 20 / 0.6);
+  backdrop-filter: blur(6px);
+}
+
+.soon-dialog[open] {
+  animation: soon-pop 0.2s ease-out;
+}
+
+.soon-card {
+  display: grid;
+  justify-items: center;
+  gap: 0.7rem;
+  padding: 1.9rem 1.6rem 1.6rem;
+  text-align: center;
+}
+
+.soon-icons {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.2rem;
+  color: var(--accent);
+}
+
+.soon-icons .provider-icon {
+  width: 34px;
+  height: 34px;
+}
+
+.soon-icons > svg:last-child {
+  width: 22px;
+  height: 22px;
+}
+
+.soon-card h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.soon-card p {
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.soon-card .soon-help {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.soon-close {
+  min-height: 44px;
+  margin-top: 0.5rem;
+  padding: 0.6rem 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: #101b5c;
+  color: #fff;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+:root[data-theme="dark"] .soon-close {
+  background: #b5f000;
+  color: #101827;
+}
+
+@keyframes soon-pop {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}

@@ -1,0 +1,93 @@
+html:has(.auth-main),
+body:has(.auth-main) {
+  height: 100%;
+  overflow: hidden;
+}
+.auth-main {
+  height: 100dvh !important;
+  overflow: hidden;
+}
+.auth-main .auth-shell {
+  height: 100dvh;
+  min-height: 100dvh !important;
+}
+.auth-mark {
+  gap: 0.7rem !important;
+}
+.brand-isotype {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+}
+.auth-mark strong {
+  color: var(--ink);
+  font-size: 1.55rem;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+}
+@media (max-height: 760px) and (min-width: 721px) {
+  .auth-main .auth-shell .form {
+    padding-block: 2rem;
+  }
+  .auth-shell .form {
+    gap: 0.8rem;
+  }
+  .auth-shell .form > h1 {
+    font-size: 2.2rem;
+  }
+}
+@media (max-width: 720px) {
+  .auth-main .auth-shell .form {
+    height: 100dvh;
+    overflow: hidden;
+    gap: 0.8rem;
+  }
+  .auth-shell .form > h1 {
+    font-size: 2.2rem;
+  }
+  .field input {
+    min-height: 42px;
+  }
+  .auth-theme {
+    top: 1rem;
+    right: 1rem;
+  }
+}
+.auth-shell .form > .auth-mark {
+  justify-content: center;
+}
+.auth-shell .form > h1,
+.auth-shell .form > p {
+  text-align: center;
+}
+.password-wrap {
+  position: relative;
+  display: block;
+}
+.password-wrap input {
+  width: 100%;
+  padding-right: 2.8rem !important;
+}
+.auth-shell .form .password-wrap .password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.35rem;
+  width: 34px;
+  min-height: 34px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  border-radius: 50% !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  box-shadow: none !important;
+}
+.auth-shell .form .password-wrap .password-toggle:hover {
+  color: var(--ink) !important;
+}
+.password-toggle svg {
+  width: 18px;
+  height: 18px;
+}

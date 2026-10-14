@@ -5,7 +5,7 @@ import type { OAuthProvider } from "../../types/oauth.js";
 const credentials = config.oauth.discord;
 
 // Discord pide que las llamadas a su API se identifiquen con este formato
-const headers = { "User-Agent": `DiscordBot (${config.clientUrl}, 1.0)` };
+const headers = { "User-Agent": `DiscordBot (${config.publicUrl}, 1.0)` };
 
 export const discord: OAuthProvider = {
   name: "discord",

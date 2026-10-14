@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="1200" height="720" fill="#e9e4da"/>
+<rect x="42" y="38" width="1116" height="644" rx="14" fill="#fcfaf5"/>
+<text x="84" y="96" font-family="Georgia" font-size="30" font-style="italic" fill="#31453a">depaso.</text>
+<text x="612" y="88" font-family="Helvetica Neue,Arial" font-size="12" fill="#576c60">Inicio</text><text x="702" y="88" font-family="Helvetica Neue,Arial" font-size="12" fill="#576c60">Mi perfil</text><text x="801" y="88" font-family="Helvetica Neue,Arial" font-size="12" fill="#576c60">Usuarios</text>
+<circle cx="1085" cy="82" r="20" fill="#d9e3d5"/><text x="1073" y="87" font-family="Helvetica Neue,Arial" font-size="11" font-weight="700" fill="#31453a">AM</text>
+<line x1="42" y1="118" x2="1158" y2="118" stroke="#e5dfd4"/>
+<rect x="42" y="119" width="1116" height="212" fill="#e8ede4"/>
+<text x="85" y="165" font-family="Helvetica Neue,Arial" font-size="11" letter-spacing="2" fill="#58755f">TU ESPACIO</text>
+<text x="83" y="242" font-family="Georgia" font-size="57" fill="#31453a">Hola, Ana.</text>
+<text x="85" y="279" font-family="Helvetica Neue,Arial" font-size="14" fill="#66796a">Tu cuenta está lista. Actualizá tus datos y elegí cómo iniciar sesión.</text>
+<circle cx="1018" cy="225" r="79" fill="#d9e3d5"/><circle cx="1018" cy="225" r="56" fill="#c7d6c3"/><text x="979" y="241" font-family="Georgia" font-size="45" fill="#31453a">AM</text>
+<rect x="84" y="362" width="625" height="270" rx="10" fill="#ffffff" stroke="#e5dfd4"/>
+<text x="112" y="406" font-family="Georgia" font-size="28" fill="#31453a">Mi perfil</text><text x="568" y="400" font-family="Helvetica Neue,Arial" font-size="10" letter-spacing="1" fill="#77937e">CUENTA ACTIVA</text>
+<text x="112" y="440" font-family="Helvetica Neue,Arial" font-size="12" fill="#8b978a">Mantené tus datos al día.</text>
+<text x="112" y="485" font-family="Helvetica Neue,Arial" font-size="10" letter-spacing="1" fill="#8b978a">NOMBRE</text><text x="112" y="509" font-family="Helvetica Neue,Arial" font-size="14" fill="#31453a">Ana Martínez</text><line x1="112" y1="524" x2="680" y2="524" stroke="#e5dfd4"/>
+<text x="112" y="552" font-family="Helvetica Neue,Arial" font-size="10" letter-spacing="1" fill="#8b978a">CORREO</text><text x="112" y="576" font-family="Helvetica Neue,Arial" font-size="14" fill="#31453a">ana@correo.com</text>
+<rect x="512" y="574" width="168" height="39" rx="5" fill="#496e54"/><text x="540" y="599" font-family="Helvetica Neue,Arial" font-size="12" font-weight="700" fill="#ffffff">Guardar cambios →</text>
+<rect x="735" y="362" width="380" height="151" rx="10" fill="#f2e7d8"/>
+<text x="759" y="402" font-family="Georgia" font-size="24" fill="#554736">Acceso flexible</text>
+<text x="759" y="430" font-family="Helvetica Neue,Arial" font-size="12" fill="#796b5d">Ingresá con tu red favorita y mantené</text><text x="759" y="449" font-family="Helvetica Neue,Arial" font-size="12" fill="#796b5d">una sola cuenta para todo.</text>
+<g font-family="Helvetica Neue,Arial" font-size="10" fill="#554736"><text x="759" y="486">Google  ·  Facebook  ·  X  ·  GitHub  ·  Discord  ·  Twitch</text></g>
+<rect x="735" y="528" width="380" height="104" rx="10" fill="#ecf0ea"/>
+<text x="759" y="565" font-family="Georgia" font-size="23" fill="#31453a">Para administradores</text><text x="759" y="591" font-family="Helvetica Neue,Arial" font-size="12" fill="#66796a">Buscar, crear y editar usuarios con claridad.</text><text x="759" y="616" font-family="Helvetica Neue,Arial" font-size="12" font-weight="700" fill="#496e54">Ir a gestión de usuarios →</text>
+</svg>

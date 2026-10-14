@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="1200" height="720" fill="#e8e9e5"/>
+<rect x="44" y="42" width="1112" height="636" rx="12" fill="#f9faf7"/>
+<rect x="44" y="42" width="654" height="636" rx="12" fill="#12223a"/>
+<rect x="666" y="42" width="32" height="636" fill="#12223a"/>
+<text x="90" y="100" font-family="Helvetica Neue,Arial" font-size="30" font-weight="700" letter-spacing="-2" fill="#f8f8ef">depaso<tspan fill="#b5d993">.</tspan></text>
+<text x="546" y="96" font-family="Helvetica Neue,Arial" font-size="11" letter-spacing="2" fill="#b5d993">R5 / ACCESO</text>
+<line x1="90" y1="123" x2="650" y2="123" stroke="#3c4d61"/>
+<text x="90" y="198" font-family="Helvetica Neue,Arial" font-size="12" letter-spacing="3" fill="#b5d993">UNA CUENTA, TODAS TUS POSIBILIDADES</text>
+<text x="88" y="294" font-family="Georgia" font-size="65" fill="#f8f8ef">Entrá en</text>
+<text x="88" y="362" font-family="Georgia" font-size="65" font-style="italic" fill="#f8f8ef">tu espacio.</text>
+<text x="90" y="411" font-family="Helvetica Neue,Arial" font-size="16" fill="#b9c5cc">Tu perfil, tus accesos y tu información,</text>
+<text x="90" y="435" font-family="Helvetica Neue,Arial" font-size="16" fill="#b9c5cc">en un lugar simple y seguro.</text>
+<line x1="90" y1="574" x2="650" y2="574" stroke="#3c4d61"/>
+<text x="90" y="611" font-family="Helvetica Neue,Arial" font-size="12" fill="#b9c5cc">01 / ACCESO</text><text x="260" y="611" font-family="Helvetica Neue,Arial" font-size="12" fill="#b9c5cc">02 / PERFIL</text><text x="426" y="611" font-family="Helvetica Neue,Arial" font-size="12" fill="#b9c5cc">03 / USUARIOS</text>
+<text x="762" y="109" font-family="Helvetica Neue,Arial" font-size="12" letter-spacing="2" fill="#6a7880">BIENVENIDO DE NUEVO</text>
+<text x="762" y="160" font-family="Georgia" font-size="36" fill="#172538">Iniciar sesión</text>
+<text x="762" y="193" font-family="Helvetica Neue,Arial" font-size="14" fill="#65737c">Ingresá con tu correo o una red social.</text>
+<text x="762" y="245" font-family="Helvetica Neue,Arial" font-size="11" letter-spacing="1" fill="#65737c">CORREO ELECTRÓNICO</text>
+<rect x="762" y="259" width="330" height="47" rx="6" fill="#ffffff" stroke="#cbd2d1"/><text x="779" y="288" font-family="Helvetica Neue,Arial" font-size="14" fill="#9ba6a8">nombre@correo.com</text>
+<text x="762" y="340" font-family="Helvetica Neue,Arial" font-size="11" letter-spacing="1" fill="#65737c">CONTRASEÑA</text>
+<rect x="762" y="354" width="330" height="47" rx="6" fill="#ffffff" stroke="#cbd2d1"/><text x="779" y="384" font-family="Helvetica Neue,Arial" font-size="17" fill="#9ba6a8">••••••••</text>
+<rect x="762" y="424" width="330" height="50" rx="6" fill="#12223a"/><text x="864" y="455" font-family="Helvetica Neue,Arial" font-size="14" font-weight="700" fill="#ffffff">Iniciar sesión  →</text>
+<line x1="762" y1="507" x2="885" y2="507" stroke="#cbd2d1"/><text x="900" y="511" font-family="Helvetica Neue,Arial" font-size="10" fill="#65737c">O CONTINUAR CON</text><line x1="1009" y1="507" x2="1092" y2="507" stroke="#cbd2d1"/>
+<g font-family="Helvetica Neue,Arial" font-size="12" fill="#172538" text-anchor="middle">
+<rect x="762" y="529" width="102" height="40" rx="5" fill="#ffffff" stroke="#cbd2d1"/><text x="813" y="554">Google</text>
+<rect x="876" y="529" width="102" height="40" rx="5" fill="#ffffff" stroke="#cbd2d1"/><text x="927" y="554">GitHub</text>
+<rect x="990" y="529" width="102" height="40" rx="5" fill="#ffffff" stroke="#cbd2d1"/><text x="1041" y="554">Discord</text>
+<rect x="762" y="580" width="102" height="40" rx="5" fill="#ffffff" stroke="#cbd2d1"/><text x="813" y="605">Facebook</text>
+<rect x="876" y="580" width="102" height="40" rx="5" fill="#ffffff" stroke="#cbd2d1"/><text x="927" y="605">X</text>
+<rect x="990" y="580" width="102" height="40" rx="5" fill="#ffffff" stroke="#cbd2d1"/><text x="1041" y="605">Twitch</text>
+</g>
+<text x="762" y="650" font-family="Helvetica Neue,Arial" font-size="12" fill="#65737c">¿No tenés cuenta? <tspan fill="#12223a" font-weight="700">Registrate</tspan></text>
+</svg>

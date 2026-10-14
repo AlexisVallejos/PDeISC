@@ -1,0 +1,24 @@
+.live-rules {
+  display: grid;
+  gap: 0.24rem;
+  margin: -0.55rem 0 0.1rem;
+  padding: 0;
+  list-style: none;
+  font-size: 0.73rem;
+  font-weight: 700;
+}
+.live-rules li {
+  color: var(--muted);
+}
+.live-rules .valid {
+  color: #16834e;
+}
+.live-rules .invalid {
+  color: var(--muted);
+}
+:root[data-theme="dark"] .live-rules .valid {
+  color: #8cf0b3;
+}
+.live-rules.compact {
+  margin-top: -0.75rem;
+}
