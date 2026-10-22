@@ -1,0 +1,88 @@
+{
+  "expo": {
+    "name": "DAMAC Lab",
+    "slug": "damac-lab",
+    "scheme": "damaclab",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/brand/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.damac.lab",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "DAMAC Lab usa Face ID para confirmar tu identidad y proteger la bóveda de notas."
+      }
+    },
+    "android": {
+      "package": "com.damac.lab",
+      "adaptiveIcon": {
+        "backgroundColor": "#0E0F11",
+        "foregroundImage": "./assets/brand/icon.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "CAMERA",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "USE_BIOMETRIC",
+        "USE_FINGERPRINT",
+        "VIBRATE",
+        "WRITE_SETTINGS",
+        "ACTIVITY_RECOGNITION"
+      ],
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/brand/icon.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "DAMAC Lab usa la cámara para sacar fotos y leer códigos cuando vos lo pedís.",
+          "microphonePermission": false
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "DAMAC Lab usa tu ubicación mientras está abierta para mostrar el GPS y el recorrido."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "DAMAC Lab usa Face ID para proteger la bóveda de notas."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "DAMAC Lab necesita acceso a tus fotos para guardar la imagen que sacaste.",
+          "savePhotosPermission": "DAMAC Lab guarda en tu galería las fotos que elijas.",
+          "granularPermissions": []
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/brand/icon.png",
+          "imageWidth": 160,
+          "resizeMode": "contain",
+          "backgroundColor": "#0E0F11",
+          "dark": { "backgroundColor": "#0E0F11" }
+        }
+      ],
+      "expo-secure-store",
+      "expo-sharing",
+      "expo-status-bar",
+      "expo-font"
+    ]
+  }
+}
