@@ -18,7 +18,7 @@ import { PressableScale } from '../components/PressableScale';
 import type { RootStackParamList } from '../navigation/types';
 
 const cards = [
- ['Camara','Cámara','Sacá y compartí fotos.','camera',' #E30614'],['Lector','Códigos','QR y barras al instante.','qr-code','#0A84FF'],['Ubicacion','Ubicación','GPS, brújula y recorrido.','navigate','#34C759'],['Sensores','Sensores','Acelerómetro y giroscopio.','speedometer','#AF52DE'],['Biometria','Biometría','Probá la autenticación local.','finger-print','#FF9F0A'],['Extras','Extras','Batería, voz, red y más.','hardware-chip','#637083'],
+ ['Camara','Cámara','Sacá y compartí fotos.','camera','#E30614'],['Lector','Códigos','QR y barras al instante.','qr-code','#0A84FF'],['Ubicacion','Ubicación','GPS, brújula y recorrido.','navigate','#34C759'],['Sensores','Sensores','Acelerómetro y giroscopio.','speedometer','#AF52DE'],['Biometria','Biometría','Probá la autenticación local.','finger-print','#FF9F0A'],['Extras','Extras','Batería, voz, red y más.','hardware-chip','#637083'],
 ] as const;
 export function InicioScreen() {
  const {palette}=useTheme(); const nav=useNavigation<NativeStackNavigationProp<RootStackParamList>>(); const reduce=useReducedMotion(); const wide=Dimensions.get('window').width>=700; const [statuses,setStatuses]=useState<Record<string,string>>({});
