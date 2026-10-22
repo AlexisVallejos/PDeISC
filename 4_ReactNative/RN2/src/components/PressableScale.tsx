@@ -1,7 +1,7 @@
 import * as Haptics from 'expo-haptics';
 import type { ReactNode } from 'react';
 import { Platform, Pressable, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withSpring } from 'react-native-reanimated';
 import { springs } from '../theme';
 
 interface PressableScaleProps extends Omit<PressableProps, 'style' | 'children'> {
@@ -25,6 +25,7 @@ export function PressableScale({
   ...rest
 }: PressableScaleProps) {
   const scale = useSharedValue(1);
+  const reduceMotion = useReducedMotion();
   const animated = useAnimatedStyle(() => ({ transform: [{ scale: scale.get() }] }));
 
   return (
@@ -35,12 +36,12 @@ export function PressableScale({
       pressRetentionOffset={20}
       style={webControl}
       onPressIn={(e) => {
-        scale.set(withSpring(pressedScale, springs.press));
+        scale.set(reduceMotion ? 1 : withSpring(pressedScale, springs.press));
         if (haptic && Platform.OS !== 'web') Haptics.selectionAsync();
         onPressIn?.(e);
       }}
       onPressOut={(e) => {
-        scale.set(withSpring(1, springs.ui));
+        scale.set(reduceMotion ? 1 : withSpring(1, springs.ui));
         onPressOut?.(e);
       }}
     >
