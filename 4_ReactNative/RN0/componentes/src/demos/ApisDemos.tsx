@@ -43,6 +43,7 @@ export function AnimatedDemo() {
     return () => sub.remove();
   }, []);
 
+  /** Reinicia y ejecuta la animación de ejemplo. */
   const animar = () => {
     const destino = activo ? 0 : 1;
     setActivo(!activo);
@@ -152,6 +153,7 @@ export function AccessibilityInfoDemo() {
     };
   }, []);
 
+  /** Convierte un booleano aún no cargado o resuelto en texto legible. */
   const si = (v: boolean | null) => (v === null ? '…' : v ? 'Sí' : 'No');
   return (
     <View style={{ gap: space.md }}>

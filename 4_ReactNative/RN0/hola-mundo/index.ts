@@ -2,7 +2,8 @@ import { registerRootComponent } from 'expo';
 
 import App from './App';
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
+// Punto de entrada indicado por "main": "index.ts" en package.json.
+// Expo Go descarga este módulo desde Metro cuando se abre la URL del QR.
+// registerRootComponent registra App como raíz y prepara el entorno nativo de Expo.
+// La conexión por Wi-Fi y el QR los gestiona `expo start --lan`; no se programa un socket aquí.
 registerRootComponent(App);

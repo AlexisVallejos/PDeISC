@@ -12,6 +12,7 @@ import type { RootStackParamList } from './src/types/navigation';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
+/** Monta los proveedores globales y la navegación principal de esta aplicación Expo. */
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

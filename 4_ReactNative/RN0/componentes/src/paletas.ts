@@ -41,6 +41,7 @@ export const PALETAS: Paleta[] = [
 
 export const PALETA_INICIAL: PaletaId = 'verde';
 
+/** Busca una paleta por identificador y usa la inicial si el dato guardado no es válido. */
 export function buscarPaleta(id: string | null | undefined): Paleta {
   return PALETAS.find((p) => p.id === id) ?? PALETAS[0]!;
 }

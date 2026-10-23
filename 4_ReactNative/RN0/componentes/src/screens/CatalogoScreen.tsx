@@ -50,6 +50,8 @@ export function CatalogoScreen({ navigation }: CatalogoScreenProps) {
   const bordeCompacto = useAnimatedStyle(() => ({ opacity: interpolate(scrollY.get(), [60, 90], [0, 1], 'clamp') }));
 
   const secciones = useMemo(() => {
+    // Primero filtra categorías; luego conserva solo fichas que coinciden con la búsqueda.
+    // Las secciones vacías se omiten para que SectionList no muestre encabezados sin filas.
     const q = normalizar(busqueda.trim());
     return categorias
       .filter((cat) => filtro === 'todos' || cat.id === filtro)
@@ -62,8 +64,10 @@ export function CatalogoScreen({ navigation }: CatalogoScreenProps) {
       .filter((s) => s.data.length > 0);
   }, [busqueda, filtro]);
 
+  /** Abre la ficha por su id; useCallback evita volver a dibujar todas las filas memorizadas. */
   const abrir = useCallback((id: string) => navigation.navigate('Detalle', { id }), [navigation]);
 
+  /** Renderiza una fila con su posición dentro de la sección. */
   const renderItem = useCallback(
     ({ item, index, section }: { item: Componente; index: number; section: { data: Componente[] } }) => (
       <FilaComponente componente={item} primera={index === 0} ultima={index === section.data.length - 1} onPress={abrir} />

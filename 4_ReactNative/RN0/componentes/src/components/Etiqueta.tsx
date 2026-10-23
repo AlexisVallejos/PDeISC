@@ -18,6 +18,7 @@ export function Etiquetas({ componente }: { componente: Componente }) {
   );
 }
 
+/** Dibuja una etiqueta individual con el estilo del catálogo. */
 export function Etiqueta({ texto }: { texto: string }) {
   const c = useTheme();
   return (

@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
-import type { LoginResponse } from '../types/usuario';
+import type { AccionResponse, LoginResponse } from '../types/usuario';
 
 const API_PORT = 3000;
 
@@ -29,6 +29,25 @@ function resolveApiUrl(): string {
 
 export const API_URL = resolveApiUrl();
 
+async function post<T extends { ok: boolean; mensaje: string }>(ruta: string, cuerpo: object): Promise<T> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const res = await fetch(`${API_URL}${ruta}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cuerpo),
+      signal: controller.signal,
+    });
+    return (await res.json()) as T;
+  } catch {
+    return { ok: false, mensaje: `No se pudo conectar con el servidor (${API_URL})` } as T;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function login(usuario: string, clave: string): Promise<LoginResponse> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 8000);
@@ -47,3 +66,10 @@ export async function login(usuario: string, clave: string): Promise<LoginRespon
     clearTimeout(timer);
   }
 }
+
+/** Paso 1: pide que se envíe un código de 6 dígitos al email de la cuenta (usuario o email). */
+export const pedirCodigo = (identificador: string) => post<AccionResponse>('/api/recuperar', { identificador });
+
+/** Paso 2: valida el código y guarda la contraseña nueva. */
+export const restablecerClave = (identificador: string, codigo: string, clave: string) =>
+  post<AccionResponse>('/api/restablecer', { identificador, codigo, clave });

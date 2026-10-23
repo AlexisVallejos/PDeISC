@@ -18,6 +18,7 @@ export function useTema() {
 
 export type Tema = ReturnType<typeof crearTema>;
 
+/** Construye los colores semánticos de la interfaz para una paleta y un modo concretos. */
 function crearTema(p: Paleta, oscuro: boolean) {
   return {
     oscuro,

@@ -756,6 +756,7 @@ AccessibilityInfo.announceForAccessibility('Guardado');`,
   },
 ];
 
+/** Busca una ficha por su identificador para abrirla desde la navegación. */
 export function buscarComponente(id: string) {
   return componentes.find((c) => c.id === id);
 }

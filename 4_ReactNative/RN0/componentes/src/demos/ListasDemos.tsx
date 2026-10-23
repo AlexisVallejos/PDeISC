@@ -14,6 +14,7 @@ const FilaLista = memo(function FilaLista({ texto, color }: { texto: string; col
 /** FlatList: 60 ítems dentro de un recuadro que se desplaza solo. */
 export function FlatListDemo() {
   const c = useTheme();
+  /** Dibuja cada fruta con el color del tema; solo cambia si cambia ese color. */
   const renderItem = useCallback(({ item }: { item: (typeof DATOS)[number] }) => <FilaLista texto={item.nombre} color={c.label} />, [c.label]);
   return (
     <View style={{ gap: space.md }}>
@@ -80,6 +81,7 @@ export function RefreshControlDemo() {
   const [cargando, setCargando] = useState(false);
   const [hora, setHora] = useState(() => new Date());
 
+  /** Activa el indicador y simula la finalización de una recarga. */
   const recargar = useCallback(() => {
     setCargando(true);
     setTimeout(() => {

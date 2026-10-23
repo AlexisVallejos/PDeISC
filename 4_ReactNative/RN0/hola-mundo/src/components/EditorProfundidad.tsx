@@ -31,6 +31,7 @@ export function EditorProfundidad({ tema }: { tema: Tema }) {
   // La capa del frente proyecta una sombra más fuerte que las cartas, para que se note la altura.
   const frente = useAnimatedStyle(() => sombra(Math.max(valores.elevacion.get(), 8), 1.3));
 
+  /** Devuelve los ajustes de esta sección a sus valores iniciales y actualiza la vista previa. */
   const restablecer = () => {
     valores.elevacion.set(withSpring(DISEÑO_INICIAL.elevacion, RESORTE));
     valores.separacion.set(withSpring(DISEÑO_INICIAL.separacion, RESORTE));

@@ -411,6 +411,7 @@ npx expo start      <span class="c"># QR → Expo Go · w → web · a → Andro
  * animación de entrada (IntersectionObserver). Sin dependencias.
  */
 class Presentacion {
+  /** Localiza las diapositivas y los indicadores; después conecta navegación y observación. */
   constructor() {
     this.slides = [...document.querySelectorAll('.slide')];
     this.actual = 0;
@@ -423,6 +424,7 @@ class Presentacion {
     this.escuchar();
   }
 
+  /** Crea un botón accesible por diapositiva y lo vincula con su destino. */
   crearPuntos() {
     this.slides.forEach((s, i) => {
       const b = document.createElement('button');
@@ -433,6 +435,7 @@ class Presentacion {
     });
   }
 
+  /** Marca como visible la diapositiva que ocupa la mayor parte de la pantalla. */
   observar() {
     const io = new IntersectionObserver((entradas) => {
       for (const e of entradas) {
@@ -445,6 +448,7 @@ class Presentacion {
     this.slides.forEach((s) => io.observe(s));
   }
 
+  /** Sincroniza la barra de progreso, el contador y el punto seleccionado. */
   actualizar() {
     const total = this.slides.length;
     this.progreso.style.transform = `scaleX(${(this.actual + 1) / total})`;
@@ -452,11 +456,13 @@ class Presentacion {
     [...this.puntos.children].forEach((b, i) => b.setAttribute('aria-current', String(i === this.actual)));
   }
 
+  /** Limita el índice al rango disponible y desplaza la presentación hasta allí. */
   ir(i) {
     const destino = Math.max(0, Math.min(this.slides.length - 1, i));
     this.slides[destino].scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
 
+  /** Admite teclado, rueda y deslizamientos horizontales como formas de navegación. */
   escuchar() {
     document.addEventListener('keydown', (e) => {
       if (['ArrowDown', 'ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); this.ir(this.actual + 1); }

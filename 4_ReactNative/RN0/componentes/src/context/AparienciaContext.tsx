@@ -20,6 +20,7 @@ export function AparienciaProvider({ children }: { children: ReactNode }) {
   const [paletaId, setPaletaId] = useState<PaletaId>(PALETA_INICIAL);
   const [modo, setModo] = useState<Modo>('sistema');
 
+  // Al iniciar, se recuperan las preferencias y se validan antes de aplicarlas al estado.
   useEffect(() => {
     AsyncStorage.getItem(CLAVE)
       .then((texto) => {
@@ -32,6 +33,7 @@ export function AparienciaProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo<AparienciaContextValue>(() => {
+    // Ambas acciones guardan la pareja completa para no perder la otra preferencia.
     const guardar = (paleta: PaletaId, m: Modo) => AsyncStorage.setItem(CLAVE, JSON.stringify({ paleta, modo: m })).catch(() => {});
     return {
       paleta: buscarPaleta(paletaId),
@@ -50,6 +52,7 @@ export function AparienciaProvider({ children }: { children: ReactNode }) {
   return <AparienciaContext.Provider value={value}>{children}</AparienciaContext.Provider>;
 }
 
+/** Obtiene el contexto de apariencia y detecta si falta su proveedor. */
 export function useApariencia(): AparienciaContextValue {
   const ctx = useContext(AparienciaContext);
   if (!ctx) throw new Error('useApariencia debe usarse dentro de <AparienciaProvider>');

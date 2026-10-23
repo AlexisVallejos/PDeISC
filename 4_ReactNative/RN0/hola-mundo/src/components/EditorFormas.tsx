@@ -36,12 +36,14 @@ export function EditorFormas({ tema }: { tema: Tema }) {
   const giro = useSharedValue(INICIAL.giro);
   const aspecto = useSharedValue(FORMAS.redondeado.aspecto);
 
+  /** Aplica el preset de forma elegido y sincroniza sus valores numéricos. */
   const elegirForma = (id: FormaId) => {
     setForma(id);
     aspecto.set(withSpring(FORMAS[id].aspecto, RESORTE));
     redondez.set(withSpring(FORMAS[id].redondez, RESORTE));
   };
 
+  /** Devuelve los ajustes de esta sección a sus valores iniciales y actualiza la vista previa. */
   const restablecer = () => {
     setForma('redondeado');
     setTono('brillante');

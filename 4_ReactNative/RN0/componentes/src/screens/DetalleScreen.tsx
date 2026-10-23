@@ -140,6 +140,7 @@ export function DetalleScreen({ route, navigation }: DetalleScreenProps) {
   );
 }
 
+/** Presenta un título y contenido con el espaciado común de la pantalla de detalle. */
 function Bloque({ titulo, children }: { titulo: string; children: ReactNode }) {
   const c = useTheme();
   return (
@@ -150,6 +151,7 @@ function Bloque({ titulo, children }: { titulo: string; children: ReactNode }) {
   );
 }
 
+/** Dibuja el enlace a la ficha anterior o siguiente. */
 function Vecino({ direccion, nombre, onPress }: { direccion: 'anterior' | 'siguiente'; nombre: string; onPress: () => void }) {
   const c = useTheme();
   const siguiente = direccion === 'siguiente';

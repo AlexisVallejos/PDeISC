@@ -108,6 +108,7 @@ export function AparienciaProvider({ children }: { children: ReactNode }) {
     separacion: useSharedValue(DISEÑO_INICIAL.separacion),
   };
 
+  // Hidrata el estado una vez: mezcla campos antiguos con valores iniciales para admitir cambios de versión.
   useEffect(() => {
     AsyncStorage.getItem(CLAVE)
       .then((texto) => {
@@ -128,6 +129,7 @@ export function AparienciaProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AparienciaContextValue>(() => {
     // Siempre a partir del estado más reciente: escribir rápido en el saludo no pierde letras.
+    // Cada acción pasa una función de cambio; así el cálculo no usa una copia vieja del estado.
     const actualizar = (cambio: (actual: Guardado) => Partial<Guardado>) =>
       setEstado((actual) => {
         const nuevo = { ...actual, ...cambio(actual) };
@@ -152,6 +154,7 @@ export function AparienciaProvider({ children }: { children: ReactNode }) {
   return <AparienciaContext.Provider value={value}>{children}</AparienciaContext.Provider>;
 }
 
+/** Obtiene el contexto de apariencia y detecta si falta su proveedor. */
 export function useApariencia(): AparienciaContextValue {
   const ctx = useContext(AparienciaContext);
   if (!ctx) throw new Error('useApariencia debe usarse dentro de <AparienciaProvider>');

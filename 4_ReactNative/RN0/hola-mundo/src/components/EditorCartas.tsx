@@ -24,12 +24,14 @@ export function EditorCartas({ tema }: { tema: Tema }) {
   const actual: Preajuste =
     (Object.keys(PREAJUSTES) as (keyof typeof PREAJUSTES)[]).find((k) => PREAJUSTES[k] === diseño.radioCartas) ?? 'otro';
 
+  /** Aplica un preset de esquinas a todas las cartas. */
   const elegir = (id: Preajuste) => {
     if (id === 'otro') return;
     valores.radioCartas.set(withSpring(PREAJUSTES[id], RESORTE));
     editarDiseño({ radioCartas: PREAJUSTES[id] });
   };
 
+  /** Devuelve los ajustes de esta sección a sus valores iniciales y actualiza la vista previa. */
   const restablecer = () => {
     valores.radioCartas.set(withSpring(DISEÑO_INICIAL.radioCartas, RESORTE));
     valores.bordeCartas.set(withSpring(DISEÑO_INICIAL.bordeCartas, RESORTE));

@@ -37,15 +37,18 @@ export function Deslizador({ etiqueta, valor, min, max, paso, unidad = '', inici
   // Si el valor guardado llega después de montar (se lee de AsyncStorage), la etiqueta lo sigue.
   useEffect(() => setMostrado(inicial), [inicial]);
 
+  /** Limita el valor al rango permitido y lo ajusta al paso más cercano. */
   const redondear = (v: number) => {
     'worklet';
     return Math.min(max, Math.max(min, Math.round(v / paso) * paso));
   };
+  /** Transforma la posición horizontal del dedo en un valor del deslizador. */
   const desdeX = (x: number) => {
     'worklet';
     const frac = ancho.get() > 0 ? Math.min(1, Math.max(0, x / ancho.get())) : 0;
     return min + frac * (max - min);
   };
+  /** Entrega el valor final al estado persistente y emite háptica en dispositivos. */
   const terminar = (final: number) => {
     if (Platform.OS !== 'web') Haptics.selectionAsync();
     onSoltar?.(final);
@@ -60,6 +63,7 @@ export function Deslizador({ etiqueta, valor, min, max, paso, unidad = '', inici
   );
 
   const arrastre = Gesture.Pan()
+    // Exige movimiento horizontal claro para no bloquear el scroll vertical de la pantalla.
     .activeOffsetX([-6, 6])
     .failOffsetY([-12, 12])
     .onStart((e) => valor.set(desdeX(e.x)))
@@ -71,11 +75,13 @@ export function Deslizador({ etiqueta, valor, min, max, paso, unidad = '', inici
     });
 
   const toque = Gesture.Tap().onEnd((e) => {
+    // Un toque calcula el paso final directamente; el resorte mueve la perilla hasta él.
     const final = redondear(desdeX(e.x));
     valor.set(withSpring(final, { duration: 300, dampingRatio: 1 }));
     scheduleOnRN(terminar, final);
   });
 
+  /** Expresa el valor actual como proporción del recorrido de la pista. */
   const fraccion = () => {
     'worklet';
     return (valor.get() - min) / (max - min);
@@ -84,6 +90,7 @@ export function Deslizador({ etiqueta, valor, min, max, paso, unidad = '', inici
   const relleno = useAnimatedStyle(() => ({ width: PERILLA / 2 + fraccion() * (ancho.get() - PERILLA) }));
   const perilla = useAnimatedStyle(() => ({ transform: [{ translateX: fraccion() * (ancho.get() - PERILLA) }] }));
 
+  /** Cambia un paso mediante las acciones de accesibilidad. */
   const ajustar = (delta: number) => {
     const nuevo = Math.min(max, Math.max(min, mostrado + delta));
     valor.set(withSpring(nuevo, { duration: 300, dampingRatio: 1 }));

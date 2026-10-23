@@ -10,7 +10,7 @@ import {
   Text,
   View,
   useWindowDimensions,
-  type TextInput,
+  type TextInputInstance,
 } from 'react-native';
 import Animated, {
   Easing,
@@ -50,8 +50,9 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
   // Una pantalla apaisada baja mantiene el diseño apilado para que el formulario respire.
   const wide = width >= 900 && height >= 620;
   const compact = width < 360;
-  const brandHeight = Math.max(250, Math.min(390, height * 0.4, width * 0.92));
-  const claveRef = useRef<TextInput>(null);
+  // El video es casi cuadrado (960×1080): el panel respeta su proporción (más la hoja que lo tapa) para verlo entero.
+  const brandHeight = Math.max(250, Math.min(width * 1.125 + radius.sheet, height * 0.52, 560));
+  const claveRef = useRef<TextInputInstance>(null);
 
   const [usuario, setUsuario] = useState('');
   const [clave, setClave] = useState('');
@@ -105,7 +106,7 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
   const layout = reduceMotion ? undefined : LinearTransition.duration(220).easing(EASE_OUT);
 
   return (
-    <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView style={[styles.root, { backgroundColor: wide ? colors.carbonDeep : palette.sheet }]} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <StatusBar style="light" />
       <ScrollView
         contentContainerStyle={[styles.scroll, wide && styles.scrollWide]}
@@ -119,10 +120,6 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
         <View style={[styles.brand, wide ? styles.brandWide : { height: brandHeight }]}>
           <VideoMarca style={StyleSheet.absoluteFill} />
           <View style={styles.topBar} />
-          <View pointerEvents="none" style={[styles.brandMark, { top: Math.max(insets.top, 12) + 14 }]}>
-            <Text style={styles.brandWord}><Text style={styles.brandD}>D</Text>AMAC</Text>
-            <Text style={styles.brandCaption}>ACCESORIOS PARA ABERTURAS</Text>
-          </View>
         </View>
 
         {/* Hoja de acceso */}
@@ -131,7 +128,7 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
           style={[
             styles.sheet,
             wide && styles.sheetWide,
-            { backgroundColor: palette.background, boxShadow: palette.sheetShadow },
+            { backgroundColor: palette.sheet, boxShadow: palette.sheetShadow },
             wide
               ? { paddingTop: insets.top + space.xxxl, paddingBottom: Math.max(insets.bottom, space.lg) + space.xxl }
               : { paddingBottom: Math.max(insets.bottom, space.lg) + space.md },
@@ -139,12 +136,9 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
         >
           {!wide && <View style={[styles.grabber, { backgroundColor: palette.separator }]} accessibilityElementsHidden importantForAccessibility="no" />}
 
-          <View style={styles.headingRow}>
-            <Text style={[styles.title, compact && styles.titleCompact, { color: palette.label }]} accessibilityRole="header">
-              Ingresar
-            </Text>
-            <ThemeToggle />
-          </View>
+          <Text style={[styles.title, compact && styles.titleCompact, { color: palette.label }]} accessibilityRole="header">
+            Ingresar
+          </Text>
           <Text style={[styles.subtitle, { color: palette.secondaryLabel }]}>Sistema de acceso para el equipo DAMAC.</Text>
 
           <Animated.View style={shakeStyle} layout={layout}>
@@ -191,6 +185,17 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
               />
             </FormGroup>
 
+            <PressableScale
+              onPress={() => navigation.navigate('Recuperar', { identificador: usuario.trim() || undefined })}
+              haptic={false}
+              disabled={cargando}
+              style={styles.forgot}
+              accessibilityRole="link"
+              accessibilityLabel="Olvidé mi contraseña"
+            >
+              <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
+            </PressableScale>
+
             {!!error && (
               <Animated.View entering={FadeIn.duration(150)} exiting={FadeOut.duration(120)}>
                 <FormFooter error>{error}</FormFooter>
@@ -224,6 +229,11 @@ export function LoginScreen({ navigation }: LoginScreenProps) {
           </Text>
         </Animated.View>
       </ScrollView>
+
+      {/* Tema: arriba a la derecha, siempre a la vista (sobre el video en celular, sobre la hoja en pantallas anchas). */}
+      <View pointerEvents="box-none" style={[styles.themeSlot, { top: Math.max(insets.top, 8) + 10 }]}>
+        <ThemeToggle overBrand={!wide} />
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -239,14 +249,6 @@ const styles = StyleSheet.create({
   },
   brandWide: { flex: 1.15, minHeight: '100%', paddingBottom: 0 },
   topBar: { position: 'absolute', top: 0, left: 0, right: 0, height: 4, backgroundColor: colors.primary },
-  brandMark: {
-    position: 'absolute', left: 20, paddingHorizontal: 12, paddingVertical: 9,
-    borderRadius: 12, backgroundColor: 'rgba(14, 15, 17, 0.76)',
-    borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.14)',
-  },
-  brandWord: { ...t.title2, fontWeight: '900', letterSpacing: 1.3, color: colors.white },
-  brandD: { color: colors.primary },
-  brandCaption: { ...t.caption, fontSize: 9, letterSpacing: 1.25, color: colors.onCarbonSecondary },
   sheet: {
     marginTop: -radius.sheet,
     borderTopLeftRadius: radius.sheet,
@@ -256,6 +258,7 @@ const styles = StyleSheet.create({
     paddingTop: space.sm,
     width: '100%',
     maxWidth: 640,
+    flexGrow: 1,
     alignSelf: 'center',
   },
   sheetWide: {
@@ -277,12 +280,14 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     marginBottom: space.xl,
   },
-  headingRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.sm },
+  themeSlot: { position: 'absolute', right: 16, zIndex: 10 },
   title: { ...t.largeTitle, flexShrink: 1 },
   titleCompact: { ...t.title1 },
   subtitle: { ...t.subhead, marginTop: space.xs, marginBottom: space.xl },
+  forgot: { alignSelf: 'flex-end', minHeight: 44, justifyContent: 'center', paddingHorizontal: space.xs, marginTop: space.xs },
+  forgotText: { ...t.subhead, fontWeight: '600', color: colors.primary },
   button: {
-    marginTop: space.xl,
+    marginTop: space.sm,
     height: 50,
     borderRadius: radius.md,
     borderCurve: 'continuous',

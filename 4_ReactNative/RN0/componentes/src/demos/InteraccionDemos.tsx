@@ -67,6 +67,7 @@ function useContador() {
   return [n, () => setN((v) => v + 1)] as const;
 }
 
+/** Demuestra la reducción de opacidad al tocar. */
 export function TouchableOpacityDemo() {
   const c = useTheme();
   const [n, sumar] = useContador();
@@ -80,6 +81,7 @@ export function TouchableOpacityDemo() {
   );
 }
 
+/** Demuestra el resaltado de fondo durante la pulsación. */
 export function TouchableHighlightDemo() {
   const c = useTheme();
   const [n, sumar] = useContador();
@@ -93,6 +95,7 @@ export function TouchableHighlightDemo() {
   );
 }
 
+/** Demuestra un toque sin cambio visual automático. */
 export function TouchableWithoutFeedbackDemo() {
   const c = useTheme();
   const [n, sumar] = useContador();

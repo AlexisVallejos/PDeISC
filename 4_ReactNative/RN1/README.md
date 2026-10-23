@@ -181,3 +181,21 @@ y correr `npx expo start` en `app/`.
 docker compose up --build
 ```
 Abrir http://localhost:8080.
+
+## Recuperar contraseña (código por Gmail)
+
+En el login, **¿Olvidaste tu contraseña?** → se escribe el usuario o el email → la API manda un código
+de 6 dígitos al email de la cuenta (vence en 10 min, 5 intentos, reenvío cada 60 s) → se ingresa el código
+y la contraseña nueva.
+
+Para que el mail salga de verdad, la API necesita una cuenta Gmail con **contraseña de aplicación**
+(Cuenta de Google → Seguridad → Verificación en 2 pasos → Contraseñas de aplicaciones):
+
+```
+GMAIL_USER=tucuenta@gmail.com
+GMAIL_APP_PASSWORD=abcd efgh ijkl mnop     # 16 letras; NO es la contraseña de la cuenta
+```
+
+Se pasan como variables de entorno al arrancar la API (`GMAIL_USER=... GMAIL_APP_PASSWORD=... npm start`,
+o en Easypanel). Sin ellas la API sigue funcionando y **imprime el código en su consola** (modo prueba).
+El mail llega al campo `email` del usuario en la tabla `damac_usuarios`: hay que poner ahí el Gmail real.

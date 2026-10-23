@@ -6,6 +6,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from './src/ThemeContext';
 import { BienvenidaScreen } from './src/screens/BienvenidaScreen';
 import { LoginScreen } from './src/screens/LoginScreen';
+import { RecuperarScreen } from './src/screens/RecuperarScreen';
 import { colors } from './src/theme';
 import type { RootStackParamList } from './src/types/navigation';
 
@@ -50,6 +51,11 @@ function AppNavigation() {
             }}
           >
             <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'DAMAC — Ingreso' }} />
+            <Stack.Screen
+              name="Recuperar"
+              component={RecuperarScreen}
+              options={{ title: 'DAMAC — Recuperar contraseña', contentStyle: { backgroundColor: palette.background } }}
+            />
             <Stack.Screen
               name="Bienvenida"
               component={BienvenidaScreen}

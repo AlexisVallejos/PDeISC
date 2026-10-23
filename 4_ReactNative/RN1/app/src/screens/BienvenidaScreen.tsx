@@ -161,8 +161,8 @@ function Row({ label, value, last, mono }: { label: string; value: string; last?
 const styles = StyleSheet.create({
   root: { flex: 1 },
   content: { flexGrow: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: space.xl },
-  header: { width: '100%', maxWidth: 980, alignItems: 'center', gap: space.sm, marginBottom: space.xl },
-  headerWide: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: space.xxxl },
+  header: { width: '100%', maxWidth: 980, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.sm, marginBottom: space.xxl },
+  headerWide: { marginBottom: space.xxxl },
   main: { width: '100%', alignItems: 'center' },
   mainWide: { maxWidth: 980, flexDirection: 'row', alignItems: 'center', gap: space.xxxl },
   identity: { width: '100%', alignItems: 'center' },

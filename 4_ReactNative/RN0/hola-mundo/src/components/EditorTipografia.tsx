@@ -34,6 +34,7 @@ export function EditorTipografia({ tema }: { tema: Tema }) {
     return { fontSize: tamaño, lineHeight: (tamaño * valores.interlineado.get()) / 100, letterSpacing: valores.tracking.get() * 0.6 };
   });
 
+  /** Devuelve los ajustes de esta sección a sus valores iniciales y actualiza la vista previa. */
   const restablecer = () => {
     const d = DISEÑO_INICIAL;
     valores.tamañoTexto.set(withSpring(d.tamañoTexto, RESORTE));

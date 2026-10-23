@@ -17,6 +17,7 @@ const Tab = createBottomTabNavigator<TabParamList>();
 // En la web la barra por defecto (49 px) corta la etiqueta con la fuente del sistema; en iOS/Android queda la nativa.
 const alturaWeb = Platform.OS === 'web' ? { height: 60, paddingTop: 4, paddingBottom: 6 } : null;
 
+/** Monta los proveedores globales y la navegación principal de esta aplicación Expo. */
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

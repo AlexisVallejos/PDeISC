@@ -15,6 +15,7 @@ interface BotonDemoProps {
   disabled?: boolean;
 }
 
+/** Botón reutilizable de las demostraciones con variante, icono y estado deshabilitado. */
 export function BotonDemo({ titulo, onPress, variante = 'lleno', icono, disabled }: BotonDemoProps) {
   const c = useTheme();
   const lleno = variante === 'lleno';

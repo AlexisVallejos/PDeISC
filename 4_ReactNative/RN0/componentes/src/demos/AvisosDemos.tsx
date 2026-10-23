@@ -26,6 +26,7 @@ export function ModalDemo() {
   const [abierto, setAbierto] = useState(false);
   const [estilo, setEstilo] = useState<'slide' | 'fade'>('slide');
 
+  /** Selecciona la transición y abre la ventana modal. */
   const abrir = (tipo: 'slide' | 'fade') => {
     setEstilo(tipo);
     setAbierto(true);
@@ -84,6 +85,7 @@ export function StatusBarDemo() {
 export function AlertDemo() {
   const [respuesta, setRespuesta] = useState('—');
 
+  /** Abre un aviso con un único botón de cierre. */
   const simple = () => {
     if (Platform.OS === 'web') {
       window.alert('Hola desde Alert');
@@ -92,6 +94,7 @@ export function AlertDemo() {
     Alert.alert('Hola', 'Esto es un Alert nativo.', [{ text: 'Aceptar', onPress: () => setRespuesta('Aceptar') }]);
   };
 
+  /** Abre un aviso con opciones para aceptar o cancelar. */
   const confirmar = () => {
     if (Platform.OS === 'web') {
       return setRespuesta(window.confirm('¿Borrar la foto? No se puede deshacer.') ? 'Borrar' : 'Cancelar');

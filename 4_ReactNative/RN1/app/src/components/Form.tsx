@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   type TextInputProps,
+  type TextInputInstance,
   type TextStyle,
   type ViewStyle,
 } from 'react-native';
@@ -46,7 +47,7 @@ export function FormGroup({ children, invalid, style }: FormGroupProps) {
   }));
 
   return (
-    <Animated.View style={[styles.group, { backgroundColor: palette.surface, boxShadow: palette.shadow }, style, frame]}>
+    <Animated.View style={[styles.group, { backgroundColor: palette.field }, style, frame]}>
       {children}
     </Animated.View>
   );
@@ -60,7 +61,7 @@ interface FormRowProps extends TextInputProps {
   last?: boolean;
 }
 
-export const FormRow = forwardRef<TextInput, FormRowProps>(function FormRow(
+export const FormRow = forwardRef<TextInputInstance, FormRowProps>(function FormRow(
   { label, password, last, onFocus, onBlur, editable = true, ...input },
   ref,
 ) {

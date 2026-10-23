@@ -8,6 +8,12 @@ export interface Usuario {
   ultimoAcceso: string | null;
 }
 
+/** Respuesta simple de los endpoints de recuperación de contraseña. */
+export interface AccionResponse {
+  ok: boolean;
+  mensaje: string;
+}
+
 export interface LoginResponse {
   ok: boolean;
   mensaje: string;

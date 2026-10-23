@@ -48,6 +48,8 @@ export const colors = {
 export const themeColors = {
   light: {
     background: '#F2F2F7',
+    sheet: '#FFFFFF',
+    field: '#F2F3F7',
     surface: '#FFFFFF',
     label: '#111113',
     secondaryLabel: '#62626B',
@@ -56,7 +58,7 @@ export const themeColors = {
     separator: 'rgba(60, 60, 67, 0.18)',
     grid: 'rgba(60, 60, 67, 0.07)',
     shadow: '0 10px 30px rgba(14, 15, 17, 0.08)',
-    sheetShadow: '0 -16px 48px rgba(0, 0, 0, 0.30)',
+    sheetShadow: '0 -12px 40px rgba(0, 0, 0, 0.22)',
     control: '#FFFFFF',
     controlBorder: 'rgba(60, 60, 67, 0.16)',
     successBackground: 'rgba(52, 199, 89, 0.14)',
@@ -65,6 +67,8 @@ export const themeColors = {
   },
   dark: {
     background: '#111316',
+    sheet: '#16181C',
+    field: '#23272D',
     surface: '#1E2126',
     label: '#F7F7F9',
     secondaryLabel: '#B4B8C1',
