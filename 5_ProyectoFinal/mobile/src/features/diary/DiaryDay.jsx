@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Card, EmptyState, ListItem, MacroInline, MacroSummary, MicroList } from '../../components';
+import { Card, Columns, EmptyState, ListItem, MacroInline, MacroSummary, MicroList } from '../../components';
 import { colors, createStyles, font, spacing, useTheme } from '../../theme';
 import { MEALS } from '../../utils/constants';
 import { fmt } from '../../utils/format';
@@ -14,7 +14,8 @@ export function DiaryDay({ day, onAdd, onEdit, onDelete, readOnly = false }) {
   const byMeal = MEALS.map((meal) => ({ ...meal, entries: day.entries.filter((e) => e.meal === meal.key) }));
   const visible = readOnly ? byMeal.filter((m) => m.entries.length) : byMeal;
 
-  return (
+  // En la PC: resumen y micronutrientes a la izquierda, las comidas del día a la derecha.
+  const summary = (
     <>
       <Card>
         <MacroSummary totals={day.totals} goals={day.goals} />
@@ -24,6 +25,11 @@ export function DiaryDay({ day, onAdd, onEdit, onDelete, readOnly = false }) {
           <MicroList nutrients={day.micros} />
         </Card>
       ) : null}
+    </>
+  );
+
+  return (
+    <Columns side={summary}>
       {readOnly && !day.entries.length ? (
         <EmptyState icon="restaurant-outline" title="Sin registros" message="No cargó comidas este día." />
       ) : null}
@@ -69,7 +75,7 @@ export function DiaryDay({ day, onAdd, onEdit, onDelete, readOnly = false }) {
           </Card>
         );
       })}
-    </>
+    </Columns>
   );
 }
 

@@ -19,9 +19,11 @@ export default function AdminHome() {
     <Screen onRefresh={reload} refreshing={refreshing}>
       <AssistantBanner subtitle="Pedile que cargue ejercicios o alimentos por vos" />
       <Card title="Gestión de entrenadores">
-        <Button title="Reportes mensuales" icon="document-text-outline" onPress={() => router.push('/coach-reports')} />
-        <Button title="Crear entrenador" icon="person-add-outline" variant="tinted" onPress={() => router.push({ pathname: '/user-form', params: { role: 'coach' } })} />
-        <Button title="Asignar atletas a entrenadores" variant="tinted" onPress={() => router.push('/users')} />
+        <View style={styles.actions}>
+          <Button title="Reportes mensuales" icon="document-text-outline" onPress={() => router.push('/coach-reports')} />
+          <Button title="Crear entrenador" icon="person-add-outline" variant="tinted" onPress={() => router.push({ pathname: '/user-form', params: { role: 'coach' } })} />
+          <Button title="Asignar atletas a entrenadores" icon="people-outline" variant="tinted" onPress={() => router.push('/users')} />
+        </View>
       </Card>
       <View style={styles.tiles}>
         <StatTile icon="people-outline" label="usuarios" value={data.totalUsers} />
@@ -49,5 +51,6 @@ export default function AdminHome() {
 }
 
 const styles = createStyles(() => StyleSheet.create({
+  actions: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   tiles: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.md },
 }));

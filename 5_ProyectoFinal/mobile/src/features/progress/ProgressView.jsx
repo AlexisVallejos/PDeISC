@@ -60,6 +60,7 @@ export function ProgressView({ userId }) {
           {data.micros ? (
             <Card title="Micronutrientes · promedio diario">
               <MicroList
+                wide
                 nutrients={data.micros.nutrients}
                 note={`Promedio de ${data.micros.days} ${data.micros.days === 1 ? 'día' : 'días'} con registros, contra el valor diario de referencia (FDA).`}
               />

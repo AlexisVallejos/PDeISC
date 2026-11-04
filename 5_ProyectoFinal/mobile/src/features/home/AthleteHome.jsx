@@ -44,7 +44,7 @@ export default function AthleteHome() {
       </View>
       <AssistantBanner />
 
-      <View style={{ gap: spacing.sm }}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
         <Button title="Mi plan de alimentación" icon="nutrition-outline" variant="tinted" onPress={() => router.push('/nutrition-plans')} />
         <Button title="Mis informes semanales" icon="document-text-outline" variant="tinted" onPress={() => router.push('/weekly-reports')} />
       </View>

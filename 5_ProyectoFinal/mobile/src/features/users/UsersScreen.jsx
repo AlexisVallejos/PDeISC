@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text, View } from 'react-native';
 import { usersApi } from '../../api/endpoints';
-import { Button, Card, Chips, EmptyState, ErrorState, ListItem, Loading, RoleBadge, Screen, TextField } from '../../components';
+import { Button, Card, Chips, EmptyState, ErrorState, ListColumns, ListItem, Loading, RoleBadge, Screen, TextField } from '../../components';
 import { useResource } from '../../hooks/useResource';
 import { colors, useTheme } from '../../theme';
 
@@ -43,15 +43,17 @@ export default function UsersScreen() {
         <EmptyState icon="people-outline" title="Sin resultados" />
       ) : (
         <Card title={`${data.meta.total} usuarios`}>
-          {data.data.map((u) => (
-            <ListItem
-              key={u.id}
-              title={u.isActive ? u.name : `${u.name} (inactivo)`}
-              subtitle={[u.email ?? 'sin email', u.coachName ? `coach: ${u.coachName}` : null].filter(Boolean).join(' · ')}
-              right={<RoleBadge role={u.role} />}
-              onPress={() => router.push({ pathname: '/user-form', params: { id: String(u.id) } })}
-            />
-          ))}
+          <ListColumns>
+            {data.data.map((u) => (
+              <ListItem
+                key={u.id}
+                title={u.isActive ? u.name : `${u.name} (inactivo)`}
+                subtitle={[u.email ?? 'sin email', u.coachName ? `coach: ${u.coachName}` : null].filter(Boolean).join(' · ')}
+                right={<RoleBadge role={u.role} />}
+                onPress={() => router.push({ pathname: '/user-form', params: { id: String(u.id) } })}
+              />
+            ))}
+          </ListColumns>
           {data.meta.totalPages > 1 ? (
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <Button title="Anterior" variant="ghost" small disabled={page <= 1} onPress={() => setPage(page - 1)} />

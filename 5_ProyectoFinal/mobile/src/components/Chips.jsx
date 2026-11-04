@@ -1,4 +1,4 @@
-import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { colors, createStyles, font, radius, spacing, useTheme } from '../theme';
 
 /** Selector de una opción entre varias (filtros, comidas, roles…). */
@@ -18,7 +18,8 @@ export function Chips({ options, value, onChange, scroll = true }) {
       </Pressable>
     );
   });
-  if (!scroll) return <>{chips}</>;
+  // Sin scroll se acomodan en fila y bajan de renglón si no entran.
+  if (!scroll) return <View style={styles.wrap}>{chips}</View>;
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.scroll} contentContainerStyle={styles.row}>
       {chips}
@@ -29,6 +30,7 @@ export function Chips({ options, value, onChange, scroll = true }) {
 const styles = createStyles(() => StyleSheet.create({
   scroll: { flexGrow: 0 },
   row: { gap: spacing.sm, paddingVertical: 2 },
+  wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   chip: {
     paddingHorizontal: spacing.lg - 2,
     minHeight: 36,

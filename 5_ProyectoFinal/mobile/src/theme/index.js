@@ -97,7 +97,7 @@ export const numeric = {
 export const continuous = Platform.OS === 'ios' ? { borderCurve: 'continuous' } : null;
 
 /** Ancho máximo del contenido en tablets / horizontal, para que no quede estirado. */
-export const MAX_CONTENT_WIDTH = 1120;
+export const MAX_CONTENT_WIDTH = 1280;
 
 /* ---------------------------------- Tema activo ---------------------------------- */
 

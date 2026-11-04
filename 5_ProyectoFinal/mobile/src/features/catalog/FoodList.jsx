@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Text } from 'react-native';
 import { foodsApi } from '../../api/endpoints';
-import { Button, Card, Chips, EmptyState, ErrorState, ListItem, Loading, TextField } from '../../components';
+import { Button, Card, Chips, EmptyState, ErrorState, ListColumns, ListItem, Loading, TextField } from '../../components';
 import { useAuth } from '../../context/AuthContext';
 import { colors, useTheme } from '../../theme';
 
@@ -71,17 +71,19 @@ export function FoodList({ initialScope = 'all' }) {
         <EmptyState icon="nutrition-outline" title="No hay alimentos" message="Probá con otra búsqueda o creá uno." />
       ) : (
         <Card title={`${meta.total} alimentos`}>
-          {items.map((f) => (
-            <ListItem
-              key={f.id}
-              icon={f.isGlobal ? 'nutrition-outline' : 'person-outline'}
-              iconColor={f.isGlobal ? colors.primary : colors.success}
-              title={f.name}
-              subtitle={`${f.kcal} kcal · P ${f.protein} C ${f.carbs} G ${f.fat} · ${f.portionDescription || `${f.portionGrams} g`}`}
-              onPress={canEdit(f) ? () => router.push({ pathname: '/food-form', params: { id: String(f.id) } }) : undefined}
-              right={canEdit(f) ? undefined : <Text style={{ color: colors.muted, fontSize: 11 }}>{f.category}</Text>}
-            />
-          ))}
+          <ListColumns>
+            {items.map((f) => (
+              <ListItem
+                key={f.id}
+                icon={f.isGlobal ? 'nutrition-outline' : 'person-outline'}
+                iconColor={f.isGlobal ? colors.primary : colors.success}
+                title={f.name}
+                subtitle={`${f.kcal} kcal · P ${f.protein} C ${f.carbs} G ${f.fat} · ${f.portionDescription || `${f.portionGrams} g`}`}
+                onPress={canEdit(f) ? () => router.push({ pathname: '/food-form', params: { id: String(f.id) } }) : undefined}
+                right={canEdit(f) ? undefined : <Text style={{ color: colors.muted, fontSize: 11 }}>{f.category}</Text>}
+              />
+            ))}
+          </ListColumns>
           {meta.page < meta.totalPages ? (
             <Button title="Cargar más" variant="ghost" loading={loadingMore} onPress={() => load(meta.page + 1)} />
           ) : null}
