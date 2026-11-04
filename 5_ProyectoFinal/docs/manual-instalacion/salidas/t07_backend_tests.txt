@@ -11,12 +11,12 @@ $ cd backend && npm test
 ✔ ejercicios y entrenamientos
 ✔ progreso
 ✔ índices
-✔ MacroEntreno Pro: micronutrientes
-✔ MacroEntreno Pro: FatSecret
-✔ MacroEntreno Pro: suscripción con Mercado Pago
+✔ Micronutrientes
+✔ FatSecret
 ✔ seguimiento, planes e informes por rol
 ✔ alimentos: código de barras y bases gratuitas
 ✔ asistente con IA
+✔ permisos del catálogo y de coaches desactivados
 ✔ registro: alta exitosa
 ✔ registro: validaciones por campo
 ✔ registro: email duplicado
@@ -24,7 +24,8 @@ $ cd backend && npm test
 ✔ login: credenciales incorrectas
 ✔ flujo completo: registro, login, refresh, logout y cambio de contraseña
 ✔ seguridad: intentos de saltear la validación
-ℹ tests 184
-ℹ suites 25
-ℹ pass 184
+✔ verificación de email y recuperación de contraseña
+ℹ tests 187
+ℹ suites 26
+ℹ pass 187
 ℹ fail 0

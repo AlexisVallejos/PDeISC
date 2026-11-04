@@ -124,7 +124,7 @@ export const blocks = [
   { t: 'h3', text: 'Pruebas automáticas de la API' },
   {
     t: 'p',
-    text: 'Con `npm test` se ejecutan las pruebas del servidor. Cada archivo crea su propia base temporal, así que no hace falta tener MySQL instalado. En la instalación de prueba pasaron los 184 casos, en 25 grupos (Figura 7).',
+    text: 'Con `npm test` se ejecutan las pruebas del servidor. Cada archivo crea su propia base temporal, así que no hace falta tener MySQL instalado. En la instalación de prueba pasaron los 187 casos, en 26 grupos (Figura 7).',
   },
   term(7, 'Resultado de las pruebas de la API', 't07_backend_tests', 13),
 
@@ -160,7 +160,7 @@ export const blocks = [
   { t: 'h3', text: 'Pruebas y revisión del código de la app' },
   {
     t: 'p',
-    text: 'La app tiene sus propias pruebas de las validaciones de los formularios (`npm test`) y un revisor de código (`npx expo lint`). Las 53 pruebas pasaron y el revisor no informó errores ni advertencias (Figura 11).',
+    text: 'La app tiene sus propias pruebas de las validaciones de los formularios (`npm test`) y un revisor de código (`npx expo lint`). Las 55 pruebas pasaron y el revisor no informó errores ni advertencias (Figura 11).',
   },
   term(11, 'Pruebas y revisión del código de la app', 't10_mobile_tests', 9),
 
@@ -249,7 +249,7 @@ export const blocks = [
   { t: 'h1', text: 'Conclusión', pageBreak: true },
   {
     t: 'p',
-    text: 'Siguiendo estos pasos sobre una copia nueva del repositorio, MacroEntreno quedó funcionando en una computadora: la API levantó con su base de datos, respondió a la comprobación de estado y pasó sus 184 pruebas, y la app abrió en el navegador e inició sesión con la cuenta de ejemplo. La misma configuración permitió publicarla en Vercel con una base MySQL externa, donde también se comprobó que la API llega a la base y que se puede ingresar.',
+    text: 'Siguiendo estos pasos sobre una copia nueva del repositorio, MacroEntreno quedó funcionando en una computadora: la API levantó con su base de datos, respondió a la comprobación de estado y pasó sus 187 pruebas, y la app abrió en el navegador e inició sesión con la cuenta de ejemplo. La misma configuración permitió publicarla en Vercel con una base MySQL externa, donde también se comprobó que la API llega a la base y que se puede ingresar.',
   },
   {
     t: 'p',

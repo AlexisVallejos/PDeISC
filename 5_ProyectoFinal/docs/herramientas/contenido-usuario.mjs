@@ -94,6 +94,14 @@ export const blocks = [
     widthCm: trio,
   },
   {
+    t: 'p',
+    text: 'El email tiene que ser de un proveedor conocido: Gmail, Outlook/Hotmail, Yahoo, iCloud o Proton. Al tocar **Crear cuenta** llega a ese email un código de 6 números; en la pantalla **Confirmá tu email** se escribe el código y se toca **Confirmar y entrar**. El código vence a los 10 minutos y con **Reenviar código** se pide otro. Hasta confirmar el email no se puede iniciar sesión: si se intenta, la aplicación manda otro código y vuelve a esa pantalla.',
+  },
+  {
+    t: 'p',
+    text: 'Si se olvida la contraseña, en la pantalla de inicio de sesión se toca **¿Olvidaste tu contraseña?**, se escribe el email y se toca **Enviar código**. Con el código que llega por email se elige una contraseña nueva; al guardarla se entra directamente y se cierran las sesiones abiertas en otros dispositivos.',
+  },
+  {
     t: 'table',
     n: 2,
     title: 'Reglas de los datos de la cuenta',
@@ -319,7 +327,7 @@ export const blocks = [
   { t: 'h3', text: 'Consultar otros días' },
   {
     t: 'p',
-    text: 'Con las flechas del selector de fecha se ve lo cargado otros días; tocando la fecha se vuelve a hoy. La Figura 15 muestra el día anterior de la cuenta de ejemplo del Atleta. Esta cuenta tiene MacroEntreno Pro, por eso además de los macronutrientes ve los micronutrientes (fibra, azúcares, sodio y otros). Sin Pro, ese recuadro ofrece conocer el plan.',
+    text: 'Con las flechas del selector de fecha se ve lo cargado otros días; tocando la fecha se vuelve a hoy. La Figura 15 muestra el día anterior de la cuenta de ejemplo del Atleta. Además de los macronutrientes se ven los micronutrientes (fibra, azúcares, sodio y otros), disponibles para todas las cuentas.',
   },
   { t: 'fig', n: 15, title: 'Día anterior en el diario de la cuenta de ejemplo del Atleta', shots: [['c19_dia_anterior']], widthCm: 5.2 },
 
@@ -466,7 +474,7 @@ export const blocks = [
   },
   {
     t: 'p',
-    text: 'Tocando un usuario se abre **Editar usuario** (Figura 26a). Ahí se cambia el rol, se asigna el entrenador de un atleta, se regala o quita MacroEntreno Pro y se puede desactivar la cuenta; una cuenta desactivada no puede ingresar. A Martina se le asignó como entrenador a Pablo Ruiz y se tocó **Guardar cambios**. Con **Eliminar**, y después de confirmar, se da de baja una cuenta. La Figura 26b muestra la lista final: Pablo Ruiz agregado, Martina con su entrenador y la cuenta "Usuario de prueba" ya eliminada.',
+    text: 'Tocando un usuario se abre **Editar usuario** (Figura 26a). Ahí se cambia el rol, se asigna el entrenador de un atleta, se abre su seguimiento y se puede desactivar la cuenta; una cuenta desactivada no puede ingresar. A Martina se le asignó como entrenador a Pablo Ruiz y se tocó **Guardar cambios**. Con **Eliminar**, y después de confirmar, se da de baja una cuenta. La Figura 26b muestra la lista final: Pablo Ruiz agregado, Martina con su entrenador y la cuenta "Usuario de prueba" ya eliminada.',
   },
   {
     t: 'fig',
