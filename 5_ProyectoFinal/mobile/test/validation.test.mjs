@@ -15,7 +15,7 @@ import {
 
 const validRegister = () => ({
   name: 'Ana Pérez',
-  email: 'ana@ejemplo.com',
+  email: 'ana@gmail.com',
   password: 'Clave1234',
   confirm: 'Clave1234',
 });
@@ -311,6 +311,18 @@ describe('seguridad: intentos de saltear la validación del cliente', () => {
   test('registro con nombre inválido usa el mensaje específico', () => {
     assert.deepEqual(validateRegister({ ...validRegister(), name: 'Ana\u0000' }), {
       name: 'El nombre tiene caracteres no permitidos',
+    });
+  });
+});
+
+describe('validateRegister: dominio del email', () => {
+  test('acepta proveedores conocidos sin importar mayúsculas', () => {
+    assert.deepEqual(validateRegister({ ...validRegister(), email: ' Ana@Outlook.com ' }), {});
+  });
+
+  test('rechaza dominios desconocidos', () => {
+    assert.deepEqual(validateRegister({ ...validRegister(), email: 'yo@pepito.com' }), {
+      email: 'Usá un email de Gmail, Outlook/Hotmail, Yahoo, iCloud o Proton',
     });
   });
 });

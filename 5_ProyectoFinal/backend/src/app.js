@@ -10,7 +10,6 @@ import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import adminRoutes from './modules/admin/admin.routes.js';
 import aiRoutes from './modules/ai/ai.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
-import billingRoutes from './modules/billing/billing.routes.js';
 import diaryRoutes from './modules/diary/diary.routes.js';
 import exercisesRoutes from './modules/exercises/exercises.routes.js';
 import foodsRoutes from './modules/foods/foods.routes.js';
@@ -20,6 +19,8 @@ import workoutsRoutes from './modules/workouts/workouts.routes.js';
 
 export function createApp() {
   const app = express();
+  // Detrás del proxy de Vercel: req.ip y req.protocol salen de X-Forwarded-* (rate limit por IP real).
+  app.set('trust proxy', 1);
 
   app.use(helmet());
   app.use(cors({ origin: env.corsOrigin === '*' ? true : env.corsOrigin.split(',').map((o) => o.trim()) }));
@@ -43,7 +44,6 @@ export function createApp() {
   app.use('/api/admin', adminRoutes);
   app.use('/api/coaching', coachingRoutes);
   app.use('/api/reports', reportsRoutes);
-  app.use('/api/billing', billingRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

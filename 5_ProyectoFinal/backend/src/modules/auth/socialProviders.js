@@ -60,6 +60,7 @@ const google = {
     return {
       providerUserId: profile.body.sub,
       email: profile.body.email_verified ? profile.body.email : null,
+      emailVerified: Boolean(profile.body.email_verified),
       name: profile.body.name || profile.body.email || 'Usuario de Google',
       avatarUrl: profile.body.picture || null,
     };
@@ -95,6 +96,8 @@ const facebook = {
     return {
       providerUserId: profile.body.id,
       email: profile.body.email || null,
+      // Graph no informa si el email está verificado: no alcanza para vincular cuentas existentes.
+      emailVerified: false,
       name: profile.body.name || 'Usuario de Facebook',
       avatarUrl: profile.body.picture?.data?.url || null,
     };
@@ -141,6 +144,7 @@ const github = {
     return {
       providerUserId: String(profile.body.id),
       email,
+      emailVerified: Boolean(email),
       name: profile.body.name || profile.body.login || 'Usuario de GitHub',
       avatarUrl: profile.body.avatar_url || null,
     };

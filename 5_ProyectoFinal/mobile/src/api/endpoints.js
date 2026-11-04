@@ -6,6 +6,10 @@ const data = (p) => p.then((json) => json?.data);
 export const authApi = {
   login: (body) => data(publicApi('/auth/login', { method: 'POST', body })),
   register: (body) => data(publicApi('/auth/register', { method: 'POST', body })),
+  verifyEmail: (body) => data(publicApi('/auth/verify-email', { method: 'POST', body })),
+  resendCode: (body) => publicApi('/auth/resend-code', { method: 'POST', body }),
+  forgotPassword: (body) => publicApi('/auth/forgot-password', { method: 'POST', body }),
+  resetPassword: (body) => data(publicApi('/auth/reset-password', { method: 'POST', body })),
   oauthExchange: (body) => data(publicApi('/auth/oauth/exchange', { method: 'POST', body })),
   logout: (refreshToken) => publicApi('/auth/logout', { method: 'POST', body: { refreshToken } }),
   me: () => data(api('/auth/me')),
@@ -29,7 +33,7 @@ export const foodsApi = {
   create: (body) => data(api('/foods', { method: 'POST', body })),
   update: (id, body) => data(api(`/foods/${id}`, { method: 'PUT', body })),
   remove: (id) => api(`/foods/${id}`, { method: 'DELETE' }),
-  // MacroEntreno Pro: base de FatSecret con micronutrientes
+  // Base de FatSecret con micronutrientes
   searchFatSecret: (search, query) => data(api('/foods/fatsecret/search', { query: { search, ...query } })),
   importFatSecret: (externalId) => data(api('/foods/fatsecret/import', { method: 'POST', body: { externalId } })),
   // Bases gratuitas: Open Food Facts (envasados) y USDA (genéricos, en inglés)
@@ -81,14 +85,6 @@ export const adminApi = {
   stats: () => data(api('/admin/stats')),
 };
 
-/** MacroEntreno Pro: suscripción mensual con Mercado Pago. */
-export const billingApi = {
-  plan: () => data(api('/billing/plan')),
-  subscribe: () => data(api('/billing/subscribe', { method: 'POST' })),
-  sync: () => data(api('/billing/sync', { method: 'POST' })),
-  cancel: () => data(api('/billing/cancel', { method: 'POST' })),
-  grant: (userId, days) => data(api('/billing/grant', { method: 'POST', body: { userId, days } })),
-};
 
 export const coachingApi = {
   dashboard: (date) => data(api('/coaching/dashboard', { query: { date } })),

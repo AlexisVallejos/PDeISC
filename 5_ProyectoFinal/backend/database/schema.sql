@@ -7,6 +7,8 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS email_codes;
+DROP TABLE IF EXISTS oauth_login_codes;
 DROP TABLE IF EXISTS weekly_reports;
 DROP TABLE IF EXISTS meal_plan_applications;
 DROP TABLE IF EXISTS meal_plan_items;
@@ -41,7 +43,6 @@ CREATE TABLE users (
   carbs_goal     SMALLINT UNSIGNED NOT NULL DEFAULT 200,
   fat_goal       SMALLINT UNSIGNED NOT NULL DEFAULT 65,
   is_active      TINYINT(1) NOT NULL DEFAULT 1,
-  pro_until      DATETIME NULL,                   -- MacroEntreno Pro (micronutrientes) activo hasta esta fecha
   created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
@@ -77,26 +78,6 @@ CREATE TABLE refresh_tokens (
   KEY idx_refresh_user (user_id, revoked_at),       -- revocar todas las sesiones de un usuario
   KEY idx_refresh_expires (expires_at),             -- limpieza de tokens vencidos
   CONSTRAINT fk_refresh_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ---------------------------------------------------------------------
--- MacroEntreno Pro: suscripciones mensuales con Mercado Pago
--- ---------------------------------------------------------------------
-CREATE TABLE subscriptions (
-  id               INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  user_id          INT UNSIGNED NOT NULL,
-  provider         ENUM('mercadopago') NOT NULL DEFAULT 'mercadopago',
-  provider_id      VARCHAR(80) NOT NULL,                -- id del preapproval de Mercado Pago
-  status           ENUM('pending', 'authorized', 'paused', 'cancelled') NOT NULL DEFAULT 'pending',
-  amount           DECIMAL(10,2) NOT NULL,
-  currency         CHAR(3) NOT NULL DEFAULT 'ARS',
-  next_payment_at  DATETIME NULL,
-  created_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at       DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY uq_subscriptions_provider (provider, provider_id), -- los webhooks buscan por el id de Mercado Pago
-  KEY idx_subscriptions_user (user_id, created_at),             -- la suscripción más reciente del usuario
-  CONSTRAINT fk_subscriptions_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------

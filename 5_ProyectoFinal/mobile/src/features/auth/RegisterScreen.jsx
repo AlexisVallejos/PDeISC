@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button, FormError, TextField } from '../../components';
@@ -11,6 +11,7 @@ import { SocialButtons } from './SocialButtons';
 export default function RegisterScreen() {
   useTheme();
   const { register } = useAuth();
+  const router = useRouter();
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState(null);
@@ -28,7 +29,8 @@ export default function RegisterScreen() {
     if (Object.keys(found).length) return;
     setLoading(true);
     try {
-      await register(form.name.trim(), form.email.trim(), form.password);
+      const result = await register(form.name.trim(), form.email.trim(), form.password);
+      if (result.verificationRequired) router.push({ pathname: '/verify-email', params: { email: result.email } });
     } catch (err) {
       setErrors(err.fieldErrors ?? {});
       setFormError(err.message);
@@ -49,6 +51,7 @@ export default function RegisterScreen() {
         keyboardType="email-address"
         autoCapitalize="none"
         autoComplete="email"
+        hint="Gmail, Outlook/Hotmail, Yahoo, iCloud o Proton. Te mandamos un código para confirmarlo."
       />
       <TextField
         label="Contraseña"

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { authenticate, requirePro } from '../../middlewares/auth.js';
+import { authenticate } from '../../middlewares/auth.js';
 import { validate } from '../../middlewares/validate.js';
 import { idParam } from '../../utils/validation.js';
 import { searchFoods } from './fatsecret.js';
@@ -18,12 +18,12 @@ router.get('/categories', async (_req, res) => {
 });
 
 // Base de FatSecret (MacroEntreno Pro): buscar e importar alimentos con micronutrientes.
-router.get('/fatsecret/search', requirePro, validate({ query: schemas.fatSecretSearchQuery }), async (req, res) => {
+router.get('/fatsecret/search', validate({ query: schemas.fatSecretSearchQuery }), async (req, res) => {
   const { search, page, limit } = req.valid.query;
   res.json({ data: await searchFoods(search, { page, limit }) });
 });
 
-router.post('/fatsecret/import', requirePro, validate({ body: schemas.fatSecretImportSchema }), async (req, res) => {
+router.post('/fatsecret/import', validate({ body: schemas.fatSecretImportSchema }), async (req, res) => {
   res.status(201).json({ data: await service.importFatSecretFood(req.user, req.valid.body.externalId) });
 });
 
@@ -44,7 +44,7 @@ router.get('/barcode/:code', validate({ params: schemas.barcodeParam }), async (
 });
 
 router.get('/:id', validate({ params: idParam }), async (req, res) => {
-  res.json({ data: service.toFood(await service.getFood(req.user, req.valid.params.id), { micros: req.user.pro }) });
+  res.json({ data: service.toFood(await service.getFood(req.user, req.valid.params.id)) });
 });
 
 router.post('/', validate({ body: schemas.foodSchema }), async (req, res) => {

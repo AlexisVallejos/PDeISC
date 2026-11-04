@@ -22,11 +22,40 @@ const authLimiter = rateLimit({
   message: { error: { code: 'TOO_MANY_REQUESTS', message: 'Demasiados intentos, probá de nuevo en unos minutos' } },
 });
 
+// Login aparte: solo cuentan los intentos fallidos, así un aula detrás de la misma IP
+// no se bloquea entre sí por ingresar bien.
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: env.nodeEnv === 'test' ? 10_000 : 20,
+  skipSuccessfulRequests: true,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+  message: { error: { code: 'TOO_MANY_REQUESTS', message: 'Demasiados intentos fallidos, probá de nuevo en unos minutos' } },
+});
+
 router.post('/register', authLimiter, validate({ body: schemas.registerSchema }), async (req, res) => {
   res.status(201).json({ data: await service.register(req.valid.body) });
 });
 
-router.post('/login', authLimiter, validate({ body: schemas.loginSchema }), async (req, res) => {
+router.post('/verify-email', authLimiter, validate({ body: schemas.verifyEmailSchema }), async (req, res) => {
+  res.json({ data: await service.verifyEmail(req.valid.body) });
+});
+
+router.post('/resend-code', authLimiter, validate({ body: schemas.resendCodeSchema }), async (req, res) => {
+  await service.resendCode(req.valid.body);
+  res.status(204).end();
+});
+
+router.post('/forgot-password', authLimiter, validate({ body: schemas.forgotPasswordSchema }), async (req, res) => {
+  await service.forgotPassword(req.valid.body);
+  res.status(204).end();
+});
+
+router.post('/reset-password', authLimiter, validate({ body: schemas.resetPasswordSchema }), async (req, res) => {
+  res.json({ data: await service.resetPassword(req.valid.body) });
+});
+
+router.post('/login', loginLimiter, validate({ body: schemas.loginSchema }), async (req, res) => {
   res.json({ data: await service.login(req.valid.body) });
 });
 
@@ -45,7 +74,7 @@ router.get(
     const { provider: name } = req.valid.params;
     const { redirect_uri: appRedirectUri, code_challenge: challenge } = req.valid.query;
     const provider = oauth.getProvider(name);
-    oauth.assertAppRedirect(appRedirectUri);
+    oauth.assertAppRedirect(appRedirectUri, oauth.publicOrigin(req));
     const state = oauth.signState({ provider: name, appRedirectUri, challenge });
     res.redirect(provider.authorizeUrl(state, oauth.callbackUrl(req, name)));
   },
@@ -62,7 +91,7 @@ router.get('/oauth/:provider/callback', validate({ params: schemas.oauthParams }
     const provider = oauth.getProvider(name);
     const profile = await provider.fetchProfile(String(req.query.code), oauth.callbackUrl(req, name));
     const userId = await service.linkSocialAccount(name, profile);
-    const code = oauth.createLoginCode(userId, state.challenge);
+    const code = await oauth.createLoginCode(userId, state.challenge);
     return res.redirect(oauth.appRedirect(state.appRedirectUri, { code }));
   } catch (err) {
     // El usuario está en el navegador: se vuelve a la app con el mensaje de error.
@@ -73,7 +102,7 @@ router.get('/oauth/:provider/callback', validate({ params: schemas.oauthParams }
 });
 
 router.post('/oauth/exchange', authLimiter, validate({ body: schemas.oauthExchangeSchema }), async (req, res) => {
-  const userId = oauth.consumeLoginCode(req.valid.body.code, req.valid.body.codeVerifier);
+  const userId = await oauth.consumeLoginCode(req.valid.body.code, req.valid.body.codeVerifier);
   res.json({ data: await service.sessionForUser(userId) });
 });
 

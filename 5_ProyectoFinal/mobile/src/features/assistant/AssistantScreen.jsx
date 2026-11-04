@@ -250,7 +250,8 @@ export default function AssistantScreen() {
               <View style={[styles.bubble, continuous, m.role === 'user' ? styles.userBubble : styles.botBubble, m.failed && styles.failedBubble]}>
                 {m.image ? <Image source={{ uri: m.image }} style={[styles.bubbleImage, continuous]} accessibilityLabel="Foto enviada" /> : null}
                 {m.text ? <Text style={m.role === 'user' ? styles.userText : styles.botText}>{m.text}</Text> : null}
-                {m.actions?.map((a, j) => (
+                {/* Diario y Entrenos son pestañas del atleta: al staff no se le ofrecen esos atajos. */}
+                {user?.role === 'athlete' && m.actions?.map((a, j) => (
                   <Pressable
                     key={j}
                     onPress={() => router.push(a.type === 'workout' ? '/workouts' : a.type === 'diary' ? '/diary' : '/')}

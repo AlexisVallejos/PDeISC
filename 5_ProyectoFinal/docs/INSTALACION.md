@@ -155,7 +155,7 @@ corregir o probar rápido.
 npm test
 ```
 
-Corre **184 pruebas** de integración contra un MySQL temporal (no toca tu base ni necesita
+Corre **187 pruebas** de integración contra un MySQL temporal (no toca tu base ni necesita
 `.env`; la primera vez descarga MySQL y tarda unos minutos):
 
 | Archivo | Pruebas | Qué cubre |

@@ -49,11 +49,27 @@ export function validatePassword(password) {
   return null;
 }
 
+// Mismos dominios que acepta el servidor en el registro (ALLOWED_EMAIL_DOMAINS).
+export const ALLOWED_EMAIL_DOMAINS = [
+  'gmail.com', 'googlemail.com', 'hotmail.com', 'hotmail.com.ar', 'outlook.com', 'outlook.com.ar',
+  'live.com', 'live.com.ar', 'yahoo.com', 'yahoo.com.ar', 'icloud.com', 'me.com', 'proton.me', 'protonmail.com',
+];
+
+export function validateRegisterEmail(email) {
+  const error = validateEmail(email);
+  if (error) return error;
+  const domain = email.trim().toLowerCase().split('@')[1];
+  return ALLOWED_EMAIL_DOMAINS.includes(domain) ? null : 'Usá un email de Gmail, Outlook/Hotmail, Yahoo, iCloud o Proton';
+}
+
+/** Código de 6 números que llega por email. */
+export const validateCode = (code) => (/^\d{6}$/.test(String(code ?? '').trim()) ? null : 'El código tiene 6 números');
+
 export function validateRegister({ name, email, password, confirm }) {
   const errors = {};
   const nameError = validateName(name);
   if (nameError) errors.name = nameError;
-  const mail = validateEmail(email);
+  const mail = validateRegisterEmail(email);
   if (mail) errors.email = mail;
   const pwd = validatePassword(password);
   if (pwd) errors.password = pwd;

@@ -86,7 +86,7 @@ export async function updateUser(id, body) {
       if (data.coachId != null) await conn.query(
         'INSERT INTO coach_assignments (athlete_id, coach_id) VALUES (?, ?)', [id, data.coachId]);
     }
-    if (current.role === 'coach' && finalRole !== 'coach') {
+    if (current.role === 'coach' && (finalRole !== 'coach' || data.isActive === false)) {
       await conn.query('UPDATE coach_assignments SET ended_at = NOW() WHERE coach_id = ? AND ended_at IS NULL', [id]);
       await conn.query('UPDATE users SET coach_id = NULL WHERE coach_id = ?', [id]);
     }
@@ -101,7 +101,8 @@ export async function createUser({ name, email, password, role, coachId }) {
   const hash = await bcrypt.hash(password, 10);
   const id = await transaction(async (conn) => {
     const [result] = await conn.query(
-      'INSERT INTO users (name, email, password_hash, role, coach_id) VALUES (?, ?, ?, ?, ?)',
+      // Las cuentas que crea un admin no necesitan confirmar el email.
+      'INSERT INTO users (name, email, password_hash, email_verified_at, role, coach_id) VALUES (?, ?, ?, NOW(), ?, ?)',
       [name, email, hash, role, role === 'athlete' ? (coachId ?? null) : null]);
     if (role === 'athlete' && coachId) await conn.query(
       'INSERT INTO coach_assignments (athlete_id, coach_id) VALUES (?, ?)', [result.insertId, coachId]);

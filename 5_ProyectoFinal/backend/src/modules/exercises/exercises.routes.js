@@ -94,7 +94,8 @@ router.put(
   },
 );
 
-router.delete('/:id', authorize('coach', 'admin'), validate({ params: idParam }), async (req, res) => {
+// Borrar afecta el catálogo de todos los usuarios: solo un administrador.
+router.delete('/:id', authorize('admin'), validate({ params: idParam }), async (req, res) => {
   const result = await query('DELETE FROM exercises WHERE id = ?', [req.valid.params.id]);
   if (!result.affectedRows) throw notFound('Ejercicio no encontrado');
   res.status(204).end();

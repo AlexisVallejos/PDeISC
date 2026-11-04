@@ -54,9 +54,16 @@ async function call(method, params) {
   }
   const json = await res.json().catch(() => null);
   if (!res.ok || !json) throw badGateway('FATSECRET_ERROR', 'FatSecret no respondió');
-  if (json.error) throw badGateway('FATSECRET_ERROR', `FatSecret: ${json.error.message}`);
+  if (json.error) {
+    const err = badGateway('FATSECRET_ERROR', `FatSecret: ${json.error.message}`);
+    err.fatSecretCode = Number(json.error.code);
+    throw err;
+  }
   return json;
 }
+
+// Código 10 = método desconocido: la clave gratuita (Basic) no incluye foods.search.v5.
+const UNKNOWN_METHOD = 10;
 
 // FatSecret devuelve un objeto suelto cuando hay un solo elemento y un array cuando hay varios.
 const list = (value) => (value === undefined || value === null ? [] : [].concat(value));
@@ -111,9 +118,19 @@ function normalize(food) {
 
 /** Busca alimentos. Cada resultado viene con macros y micronutrientes cada 100 g y cuántos micros informa. */
 export async function searchFoods(search, { page = 0, limit = 20 } = {}) {
-  const json = await call('foods.search.v5', { search_expression: search, page_number: String(page), max_results: String(limit) });
-  const result = json.foods_search ?? {};
-  const foods = list(result.results?.food)
+  const query = { search_expression: search, page_number: String(page), max_results: String(limit) };
+  let result;
+  let rawFoods;
+  try {
+    result = (await call('foods.search.v5', query)).foods_search ?? {};
+    rawFoods = list(result.results?.food);
+  } catch (err) {
+    if (err.fatSecretCode !== UNKNOWN_METHOD) throw err;
+    // Plan gratuito: foods.search solo trae un resumen, así que se pide el detalle (con porciones) de cada resultado.
+    result = (await call('foods.search', query)).foods ?? {};
+    rawFoods = (await Promise.all(list(result.food).map((f) => call('food.get.v5', { food_id: String(f.food_id) })))).map((json) => json.food ?? {});
+  }
+  const foods = rawFoods
     .map(normalize)
     .filter(Boolean)
     .map((food) => ({ ...food, microsCount: Object.values(food.micros).filter((v) => v !== null).length }));

@@ -31,6 +31,8 @@ function RootNavigator() {
       <Stack.Protected guard={!signedIn}>
         <Stack.Screen name="login" />
         <Stack.Screen name="register" />
+        <Stack.Screen name="verify-email" />
+        <Stack.Screen name="forgot-password" />
       </Stack.Protected>
       <Stack.Screen name="oauth-callback" />
     </Stack>

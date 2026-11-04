@@ -131,7 +131,10 @@ Verifica la API y la conexión a MySQL.
 ### 5.2 Auth
 
 #### `POST /auth/register`
-Crea una cuenta con rol `athlete` (un `role` enviado en el body se ignora).
+Crea una cuenta con rol `athlete` (un `role` enviado en el body se ignora) **sin confirmar** y manda
+un código de 6 números al email. No hay sesión hasta confirmarlo con `POST /auth/verify-email`.
+Solo se aceptan emails de proveedores conocidos (Gmail, Outlook/Hotmail/Live, Yahoo, iCloud,
+Proton; configurable con `ALLOWED_EMAIL_DOMAINS`).
 
 | Campo | Tipo | Reglas |
 |---|---|---|
@@ -148,7 +151,27 @@ Estas mismas reglas se aplican en el alta y la edición de usuarios por un admin
   "details": [{ "field": "password", "message": "La contraseña debe incluir al menos un número" }] } }
 ```
 
-`201` → sesión:
+`201` → `{ "data": { "verificationRequired": true, "email": "ana@gmail.com" } }`.
+Si la API está publicada sin SMTP configurado, la cuenta entra sin confirmar y `201` devuelve
+directamente la sesión.
+
+#### `POST /auth/verify-email`
+Body `{ "email", "code" }`. Confirma el email y abre la sesión. El código vence a los 10 minutos y se
+quema después de 5 intentos fallidos. Errores: `400 INVALID_CODE`.
+
+#### `POST /auth/resend-code`
+Body `{ "email", "purpose": "verify" | "reset" }`. Manda otro código. Responde `204` exista o no la
+cuenta. `429 CODE_RECENTLY_SENT` si se pidió hace menos de un minuto.
+
+#### `POST /auth/forgot-password`
+Body `{ "email" }`. Si la cuenta existe, manda un código para cambiar la contraseña. Siempre `204`
+(no revela qué emails están registrados).
+
+#### `POST /auth/reset-password`
+Body `{ "email", "code", "newPassword" }`. Cambia la contraseña, cierra las demás sesiones y abre una
+nueva. Errores: `400 INVALID_CODE`, `400 VALIDATION_ERROR`.
+
+Sesión que devuelven `verify-email`, `reset-password` y `login`:
 ```json
 {
   "data": {
@@ -169,9 +192,10 @@ mayúsculas o espacios), `413`, `429`.
 Body `{ "email", "password" }`. El email se normaliza igual que en el registro (recorte +
 minúsculas). A la contraseña no se le exigen las reglas de fortaleza, pero sí que no esté vacía y
 que no supere los 72 bytes (si no, "clave de 72 caracteres + cualquier cosa" también entraría).
-`200` → misma sesión que el registro.
-Errores: `400`, `401 INVALID_CREDENTIALS` (mismo mensaje para email o contraseña incorrectos),
-`401 SOCIAL_ACCOUNT`, `403` (cuenta desactivada), `413`, `429`.
+`200` → sesión. Si el email no está confirmado responde `403 EMAIL_NOT_VERIFIED` y manda otro
+código. El límite de intentos de login cuenta solo los fallidos (20 cada 15 minutos por IP).
+Errores: `400`, `401 INVALID_CREDENTIALS` (mismo mensaje y mismo tiempo de respuesta para email o
+contraseña incorrectos), `401 SOCIAL_ACCOUNT`, `403` (cuenta desactivada), `413`, `429`.
 
 #### `POST /auth/refresh`
 Body `{ "refreshToken" }` (string de 1 a 2000 caracteres). `200` → sesión nueva (rota el refresh token).
@@ -319,7 +343,7 @@ Las palabras de menos de 3 letras se buscan con `LIKE`.
 |---|---|---|---|
 | [Open Food Facts](https://world.openfoodfacts.org) | ~4 M de productos envasados con código de barras, muchas marcas argentinas. Licencia ODbL | No (pide `User-Agent` propio: `OFF_USER_AGENT`) | ~15 productos y ~10 búsquedas por minuto por IP: la app busca al confirmar, no letra por letra |
 | [USDA FoodData Central](https://fdc.nal.usda.gov) | Alimentos genéricos analizados en laboratorio (Foundation y SR Legacy) | `USDA_API_KEY` gratuita (sin clave usa `DEMO_KEY`) | 1000 consultas por hora |
-| FatSecret | Genéricos y marcas con micronutrientes | Sí (Pro, ver 5.11) | Según el plan |
+| FatSecret | Genéricos y marcas con micronutrientes | Sí (ver 5.11) | 5.000 consultas/día (plan gratis) |
 
 Los valores de Open Food Facts los cargan voluntarios: los micronutrientes imposibles (por ejemplo,
 mg cargados como g) se descartan al importar.
@@ -473,26 +497,20 @@ Un día está "en objetivo" cuando sus calorías quedan dentro de ±10 % de la m
 Usuarios por rol, activos, atletas sin coach, alimentos globales y personales, actividad de los
 últimos 7 días y últimos 5 usuarios registrados.
 
-### 5.11 MacroEntreno Pro (micronutrientes y suscripción)
+### 5.11 Micronutrientes y FatSecret
 
-Los atletas acceden a Pro con una suscripción mensual (Mercado Pago) o porque un admin se la regala; entrenadores y administradores lo tienen incluido. Sin Pro, las funciones devuelven **402 `PRO_REQUIRED`** y las respuestas del diario, progreso y alimentos no incluyen micronutrientes (`micros: null`).
+Disponibles para todos los usuarios.
 
 **Micronutrientes** (fibra, azúcares, grasas saturadas, colesterol, sodio, potasio, calcio, hierro, vitaminas A, C y D): cada alimento y registro los guarda por porción; `null` significa *desconocido* (no suma cero). Los resúmenes informan `value`, `percent` del valor diario de referencia (FDA, adultos), `kind` (`goal` o `limit`) y la cobertura (`known` de `entries`).
 
 | Método | Ruta | Quién | Descripción |
 |---|---|---|---|
-| GET | `/api/diary?date=` | todos | Con Pro agrega `micros` (resumen del día) y `entries[].micros` |
-| GET | `/api/progress` | todos | Con Pro agrega `micros: { days, nutrients }` (promedio diario) |
-| GET | `/api/foods/fatsecret/search?search=&page=&limit=` | Pro | Busca en FatSecret; valores cada 100 g y `microsCount` |
-| POST | `/api/foods/fatsecret/import` | Pro | `{ externalId }` → guarda el alimento en el catálogo global (si ya existe lo actualiza) |
-| GET | `/api/billing/plan` | todos | `{ plan, price, checkoutAvailable, subscription }` |
-| POST | `/api/billing/subscribe` | atleta | Crea la suscripción pendiente en Mercado Pago → `{ checkoutUrl }` |
-| POST | `/api/billing/sync` | atleta | Consulta el estado en Mercado Pago (la app lo llama al volver del pago) |
-| POST | `/api/billing/cancel` | atleta | Da de baja; Pro sigue hasta el final del período pagado |
-| POST | `/api/billing/webhook` | Mercado Pago | Valida `x-signature` (si hay `MERCADOPAGO_WEBHOOK_SECRET`) y vuelve a consultar la suscripción |
-| POST | `/api/billing/grant` | admin | `{ userId, days }` suma días de Pro; `days: 0` lo quita |
+| GET | `/api/diary?date=` | todos | Incluye `micros` (resumen del día) y `entries[].micros` |
+| GET | `/api/progress` | todos | Incluye `micros: { days, nutrients }` (promedio diario) |
+| GET | `/api/foods/fatsecret/search?search=&page=&limit=` | todos | Busca en FatSecret; valores cada 100 g y `microsCount` |
+| POST | `/api/foods/fatsecret/import` | todos | `{ externalId }` → guarda el alimento en el catálogo global (si ya existe lo actualiza) |
 
-Una suscripción autorizada deja Pro activo hasta la fecha del próximo cobro más 3 días de gracia; cada cobro mensual lo extiende.
+Con la clave gratuita de FatSecret no existe `foods.search.v5`: la API busca con `foods.search` y pide el detalle de cada resultado con `food.get.v5`.
 
 ## 6. Scripts y pruebas
 
@@ -503,15 +521,15 @@ Una suscripción autorizada deja Pro activo hasta la fecha del próximo cobro m�
 | `npm run db:init` | Crea la base, aplica `database/schema.sql` y carga los datos demo (**borra todo**) |
 | `npm run db:seed` | Recarga solo los datos demo |
 | `npm run dev:memory` | API + MySQL temporal descargado automáticamente (no hace falta instalar MySQL) |
-| `npm test` | 184 pruebas de integración contra un MySQL real temporal (no toca tu base) |
+| `npm test` | 187 pruebas de integración contra un MySQL real temporal (no toca tu base) |
 
 | Archivo | Pruebas | Qué cubre |
 |---|---|---|
-| `test/api.test.js` | 72 | Rotación y reutilización de tokens, el flujo OAuth completo con un proveedor simulado, los permisos de cada rol, el CRUD de todos los recursos, las validaciones y, con `EXPLAIN`, que las consultas principales usen sus índices |
-| `test/auth.test.js` | 93 | Registro, login, refresh, logout, cambio de contraseña y `/auth/me`: límites exactos de cada campo, normalización del email, mensajes de error, tokens con otro algoritmo, body de más de 100 kB e intentos de saltear la validación (también en el alta de usuarios por un admin) |
+| `test/api.test.js` | 68 | Rotación y reutilización de tokens, el flujo OAuth completo con un proveedor simulado, los permisos de cada rol, el CRUD de todos los recursos, las validaciones y, con `EXPLAIN`, que las consultas principales usen sus índices |
+| `test/auth.test.js` | 100 | Registro con código por email, recuperación de contraseña, login, refresh, logout, cambio de contraseña y `/auth/me`: límites exactos de cada campo, normalización del email, mensajes de error, tokens con otro algoritmo, body de más de 100 kB e intentos de saltear la validación (también en el alta de usuarios por un admin) |
 | `test/ai.test.js` | 19 | Asistente con IA con OpenAI simulado (nunca se llama de verdad): `/ai/status`, validación de mensajes (largo, cantidad, último mensaje), reintentos y la traducción de los errores de OpenAI (`AI_NOT_CONFIGURED`, `AI_INVALID_KEY`, `AI_QUOTA`, `AI_RATE_LIMIT`, `AI_UNAVAILABLE`, `AI_MODEL_NOT_FOUND`, `AI_UNREACHABLE`, `AI_TIMEOUT`) |
 
-Resultado actual: **184/184** ✅.
+Resultado actual: **187/187** ✅.
 
 Ejemplo rápido con `curl`:
 

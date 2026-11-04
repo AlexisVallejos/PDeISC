@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { diaryApi, foodsApi } from '../../api/endpoints';
 import { Button, Card, Chips, ErrorState, FieldRow, FormError, ListItem, Loading, MacroInline, Screen, TextField } from '../../components';
-import { useAuth } from '../../context/AuthContext';
 import { colors, continuous, createStyles, font, radius, spacing, useTheme } from '../../theme';
 import { MEALS } from '../../utils/constants';
 import { confirm } from '../../utils/confirm';
@@ -45,8 +44,6 @@ export default function DiaryEntryScreen() {
   useTheme();
   const router = useRouter();
   const params = useLocalSearchParams();
-  const { user } = useAuth();
-  const isPro = Boolean(user?.plan?.pro);
   const editingId = params.id ? Number(params.id) : null;
   const date = String(params.date);
 
@@ -112,7 +109,7 @@ export default function DiaryEntryScreen() {
     return () => clearTimeout(timer);
   }, [search, mode, editingId]);
 
-  // Pro: búsqueda en FatSecret (necesita al menos 2 letras; un poco más de espera porque es un servicio externo).
+  // Búsqueda en FatSecret (necesita al menos 2 letras; un poco más de espera porque es un servicio externo).
   useEffect(() => {
     if (mode !== 'fatsecret' || editingId) return undefined;
     if (search.trim().length < 2) return undefined;
@@ -182,10 +179,6 @@ export default function DiaryEntryScreen() {
   };
 
   const changeMode = (next) => {
-    if (next === 'fatsecret' && !isPro) {
-      router.push('/pro');
-      return;
-    }
     setResults([]);
     setSearchError(null);
     setFood(null);
@@ -317,7 +310,7 @@ export default function DiaryEntryScreen() {
               { value: 'catalog', label: 'Mi catálogo' },
               { value: 'off', label: 'Open Food Facts' },
               { value: 'usda', label: 'USDA' },
-              { value: 'fatsecret', label: isPro ? 'FatSecret · Pro' : 'FatSecret · Pro (bloqueado)' },
+              { value: 'fatsecret', label: 'FatSecret' },
               { value: 'manual', label: 'Carga manual' },
             ]}
             value={mode}

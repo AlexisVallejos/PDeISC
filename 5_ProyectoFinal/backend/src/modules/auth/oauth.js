@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import jwt from 'jsonwebtoken';
+import { query, transaction } from '../../config/db.js';
 import { env } from '../../config/env.js';
 import { HttpError, badRequest, unauthorized } from '../../utils/httpError.js';
 import { socialProviders } from './socialProviders.js';
@@ -16,8 +17,9 @@ import { JWT_ALGORITHMS } from './tokens.js';
  *     original (PKCE), así ninguna otra app que intercepte el deep link puede usarlo.
  */
 
-const LOGIN_CODE_TTL_MS = 2 * 60 * 1000;
-const loginCodes = new Map(); // code -> { userId, challenge, expiresAt }
+// Los códigos se guardan en la base (solo su hash): en Vercel el callback y el canje
+// pueden caer en instancias distintas.
+const LOGIN_CODE_TTL_SECONDS = 120;
 
 const sha256Hex = (value) => crypto.createHash('sha256').update(value).digest('hex');
 
@@ -34,18 +36,31 @@ export function getProvider(name) {
   return provider;
 }
 
-/** Solo se devuelve el control a esquemas de la app (evita redirecciones abiertas). */
-export function assertAppRedirect(uri) {
-  let scheme;
+/**
+ * Solo se devuelve el control a la app: su origen web o macroentreno://oauth-callback.
+ * exp:// y exps:// (Expo Go) se permiten solo si están en APP_REDIRECT_SCHEMES (desarrollo).
+ */
+export function assertAppRedirect(uri, webOrigin) {
+  let url;
   try {
-    scheme = new URL(uri).protocol.replace(':', '');
+    url = new URL(uri);
   } catch {
     throw badRequest('redirect_uri inválida');
   }
+  // La app web se sirve en el mismo dominio que la API: puede volver a su propio origen.
+  if (webOrigin && url.origin === webOrigin) return;
+  const scheme = url.protocol.replace(':', '');
   if (!env.oauth.appSchemes.includes(scheme)) {
     throw badRequest(`redirect_uri debe usar uno de estos esquemas: ${env.oauth.appSchemes.join(', ')}`);
   }
+  // El esquema propio solo vuelve a la pantalla de login social, nunca a otro destino.
+  if (scheme === 'macroentreno' && `${url.host}${url.pathname}`.replace(/\/$/, '') !== 'oauth-callback') {
+    throw badRequest('redirect_uri inválida');
+  }
 }
+
+/** Origen público de la API (y de la app web, que se publica en el mismo dominio). */
+export const publicOrigin = (req) => new URL(env.oauth.publicApiUrl || `${req.protocol}://${req.get('host')}`).origin;
 
 export const callbackUrl = (req, providerName) =>
   `${env.oauth.publicApiUrl || `${req.protocol}://${req.get('host')}`}/api/auth/oauth/${providerName}/callback`;
@@ -63,21 +78,30 @@ export function verifyState(state) {
   }
 }
 
-export function createLoginCode(userId, challenge) {
-  const now = Date.now();
-  for (const [code, data] of loginCodes) if (data.expiresAt < now) loginCodes.delete(code);
+export async function createLoginCode(userId, challenge) {
+  await query('DELETE FROM oauth_login_codes WHERE expires_at < NOW()');
   const code = crypto.randomBytes(32).toString('hex');
-  loginCodes.set(code, { userId, challenge, expiresAt: now + LOGIN_CODE_TTL_MS });
+  await query(
+    'INSERT INTO oauth_login_codes (code_hash, user_id, challenge, expires_at) VALUES (?, ?, ?, NOW() + INTERVAL ? SECOND)',
+    [sha256Hex(code), userId, challenge, LOGIN_CODE_TTL_SECONDS],
+  );
   return code;
 }
 
-export function consumeLoginCode(code, codeVerifier) {
-  const data = loginCodes.get(code);
-  loginCodes.delete(code); // un solo uso, aunque falle la verificación
-  if (!data || data.expiresAt < Date.now() || sha256Hex(codeVerifier) !== data.challenge) {
+export async function consumeLoginCode(code, codeVerifier) {
+  // Un solo uso, aunque falle la verificación: se borra dentro de la misma transacción.
+  const data = await transaction(async (conn) => {
+    const [[row]] = await conn.query(
+      'SELECT user_id, challenge, expires_at > NOW() AS alive FROM oauth_login_codes WHERE code_hash = ? FOR UPDATE',
+      [sha256Hex(code)],
+    );
+    if (row) await conn.query('DELETE FROM oauth_login_codes WHERE code_hash = ?', [sha256Hex(code)]);
+    return row;
+  });
+  if (!data || !data.alive || sha256Hex(codeVerifier) !== data.challenge) {
     throw unauthorized('Código de inicio de sesión inválido o vencido', 'SOCIAL_LOGIN_FAILED');
   }
-  return data.userId;
+  return data.user_id;
 }
 
 export function appRedirect(appUri, params) {

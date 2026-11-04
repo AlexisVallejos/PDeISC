@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { progressApi } from '../../api/endpoints';
-import { Card, Chips, EmptyState, ErrorState, KcalBarChart, Loading, MicroList, ProTeaser, StatTile } from '../../components';
+import { Card, Chips, EmptyState, ErrorState, KcalBarChart, Loading, MicroList, StatTile } from '../../components';
 import { useResource } from '../../hooks/useResource';
 import { colors, createStyles, font, numeric, spacing, useTheme } from '../../theme';
 import { formatDayLabel, today } from '../../utils/dates';
@@ -64,8 +64,6 @@ export function ProgressView({ userId }) {
                 note={`Promedio de ${data.micros.days} ${data.micros.days === 1 ? 'día' : 'días'} con registros, contra el valor diario de referencia (FDA).`}
               />
             </Card>
-          ) : !userId ? (
-            <ProTeaser title="Micronutrientes del período" text="Promedio diario de vitaminas y minerales en 7, 14 o 30 días, con MacroEntreno Pro." />
           ) : null}
 
           <Card title="Fuerza (últimos 30 días)">

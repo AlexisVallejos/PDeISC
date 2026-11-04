@@ -34,7 +34,6 @@ export default function AppLayout() {
       <Stack.Screen name="food-form" options={{ title: 'Alimento' }} />
       <Stack.Screen name="nutrition-plans" options={{ title: 'Plan de alimentación' }} />
       <Stack.Screen name="weekly-reports" options={{ title: 'Informes semanales' }} />
-      <Stack.Screen name="pro" options={{ title: 'MacroEntreno Pro' }} />
       <Stack.Screen name="assistant" options={{ title: 'Asistente' }} />
 
       {/* Atleta: carga su diario y entrena con la cámara */}

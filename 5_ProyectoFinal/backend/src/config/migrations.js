@@ -4,6 +4,42 @@ import fs from 'node:fs/promises';
 export async function runMigrations(conn) {
   await migrateCoaching(conn);
   await migrateFoodSources(conn);
+  await migrateOAuthLoginCodes(conn);
+  await migrateEmailVerification(conn);
+}
+
+/** Verificación de email con código. Las cuentas que ya existían se dan por verificadas. */
+async function migrateEmailVerification(conn) {
+  const [column] = await conn.query("SHOW COLUMNS FROM users LIKE 'email_verified_at'");
+  if (!column.length) {
+    await conn.query('ALTER TABLE users ADD COLUMN email_verified_at DATETIME NULL AFTER password_hash');
+    await conn.query('UPDATE users SET email_verified_at = created_at');
+  }
+  await conn.query(`CREATE TABLE IF NOT EXISTS email_codes (
+    id         INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    user_id    INT UNSIGNED NOT NULL,
+    purpose    ENUM('verify','reset') NOT NULL,
+    code_hash  CHAR(64) NOT NULL,
+    attempts   TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uq_email_codes_user_purpose (user_id, purpose),
+    CONSTRAINT fk_email_codes_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
+}
+
+/** Códigos de un solo uso del login social (antes vivían en memoria de cada instancia). */
+async function migrateOAuthLoginCodes(conn) {
+  await conn.query(`CREATE TABLE IF NOT EXISTS oauth_login_codes (
+    code_hash  CHAR(64) NOT NULL,
+    user_id    INT UNSIGNED NOT NULL,
+    challenge  CHAR(64) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    PRIMARY KEY (code_hash),
+    KEY idx_oauth_codes_expires (expires_at),
+    CONSTRAINT fk_oauth_codes_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
 }
 
 /** Código de barras y nuevas fuentes externas de alimentos (Open Food Facts, USDA). */

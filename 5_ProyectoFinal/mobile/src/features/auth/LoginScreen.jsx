@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useRef, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button, FormError, TextField } from '../../components';
@@ -11,6 +11,7 @@ import { SocialButtons } from './SocialButtons';
 export default function LoginScreen() {
   useTheme();
   const { login } = useAuth();
+  const router = useRouter();
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState(null);
@@ -31,6 +32,11 @@ export default function LoginScreen() {
     try {
       await login(form.email.trim(), form.password);
     } catch (err) {
+      // Cuenta sin confirmar: el servidor ya mandó otro código al email.
+      if (err.code === 'EMAIL_NOT_VERIFIED') {
+        router.push({ pathname: '/verify-email', params: { email: form.email.trim().toLowerCase() } });
+        return;
+      }
       setErrors(err.fieldErrors ?? {});
       setFormError(err.message);
     } finally {
@@ -65,6 +71,9 @@ export default function LoginScreen() {
         onSubmitEditing={submit}
         placeholder="••••••••"
       />
+      <Link href={{ pathname: '/forgot-password', params: { email: form.email.trim() } }} style={styles.forgot}>
+        ¿Olvidaste tu contraseña?
+      </Link>
       <Button title="Ingresar" onPress={submit} loading={loading} />
       <SocialButtons onError={setFormError} disabled={loading} />
       <View style={styles.footer}>
@@ -73,9 +82,6 @@ export default function LoginScreen() {
           Registrate
         </Link>
       </View>
-      <Text style={styles.demo}>
-        Demo: admin@ · coach@ · atleta@macroentreno.com — contraseña Demo1234
-      </Text>
     </AuthLayout>
   );
 }
@@ -84,5 +90,5 @@ const styles = createStyles(() => StyleSheet.create({
   footer: { flexDirection: 'row', justifyContent: 'center', gap: spacing.xs },
   muted: { color: colors.muted, fontSize: font.md },
   link: { color: colors.primary, fontSize: font.md, fontWeight: '600' },
-  demo: { color: colors.muted, fontSize: font.xs, textAlign: 'center' },
+  forgot: { color: colors.primary, fontSize: font.sm, fontWeight: '600', alignSelf: 'flex-end' },
 }));

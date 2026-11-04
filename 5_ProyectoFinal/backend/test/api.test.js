@@ -20,19 +20,16 @@ before(async () => {
   db = await createDB({ version: '8.4.x' });
   Object.assign(process.env, {
     NODE_ENV: 'test',
+    ALLOWED_EMAIL_DOMAINS: 'macroentreno.com,gmail.com,test.com,ejemplo.com,mail.com,x.com,seguimiento.test',
     DB_HOST: '127.0.0.1',
     DB_PORT: String(db.port),
     DB_USER: db.username,
     DB_PASSWORD: '',
     DB_NAME: 'macroentreno_test',
-    // Servicios externos con claves de prueba: las llamadas se simulan (setFatSecretFetch / setMercadoPagoFetch).
+    // Servicios externos con claves de prueba: las llamadas se simulan (setFatSecretFetch).
     FATSECRET_CONSUMER_KEY: 'test-key',
     FATSECRET_CONSUMER_SECRET: 'test-secret',
     FATSECRET_REGION: '',
-    MERCADOPAGO_ACCESS_TOKEN: 'TEST-token',
-    MERCADOPAGO_WEBHOOK_SECRET: 'secreto-webhook',
-    PUBLIC_APP_URL: 'https://app.macroentreno.test',
-    PRO_PRICE: '4999',
     OPENAI_API_KEY: 'test-openai',
   });
   const { initDatabase } = await import('../scripts/db-init.js');
@@ -40,6 +37,7 @@ before(async () => {
   await initDatabase({ config: env.db });
   ({ pool } = await import('../src/config/db.js'));
   app = (await import('../src/app.js')).createApp();
+  (await import('../src/utils/mailer.js')).setMailSender(async ({ to, text }) => sentCodes.set(to, text.match(/\b\d{6}\b/)[0]));
 
   for (const [role, email] of [
     ['admin', 'admin@macroentreno.com'],
@@ -57,6 +55,15 @@ after(async () => {
   await pool?.end();
   await db?.stop();
 });
+
+// Los emails no salen: el último código enviado a cada dirección queda acá.
+const sentCodes = new Map();
+/** Alta + código del email: devuelve la respuesta de /verify-email (user + tokens). */
+async function registerVerified(body) {
+  const res = await request(app).post('/api/auth/register').send(body);
+  assert.equal(res.status, 201, res.text);
+  return request(app).post('/api/auth/verify-email').send({ email: body.email, code: sentCodes.get(body.email.trim().toLowerCase()) });
+}
 
 describe('salud y errores generales', () => {
   test('GET /api/health responde ok', async () => {
@@ -87,11 +94,9 @@ describe('autenticación', () => {
     assert.deepEqual(fields.sort(), ['email', 'name', 'password', 'password'].sort());
   });
 
-  test('registro crea un atleta y devuelve tokens', async () => {
-    const res = await request(app)
-      .post('/api/auth/register')
-      .send({ name: 'Nuevo Usuario', email: 'Nuevo@Mail.com', password: 'Clave1234' });
-    assert.equal(res.status, 201, res.text);
+  test('registro crea un atleta y, con el código del email, devuelve tokens', async () => {
+    const res = await registerVerified({ name: 'Nuevo Usuario', email: 'Nuevo@Mail.com', password: 'Clave1234' });
+    assert.equal(res.status, 200, res.text);
     assert.equal(res.body.data.user.role, 'athlete');
     assert.equal(res.body.data.user.email, 'nuevo@mail.com');
     assert.ok(res.body.data.tokens.accessToken);
@@ -173,11 +178,12 @@ describe('login social (flujo OAuth con proveedor simulado)', () => {
     const original = socialProviders.github.fetchProfile;
     env.social.githubClientId = 'test-client';
     env.social.githubClientSecret = 'test-secret';
-    // Simula a GitHub: el código "existente" pertenece al atleta demo, "nuevo" a alguien sin email.
+    // Simula a GitHub: "existente" trae el email del atleta demo (que tiene contraseña),
+    // "nuevo" a alguien sin email.
     socialProviders.github.fetchProfile = async (code) =>
       code === 'existente'
-        ? { providerUserId: 'gh-1', email: 'atleta@macroentreno.com', name: 'Alexis GH', avatarUrl: null }
-        : { providerUserId: 'gh-2', email: null, name: 'Sin Email', avatarUrl: 'https://example.com/a.png' };
+        ? { providerUserId: 'gh-1', email: 'atleta@macroentreno.com', emailVerified: true, name: 'Alexis GH', avatarUrl: null }
+        : { providerUserId: 'gh-2', email: null, emailVerified: false, name: 'Sin Email', avatarUrl: 'https://example.com/a.png' };
     restore = () => {
       socialProviders.github.fetchProfile = original;
       env.social.githubClientId = '';
@@ -214,14 +220,19 @@ describe('login social (flujo OAuth con proveedor simulado)', () => {
     assert.equal(res.status, 400);
   });
 
-  test('vincula por email a un usuario existente y canjea el código con PKCE', async () => {
+  test('no se vincula sola a una cuenta existente con contraseña: vuelve a la app con error', async () => {
     const back = await runFlow('existente');
     assert.equal(back.protocol, 'macroentreno:');
+    assert.equal(back.searchParams.get('error'), 'CONFLICT');
+    assert.equal(back.searchParams.get('code'), null);
+  });
+
+  test('canjea el código con PKCE una sola vez', async () => {
+    const back = await runFlow('nuevo');
     const code = back.searchParams.get('code');
 
     const exchange = await request(app).post('/api/auth/oauth/exchange').send({ code, codeVerifier: verifier });
     assert.equal(exchange.status, 200, exchange.text);
-    assert.equal(exchange.body.data.user.id, 3);
     assert.ok(exchange.body.data.tokens.accessToken);
 
     const reuse = await request(app).post('/api/auth/oauth/exchange').send({ code, codeVerifier: verifier });
@@ -229,7 +240,7 @@ describe('login social (flujo OAuth con proveedor simulado)', () => {
   });
 
   test('verifier incorrecto → 401', async () => {
-    const code = (await runFlow('existente')).searchParams.get('code');
+    const code = (await runFlow('nuevo')).searchParams.get('code');
     const res = await request(app)
       .post('/api/auth/oauth/exchange')
       .send({ code, codeVerifier: crypto.randomBytes(32).toString('hex') });
@@ -319,9 +330,7 @@ describe('roles y permisos', () => {
   });
 
   test('usuario desactivado no puede usar su token', async () => {
-    const reg = await request(app)
-      .post('/api/auth/register')
-      .send({ name: 'Baja', email: 'baja@mail.com', password: 'Clave1234' });
+    const reg = await registerVerified({ name: 'Baja', email: 'baja@mail.com', password: 'Clave1234' });
     const { id } = reg.body.data.user;
     await request(app).put(`/api/users/${id}`).set(auth('admin')).send({ isActive: false });
     const res = await request(app).get('/api/auth/me').set('Authorization', `Bearer ${reg.body.data.tokens.accessToken}`);
@@ -539,8 +548,8 @@ const localToday = () => {
 };
 const jsonResponse = (body, status = 200) => ({ ok: status < 400, status, json: async () => body });
 
-describe('MacroEntreno Pro: micronutrientes', () => {
-  test('el atleta con Pro recibe los micronutrientes del día; el plan gratis no', async () => {
+describe('Micronutrientes', () => {
+  test('todos los atletas reciben los micronutrientes del día', async () => {
     const pro = await request(app).get(`/api/diary?date=${localToday()}`).set(auth('athlete'));
     assert.equal(pro.status, 200);
     const fiber = pro.body.data.micros.find((m) => m.key === 'fiber');
@@ -552,28 +561,23 @@ describe('MacroEntreno Pro: micronutrientes', () => {
     assert.equal(vitD.value, null, 'lo desconocido no suma cero');
     assert.ok(pro.body.data.entries[0].micros);
 
-    const free = await request(app).get(`/api/diary?date=${localToday()}`).set(auth('other'));
-    assert.equal(free.body.data.micros, null);
-    assert.equal((await request(app).get('/api/auth/me').set(auth('other'))).body.data.plan.pro, false);
+    const other = await request(app).get(`/api/diary?date=${localToday()}`).set(auth('other'));
+    assert.ok(Array.isArray(other.body.data.micros));
   });
 
-  test('el coach ve los micronutrientes de su atleta (Pro incluido por el rol)', async () => {
+  test('el coach ve los micronutrientes de su atleta', async () => {
     const res = await request(app).get(`/api/diary?date=${localToday()}&userId=3`).set(auth('coach'));
     assert.ok(Array.isArray(res.body.data.micros));
-    const me = await request(app).get('/api/auth/me').set(auth('coach'));
-    assert.deepEqual(me.body.data.plan, { pro: true, source: 'role', proUntil: null });
   });
 
-  test('progreso: promedio diario de micronutrientes solo con Pro', async () => {
-    const pro = await request(app).get(`/api/progress?days=7&to=${localToday()}`).set(auth('athlete'));
-    assert.equal(pro.body.data.micros.days, 7);
-    assert.ok(pro.body.data.micros.nutrients.find((m) => m.key === 'sodium').value > 0);
-    const free = await request(app).get('/api/progress?days=7').set(auth('other'));
-    assert.equal(free.body.data.micros, null);
+  test('progreso: promedio diario de micronutrientes', async () => {
+    const res = await request(app).get(`/api/progress?days=7&to=${localToday()}`).set(auth('athlete'));
+    assert.equal(res.body.data.micros.days, 7);
+    assert.ok(res.body.data.micros.nutrients.find((m) => m.key === 'sodium').value > 0);
   });
 });
 
-describe('MacroEntreno Pro: FatSecret', () => {
+describe('FatSecret', () => {
   let fatsecret;
   const calls = [];
   // Porción de 50 g: la API tiene que pasar todo a 100 g.
@@ -592,12 +596,6 @@ describe('MacroEntreno Pro: FatSecret', () => {
   });
   after(() => fatsecret.setFatSecretFetch());
 
-  test('sin Pro → 402 PRO_REQUIRED', async () => {
-    const res = await request(app).get('/api/foods/fatsecret/search?search=banana').set(auth('other'));
-    assert.equal(res.status, 402);
-    assert.equal(res.body.error.code, 'PRO_REQUIRED');
-  });
-
   test('busca firmando con OAuth 1.0 y normaliza a 100 g', async () => {
     const res = await request(app).get('/api/foods/fatsecret/search?search=banana').set(auth('athlete'));
     assert.equal(res.status, 200, res.text);
@@ -610,6 +608,21 @@ describe('MacroEntreno Pro: FatSecret', () => {
     assert.equal(sent.get('oauth_consumer_key'), 'test-key');
     assert.equal(sent.get('oauth_signature_method'), 'HMAC-SHA1');
     assert.ok(sent.get('oauth_signature'));
+  });
+
+  test('con la clave gratuita (sin foods.search.v5) busca con foods.search y trae el detalle', async () => {
+    fatsecret.setFatSecretFetch(async (url) => {
+      const method = new URL(url).searchParams.get('method');
+      if (method === 'foods.search.v5') return jsonResponse({ error: { code: 10, message: 'Unknown method' } });
+      if (method === 'foods.search') return jsonResponse({ foods: { total_results: '1', page_number: '0', food: { food_id: '5388', food_name: 'Banana' } } });
+      if (method === 'food.get.v5') return jsonResponse({ food: banana });
+      return jsonResponse({ error: { code: 2, message: 'método desconocido' } });
+    });
+    const res = await request(app).get('/api/foods/fatsecret/search?search=banana').set(auth('athlete'));
+    assert.equal(res.status, 200, res.text);
+    assert.equal(res.body.data.total, 1);
+    assert.equal(res.body.data.foods[0].kcal, 89);
+    assert.equal(res.body.data.foods[0].micros.potassium, 358);
   });
 
   test('importar crea el alimento (sin duplicar) y el diario escala sus micronutrientes', async () => {
@@ -627,117 +640,6 @@ describe('MacroEntreno Pro: FatSecret', () => {
     assert.equal(entry.status, 201, entry.text);
     assert.equal(entry.body.data.micros.potassium, 537);
     assert.equal(entry.body.data.micros.vitaminD, null);
-
-    // Un atleta sin Pro puede registrar ese alimento, pero no recibe sus micronutrientes.
-    const free = await request(app).get(`/api/foods/${first.body.data.id}`).set(auth('other'));
-    assert.equal(free.body.data.micros, undefined);
-  });
-});
-
-describe('MacroEntreno Pro: suscripción con Mercado Pago', () => {
-  let mp;
-  let preapproval;
-  const sent = [];
-  const sign = (dataId, requestId, ts = String(Math.floor(Date.now() / 1000))) => {
-    const v1 = crypto.createHmac('sha256', 'secreto-webhook').update(`id:${dataId};request-id:${requestId};ts:${ts};`).digest('hex');
-    return `ts=${ts},v1=${v1}`;
-  };
-
-  before(async () => {
-    mp = await import('../src/modules/billing/mercadopago.js');
-    mp.setMercadoPagoFetch(async (url, options) => {
-      const body = options.body ? JSON.parse(options.body) : null;
-      sent.push({ url, method: options.method, body, headers: options.headers });
-      if (options.method === 'POST' && url.endsWith('/preapproval')) {
-        preapproval = { id: 'pre-123', status: 'pending', external_reference: body.external_reference, init_point: 'https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_id=pre-123' };
-        return jsonResponse(preapproval, 201);
-      }
-      if (url.endsWith('/preapproval/pre-123') && options.method === 'GET') return jsonResponse(preapproval);
-      if (url.endsWith('/preapproval/pre-123') && options.method === 'PUT') {
-        preapproval = { ...preapproval, status: body.status };
-        return jsonResponse(preapproval);
-      }
-      return jsonResponse({ message: 'not found' }, 404);
-    });
-  });
-  after(() => mp.setMercadoPagoFetch());
-
-  test('el plan informa precio y que se puede pagar', async () => {
-    const res = await request(app).get('/api/billing/plan').set(auth('other'));
-    assert.equal(res.status, 200);
-    assert.deepEqual(res.body.data.price, { amount: 4999, currency: 'ARS', period: 'month' });
-    assert.equal(res.body.data.checkoutAvailable, true);
-  });
-
-  test('suscribirse crea el preapproval pendiente y devuelve el link de pago', async () => {
-    const res = await request(app).post('/api/billing/subscribe').set(auth('other'));
-    assert.equal(res.status, 201, res.text);
-    assert.match(res.body.data.checkoutUrl, /preapproval_id=pre-123/);
-    const call = sent.at(-1);
-    assert.equal(call.headers.Authorization, 'Bearer TEST-token');
-    assert.ok(call.headers['X-Idempotency-Key']);
-    assert.deepEqual(call.body.auto_recurring, { frequency: 1, frequency_type: 'months', transaction_amount: 4999, currency_id: 'ARS' });
-    assert.equal(call.body.payer_email, 'martina@macroentreno.com');
-    assert.equal(call.body.back_url, 'https://app.macroentreno.test/pro');
-    assert.equal(res.body.data.subscription.status, 'pending');
-  });
-
-  test('coach no se suscribe: su rol ya incluye Pro', async () => {
-    assert.equal((await request(app).post('/api/billing/subscribe').set(auth('coach'))).status, 400);
-  });
-
-  test('webhook con firma inválida → 401; con firma válida activa Pro', async () => {
-    const bad = await request(app)
-      .post('/api/billing/webhook?type=subscription_preapproval&data.id=pre-123')
-      .set('x-signature', 'ts=1,v1=deadbeef')
-      .set('x-request-id', 'req-1')
-      .send({ type: 'subscription_preapproval', data: { id: 'pre-123' } });
-    assert.equal(bad.status, 401);
-
-    const next = new Date(Date.now() + 30 * 86_400_000).toISOString();
-    preapproval = { ...preapproval, status: 'authorized', next_payment_date: next };
-    const ok = await request(app)
-      .post('/api/billing/webhook?type=subscription_preapproval&data.id=pre-123')
-      .set('x-signature', sign('pre-123', 'req-2'))
-      .set('x-request-id', 'req-2')
-      .send({ type: 'subscription_preapproval', data: { id: 'pre-123' } });
-    assert.equal(ok.status, 200, ok.text);
-
-    const me = await request(app).get('/api/auth/me').set(auth('other'));
-    assert.equal(me.body.data.plan.pro, true);
-    assert.equal(me.body.data.plan.source, 'subscription');
-    const plan = await request(app).get('/api/billing/plan').set(auth('other'));
-    assert.equal(plan.body.data.subscription.status, 'authorized');
-    // Con Pro activo ya ve los micronutrientes.
-    const diary = await request(app).get(`/api/diary?date=${localToday()}`).set(auth('other'));
-    assert.ok(Array.isArray(diary.body.data.micros));
-  });
-
-  test('cancelar da de baja en Mercado Pago pero respeta el período pagado', async () => {
-    const res = await request(app).post('/api/billing/cancel').set(auth('other'));
-    assert.equal(res.status, 200, res.text);
-    assert.equal(sent.at(-1).method, 'PUT');
-    assert.deepEqual(sent.at(-1).body, { status: 'cancelled' });
-    assert.equal(res.body.data.subscription.status, 'cancelled');
-    assert.equal(res.body.data.plan.pro, true);
-  });
-
-  test('admin regala o quita Pro; los demás no', async () => {
-    assert.equal((await request(app).post('/api/billing/grant').set(auth('athlete')).send({ userId: 4, days: 30 })).status, 403);
-    const off = await request(app).post('/api/billing/grant').set(auth('admin')).send({ userId: 4, days: 0 });
-    assert.equal(off.status, 200);
-    assert.equal(off.body.data.plan.pro, false);
-    const on = await request(app).post('/api/billing/grant').set(auth('admin')).send({ userId: 4, days: 15 });
-    assert.equal(on.body.data.plan.pro, true);
-  });
-
-  test('webhook de otra cosa se ignora', async () => {
-    const res = await request(app)
-      .post('/api/billing/webhook?type=payment&data.id=999')
-      .set('x-signature', sign('999', 'req-3'))
-      .set('x-request-id', 'req-3')
-      .send({ type: 'payment', data: { id: '999' } });
-    assert.equal(res.status, 200);
   });
 });
 
@@ -948,7 +850,7 @@ describe('alimentos: código de barras y bases gratuitas', () => {
     const again = await request(app).get('/api/foods/barcode/7790580660000').set(auth('athlete'));
     assert.equal(again.body.data.source, 'catalog');
     assert.equal(again.body.data.food.id, first.body.data.food.id);
-    // Con Pro se ven los micronutrientes convertidos a mg.
+    // Se ven los micronutrientes convertidos a mg.
     assert.equal(again.body.data.food.micros.sodium, 12);
     assert.equal(offCalls.length, before);
   });
@@ -1082,5 +984,30 @@ describe('asistente con IA', () => {
     } finally {
       env.openai.apiKey = key;
     }
+  });
+});
+
+describe('permisos del catálogo y de coaches desactivados', () => {
+  test('un coach no puede borrar ejercicios del catálogo; el admin sí', async () => {
+    const created = await request(app).post('/api/exercises').set(auth('coach')).send({ name: `Borrable ${Date.now()}`, muscleGroup: 'Pecho' });
+    assert.equal(created.status, 201, created.text);
+    const id = created.body.data.id;
+    assert.equal((await request(app).delete(`/api/exercises/${id}`).set(auth('coach'))).status, 403);
+    assert.equal((await request(app).delete(`/api/exercises/${id}`).set(auth('admin'))).status, 204);
+  });
+
+  test('desactivar un coach libera a sus atletas', async () => {
+    const coach = await request(app)
+      .post('/api/users')
+      .set(auth('admin'))
+      .send({ name: 'Coach Temporal', email: `coach.${Date.now()}@test.com`, password: 'Clave1234', role: 'coach' });
+    const athlete = await request(app)
+      .post('/api/users')
+      .set(auth('admin'))
+      .send({ name: 'Atleta Temporal', email: `atl.${Date.now()}@test.com`, password: 'Clave1234', role: 'athlete', coachId: coach.body.data.id });
+    assert.equal(athlete.body.data.coachId, coach.body.data.id);
+    await request(app).put(`/api/users/${coach.body.data.id}`).set(auth('admin')).send({ isActive: false });
+    const after = await request(app).get(`/api/users/${athlete.body.data.id}`).set(auth('admin'));
+    assert.equal(after.body.data.coachId, null);
   });
 });

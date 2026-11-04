@@ -28,3 +28,5 @@ Thumbs.db
 
 # Vercel (proyecto vinculado localmente)
 .vercel/
+.vercel
+.env*

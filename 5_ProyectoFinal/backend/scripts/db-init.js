@@ -38,7 +38,7 @@ export async function initDatabase({ seedOnly = false, config = env.db } = {}) {
 async function seed(conn) {
   const hash = await bcrypt.hash(DEMO_PASSWORD, 10);
   await conn.query('SET FOREIGN_KEY_CHECKS = 0');
-  for (const table of ['weekly_reports', 'meal_plan_applications', 'meal_plan_items', 'meal_plans', 'coach_assignments', 'workout_sets', 'workout_exercises', 'workouts', 'exercises', 'diary_entries', 'foods', 'subscriptions', 'refresh_tokens', 'social_accounts', 'users']) {
+  for (const table of ['weekly_reports', 'meal_plan_applications', 'meal_plan_items', 'meal_plans', 'coach_assignments', 'workout_sets', 'workout_exercises', 'workouts', 'exercises', 'diary_entries', 'foods', 'refresh_tokens', 'social_accounts', 'users']) {
     await conn.query(`TRUNCATE TABLE ${table}`);
   }
   await conn.query('SET FOREIGN_KEY_CHECKS = 1');
@@ -53,8 +53,7 @@ async function seed(conn) {
      (4, 'Martina Atleta', 'martina@macroentreno.com', ?, 'athlete', NULL, 2100, 130, 240, 70)`,
     [hash, hash, hash, hash],
   );
-
-  await conn.query('UPDATE users SET pro_until = NOW() + INTERVAL 30 DAY WHERE id = 3');
+  await conn.query('UPDATE users SET email_verified_at = NOW()');
 
   // Los micronutrientes del seed (por porción) vienen de FatSecret: ver "microsFrom" en foods.json.
   const foods = await readJson('foods.json');

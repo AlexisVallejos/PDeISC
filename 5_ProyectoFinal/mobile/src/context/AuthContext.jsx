@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer } from 'react';
 import { getRefreshToken, restoreSessionTokens, setOnSessionExpired, setSessionTokens } from '../api/client';
 import { authApi, usersApi } from '../api/endpoints';
-import { socialLogin as runSocialLogin } from '../api/socialLogin';
+import { completeWebSocialLogin, socialLogin as runSocialLogin } from '../api/socialLogin';
 import { loadCachedUser, saveCachedUser } from '../storage/tokenStorage';
 
 /**
@@ -60,12 +60,33 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (email, password) => startSession(await authApi.login({ email, password })), [startSession]);
 
+  // El registro no abre sesión: llega un código al email y la sesión empieza en verifyEmail.
+  // Si el servidor no tiene correo configurado, devuelve la sesión directamente.
   const register = useCallback(
-    async (name, email, password) => startSession(await authApi.register({ name, email, password })),
+    async (name, email, password) => {
+      const result = await authApi.register({ name, email, password });
+      if (result.tokens) await startSession(result);
+      return result;
+    },
+    [startSession],
+  );
+
+  const verifyEmail = useCallback(
+    async (email, code) => startSession(await authApi.verifyEmail({ email, code })),
+    [startSession],
+  );
+
+  const resetPassword = useCallback(
+    async (email, code, newPassword) => startSession(await authApi.resetPassword({ email, code, newPassword })),
     [startSession],
   );
 
   const socialLogin = useCallback(async (provider) => startSession(await runSocialLogin(provider)), [startSession]);
+
+  const finishWebSocialLogin = useCallback(
+    async (queryParams) => startSession(await completeWebSocialLogin(queryParams)),
+    [startSession],
+  );
 
   const logout = useCallback(async () => {
     const refreshToken = getRefreshToken();
@@ -93,8 +114,8 @@ export function AuthProvider({ children }) {
   );
 
   const value = useMemo(
-    () => ({ ...state, login, register, socialLogin, logout, refreshUser, updateProfile, changePassword }),
-    [state, login, register, socialLogin, logout, refreshUser, updateProfile, changePassword],
+    () => ({ ...state, login, register, verifyEmail, resetPassword, socialLogin, finishWebSocialLogin, logout, refreshUser, updateProfile, changePassword }),
+    [state, login, register, verifyEmail, resetPassword, socialLogin, finishWebSocialLogin, logout, refreshUser, updateProfile, changePassword],
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

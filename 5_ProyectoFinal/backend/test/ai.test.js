@@ -50,6 +50,7 @@ before(async () => {
   db = await createDB({ version: '8.4.x' });
   Object.assign(process.env, {
     NODE_ENV: 'test',
+    ALLOWED_EMAIL_DOMAINS: 'macroentreno.com,gmail.com,test.com,ejemplo.com,mail.com,x.com,seguimiento.test',
     DB_HOST: '127.0.0.1',
     DB_PORT: String(db.port),
     DB_USER: db.username,

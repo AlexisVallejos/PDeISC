@@ -42,9 +42,13 @@ export const env = {
 
   oauth: {
     // URL pública de esta API (ej. https://xxxx.ngrok-free.app). Se usa para armar el callback.
-    publicApiUrl: (process.env.PUBLIC_API_URL || '').replace(/\/$/, ''),
-    // Esquemas a los que se permite volver después del login social.
-    appSchemes: list(process.env.APP_REDIRECT_SCHEMES || 'macroentreno,exp,exps'),
+    // En producción es obligatoria: si no, el header Host decidiría la URL de callback.
+    publicApiUrl: (process.env.NODE_ENV === 'production' ? required('PUBLIC_API_URL') : process.env.PUBLIC_API_URL || '').replace(/\/$/, ''),
+    // Esquemas a los que se permite volver después del login social. exp/exps (Expo Go) aceptan
+    // cualquier host, así que en producción solo queda el esquema propio de la app.
+    appSchemes: list(
+      process.env.APP_REDIRECT_SCHEMES || (process.env.NODE_ENV === 'production' ? 'macroentreno' : 'macroentreno,exp,exps'),
+    ),
   },
 
   // Búsqueda de alimentos con micronutrientes (OAuth 1.0: no depende de la IP habilitada en FatSecret).
@@ -73,15 +77,19 @@ export const env = {
     ttsVoice: process.env.OPENAI_TTS_VOICE || 'coral',
   },
 
-  // MacroEntreno Pro: suscripción mensual con Mercado Pago.
-  billing: {
-    mpAccessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || '',
-    mpWebhookSecret: process.env.MERCADOPAGO_WEBHOOK_SECRET || '',
-    price: Number(process.env.PRO_PRICE || 4999),
-    currency: process.env.PRO_CURRENCY || 'ARS',
-    // Adónde vuelve el navegador después de pagar (la app web, ej. https://app.midominio.com).
-    appUrl: (process.env.PUBLIC_APP_URL || '').replace(/\/$/, ''),
+  // Emails con códigos de verificación (SMTP; con Gmail: smtp.gmail.com + contraseña de aplicación).
+  mail: {
+    host: process.env.SMTP_HOST || '',
+    port: Number(process.env.SMTP_PORT || 465),
+    user: process.env.SMTP_USER || '',
+    pass: (process.env.SMTP_PASS || '').replace(/\s/g, ''),
+    from: process.env.MAIL_FROM || '',
   },
+  // Dominios aceptados en el registro público: proveedores de email conocidos.
+  allowedEmailDomains: list(
+    process.env.ALLOWED_EMAIL_DOMAINS ||
+      'gmail.com,googlemail.com,hotmail.com,hotmail.com.ar,outlook.com,outlook.com.ar,live.com,live.com.ar,yahoo.com,yahoo.com.ar,icloud.com,me.com,proton.me,protonmail.com',
+  ).map((d) => d.toLowerCase()),
 
   social: {
     googleClientId: process.env.GOOGLE_CLIENT_ID || '',

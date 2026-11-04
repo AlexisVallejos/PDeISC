@@ -6,8 +6,8 @@ import { MEALS } from './diary.schemas.js';
 
 const round = (n) => Math.round(n * 10) / 10;
 
-/** Los micronutrientes solo se incluyen para quien tiene Pro (`micros: true`). */
-function toEntry(row, { micros = false } = {}) {
+/** Los micronutrientes se incluyen por defecto (`micros: false` los omite). */
+function toEntry(row, { micros = true } = {}) {
   const entry = {
     id: row.id,
     userId: row.user_id,
@@ -39,8 +39,8 @@ function scaleFood(food, grams) {
 
 const sum = (entries, key) => round(entries.reduce((acc, e) => acc + Number(e[key] || 0), 0));
 
-/** El día del diario. Con `micros` (Pro) incluye los micronutrientes de cada registro y su resumen. */
-export async function getDay(userId, date, { micros = false } = {}) {
+/** El día del diario. Incluye los micronutrientes de cada registro y su resumen. */
+export async function getDay(userId, date, { micros = true } = {}) {
   const rows = await query(
     `SELECT * FROM diary_entries WHERE user_id = ? AND entry_date = ?
      ORDER BY FIELD(meal, ${MEALS.map(() => '?').join(', ')}), id`,
@@ -83,7 +83,7 @@ export async function createEntry(user, data) {
     [user.id, data.foodId ?? null, data.date, data.meal, name, data.grams, ...columns.map((c) => values[c])],
   );
   const [row] = await query('SELECT * FROM diary_entries WHERE id = ?', [result.insertId]);
-  return toEntry(row, { micros: user.pro });
+  return toEntry(row);
 }
 
 export async function updateEntry(user, id, data) {
@@ -107,7 +107,7 @@ export async function updateEntry(user, id, data) {
     ]);
   }
   const [updated] = await query('SELECT * FROM diary_entries WHERE id = ?', [id]);
-  return toEntry(updated, { micros: user.pro });
+  return toEntry(updated);
 }
 
 export async function deleteEntry(user, id) {

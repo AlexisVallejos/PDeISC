@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { env } from '../config/env.js';
 
 export const idParam = z.object({ id: z.coerce.number().int().positive() });
 
@@ -33,6 +34,13 @@ export const emailField = z
   .trim()
   .toLowerCase()
   .pipe(z.email('Email inválido').max(EMAIL_MAX, `El email no puede superar ${EMAIL_MAX} caracteres`));
+
+// Registro público: además, el dominio tiene que ser de un proveedor de email conocido.
+export const registerEmailField = emailField.refine(
+  // Si el formato ya es inválido, ese es el único error que se informa.
+  (value) => !z.email().safeParse(value).success || env.allowedEmailDomains.includes(value.split('@')[1]),
+  'Usá un email de Gmail, Outlook/Hotmail, Yahoo, iCloud o Proton',
+);
 
 // Sin caracteres de control (\0, saltos de línea) ni invisibles (espacios de ancho cero) y con alguna letra.
 export const nameField = z

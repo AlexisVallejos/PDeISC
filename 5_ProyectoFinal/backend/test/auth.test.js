@@ -20,7 +20,20 @@ let env;
 let oauth;
 let authService;
 
-const register = (body) => request(app).post('/api/auth/register').send(body);
+// Los emails no salen: el último código enviado a cada dirección queda acá.
+const sentCodes = new Map();
+const codeFor = (email) => sentCodes.get(String(email).trim().toLowerCase());
+
+const registerOnly = (body) => request(app).post('/api/auth/register').send(body);
+/** Registro completo: alta + código del email. Devuelve la respuesta del alta o, si salió bien, la de la verificación. */
+async function register(body) {
+  const res = await registerOnly(body);
+  if (res.status !== 201) return res;
+  const verified = await request(app).post('/api/auth/verify-email').send({ email: body.email, code: codeFor(body.email) });
+  assert.equal(verified.status, 200, verified.text);
+  verified.status = 201; // los casos comparan contra el 201 del alta
+  return verified;
+}
 const login = (email, password = DEMO_PASSWORD) => request(app).post('/api/auth/login').send({ email, password });
 const me = (accessToken) => request(app).get('/api/auth/me').set('Authorization', `Bearer ${accessToken}`);
 const refresh = (refreshToken) => request(app).post('/api/auth/refresh').send({ refreshToken });
@@ -50,6 +63,7 @@ before(async () => {
   db = await createDB({ version: '8.4.x' });
   Object.assign(process.env, {
     NODE_ENV: 'test',
+    ALLOWED_EMAIL_DOMAINS: 'macroentreno.com,gmail.com,test.com,ejemplo.com,mail.com,x.com,seguimiento.test',
     DB_HOST: '127.0.0.1',
     DB_PORT: String(db.port),
     DB_USER: db.username,
@@ -64,6 +78,7 @@ before(async () => {
   oauth = await import('../src/modules/auth/oauth.js');
   authService = await import('../src/modules/auth/auth.service.js');
   app = (await import('../src/app.js')).createApp();
+  (await import('../src/utils/mailer.js')).setMailSender(async ({ to, text }) => sentCodes.set(to, text.match(/\b\d{6}\b/)[0]));
 });
 
 after(async () => {
@@ -340,7 +355,8 @@ describe('login: credenciales incorrectas', () => {
 
   test('cuenta social puede definir contraseña sin la actual y luego entrar con email', async () => {
     const email = uniqueEmail('social-pass');
-    const [result] = await pool.query('INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, NULL, ?)', [
+    // Como la crea Google: sin contraseña y con el email ya verificado por el proveedor.
+    const [result] = await pool.query('INSERT INTO users (name, email, password_hash, email_verified_at, role) VALUES (?, ?, NULL, NOW(), ?)', [
       'Social Con Clave',
       email,
       'athlete',
@@ -696,8 +712,9 @@ describe('seguridad: intentos de saltear la validación', () => {
   });
 
   test('email de 190 caracteres se acepta; de 191 → 400 (no 500 por la columna de la base)', async () => {
-    const domain = `@${Date.now()}.com`;
-    const at190 = `${'a'.repeat(190 - domain.length)}${domain}`;
+    const domain = '@test.com';
+    const stamp = String(Date.now());
+    const at190 = `${stamp}${'a'.repeat(190 - domain.length - stamp.length)}${domain}`;
     assert.equal(at190.length, 190);
     assert.equal((await register({ ...valid(), email: at190 })).status, 201);
     const res = await register({ ...valid(), email: `b${at190}` });
@@ -783,8 +800,8 @@ describe('seguridad: intentos de saltear la validación', () => {
     assert.equal(res.status, 201, res.text);
     const { user } = res.body.data;
     assert.notEqual(user.id, 1);
-    const [[row]] = await pool.query('SELECT role, is_active, pro_until, coach_id FROM users WHERE id = ?', [user.id]);
-    assert.deepEqual({ ...row }, { role: 'athlete', is_active: 1, pro_until: null, coach_id: null });
+    const [[row]] = await pool.query('SELECT role, is_active, coach_id FROM users WHERE id = ?', [user.id]);
+    assert.deepEqual({ ...row }, { role: 'athlete', is_active: 1, coach_id: null });
   });
 
   // --- Límite de intentos ---
@@ -816,11 +833,11 @@ describe('seguridad: intentos de saltear la validación', () => {
     const challenge = crypto.createHash('sha256').update(verifier).digest('hex');
     const exchange = (code, codeVerifier) => request(app).post('/api/auth/oauth/exchange').send({ code, codeVerifier });
 
-    const stolen = oauth.createLoginCode(body.user.id, challenge);
+    const stolen = await oauth.createLoginCode(body.user.id, challenge);
     assert.equal((await exchange(stolen, 'w'.repeat(50))).status, 401);
     assert.equal((await exchange(stolen, verifier)).status, 401); // un solo uso
 
-    const fresh = oauth.createLoginCode(body.user.id, challenge);
+    const fresh = await oauth.createLoginCode(body.user.id, challenge);
     const ok = await exchange(fresh, verifier);
     assert.equal(ok.status, 200, ok.text);
     assert.equal(ok.body.data.user.id, body.user.id);
@@ -841,17 +858,61 @@ describe('seguridad: intentos de saltear la validación', () => {
       assert.throws(() => oauth.assertAppRedirect(uri), { status: 400 }, uri);
     }
     assert.doesNotThrow(() => oauth.assertAppRedirect('macroentreno://oauth-callback'));
+    // El esquema propio solo vuelve a la pantalla de login social.
+    for (const uri of ['macroentreno://evil.com/x', 'macroentreno:evil']) {
+      assert.throws(() => oauth.assertAppRedirect(uri), { status: 400 }, uri);
+    }
+    // La app web vuelve a su propio origen, pero no a otro dominio ni a un subdominio parecido.
+    const web = 'https://macroentreno.vercel.app';
+    assert.doesNotThrow(() => oauth.assertAppRedirect(`${web}/oauth-callback`, web));
+    for (const uri of ['https://evil.com/oauth-callback', 'https://macroentreno.vercel.app.evil.com/x', 'http://macroentreno.vercel.app/x']) {
+      assert.throws(() => oauth.assertAppRedirect(uri, web), { status: 400 }, uri);
+    }
   });
 
-  test('login social con el email en mayúsculas se vincula a la cuenta existente (no duplica)', async () => {
-    const { email, body } = await registerUser();
-    const userId = await authService.linkSocialAccount('google', {
+  test('login social con el email en mayúsculas se vincula a la cuenta social existente (no duplica)', async () => {
+    const email = `social${Date.now()}@test.com`;
+    const first = await authService.linkSocialAccount('github', {
+      providerUserId: `gh-${Date.now()}`,
+      email,
+      emailVerified: true,
+      name: 'Desde GitHub',
+      avatarUrl: null,
+    });
+    const second = await authService.linkSocialAccount('google', {
       providerUserId: `g-${Date.now()}`,
       email: `  ${email.toUpperCase()} `,
+      emailVerified: true,
       name: 'Desde Google',
       avatarUrl: null,
     });
-    assert.equal(userId, body.user.id);
+    assert.equal(second, first);
+  });
+
+  test('login social no toma cuentas con contraseña, de staff ni con email sin verificar', async () => {
+    const { email } = await registerUser();
+    const link = (data) =>
+      authService.linkSocialAccount(data.provider ?? 'google', { providerUserId: `x-${Math.random()}`, name: 'X', avatarUrl: null, ...data });
+    // Alguien registró el email con su contraseña: la víctima que entra con Google no queda en esa cuenta.
+    await assert.rejects(link({ email, emailVerified: true }), { status: 409 });
+    await assert.rejects(link({ email: 'coach@macroentreno.com', emailVerified: true }), { status: 409 });
+    // Facebook no informa si el email está verificado.
+    const socialEmail = `fb${Date.now()}@test.com`;
+    await link({ provider: 'github', email: socialEmail, emailVerified: true });
+    await assert.rejects(link({ provider: 'facebook', email: socialEmail, emailVerified: false }), { status: 409 });
+  });
+
+  test('el nombre social se recorta sin partir emojis', async () => {
+    const userId = await authService.linkSocialAccount('github', {
+      providerUserId: `emoji-${Date.now()}`,
+      email: null,
+      emailVerified: false,
+      name: `${'a'.repeat(99)}💪🏽`,
+      avatarUrl: null,
+    });
+    const row = await authService.findUserById(userId);
+    assert.equal(Array.from(row.name).length, 100);
+    assert.ok(!/[\uD800-\uDBFF]$/.test(row.name));
   });
 
   // --- Alta y edición de usuarios por un admin ---
@@ -883,5 +944,72 @@ describe('seguridad: intentos de saltear la validación', () => {
       .send({ email: ` ${local.toUpperCase()}@TEST.com  ` });
     assert.equal(res.status, 200, res.text);
     assert.equal(res.body.data.email, `${local}@test.com`);
+  });
+});
+
+describe('verificación de email y recuperación de contraseña', () => {
+  test('el registro no da sesión hasta confirmar el código del email', async () => {
+    const email = uniqueEmail('verif');
+    const res = await registerOnly({ name: 'Sin Confirmar', email, password: 'Clave1234' });
+    assert.equal(res.status, 201, res.text);
+    assert.deepEqual(res.body.data, { verificationRequired: true, email });
+    assert.equal(res.body.data.tokens, undefined);
+
+    // Con la contraseña correcta, el login pide confirmar el email.
+    const blocked = await login(email, 'Clave1234');
+    assert.equal(blocked.status, 403);
+    assert.equal(blocked.body.error.code, 'EMAIL_NOT_VERIFIED');
+
+    const wrong = await request(app).post('/api/auth/verify-email').send({ email, code: '000000' === codeFor(email) ? '111111' : '000000' });
+    assert.equal(wrong.status, 400);
+    assert.equal(wrong.body.error.code, 'INVALID_CODE');
+
+    const ok = await request(app).post('/api/auth/verify-email').send({ email, code: codeFor(email) });
+    assert.equal(ok.status, 200, ok.text);
+    assert.equal(ok.body.data.user.emailVerified, true);
+    assert.ok(ok.body.data.tokens.accessToken);
+    assert.equal((await login(email, 'Clave1234')).status, 200);
+    // El código ya se usó.
+    assert.equal((await request(app).post('/api/auth/verify-email').send({ email, code: codeFor(email) })).status, 400);
+  });
+
+  test('el código se quema después de 5 intentos fallidos', async () => {
+    const email = uniqueEmail('intentos');
+    await registerOnly({ name: 'Intentos', email, password: 'Clave1234' });
+    const good = codeFor(email);
+    const bad = good === '123456' ? '654321' : '123456';
+    for (let i = 0; i < 5; i++) await request(app).post('/api/auth/verify-email').send({ email, code: bad });
+    assert.equal((await request(app).post('/api/auth/verify-email').send({ email, code: good })).status, 400);
+  });
+
+  test('registro público solo acepta dominios de email conocidos', async () => {
+    const res = await registerOnly({ name: 'Pepito', email: 'yo@pepito.com', password: 'Clave1234' });
+    assertValidationError(res, ['email']);
+  });
+
+  test('olvidé mi contraseña: el código del email permite elegir una nueva y cierra las otras sesiones', async () => {
+    const { email, password, body } = await registerUser();
+    const forgot = await request(app).post('/api/auth/forgot-password').send({ email });
+    assert.equal(forgot.status, 204);
+    // Para un email que no existe responde igual.
+    assert.equal((await request(app).post('/api/auth/forgot-password').send({ email: 'nadie@test.com' })).status, 204);
+
+    const reset = await request(app)
+      .post('/api/auth/reset-password')
+      .send({ email, code: codeFor(email), newPassword: 'Nueva1234' });
+    assert.equal(reset.status, 200, reset.text);
+    assert.ok(reset.body.data.tokens.accessToken);
+    assert.equal((await login(email, password)).status, 401);
+    assert.equal((await login(email, 'Nueva1234')).status, 200);
+    assert.equal((await refresh(body.tokens.refreshToken)).status, 401);
+  });
+
+  test('reset con código incorrecto no cambia la contraseña', async () => {
+    const { email, password } = await registerUser();
+    await request(app).post('/api/auth/forgot-password').send({ email });
+    const bad = codeFor(email) === '123456' ? '654321' : '123456';
+    const res = await request(app).post('/api/auth/reset-password').send({ email, code: bad, newPassword: 'Nueva1234' });
+    assert.equal(res.status, 400);
+    assert.equal((await login(email, password)).status, 200);
   });
 });

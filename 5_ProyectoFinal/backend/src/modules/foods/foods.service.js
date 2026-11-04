@@ -6,8 +6,8 @@ import { getFoodDetail } from './fatsecret.js';
 import * as openFoodFacts from './openfoodfacts.js';
 import * as usda from './usda.js';
 
-/** Los micronutrientes y el origen solo se incluyen para quien tiene Pro (`micros: true`). */
-export function toFood(row, { micros = false } = {}) {
+/** Los micronutrientes y el origen se incluyen por defecto (`micros: false` los omite). */
+export function toFood(row, { micros = true } = {}) {
   const food = {
     id: row.id,
     name: row.name,
@@ -83,7 +83,7 @@ export async function listFoods(user, { page, limit, search, category, scope }) 
     limit,
     (page - 1) * limit,
   ]);
-  return { data: rows.map((row) => toFood(row, { micros: user.pro })), meta: paginationMeta(page, limit, total) };
+  return { data: rows.map((row) => toFood(row)), meta: paginationMeta(page, limit, total) };
 }
 
 export async function listCategories() {
@@ -133,7 +133,7 @@ export async function createFood(user, data) {
     `INSERT INTO foods (owner_id, ${keys.map((k) => COLUMNS[k]).join(', ')}) VALUES (?, ${keys.map(() => '?').join(', ')})`,
     [ownerId, ...keys.map((k) => data[k])],
   );
-  return toFood(await getFood(user, result.insertId), { micros: user.pro });
+  return toFood(await getFood(user, result.insertId));
 }
 
 export async function updateFood(user, id, data) {
@@ -146,7 +146,7 @@ export async function updateFood(user, id, data) {
       id,
     ]);
   }
-  return toFood(await getFood(user, id), { micros: user.pro });
+  return toFood(await getFood(user, id));
 }
 
 /**
@@ -185,7 +185,7 @@ async function saveExternalFood(user, source, food) {
     [source, food.externalId, ...columns.map((c) => values[c])],
   );
   const [row] = await query('SELECT * FROM foods WHERE external_source = ? AND external_id = ?', [source, food.externalId]);
-  return toFood(row, { micros: user.pro });
+  return toFood(row);
 }
 
 /** Busca en las bases gratuitas. Los resultados traen macros y micronutrientes cada 100 g. */
@@ -211,7 +211,7 @@ export async function findByBarcode(user, barcode) {
     'SELECT * FROM foods WHERE barcode = ? AND (owner_id IS NULL OR owner_id = ?) ORDER BY owner_id IS NULL, id LIMIT 1',
     [barcode, user.id],
   );
-  if (row) return { found: true, source: 'catalog', food: toFood(row, { micros: user.pro }) };
+  if (row) return { found: true, source: 'catalog', food: toFood(row) };
   const product = await openFoodFacts.getProductByBarcode(barcode);
   if (!product) return { found: false, barcode };
   return { found: true, source: 'openfoodfacts', food: await saveExternalFood(user, 'openfoodfacts', product) };

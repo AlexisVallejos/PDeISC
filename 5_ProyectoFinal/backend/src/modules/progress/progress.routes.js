@@ -129,7 +129,7 @@ router.get('/', validate({ query: progressQuery }), async (req, res) => {
         totalWorkouts: daily.reduce((a, d) => a + d.workouts, 0),
       },
       exercises: exerciseProgress(setRows),
-      micros: req.user.pro ? await microsAverage(userId, from, to) : null,
+      micros: await microsAverage(userId, from, to),
     },
   });
 });

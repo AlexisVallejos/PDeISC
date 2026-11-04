@@ -131,10 +131,10 @@ macroentreno_flet/
 │   ├── src/
 │   │   ├── config/  middlewares/  utils/
 │   │   └── modules/{auth,users,foods,diary,exercises,workouts,progress,admin}/
-│   └── test/                 ← 184 pruebas de integración (api, auth, ai)
+│   └── test/                 ← 187 pruebas de integración (api, auth, ai)
 └── mobile/                   ← App React Native (Expo SDK 58)
     ├── app.json · eas.json   ← configuración de la app y del APK
-    ├── test/                 ← 53 pruebas de las validaciones de formularios (node:test)
+    ├── test/                 ← 55 pruebas de las validaciones de formularios (node:test)
     └── src/
         ├── app/              ← rutas (Expo Router): login/register y (app)/(tabs) por rol
         ├── features/         ← pantallas por dominio: auth, home, diary, workouts, progress, catalog, users, profile
@@ -166,8 +166,8 @@ Usuarios demo (contraseña `Demo1234`): `admin@macroentreno.com` · `coach@macro
 
 | Verificación | Comando | Resultado |
 |---|---|---|
-| Pruebas de integración de la API (MySQL real): endpoints y permisos, login/registro, asistente con IA | `cd backend && npm test` | 184/184 ✅ (72 + 93 + 19) |
-| Pruebas de las validaciones de la app (node:test) | `cd mobile && npm test` | 53/53 ✅ |
+| Pruebas de integración de la API (MySQL real): endpoints y permisos, login/registro, asistente con IA | `cd backend && npm test` | 187/187 ✅ (68 + 100 + 19) |
+| Pruebas de las validaciones de la app (node:test) | `cd mobile && npm test` | 55/55 ✅ |
 | Lint de la app | `cd mobile && npx expo lint` | sin errores ni advertencias ✅ |
 | Diagnóstico de Expo | `cd mobile && npx expo-doctor` | 20/20 ✅ |
 | Compilación del bundle Android | `cd mobile && npx expo export -p android` | ✅ |

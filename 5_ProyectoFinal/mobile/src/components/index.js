@@ -15,4 +15,4 @@ export { StatTile } from './StatTile';
 export { EmptyState, ErrorState, FormError, Loading } from './States';
 export { TextField } from './TextField';
 export { ThemeSwitch, ThemeToggleButton } from './ThemeSwitch';
-export { MicroList, ProTeaser } from './Micros';
+export { MicroList } from './Micros';

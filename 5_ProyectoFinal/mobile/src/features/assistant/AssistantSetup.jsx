@@ -6,16 +6,9 @@ import { colors, continuous, createStyles, font, radius, spacing, useTheme } fro
 /** Errores que se arreglan configurando el servidor (no reintentando): se muestra este panel. */
 export const SETUP_CODES = ['AI_NOT_CONFIGURED', 'AI_INVALID_KEY'];
 
-const STEPS = [
-  { text: 'Abrí el archivo', code: 'backend/.env' },
-  { text: 'Pegá tu clave de OpenAI (empieza con sk-) en la línea', code: 'OPENAI_API_KEY=sk-...' },
-  { text: 'Reiniciá la API', code: 'cd backend && npm run dev' },
-];
-
 /**
  * Estado vacío cuando el asistente no puede funcionar por falta de clave (o clave inválida).
- * Explica exactamente dónde va la clave; el administrador ve los pasos, el resto también pero con
- * el aviso de que lo tiene que hacer quien maneja el servidor.
+ * Muestra un mensaje para el usuario; cómo configurar la clave está en el README del backend.
  */
 export function AssistantSetup({ reason = 'AI_NOT_CONFIGURED', isAdmin, onRecheck, checking }) {
   useTheme();
@@ -25,34 +18,15 @@ export function AssistantSetup({ reason = 'AI_NOT_CONFIGURED', isAdmin, onRechec
       <View style={[styles.icon, continuous]}>
         <Ionicons name={invalid ? 'alert-circle-outline' : 'key-outline'} size={30} color={colors.warning} />
       </View>
-      <Text style={styles.title}>{invalid ? 'La clave de OpenAI es inválida' : 'Falta configurar el asistente'}</Text>
+      {/* Mensaje para quien usa la app: los pasos de configuración están en el README, no en pantalla. */}
+      <Text style={styles.title}>El asistente no está disponible</Text>
       <Text style={styles.text}>
         {invalid
-          ? 'OpenAI rechazó la clave cargada en el servidor. Puede estar mal copiada, vencida o revocada.'
-          : 'El asistente con IA necesita una clave de OpenAI en el servidor. La clave nunca se guarda en la app.'}
-        {isAdmin ? '' : ' Pasale estos pasos a quien administra el servidor:'}
+          ? 'Hay un problema con la conexión del asistente. Ya está avisado; probá de nuevo más tarde.'
+          : 'El asistente con IA todavía no está activo en este servidor. Probá de nuevo más tarde.'}
       </Text>
 
-      <View style={[styles.card, continuous]}>
-        {STEPS.map((step, i) => (
-          <View key={step.code} style={styles.step}>
-            <View style={styles.stepNumber}>
-              <Text style={styles.stepNumberText}>{i + 1}</Text>
-            </View>
-            <View style={{ flex: 1, gap: spacing.xs }}>
-              <Text style={styles.stepText}>{step.text}</Text>
-              <Text style={[styles.code, continuous]} selectable>
-                {step.code}
-              </Text>
-            </View>
-          </View>
-        ))}
-        <Text style={styles.hint}>
-          Las claves se crean en platform.openai.com/api-keys y la cuenta necesita saldo cargado. Al arrancar, la API avisa en la consola si el asistente quedó activo.
-        </Text>
-      </View>
-
-      {onRecheck ? <Button title="Ya la configuré, volver a probar" icon="refresh" variant="tinted" onPress={onRecheck} loading={checking} /> : null}
+      {onRecheck ? <Button title="Volver a probar" icon="refresh" variant="tinted" onPress={onRecheck} loading={checking} /> : null}
     </View>
   );
 }

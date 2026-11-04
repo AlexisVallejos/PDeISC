@@ -5,8 +5,6 @@ import { useAuth } from '../../../context/AuthContext';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { colors, createStyles, font, MAX_CONTENT_WIDTH, spacing, tracking, useTheme } from '../../../theme';
 
-const SIDEBAR_WIDTH = 260;
-
 /** Como en iOS: ícono de contorno en reposo y relleno en la pestaña activa. */
 const icon = (name) =>
   function TabBarIcon({ color, size, focused }) {
@@ -18,16 +16,15 @@ const icon = (name) =>
  *  - Atleta:        Inicio · Diario · Entrenos · Progreso · Perfil
  *  - Entrenador:    Atletas · Catálogo · Perfil
  *  - Administrador: Panel · Usuarios · Catálogo · Perfil
- * En pantallas anchas (tablet, web de escritorio) pasan a una barra lateral, como en iPadOS.
+ * La barra va siempre abajo; en pantallas anchas (tablet, web) muestra el ícono al lado del texto.
  */
 export default function TabsLayout() {
   useTheme();
   const { user } = useAuth();
   const { width } = useResponsive();
-  const sidebar = width >= 900;
+  const wide = width >= 700;
   // El título grande se alinea con el contenido, que está centrado con ancho máximo
-  const contentWidth = width - (sidebar ? SIDEBAR_WIDTH : 0);
-  const titleInset = Math.max(0, (contentWidth - MAX_CONTENT_WIDTH) / 2);
+  const titleInset = Math.max(0, (width - MAX_CONTENT_WIDTH) / 2);
   const role = user?.role;
   const homeTitle = role === 'admin' ? 'Panel' : role === 'coach' ? 'Mis atletas' : 'Inicio';
   const homeIcon = role === 'admin' ? 'speedometer' : role === 'coach' ? 'people' : 'home';
@@ -42,14 +39,14 @@ export default function TabsLayout() {
         headerTintColor: colors.text,
         headerTitleStyle: { fontSize: font.display - 2, fontWeight: '700', letterSpacing: tracking.display },
         headerTitleContainerStyle: { marginLeft: spacing.lg + titleInset },
-        tabBarPosition: sidebar ? 'left' : 'bottom',
-        tabBarLabelPosition: sidebar ? 'beside-icon' : 'below-icon',
-        tabBarStyle: sidebar ? styles.sidebar : styles.tabBar,
-        tabBarItemStyle: sidebar ? styles.sidebarItem : undefined,
-        tabBarLabelStyle: sidebar ? styles.sidebarLabel : styles.tabLabel,
+        tabBarPosition: 'bottom',
+        tabBarLabelPosition: wide ? 'beside-icon' : 'below-icon',
+        tabBarStyle: [styles.tabBar, wide && { paddingHorizontal: titleInset + spacing.lg }],
+        tabBarItemStyle: wide ? styles.wideItem : undefined,
+        tabBarLabelStyle: wide ? styles.wideLabel : styles.tabLabel,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.muted,
-        tabBarActiveBackgroundColor: sidebar ? colors.primarySoft : undefined,
+        tabBarActiveBackgroundColor: wide ? colors.primarySoft : undefined,
         sceneStyle: { backgroundColor: colors.background },
       }}
     >
@@ -83,16 +80,7 @@ const styles = createStyles(() => StyleSheet.create({
     ...(Platform.OS === 'web' ? { height: 60, paddingTop: 4, paddingBottom: 8 } : null),
   },
   tabLabel: { fontSize: 10, fontWeight: '500' },
-  sidebar: {
-    // pisa el ancho mínimo de 360 que trae por defecto (pensado para Material)
-    width: SIDEBAR_WIDTH,
-    minWidth: SIDEBAR_WIDTH,
-    backgroundColor: colors.background,
-    borderRightColor: colors.border,
-    borderRightWidth: StyleSheet.hairlineWidth,
-    paddingTop: 24,
-    paddingHorizontal: 12,
-  },
-  sidebarItem: { borderRadius: 12, marginVertical: 2, paddingHorizontal: 12, justifyContent: 'flex-start' },
-  sidebarLabel: { fontSize: font.md, fontWeight: '600', marginLeft: 12 },
+  // Pantallas anchas: pastillas con ícono y texto, repartidas a lo ancho del contenido
+  wideItem: { borderRadius: 12, marginHorizontal: 4, marginVertical: 2 },
+  wideLabel: { fontSize: font.md, fontWeight: '600', marginLeft: 8 },
 }));

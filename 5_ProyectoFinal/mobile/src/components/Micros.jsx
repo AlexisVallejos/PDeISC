@@ -1,7 +1,5 @@
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { colors, continuous, createStyles, font, numeric, radius, spacing, useTheme } from '../theme';
+import { StyleSheet, Text, View } from 'react-native';
+import { colors, createStyles, font, numeric, radius, spacing, useTheme } from '../theme';
 import { fmt } from '../utils/format';
 
 /** Color de la barra: las metas se ponen verdes al cumplirse; los límites, naranja cerca y rojo pasados. */
@@ -48,23 +46,6 @@ export function MicroList({ nutrients, note }) {
   );
 }
 
-/** Lo que ve el plan gratis en lugar de una función Pro. */
-export function ProTeaser({ title = 'Micronutrientes', text = 'Vitaminas, minerales, fibra y sodio de cada comida, con MacroEntreno Pro.' }) {
-  useTheme();
-  const router = useRouter();
-  return (
-    <Pressable onPress={() => router.push('/pro')} accessibilityRole="button" style={({ pressed }) => [styles.teaser, continuous, pressed && { opacity: 0.85 }]}>
-      <View style={styles.lock}>
-        <Ionicons name="lock-closed" size={18} color={colors.onPrimary} />
-      </View>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.teaserTitle}>{title}</Text>
-        <Text style={styles.teaserText}>{text}</Text>
-      </View>
-      <Text style={styles.teaserCta}>Ver Pro</Text>
-    </Pressable>
-  );
-}
 
 const styles = createStyles(() => StyleSheet.create({
   list: { gap: spacing.md },
@@ -78,9 +59,4 @@ const styles = createStyles(() => StyleSheet.create({
   fill: { height: '100%', borderRadius: radius.pill },
   note: { color: colors.muted, fontSize: font.xs },
   empty: { color: colors.muted, fontSize: font.sm },
-  teaser: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.lg, borderRadius: radius.lg, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.primaryMuted },
-  lock: { width: 36, height: 36, borderRadius: 18, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center' },
-  teaserTitle: { color: colors.text, fontSize: font.md + 1, fontWeight: '600' },
-  teaserText: { color: colors.muted, fontSize: font.sm },
-  teaserCta: { color: colors.primary, fontSize: font.md, fontWeight: '600' },
 }));
