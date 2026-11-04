@@ -39,6 +39,7 @@ export default function AppLayout() {
       {/* Atleta: carga su diario y entrena con la cámara */}
       <Stack.Protected guard={isAthlete}>
         <Stack.Screen name="diary-entry" options={{ title: 'Registrar comida' }} />
+        <Stack.Screen name="body" options={{ title: 'Mis datos y objetivo' }} />
         <Stack.Screen name="coach/index" options={{ title: 'Entrenar con cámara' }} />
         <Stack.Screen name="coach/[rule]" options={{ title: 'Entrenar' }} />
       </Stack.Protected>

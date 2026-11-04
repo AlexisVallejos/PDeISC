@@ -42,6 +42,16 @@ export default function AthleteHome() {
           onPress={() => router.push({ pathname: '/workout-form', params: { date } })}
         />
       </View>
+      {!user.hasBodyProfile ? (
+        <Pressable onPress={() => router.push('/body')} accessibilityRole="button" style={[styles.setup, continuous]}>
+          <Ionicons name="body-outline" size={26} color={colors.primary} />
+          <View style={{ flex: 1 }}>
+            <Text style={styles.setupTitle}>Calculá tus calorías y macros</Text>
+            <Text style={styles.sub}>Cargá peso, altura, actividad y objetivo (déficit, mantenimiento o volumen).</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={colors.chevron} />
+        </Pressable>
+      ) : null}
       <AssistantBanner />
 
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
@@ -89,6 +99,8 @@ function QuickAction({ icon, title, onPress, primary }) {
 }
 
 const styles = createStyles(() => StyleSheet.create({
+  setup: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.lg, borderRadius: radius.lg, backgroundColor: colors.primarySoft },
+  setupTitle: { color: colors.text, fontSize: font.md + 1, fontWeight: '700' },
   hello: { color: colors.text, fontSize: font.xxl, fontWeight: '700', letterSpacing: tracking.title },
   sub: { color: colors.muted, fontSize: font.sm },
   actions: { flexDirection: 'row', gap: spacing.md },

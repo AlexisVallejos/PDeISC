@@ -1,5 +1,6 @@
 import coachingRoutes from './modules/coaching/coaching.routes.js';
 import reportsRoutes from './modules/reports/reports.routes.js';
+import bodyRoutes from './modules/body/body.routes.js';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
@@ -43,6 +44,7 @@ export function createApp() {
   app.use('/api/progress', progressRoutes);
   app.use('/api/admin', adminRoutes);
   app.use('/api/coaching', coachingRoutes);
+  app.use('/api/body', bodyRoutes);
   app.use('/api/reports', reportsRoutes);
 
   app.use(notFoundHandler);

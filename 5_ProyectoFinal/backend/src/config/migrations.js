@@ -8,6 +8,30 @@ export async function runMigrations(conn) {
   await migrateOAuthLoginCodes(conn);
   await migrateEmailVerification(conn);
   await migrateTypicalFoods(conn);
+  await migrateBodyProfile(conn);
+}
+
+/** Datos corporales para calcular calorías y macros, e historial de peso. */
+async function migrateBodyProfile(conn) {
+  const [column] = await conn.query("SHOW COLUMNS FROM users LIKE 'sex'");
+  if (!column.length) {
+    await conn.query(`ALTER TABLE users
+      ADD COLUMN sex ENUM('male','female') NULL,
+      ADD COLUMN birth_date DATE NULL,
+      ADD COLUMN height_cm DECIMAL(5,1) NULL,
+      ADD COLUMN weight_kg DECIMAL(5,1) NULL,
+      ADD COLUMN body_fat_pct DECIMAL(4,1) NULL,
+      ADD COLUMN activity_level ENUM('sedentary','light','moderate','active','very_active') NULL,
+      ADD COLUMN goal_type ENUM('cut','recomp','maintain','bulk') NULL,
+      ADD COLUMN goal_pace ENUM('slow','moderate','fast') NULL`);
+  }
+  await conn.query(`CREATE TABLE IF NOT EXISTS body_weights (
+    user_id   INT UNSIGNED NOT NULL,
+    date      DATE NOT NULL,
+    weight_kg DECIMAL(5,1) NOT NULL,
+    PRIMARY KEY (user_id, date),
+    CONSTRAINT fk_body_weights_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
 }
 
 /**

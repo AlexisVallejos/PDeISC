@@ -1011,3 +1011,45 @@ describe('permisos del catálogo y de coaches desactivados', () => {
     assert.equal(after.body.data.coachId, null);
   });
 });
+
+describe('datos corporales y plan de calorías', () => {
+  const body = { sex: 'male', birthDate: '1996-05-10', heightCm: 180, weightKg: 80, activityLevel: 'moderate', goal: 'cut', pace: 'moderate' };
+
+  test('vista previa calcula sin guardar', async () => {
+    const res = await request(app).post('/api/body/preview').set(auth('athlete')).send(body);
+    assert.equal(res.status, 200, res.text);
+    assert.equal(res.body.data.method, 'Mifflin-St Jeor');
+    assert.ok(res.body.data.goals.kcal < res.body.data.tdee);
+    const saved = await request(app).get('/api/body').set(auth('athlete'));
+    assert.equal(saved.body.data.profile, null);
+  });
+
+  test('guardar aplica las metas, registra el peso y valida los datos', async () => {
+    const bad = await request(app).put('/api/body').set(auth('athlete')).send({ ...body, heightCm: 90, goal: 'x' });
+    assert.equal(bad.status, 400);
+    const res = await request(app).put('/api/body').set(auth('athlete')).send(body);
+    assert.equal(res.status, 200, res.text);
+    assert.deepEqual(res.body.data.profile, { ...body, bodyFatPct: null });
+    assert.equal(res.body.data.weights.length, 1);
+    const me = await request(app).get('/api/auth/me').set(auth('athlete'));
+    assert.deepEqual(me.body.data.goals, res.body.data.plan.goals);
+  });
+
+  test('pesada rápida actualiza el peso y el plan', async () => {
+    const res = await request(app).post('/api/body/weight').set(auth('athlete')).send({ weightKg: 78.5 });
+    assert.equal(res.status, 201, res.text);
+    assert.equal(res.body.data.profile.weightKg, 78.5);
+    // Una pesada vieja no pisa el peso actual
+    await request(app).post('/api/body/weight').set(auth('athlete')).send({ weightKg: 90, date: '2020-01-01' });
+    const after = await request(app).get('/api/body').set(auth('athlete'));
+    assert.equal(after.body.data.profile.weightKg, 78.5);
+    assert.equal(after.body.data.weights[0].date, '2020-01-01');
+  });
+
+  test('el coach ve los datos de su atleta; otro atleta no', async () => {
+    const coach = await request(app).get('/api/body?userId=3').set(auth('coach'));
+    assert.equal(coach.status, 200);
+    assert.equal(coach.body.data.profile.heightCm, 180);
+    assert.equal((await request(app).get('/api/body?userId=3').set(auth('other'))).status, 403);
+  });
+});

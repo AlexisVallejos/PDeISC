@@ -7,6 +7,7 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS body_weights;
 DROP TABLE IF EXISTS email_codes;
 DROP TABLE IF EXISTS oauth_login_codes;
 DROP TABLE IF EXISTS weekly_reports;

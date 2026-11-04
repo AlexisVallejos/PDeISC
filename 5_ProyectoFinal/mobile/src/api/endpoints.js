@@ -16,6 +16,15 @@ export const authApi = {
   changePassword: (body) => data(api('/auth/password', { method: 'PUT', body })),
 };
 
+/** Datos corporales y plan de calorías y macros calculado. */
+export const bodyApi = {
+  get: (userId) => data(api('/body', { query: userId ? { userId } : undefined })),
+  options: () => data(api('/body/options')),
+  preview: (body) => data(api('/body/preview', { method: 'POST', body })),
+  save: (body) => data(api('/body', { method: 'PUT', body })),
+  logWeight: (body) => data(api('/body/weight', { method: 'POST', body })),
+};
+
 export const usersApi = {
   list: (query) => api('/users', { query }),
   get: (id) => data(api(`/users/${id}`)),

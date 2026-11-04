@@ -512,6 +512,26 @@ Disponibles para todos los usuarios.
 
 Con la clave gratuita de FatSecret no existe `foods.search.v5`: la API busca con `foods.search` y pide el detalle de cada resultado con `food.get.v5`.
 
+### 5.12 Datos corporales y plan de calorías
+
+Con sexo, fecha de nacimiento, altura, peso, % de grasa (opcional), nivel de actividad y objetivo
+se calcula el plan (`src/modules/body/energy.js`):
+
+- **Metabolismo basal:** Mifflin-St Jeor; con % de grasa, Katch-McArdle sobre la masa magra.
+- **Gasto diario:** basal × factor de actividad (1,2 sedentario a 1,9 muy activo).
+- **Objetivo:** déficit de 0,5 / 0,75 / 1 % del peso por semana, volumen de 0,25 / 0,35 / 0,5 %,
+  recomposición (−5 %) o mantenimiento. El déficit nunca supera el 25 % ni baja del basal.
+- **Macros:** proteína 1,8–2,4 g/kg según el objetivo (con IMC ≥ 30 sobre un peso de referencia),
+  grasas entre 0,8 g/kg y el 35 % de las calorías, carbohidratos el resto. También agua y fibra.
+
+| Método | Ruta | Quién | Descripción |
+|---|---|---|---|
+| GET | `/api/body/options` | todos | Niveles de actividad y objetivos con sus textos |
+| GET | `/api/body?userId=` | todos | Datos, plan calculado y últimas 30 pesadas (coach: sus atletas) |
+| POST | `/api/body/preview` | todos | Calcula el plan sin guardar |
+| PUT | `/api/body` | todos | Guarda los datos, registra el peso y aplica las metas (`applyGoals`) |
+| POST | `/api/body/weight` | todos | `{ weightKg, date? }` pesada rápida |
+
 ## 6. Scripts y pruebas
 
 | Comando | Qué hace |
@@ -521,15 +541,16 @@ Con la clave gratuita de FatSecret no existe `foods.search.v5`: la API busca con
 | `npm run db:init` | Crea la base, aplica `database/schema.sql` y carga los datos demo (**borra todo**) |
 | `npm run db:seed` | Recarga solo los datos demo |
 | `npm run dev:memory` | API + MySQL temporal descargado automáticamente (no hace falta instalar MySQL) |
-| `npm test` | 187 pruebas de integración contra un MySQL real temporal (no toca tu base) |
+| `npm test` | 200 pruebas (integración + cálculo energético) contra un MySQL real temporal (no toca tu base) |
 
 | Archivo | Pruebas | Qué cubre |
 |---|---|---|
-| `test/api.test.js` | 68 | Rotación y reutilización de tokens, el flujo OAuth completo con un proveedor simulado, los permisos de cada rol, el CRUD de todos los recursos, las validaciones y, con `EXPLAIN`, que las consultas principales usen sus índices |
+| `test/api.test.js` | 72 | Rotación y reutilización de tokens, el flujo OAuth completo con un proveedor simulado, los permisos de cada rol, el CRUD de todos los recursos, las validaciones y, con `EXPLAIN`, que las consultas principales usen sus índices |
 | `test/auth.test.js` | 100 | Registro con código por email, recuperación de contraseña, login, refresh, logout, cambio de contraseña y `/auth/me`: límites exactos de cada campo, normalización del email, mensajes de error, tokens con otro algoritmo, body de más de 100 kB e intentos de saltear la validación (también en el alta de usuarios por un admin) |
+| `test/energy.test.js` | 9 | Cálculo de basal, gasto, déficit/volumen y macros con valores de referencia |
 | `test/ai.test.js` | 19 | Asistente con IA con OpenAI simulado (nunca se llama de verdad): `/ai/status`, validación de mensajes (largo, cantidad, último mensaje), reintentos y la traducción de los errores de OpenAI (`AI_NOT_CONFIGURED`, `AI_INVALID_KEY`, `AI_QUOTA`, `AI_RATE_LIMIT`, `AI_UNAVAILABLE`, `AI_MODEL_NOT_FOUND`, `AI_UNREACHABLE`, `AI_TIMEOUT`) |
 
-Resultado actual: **187/187** ✅.
+Resultado actual: **200/200** ✅.
 
 Ejemplo rápido con `curl`:
 

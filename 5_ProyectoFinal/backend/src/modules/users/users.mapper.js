@@ -18,11 +18,13 @@ export function toPublicUser(row) {
     isActive: Boolean(row.is_active),
     hasPassword: Boolean(row.password_hash),
     emailVerified: Boolean(row.email_verified_at),
+    // Si ya cargó peso, altura y objetivo (para calcular sus metas).
+    hasBodyProfile: Boolean(row.sex),
     createdAt: row.created_at,
   };
 }
 
-export const USER_COLUMNS = `u.id, u.name, u.email, u.password_hash, u.email_verified_at, u.role, u.coach_id, u.avatar_url,
+export const USER_COLUMNS = `u.id, u.name, u.email, u.password_hash, u.email_verified_at, u.sex, u.role, u.coach_id, u.avatar_url,
   u.kcal_goal, u.protein_goal, u.carbs_goal, u.fat_goal, u.is_active, u.created_at,
   c.name AS coach_name`;
 

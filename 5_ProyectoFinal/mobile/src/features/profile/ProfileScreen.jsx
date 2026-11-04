@@ -72,6 +72,13 @@ export default function ProfileScreen() {
 
         {user.role === 'athlete' ? (
           <Card title="Mis objetivos diarios">
+            <Button
+              title={user.hasBodyProfile ? 'Recalcular con mis datos' : 'Calcular con mi peso y objetivo'}
+              icon="calculator-outline"
+              variant="tinted"
+              small
+              onPress={() => router.push('/body')}
+            />
             <GoalsForm key={user.id} goals={user.goals} onSave={(goals) => updateProfile({ goals })} />
             {user.coachName ? <Text style={styles.muted}>Tu entrenador ({user.coachName}) también puede ajustarlos.</Text> : null}
           </Card>
