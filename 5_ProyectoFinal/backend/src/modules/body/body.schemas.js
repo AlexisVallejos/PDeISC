@@ -36,14 +36,20 @@ const birthDate = z.string({ error: 'Ingresá la fecha de nacimiento' }).trim().
   if (message) ctx.addIssue({ code: 'custom', message });
 });
 
-/** Número dentro de un rango y con un decimal como máximo (72,5 sí; 72,55 no). */
+/** Número dentro de un rango y con un decimal como máximo (72,5 sí; 72,55 no). Un mensaje por error. */
 const measure = (name, unit, { min, max }) =>
-  z.coerce
-    .number({ error: `Ingresá ${name}` })
-    .refine(Number.isFinite, `Ingresá ${name}`)
-    .refine((v) => v >= min, `Mínimo ${min} ${unit}`)
-    .refine((v) => v <= max, `Máximo ${max} ${unit}`)
-    .refine((v) => Math.round(v * 10) === v * 10, 'Usá como máximo un decimal');
+  z.coerce.number({ error: `Ingresá ${name}` }).superRefine((v, ctx) => {
+    const message = !Number.isFinite(v)
+      ? `Ingresá ${name}`
+      : v < min
+        ? `Mínimo ${min} ${unit}`
+        : v > max
+          ? `Máximo ${max} ${unit}`
+          : Math.round(v * 10) !== v * 10
+            ? 'Usá como máximo un decimal'
+            : null;
+    if (message) ctx.addIssue({ code: 'custom', message });
+  });
 
 /** Datos que hacen falta para calcular el plan. */
 export const bodyProfileSchema = z.object({
