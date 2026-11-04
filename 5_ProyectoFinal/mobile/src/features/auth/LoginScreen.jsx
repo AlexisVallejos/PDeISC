@@ -74,7 +74,7 @@ export default function LoginScreen() {
       <Link href={{ pathname: '/forgot-password', params: { email: form.email.trim() } }} style={styles.forgot}>
         ¿Olvidaste tu contraseña?
       </Link>
-      <Button title="Ingresar" onPress={submit} loading={loading} />
+      <Button title="Ingresar" block onPress={submit} loading={loading} />
       <SocialButtons onError={setFormError} disabled={loading} />
       <View style={styles.footer}>
         <Text style={styles.muted}>¿No tenés cuenta?</Text>

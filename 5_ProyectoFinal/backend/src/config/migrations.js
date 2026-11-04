@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { MICRO_COLUMNS, MICROS } from '../modules/nutrition/micros.js';
 
 /** Todas las migraciones aditivas, en orden. Se pueden correr varias veces. */
 export async function runMigrations(conn) {
@@ -6,6 +7,23 @@ export async function runMigrations(conn) {
   await migrateFoodSources(conn);
   await migrateOAuthLoginCodes(conn);
   await migrateEmailVerification(conn);
+  await migrateTypicalFoods(conn);
+}
+
+/**
+ * Comidas típicas (milanesas, empanadas, asado, guisos…) en el catálogo global.
+ * Solo agrega las que faltan por nombre: no pisa correcciones ni duplica.
+ */
+async function migrateTypicalFoods(conn) {
+  const foods = JSON.parse(await fs.readFile(new URL('../../database/seeds/typical-foods.json', import.meta.url), 'utf8'));
+  const [existing] = await conn.query('SELECT LOWER(name) AS name FROM foods WHERE owner_id IS NULL');
+  const known = new Set(existing.map((r) => r.name));
+  const missing = foods.filter((f) => !known.has(f.name.toLowerCase()));
+  if (!missing.length) return;
+  await conn.query(
+    `INSERT INTO foods (owner_id, name, category, brand, portion_grams, portion_description, kcal, protein, carbs, fat, ${MICRO_COLUMNS.join(', ')}) VALUES ?`,
+    [missing.map((f) => [null, f.name, f.category, f.brand, f.portionGrams, f.portionDescription, f.kcal, f.protein, f.carbs, f.fat, ...MICROS.map((m) => f.micros?.[m.key] ?? null)])],
+  );
 }
 
 /** Verificación de email con código. Las cuentas que ya existían se dan por verificadas. */

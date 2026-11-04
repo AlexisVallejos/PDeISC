@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, useWindowDimensions } from 'react-native';
 import { colors, continuous, createStyles, font, radius, spacing, useTheme } from '../theme';
 
 const variants = () => ({
@@ -11,9 +11,15 @@ const variants = () => ({
   ghost: { bg: 'transparent', fg: colors.primary, border: 'transparent' },
 });
 
-/** Botón en forma de cápsula. Responde al tocar (no al soltar) achicándose levemente. */
-export function Button({ title, onPress, variant = 'primary', icon, loading = false, disabled = false, style, small }) {
+/**
+ * Botón en forma de cápsula. Responde al tocar (no al soltar) achicándose levemente.
+ * En el celular ocupa todo el ancho (blanco fácil para el dedo). En la web de escritorio toma el
+ * ancho de su texto y es más bajo, como un botón de PC; `block` lo fuerza a ocupar todo el ancho.
+ */
+export function Button({ title, onPress, variant = 'primary', icon, loading = false, disabled = false, style, small, block }) {
   useTheme();
+  const { width } = useWindowDimensions();
+  const desktop = Platform.OS === 'web' && width >= 700 && !block;
   const v = variants()[variant];
   const isDisabled = disabled || loading;
   return (
@@ -25,6 +31,7 @@ export function Button({ title, onPress, variant = 'primary', icon, loading = fa
       style={({ pressed }) => [
         styles.base,
         continuous,
+        desktop && styles.desktop,
         small && styles.small,
         { backgroundColor: v.bg, borderColor: v.border, opacity: isDisabled ? 0.4 : pressed ? 0.85 : 1 },
         pressed && !isDisabled && styles.pressed,
@@ -59,6 +66,7 @@ const styles = createStyles(() => StyleSheet.create({
     gap: spacing.sm,
   },
   pressed: { transform: [{ scale: 0.97 }] },
+  desktop: { alignSelf: 'flex-start', minHeight: 40, paddingHorizontal: spacing.lg },
   small: { minHeight: 34, paddingHorizontal: spacing.md },
   text: { fontSize: font.body, fontWeight: '600', letterSpacing: -0.2 },
   smallText: { fontSize: font.md },

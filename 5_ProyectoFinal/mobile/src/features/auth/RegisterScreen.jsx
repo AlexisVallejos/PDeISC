@@ -70,7 +70,7 @@ export default function RegisterScreen() {
         secureTextEntry
         onSubmitEditing={submit}
       />
-      <Button title="Crear cuenta" onPress={submit} loading={loading} />
+      <Button title="Crear cuenta" block onPress={submit} loading={loading} />
       <SocialButtons onError={setFormError} disabled={loading} />
       <View style={styles.footer}>
         <Text style={styles.muted}>¿Ya tenés cuenta?</Text>

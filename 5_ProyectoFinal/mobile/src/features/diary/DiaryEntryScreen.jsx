@@ -367,6 +367,10 @@ export default function DiaryEntryScreen() {
                       : 'Sin resultados. Probá otra palabra, buscá en Open Food Facts o usá la carga manual.'}
                 </Text>
               ) : null}
+              {/* Si el catálogo no lo tiene, la misma búsqueda sigue en FatSecret (la búsqueda conserva el texto). */}
+              {!searching && !searchError && mode === 'catalog' && visible.length === 0 && search.trim().length >= 2 ? (
+                <Button title={`Buscar "${search.trim()}" en FatSecret`} icon="search" variant="tinted" small onPress={() => changeMode('fatsecret')} />
+              ) : null}
               {!searching &&
                 (mode === 'fatsecret' || external) &&
                 visible.map((item) => (

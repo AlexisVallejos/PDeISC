@@ -79,7 +79,7 @@ export default function ForgotPasswordScreen() {
             onSubmitEditing={sendCode}
             placeholder="tu@gmail.com"
           />
-          <Button title="Enviar código" onPress={sendCode} loading={loading} />
+          <Button title="Enviar código" block onPress={sendCode} loading={loading} />
         </>
       ) : (
         <>
@@ -111,8 +111,8 @@ export default function ForgotPasswordScreen() {
             secureTextEntry
             onSubmitEditing={submit}
           />
-          <Button title="Cambiar contraseña y entrar" onPress={submit} loading={loading} />
-          <Button title="Reenviar código" variant="secondary" onPress={sendCode} disabled={loading} />
+          <Button title="Cambiar contraseña y entrar" block onPress={submit} loading={loading} />
+          <Button title="Reenviar código" block variant="secondary" onPress={sendCode} disabled={loading} />
         </>
       )}
       <View style={styles.footer}>

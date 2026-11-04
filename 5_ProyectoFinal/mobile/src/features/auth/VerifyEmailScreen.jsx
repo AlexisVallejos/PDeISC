@@ -67,8 +67,8 @@ export default function VerifyEmailScreen() {
         onSubmitEditing={submit}
         placeholder="123456"
       />
-      <Button title="Confirmar y entrar" onPress={submit} loading={loading} />
-      <Button title="Reenviar código" variant="secondary" onPress={resend} loading={resending} />
+      <Button title="Confirmar y entrar" block onPress={submit} loading={loading} />
+      <Button title="Reenviar código" block variant="secondary" onPress={resend} loading={resending} />
       <View style={styles.footer}>
         <Link href="/register" style={styles.link}>
           Cambiar email
