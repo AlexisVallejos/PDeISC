@@ -69,3 +69,22 @@ export const loginPasswordField = z
   .string({ error: 'Ingresá la contraseña' })
   .min(1, 'Ingresá la contraseña')
   .refine((value) => utf8Bytes(value) <= PASSWORD_MAX, `La contraseña no puede superar ${PASSWORD_MAX} caracteres`);
+
+/**
+ * Coherencia nutricional (misma regla que la app, mobile/src/utils/validation.js):
+ *  - proteínas + carbohidratos + grasas no pesan más que la porción
+ *  - las calorías se parecen a 4·P + 4·C + 9·G (margen de 30 kcal o 30 %, por fibra, alcohol y redondeos)
+ * Para usar con superRefine; solo controla cuando están todos los valores.
+ */
+export function checkMacros(v, ctx, gramsKey = 'grams') {
+  const { kcal, protein, carbs, fat } = v;
+  const grams = v[gramsKey];
+  if ([kcal, protein, carbs, fat].some((n) => n === undefined || n === null)) return;
+  if (grams && protein + carbs + fat > grams + 0.5) {
+    ctx.addIssue({ code: 'custom', path: ['fat'], message: `Los macros suman ${Math.round(protein + carbs + fat)} g y la porción es de ${grams} g` });
+  }
+  const fromMacros = 4 * protein + 4 * carbs + 9 * fat;
+  if (Math.abs(kcal - fromMacros) > Math.max(30, 0.3 * Math.max(kcal, fromMacros))) {
+    ctx.addIssue({ code: 'custom', path: ['kcal'], message: `No coincide con los macros: deberían ser unas ${Math.round(fromMacros)} kcal` });
+  }
+}

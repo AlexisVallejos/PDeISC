@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { pagination } from '../../utils/validation.js';
+import { checkMacros, pagination } from '../../utils/validation.js';
 
 /** EAN-8, EAN-13, UPC-A/E o ITF-14: solo dígitos. */
 export const barcode = z.string().trim().regex(/^\d{6,14}$/, 'Código de barras inválido');
@@ -13,7 +13,7 @@ export const listFoodsQuery = z.object({
   scope: z.enum(['all', 'global', 'mine']).default('all'),
 });
 
-export const foodSchema = z.object({
+const foodFields = z.object({
   name: z.string().trim().min(2, 'El nombre debe tener al menos 2 caracteres').max(150),
   category: z.string().trim().max(60).default('General'),
   brand: z.string().trim().max(80).nullable().optional(),
@@ -28,7 +28,13 @@ export const foodSchema = z.object({
   isGlobal: z.boolean().default(false),
 });
 
-export const updateFoodSchema = foodSchema.omit({ isGlobal: true }).partial();
+// Las calorías tienen que cerrar con los macros y los macros no pueden pesar más que la porción.
+export const foodSchema = foodFields.superRefine((v, ctx) => checkMacros(v, ctx, 'portionGrams'));
+
+export const updateFoodSchema = foodFields
+  .omit({ isGlobal: true })
+  .partial()
+  .superRefine((v, ctx) => checkMacros(v, ctx, 'portionGrams'));
 
 export const fatSecretSearchQuery = z.object({
   search: z.string().trim().min(2, 'Escribí al menos 2 letras').max(100),

@@ -1091,3 +1091,41 @@ describe('datos corporales: validaciones', () => {
     assert.equal((await log({ weightKg: 70, date: '2999-01-01' })).status, 400);
   });
 });
+
+describe('validación de coherencia nutricional y entrenamientos', () => {
+  const food = { name: 'Prueba coherencia', portionGrams: 100, kcal: 165, protein: 31, carbs: 0, fat: 3.6 };
+
+  test('alimento: calorías que no cierran con los macros → 400 en kcal', async () => {
+    const res = await request(app).post('/api/foods').set(auth('athlete')).send({ ...food, kcal: 10 });
+    assert.equal(res.status, 400);
+    assert.deepEqual(res.body.error.details.map((d) => d.field), ['kcal']);
+    assert.match(res.body.error.details[0].message, /deberían ser unas 156 kcal/);
+  });
+
+  test('alimento: macros que pesan más que la porción → 400', async () => {
+    const res = await request(app).post('/api/foods').set(auth('athlete')).send({ ...food, portionGrams: 20, kcal: 156, protein: 30, carbs: 0, fat: 4 });
+    assert.equal(res.status, 400);
+    assert.ok(res.body.error.details.some((d) => d.field === 'fat' && /porción es de 20 g/.test(d.message)));
+  });
+
+  test('alimento coherente → 201; editar con macros incoherentes → 400', async () => {
+    const created = await request(app).post('/api/foods').set(auth('athlete')).send(food);
+    assert.equal(created.status, 201, created.text);
+    const res = await request(app).put(`/api/foods/${created.body.data.id}`).set(auth('athlete')).send({ kcal: 900, protein: 31, carbs: 0, fat: 3.6 });
+    assert.equal(res.status, 400);
+  });
+
+  test('diario manual: calorías incoherentes → 400; sin macros cuenta como 0', async () => {
+    const entry = { date: '2026-03-02', meal: 'cena', name: 'Manual', grams: 100 };
+    assert.equal((await request(app).post('/api/diary').set(auth('athlete')).send({ ...entry, kcal: 500, protein: 1, carbs: 1, fat: 1 })).status, 400);
+    assert.equal((await request(app).post('/api/diary').set(auth('athlete')).send({ ...entry, kcal: 20 })).status, 201);
+  });
+
+  test('entrenamiento: 0 repeticiones → 400', async () => {
+    const res = await request(app).post('/api/workouts').set(auth('athlete')).send({
+      date: '2026-03-02', title: 'Prueba', exercises: [{ name: 'Sentadilla', sets: [{ reps: 0, weight: 50 }] }],
+    });
+    assert.equal(res.status, 400);
+    assert.match(JSON.stringify(res.body), /Al menos 1 repetición/);
+  });
+});

@@ -86,11 +86,12 @@ export function BarcodeScanner({ visible, onClose, onScanned }) {
             placeholder="7790580660000"
             value={manual}
             onChangeText={(v) => {
-              setManual(v);
+              setManual(v.replace(/\D/g, '').slice(0, 14));
               setManualError(null);
             }}
             error={manualError}
             keyboardType="number-pad"
+            maxLength={14}
             returnKeyType="search"
             onSubmitEditing={submitManual}
             style={{ flex: 1 }}

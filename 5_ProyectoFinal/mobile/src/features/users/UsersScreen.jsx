@@ -34,7 +34,7 @@ export default function UsersScreen() {
     <Screen onRefresh={reload} refreshing={refreshing}>
       <Button title="Nuevo usuario" icon="person-add-outline" onPress={() => router.push('/user-form')} />
       <Chips options={ROLE_FILTERS} value={role} onChange={changeFilter(setRole)} />
-      <TextField placeholder="Buscar por nombre o email…" value={search} onChangeText={changeFilter(setSearch)} autoCorrect={false} />
+      <TextField placeholder="Buscar por nombre o email…" value={search} onChangeText={changeFilter(setSearch)} autoCorrect={false} maxLength={100} />
       {error && !data ? (
         <ErrorState error={error} onRetry={reload} />
       ) : loading || !data ? (

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { isoDate } from '../../utils/validation.js';
 
 const setSchema = z.object({
-  reps: z.coerce.number().int().min(0).max(1000),
+  reps: z.coerce.number().int().min(1, 'Al menos 1 repetición').max(1000, 'Máximo 1000 repeticiones'),
   weight: z.coerce.number().min(0).max(2000).default(0),
   rpe: z.coerce.number().int().min(1).max(10).nullable().optional(),
 });

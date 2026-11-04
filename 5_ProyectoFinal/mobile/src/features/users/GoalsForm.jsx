@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { Button, FieldRow, FormError, TextField } from '../../components';
 import { spacing } from '../../theme';
+import { digits } from '../../utils/inputs';
 import { toNumber, validateNumbers } from '../../utils/validation';
 
 const FIELDS = [
@@ -24,8 +25,20 @@ export function GoalsForm({ goals, onSave }) {
   const [saved, setSaved] = useState(false);
 
   const save = async () => {
-    const found = validateNumbers(form, FIELDS.map(([k]) => k));
-    if (!found.kcal && (toNumber(form.kcal) < 800 || toNumber(form.kcal) > 10000)) found.kcal = 'Entre 800 y 10000';
+    // Mismos límites que el servidor (users.schemas.js): enteros, kcal 800–10000.
+    const found = validateNumbers(form, FIELDS.map(([k]) => k), {
+      integer: FIELDS.map(([k]) => k),
+      min: { kcal: 800 },
+      max: { kcal: 10000, protein: 1000, carbs: 2000, fat: 1000 },
+    });
+    // Las calorías de los macros tienen que cerrar con la meta (±15 %).
+    if (!Object.keys(found).length) {
+      const fromMacros = 4 * toNumber(form.protein) + 4 * toNumber(form.carbs) + 9 * toNumber(form.fat);
+      const kcal = toNumber(form.kcal);
+      if (Math.abs(fromMacros - kcal) > kcal * 0.15) {
+        found.kcal = `Los macros suman ${Math.round(fromMacros)} kcal: ajustá las calorías o los gramos (±15 %)`;
+      }
+    }
     setErrors(found);
     setFormError(null);
     setSaved(false);
@@ -51,7 +64,7 @@ export function GoalsForm({ goals, onSave }) {
             label={label}
             value={form[key]}
             onChangeText={(v) => {
-              setForm((f) => ({ ...f, [key]: v }));
+              setForm((f) => ({ ...f, [key]: digits(5)(v) }));
               setSaved(false);
             }}
             error={errors[key]}

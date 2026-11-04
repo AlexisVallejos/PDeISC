@@ -7,7 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { colors, createStyles, font, spacing, useTheme } from '../../theme';
 import { confirm } from '../../utils/confirm';
 import { ROLES } from '../../utils/constants';
-import { isEmail, validatePassword } from '../../utils/validation';
+import { validateEmail, validateName, validatePassword } from '../../utils/validation';
 
 /** Alta / edición / baja de usuarios, cambio de rol y asignación de entrenador (admin). */
 export default function UserFormScreen() {
@@ -49,8 +49,13 @@ export default function UserFormScreen() {
 
   const save = async () => {
     const found = {};
-    if (form.name.trim().length < 2) found.name = 'Ingresá un nombre';
-    if (!isEmail(form.email) && (!id || form.email)) found.email = 'Email inválido';
+    // Mismas reglas que el registro (el servidor las vuelve a aplicar en /users).
+    const nameError = validateName(form.name);
+    if (nameError) found.name = nameError;
+    if (!id || form.email) {
+      const emailError = validateEmail(form.email);
+      if (emailError) found.email = emailError;
+    }
     if (!id) {
       const pwd = validatePassword(form.password);
       if (pwd) found.password = pwd;
@@ -103,7 +108,7 @@ export default function UserFormScreen() {
       <Stack.Screen options={{ title: id ? 'Editar usuario' : 'Nuevo usuario' }} />
       <FormError message={formError} />
       <Card>
-        <TextField label="Nombre" value={form.name} onChangeText={set('name')} error={errors.name} />
+        <TextField label="Nombre" value={form.name} onChangeText={set('name')} error={errors.name} maxLength={100} />
         <TextField
           label="Email"
           value={form.email}
@@ -111,6 +116,7 @@ export default function UserFormScreen() {
           error={errors.email}
           autoCapitalize="none"
           keyboardType="email-address"
+          maxLength={190}
         />
         {!id ? (
           <TextField

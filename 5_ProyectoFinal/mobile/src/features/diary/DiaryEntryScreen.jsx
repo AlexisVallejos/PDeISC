@@ -8,7 +8,8 @@ import { colors, continuous, createStyles, font, radius, spacing, useTheme } fro
 import { MEALS } from '../../utils/constants';
 import { confirm } from '../../utils/confirm';
 import { round1 } from '../../utils/format';
-import { toNumber, validateNumbers } from '../../utils/validation';
+import { decimal } from '../../utils/inputs';
+import { toNumber, validateMacroConsistency, validateNumbers, validateText } from '../../utils/validation';
 import { BarcodeScanner } from './BarcodeScanner';
 import { FoodPhotoCard } from './FoodPhotoCard';
 
@@ -200,8 +201,10 @@ export default function DiaryEntryScreen() {
     }
   };
 
+  // Gramos y macros: solo números con un decimal (el servidor acepta hasta 5000 g y 10000 kcal).
+  const NUMERIC = { grams: decimal(4), kcal: decimal(5), protein: decimal(4), carbs: decimal(4), fat: decimal(4) };
   const set = (key) => (value) => {
-    setForm((f) => ({ ...f, [key]: value }));
+    setForm((f) => ({ ...f, [key]: NUMERIC[key] ? NUMERIC[key](value) : value }));
     setErrors((e) => ({ ...e, [key]: undefined }));
   };
 
@@ -217,7 +220,7 @@ export default function DiaryEntryScreen() {
     let body;
     if (searchable) {
       if (!food) return setFormError('Elegí un alimento de la lista');
-      const found = validateNumbers(form, ['grams'], { positive: ['grams'] });
+      const found = validateNumbers(form, ['grams'], { positive: ['grams'], max: { grams: 5000 } });
       setErrors(found);
       if (Object.keys(found).length) return;
       body = { date, meal, foodId: food.id, grams: toNumber(form.grams) };
@@ -225,8 +228,11 @@ export default function DiaryEntryScreen() {
       const found = validateNumbers(form, ['grams', 'kcal', 'protein', 'carbs', 'fat'], {
         required: ['grams', 'kcal'],
         positive: ['grams'],
+        max: { grams: 5000, kcal: 10000, protein: 5000, carbs: 5000, fat: 5000 },
       });
-      if (!form.name || form.name.trim().length < 2) found.name = 'Ingresá un nombre';
+      if (!Object.keys(found).length) Object.assign(found, validateMacroConsistency(form));
+      const name = validateText(form.name, { min: 2, max: 150, label: 'el nombre' });
+      if (name) found.name = name;
       setErrors(found);
       if (Object.keys(found).length) return;
       body = {
@@ -329,6 +335,7 @@ export default function DiaryEntryScreen() {
               placeholder={external ? external.placeholder : mode === 'fatsecret' ? 'banana, yogur, oats…' : 'pollo, arroz, alfajor…'}
               value={search}
               onChangeText={setSearch}
+              maxLength={100}
               autoCorrect={false}
               returnKeyType="search"
               onSubmitEditing={external ? searchExternal : undefined}
@@ -409,7 +416,7 @@ export default function DiaryEntryScreen() {
               Viene del catálogo: si cambiás solo los gramos, los macros se recalculan solos.
             </Text>
           ) : null}
-          <TextField label="Nombre" value={form.name} onChangeText={set('name')} error={errors.name} />
+          <TextField label="Nombre" value={form.name} onChangeText={set('name')} error={errors.name} maxLength={150} />
           <TextField
             label="Cantidad (g)"
             value={form.grams}

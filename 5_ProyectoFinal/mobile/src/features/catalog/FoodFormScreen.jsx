@@ -6,7 +6,8 @@ import { Button, Card, ErrorState, FieldRow, FormError, Loading, Screen, TextFie
 import { useAuth } from '../../context/AuthContext';
 import { colors, createStyles, font, spacing, useTheme } from '../../theme';
 import { confirm } from '../../utils/confirm';
-import { toNumber, validateNumbers } from '../../utils/validation';
+import { decimal } from '../../utils/inputs';
+import { toNumber, validateMacroConsistency, validateNumbers, validateText } from '../../utils/validation';
 
 const EMPTY = { name: '', category: '', brand: '', portionGrams: '100', portionDescription: '', kcal: '', protein: '', carbs: '', fat: '' };
 
@@ -49,14 +50,25 @@ export default function FoodFormScreen() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  // Números: solo dígitos y un decimal (porción hasta 5000 g, macros hasta 5000).
+  const NUMERIC = { portionGrams: decimal(4), kcal: decimal(4), protein: decimal(4), carbs: decimal(4), fat: decimal(4) };
   const set = (key) => (value) => {
-    setForm((f) => ({ ...f, [key]: value }));
+    setForm((f) => ({ ...f, [key]: NUMERIC[key] ? NUMERIC[key](value) : value }));
     setErrors((e) => ({ ...e, [key]: undefined }));
   };
 
   const save = async () => {
-    const found = validateNumbers(form, ['portionGrams', 'kcal', 'protein', 'carbs', 'fat'], { positive: ['portionGrams'] });
-    if (form.name.trim().length < 2) found.name = 'Ingresá un nombre';
+    // Mismos límites que el servidor (foods.schemas.js) + coherencia entre calorías y macros.
+    const max = { portionGrams: 5000, kcal: 5000, protein: 5000, carbs: 5000, fat: 5000 };
+    const found = validateNumbers(form, ['portionGrams', 'kcal', 'protein', 'carbs', 'fat'], { positive: ['portionGrams'], max });
+    if (!Object.keys(found).length) Object.assign(found, validateMacroConsistency({ ...form, grams: form.portionGrams }));
+    const texts = {
+      name: validateText(form.name, { min: 2, max: 150, label: 'el nombre' }),
+      category: validateText(form.category, { max: 60 }),
+      brand: validateText(form.brand, { max: 80 }),
+      portionDescription: validateText(form.portionDescription, { max: 120 }),
+    };
+    for (const [k, v] of Object.entries(texts)) if (v) found[k] = v;
     setErrors(found);
     setFormError(null);
     if (Object.keys(found).length) return;
@@ -118,16 +130,16 @@ export default function FoodFormScreen() {
         </View>
       ) : null}
       <Card>
-        <TextField label="Nombre" value={form.name} onChangeText={set('name')} error={errors.name} />
+        <TextField label="Nombre" value={form.name} onChangeText={set('name')} error={errors.name} maxLength={150} />
         <FieldRow>
-          <TextField label="Categoría" value={form.category} onChangeText={set('category')} placeholder="Ej. Lácteos" />
-          <TextField label="Marca" value={form.brand} onChangeText={set('brand')} />
+          <TextField label="Categoría" value={form.category} onChangeText={set('category')} error={errors.category} placeholder="Ej. Lácteos" maxLength={60} />
+          <TextField label="Marca" value={form.brand} onChangeText={set('brand')} error={errors.brand} maxLength={80} />
         </FieldRow>
       </Card>
       <Card title="Valores por porción">
         <FieldRow>
-          <TextField label="Porción (g)" value={form.portionGrams} onChangeText={set('portionGrams')} error={errors.portionGrams} keyboardType="decimal-pad" />
-          <TextField label="Descripción" value={form.portionDescription} onChangeText={set('portionDescription')} placeholder="1 taza" />
+          <TextField label="Porción (g)" value={form.portionGrams} onChangeText={set('portionGrams')} error={errors.portionGrams} keyboardType="decimal-pad" hint="Entre 0,1 y 5000 g" />
+          <TextField label="Descripción" value={form.portionDescription} onChangeText={set('portionDescription')} error={errors.portionDescription} placeholder="1 taza" maxLength={120} />
         </FieldRow>
         <FieldRow>
           <TextField label="Kcal" value={form.kcal} onChangeText={set('kcal')} error={errors.kcal} keyboardType="decimal-pad" />
@@ -137,6 +149,7 @@ export default function FoodFormScreen() {
           <TextField label="Carbohidratos (g)" value={form.carbs} onChangeText={set('carbs')} error={errors.carbs} keyboardType="decimal-pad" />
           <TextField label="Grasas (g)" value={form.fat} onChangeText={set('fat')} error={errors.fat} keyboardType="decimal-pad" />
         </FieldRow>
+        <Text style={styles.muted}>Las calorías se controlan contra los macros (4 kcal por gramo de proteína y carbohidrato, 9 por gramo de grasa).</Text>
       </Card>
     </Screen>
   );

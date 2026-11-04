@@ -534,6 +534,20 @@ fecha real y no futura, altura 100–250 cm, peso 30–350 kg, % de grasa 3–60
 | PUT | `/api/body` | todos | Guarda los datos, registra el peso y aplica las metas (`applyGoals`) |
 | POST | `/api/body/weight` | todos | `{ weightKg, date? }` pesada rápida |
 
+### 5.13 Validación de los datos
+
+Cada campo se valida dos veces con las mismas reglas: en la app (antes de enviar, con el error debajo
+del campo) y en el servidor (zod, `400 VALIDATION_ERROR` con `details` por campo).
+
+- **Números:** la app no deja escribir letras ni más decimales de los permitidos; el servidor controla
+  rango, enteros y decimales (porción y gramos 0,1–5000, kcal de metas 800–10000, reps 1–1000, RPE 1–10,
+  kilos 0–2000).
+- **Coherencia nutricional:** en alimentos y en la carga manual del diario, proteínas + carbohidratos +
+  grasas no pueden pesar más que la porción, y las calorías tienen que parecerse a 4·P + 4·C + 9·G
+  (margen de 30 kcal o 30 %). En las metas, los macros tienen que cerrar con las calorías (±15 %).
+- **Textos:** largo mínimo y máximo iguales a las columnas de la base; sin caracteres de control.
+- **Fechas:** formato AAAA-MM-DD, que existan, vigencia de un plan de hasta un año y fin posterior al inicio.
+
 ## 6. Scripts y pruebas
 
 | Comando | Qué hace |
@@ -543,16 +557,16 @@ fecha real y no futura, altura 100–250 cm, peso 30–350 kg, % de grasa 3–60
 | `npm run db:init` | Crea la base, aplica `database/schema.sql` y carga los datos demo (**borra todo**) |
 | `npm run db:seed` | Recarga solo los datos demo |
 | `npm run dev:memory` | API + MySQL temporal descargado automáticamente (no hace falta instalar MySQL) |
-| `npm test` | 203 pruebas (integración + cálculo energético) contra un MySQL real temporal (no toca tu base) |
+| `npm test` | 208 pruebas (integración + cálculo energético) contra un MySQL real temporal (no toca tu base) |
 
 | Archivo | Pruebas | Qué cubre |
 |---|---|---|
-| `test/api.test.js` | 75 | Rotación y reutilización de tokens, el flujo OAuth completo con un proveedor simulado, los permisos de cada rol, el CRUD de todos los recursos, las validaciones y, con `EXPLAIN`, que las consultas principales usen sus índices |
+| `test/api.test.js` | 80 | Rotación y reutilización de tokens, el flujo OAuth completo con un proveedor simulado, los permisos de cada rol, el CRUD de todos los recursos, las validaciones y, con `EXPLAIN`, que las consultas principales usen sus índices |
 | `test/auth.test.js` | 100 | Registro con código por email, recuperación de contraseña, login, refresh, logout, cambio de contraseña y `/auth/me`: límites exactos de cada campo, normalización del email, mensajes de error, tokens con otro algoritmo, body de más de 100 kB e intentos de saltear la validación (también en el alta de usuarios por un admin) |
 | `test/energy.test.js` | 9 | Cálculo de basal, gasto, déficit/volumen y macros con valores de referencia |
 | `test/ai.test.js` | 19 | Asistente con IA con OpenAI simulado (nunca se llama de verdad): `/ai/status`, validación de mensajes (largo, cantidad, último mensaje), reintentos y la traducción de los errores de OpenAI (`AI_NOT_CONFIGURED`, `AI_INVALID_KEY`, `AI_QUOTA`, `AI_RATE_LIMIT`, `AI_UNAVAILABLE`, `AI_MODEL_NOT_FOUND`, `AI_UNREACHABLE`, `AI_TIMEOUT`) |
 
-Resultado actual: **203/203** ✅.
+Resultado actual: **208/208** ✅.
 
 Ejemplo rápido con `curl`:
 

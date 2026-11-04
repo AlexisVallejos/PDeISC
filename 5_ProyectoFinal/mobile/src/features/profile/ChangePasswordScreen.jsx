@@ -23,6 +23,7 @@ export default function ChangePasswordScreen() {
     if (user.hasPassword && !form.current) found.current = 'Ingresá tu contraseña actual';
     const pwd = validatePassword(form.next);
     if (pwd) found.next = pwd;
+    if (!pwd && form.current && form.next === form.current) found.next = 'Tiene que ser distinta de la actual';
     if (form.next !== form.confirm) found.confirm = 'Las contraseñas no coinciden';
     setErrors(found);
     setFormError(null);

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isoDate } from '../../utils/validation.js';
+import { isoDate, checkMacros } from '../../utils/validation.js';
 
 export const MEALS = ['desayuno', 'almuerzo', 'merienda', 'cena', 'snack'];
 const meal = z.enum(MEALS, { message: `La comida debe ser una de: ${MEALS.join(', ')}` });
@@ -29,6 +29,10 @@ export const createEntrySchema = z
   .refine((v) => v.foodId || (v.name && v.kcal !== undefined), {
     message: 'Indicá foodId o, para una carga manual, name y kcal',
     path: ['foodId'],
+  })
+  // Carga manual: los macros que falten cuentan como 0 y tienen que cerrar con las calorías.
+  .superRefine((v, ctx) => {
+    if (!v.foodId) checkMacros({ ...v, protein: v.protein ?? 0, carbs: v.carbs ?? 0, fat: v.fat ?? 0 }, ctx);
   });
 
 export const updateEntrySchema = z
@@ -42,4 +46,5 @@ export const updateEntrySchema = z
     carbs: macro,
     fat: macro,
   })
-  .partial();
+  .partial()
+  .superRefine((v, ctx) => checkMacros(v, ctx));

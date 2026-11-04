@@ -62,7 +62,7 @@ export function FoodList({ initialScope = 'all' }) {
         onPress={() => router.push('/food-form')}
       />
       <Chips options={SCOPES} value={scope} onChange={setScope} />
-      <TextField placeholder="Buscar por nombre o marca…" value={search} onChangeText={setSearch} autoCorrect={false} />
+      <TextField placeholder="Buscar por nombre o marca…" value={search} onChangeText={setSearch} autoCorrect={false} maxLength={100} />
       {error && !items.length ? (
         <ErrorState error={error} onRetry={() => load(1)} />
       ) : loading ? (

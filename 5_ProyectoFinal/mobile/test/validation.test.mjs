@@ -13,7 +13,13 @@ import {
   validateBirthDate,
   validateBody,
   validateRegister,
+  validateDateRange,
+  validateMacroConsistency,
+  validateNumbers,
+  validateText,
+  validateUrl,
 } from '../src/utils/validation.js';
+import { dateMask, decimal, digits } from '../src/utils/inputs.js';
 
 const validRegister = () => ({
   name: 'Ana Pérez',
@@ -362,5 +368,41 @@ describe('validateBody: datos corporales', () => {
 
   test('faltan selecciones', () => {
     assert.deepEqual(Object.keys(validateBody({ ...ok, sex: null, activityLevel: null, goal: null }, today)).sort(), ['activityLevel', 'goal', 'sex']);
+  });
+});
+
+describe('filtros de entrada y validaciones de formularios', () => {
+  test('decimal: solo números, una coma y los decimales permitidos', () => {
+    assert.equal(decimal(4)('abc72,555'), '72,5');
+    assert.equal(decimal(4)('123456'), '1234');
+    assert.equal(decimal(4, 2)('2.255'), '2.25');
+    assert.equal(decimal(4)('1,2,3'), '1,2');
+    assert.equal(digits(2)('1a0b5'), '10');
+    assert.equal(dateMask('20260315'), '2026-03-15');
+  });
+
+  test('validateNumbers: rangos, enteros y un decimal', () => {
+    assert.deepEqual(validateNumbers({ g: '5001' }, ['g'], { max: { g: 5000 } }), { g: 'Máximo 5000' });
+    assert.deepEqual(validateNumbers({ g: '0' }, ['g'], { positive: ['g'] }), { g: 'Debe ser mayor a 0' });
+    assert.deepEqual(validateNumbers({ k: '799' }, ['k'], { min: { k: 800 } }), { k: 'Mínimo 800' });
+    assert.deepEqual(validateNumbers({ r: '8,5' }, ['r'], { integer: ['r'] }), { r: 'Sin decimales' });
+    assert.deepEqual(validateNumbers({ g: '1,25' }, ['g']), { g: 'Como máximo un decimal' });
+    assert.deepEqual(validateNumbers({ g: '' }, ['g']), { g: 'Requerido' });
+  });
+
+  test('coherencia nutricional: kcal vs macros y macros vs porción', () => {
+    assert.deepEqual(validateMacroConsistency({ grams: 100, kcal: 165, protein: 31, carbs: 0, fat: 3.6 }), {});
+    assert.match(validateMacroConsistency({ grams: 100, kcal: 10, protein: 31, carbs: 0, fat: 3.6 }).kcal, /156 kcal/);
+    assert.match(validateMacroConsistency({ grams: 20, kcal: 156, protein: 30, carbs: 0, fat: 4 }).fat, /porción es de 20 g/);
+  });
+
+  test('textos, fechas de un plan y URL', () => {
+    assert.equal(validateText('  ', { min: 2, label: 'el título' }), 'Completá el título');
+    assert.equal(validateText('a'.repeat(121), { max: 120 }), 'Máximo 120 caracteres');
+    assert.deepEqual(validateDateRange('2026-03-10', '2026-03-01'), { endDate: 'El fin no puede ser anterior al inicio' });
+    assert.deepEqual(validateDateRange('2026-01-01', '2027-06-01'), { endDate: 'La vigencia puede ser de hasta un año' });
+    assert.deepEqual(validateDateRange('2026-02-30', '2026-03-01'), { startDate: 'Esa fecha no existe' });
+    assert.equal(validateUrl('ftp://x.com/a.png'), 'Tiene que empezar con http:// o https://');
+    assert.equal(validateUrl('https://x.com/a.png'), null);
   });
 });

@@ -78,7 +78,14 @@ export function validateRegister({ name, email, password, confirm }) {
 }
 
 /** Valida que los campos sean números >= 0. `required` lista los obligatorios. */
-export function validateNumbers(values, fields, { required = fields, positive = [] } = {}) {
+/**
+ * Valida campos numéricos. Opciones:
+ *  - required: los obligatorios (por defecto, todos)
+ *  - positive: los que tienen que ser mayores a 0
+ *  - max: { campo: máximo } con los mismos límites que el servidor
+ *  - integer: los que no aceptan decimales; el resto acepta uno como máximo
+ */
+export function validateNumbers(values, fields, { required = fields, positive = [], max = {}, integer = [], min = {} } = {}) {
   const errors = {};
   for (const field of fields) {
     const raw = values[field];
@@ -86,12 +93,84 @@ export function validateNumbers(values, fields, { required = fields, positive = 
       if (required.includes(field)) errors[field] = 'Requerido';
       continue;
     }
-    const n = Number(String(raw).replace(',', '.'));
-    if (Number.isNaN(n)) errors[field] = 'Debe ser un número';
+    const text = String(raw).trim().replace(',', '.');
+    const n = Number(text);
+    if (text === '' || Number.isNaN(n)) errors[field] = 'Debe ser un número';
     else if (n < 0) errors[field] = 'No puede ser negativo';
     else if (positive.includes(field) && n === 0) errors[field] = 'Debe ser mayor a 0';
+    else if (min[field] !== undefined && n < min[field]) errors[field] = `Mínimo ${min[field]}`;
+    else if (max[field] !== undefined && n > max[field]) errors[field] = `Máximo ${max[field]}`;
+    else if (integer.includes(field) && !Number.isInteger(n)) errors[field] = 'Sin decimales';
+    else if (!integer.includes(field) && Math.round(n * 10) !== n * 10) errors[field] = 'Como máximo un decimal';
   }
   return errors;
+}
+
+/**
+ * Coherencia nutricional de un alimento o registro (gramos, kcal y macros de la misma cantidad):
+ *  - proteínas + carbohidratos + grasas no pueden pesar más que la porción
+ *  - las calorías tienen que parecerse a 4·P + 4·C + 9·G (margen por fibra, alcohol y redondeos)
+ */
+export function validateMacroConsistency({ grams, kcal, protein, carbs, fat }) {
+  const errors = {};
+  const n = (v) => Number(String(v ?? '').replace(',', '.')) || 0;
+  const [g, k, p, c, f] = [grams, kcal, protein, carbs, fat].map(n);
+  if (g > 0 && p + c + f > g + 0.5) errors.fat = `Los macros suman ${Math.round(p + c + f)} g y la porción es de ${g} g`;
+  const fromMacros = 4 * p + 4 * c + 9 * f;
+  if (Math.abs(k - fromMacros) > Math.max(30, 0.3 * Math.max(k, fromMacros))) {
+    errors.kcal = `No coincide con los macros: deberían ser unas ${Math.round(fromMacros)} kcal`;
+  }
+  return errors;
+}
+
+/** Texto obligatorio u opcional con largo mínimo y máximo (mismos topes que el servidor). */
+export function validateText(value, { min = 0, max, required = min > 0, label = 'este campo' } = {}) {
+  const text = String(value ?? '').trim();
+  if (!text) return required ? `Completá ${label}` : null;
+  if (text.length < min) return `Mínimo ${min} caracteres`;
+  if (max && text.length > max) return `Máximo ${max} caracteres`;
+  if (/[\p{Cc}]/u.test(text.replace(/[\n\t]/g, ''))) return 'Tiene caracteres no permitidos';
+  return null;
+}
+
+/** Fecha AAAA-MM-DD que exista. */
+export function validateIsoDate(value, label = 'la fecha') {
+  const v = String(value ?? '').trim();
+  if (!v) return `Completá ${label}`;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return 'Usá el formato AAAA-MM-DD';
+  const [y, m, d] = v.split('-').map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d));
+  if (date.getUTCMonth() !== m - 1 || date.getUTCDate() !== d) return 'Esa fecha no existe';
+  if (y < 2000 || y > 2100) return 'Año fuera de rango';
+  return null;
+}
+
+/** Vigencia de un plan: fechas válidas, fin igual o posterior al inicio y como máximo un año. */
+export function validateDateRange(start, end) {
+  const errors = {};
+  const s = validateIsoDate(start, 'el inicio');
+  const e = validateIsoDate(end, 'el fin');
+  if (s) errors.startDate = s;
+  if (e) errors.endDate = e;
+  if (!s && !e) {
+    const days = (Date.parse(end) - Date.parse(start)) / 86400000;
+    if (days < 0) errors.endDate = 'El fin no puede ser anterior al inicio';
+    else if (days > 366) errors.endDate = 'La vigencia puede ser de hasta un año';
+  }
+  return errors;
+}
+
+/** URL http(s) opcional. */
+export function validateUrl(value) {
+  const v = String(value ?? '').trim();
+  if (!v) return null;
+  if (v.length > 500) return 'Máximo 500 caracteres';
+  try {
+    const url = new URL(v);
+    return ['http:', 'https:'].includes(url.protocol) ? null : 'Tiene que empezar con http:// o https://';
+  } catch {
+    return 'URL inválida';
+  }
 }
 
 export const toNumber = (v) => (v === '' || v === undefined || v === null ? undefined : Number(String(v).replace(',', '.')));

@@ -6,6 +6,7 @@ import { Button, Card, FormError, Loading, MacroInline, TextField } from '../../
 import { colors, continuous, createStyles, font, radius, spacing, useTheme } from '../../theme';
 import { pickImage } from '../../utils/media';
 import { round1 } from '../../utils/format';
+import { decimal } from '../../utils/inputs';
 import { toNumber } from '../../utils/validation';
 
 const CONFIDENCE = { alta: 'Confianza alta', media: 'Confianza media', baja: 'Confianza baja: revisá los gramos' };
@@ -57,7 +58,9 @@ export function FoodPhotoCard({ date, meal, onDone }) {
   };
 
   const update = (key, patch) => setItems((list) => list.map((it) => (it.key === key ? { ...it, ...patch } : it)));
-  const chosen = items.filter((it) => it.include && toNumber(it.grams) > 0);
+  // Gramos entre 0,1 y 5000 (lo que acepta el diario).
+  const gramsError = (it) => (toNumber(it.grams) > 5000 ? 'Máximo 5000 g' : null);
+  const chosen = items.filter((it) => it.include && toNumber(it.grams) > 0 && !gramsError(it));
   const total = chosen.reduce(
     (acc, it) => {
       const m = scaled(it);
@@ -132,7 +135,8 @@ export function FoodPhotoCard({ date, meal, onDone }) {
                 <TextField
                   label="Gramos"
                   value={it.grams}
-                  onChangeText={(v) => update(it.key, { grams: v })}
+                  onChangeText={(v) => update(it.key, { grams: decimal(4)(v) })}
+                  error={it.include ? gramsError(it) : null}
                   keyboardType="decimal-pad"
                   editable={it.include}
                   style={styles.grams}
@@ -163,7 +167,8 @@ export function FoodPhotoCard({ date, meal, onDone }) {
             placeholder="Ej.: la milanesa es de pollo, comí la mitad"
             value={note}
             onChangeText={setNote}
-            hint="Si algo no salió bien, aclaralo y volvé a analizar."
+            maxLength={300}
+            hint={`Si algo no salió bien, aclaralo y volvé a analizar (${note.length}/300).`}
           />
           <View style={styles.row}>
             <Button title="Volver a analizar" icon="refresh" variant="secondary" onPress={() => analyze()} style={{ flex: 1 }} />

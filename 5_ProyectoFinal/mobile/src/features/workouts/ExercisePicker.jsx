@@ -42,7 +42,7 @@ export function ExercisePicker({ visible, onClose, onPick }) {
             </Pressable>
           </View>
           <View style={styles.custom}>
-            <TextField style={{ flex: 1 }} placeholder="O escribí uno nuevo…" value={custom} onChangeText={setCustom} />
+            <TextField style={{ flex: 1 }} placeholder="O escribí uno nuevo…" value={custom} onChangeText={setCustom} maxLength={120} />
             <Button
               icon="add"
               disabled={custom.trim().length < 2}

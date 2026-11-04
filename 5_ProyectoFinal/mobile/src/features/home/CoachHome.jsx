@@ -28,7 +28,7 @@ export default function CoachHome() {
           <StatTile icon="barbell-outline" label="sesiones de la semana" value={data.clients.reduce((n, c) => n + c.sessions, 0)} color={colors.warning} />
         </View>
       </>}
-      <TextField placeholder="Buscar cliente por nombre o email" value={search} onChangeText={setSearch} autoCorrect={false} />
+      <TextField placeholder="Buscar cliente por nombre o email" value={search} onChangeText={setSearch} autoCorrect={false} maxLength={100} />
       {error ? <ErrorState error={error} onRetry={reload} /> : loading || !data ? <Loading /> : !clients.length ? (
         <EmptyState icon="people-outline" title={search ? 'Sin coincidencias' : 'Sin clientes asignados'} message="El administrador asigna atletas desde Usuarios." />
       ) : <Grid>{clients.map((a) => (

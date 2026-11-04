@@ -2,10 +2,11 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import { API_URL } from '../../api/client';
-import { Button, Card, FormError, Grid, ListItem, RoleBadge, Screen, TextField, ThemeSwitch } from '../../components';
+import { Button, Card, Grid, ListItem, RoleBadge, Screen, TextField, ThemeSwitch } from '../../components';
 import { useAuth } from '../../context/AuthContext';
 import { colors, createStyles, font, spacing, tracking, useTheme } from '../../theme';
 import { confirm } from '../../utils/confirm';
+import { validateName } from '../../utils/validation';
 import { GoalsForm } from '../users/GoalsForm';
 
 export default function ProfileScreen() {
@@ -17,7 +18,9 @@ export default function ProfileScreen() {
   const [saving, setSaving] = useState(false);
 
   const saveName = async () => {
-    if (name.trim().length < 2) return setNameError('Ingresá un nombre');
+    // Mismas reglas que el registro: 2–100 caracteres, con letras y sin caracteres invisibles.
+    const invalid = validateName(name);
+    if (invalid) return setNameError(invalid);
     setSaving(true);
     setNameError(null);
     try {
@@ -65,8 +68,7 @@ export default function ProfileScreen() {
 
       <Grid>
         <Card title="Datos personales">
-          <FormError message={nameError} />
-          <TextField label="Nombre" value={name} onChangeText={setName} />
+          <TextField label="Nombre" value={name} onChangeText={(v) => { setName(v); setNameError(null); }} error={nameError} maxLength={100} autoComplete="name" />
           <Button title="Guardar nombre" variant="secondary" onPress={saveName} loading={saving} disabled={name === user.name} />
         </Card>
 

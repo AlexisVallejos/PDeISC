@@ -10,7 +10,8 @@ import { ruleFor } from '../coach/exercises';
 import { colors, createStyles, font, spacing, useTheme } from '../../theme';
 import { confirm } from '../../utils/confirm';
 import { today } from '../../utils/dates';
-import { toNumber } from '../../utils/validation';
+import { decimal, digits } from '../../utils/inputs';
+import { toNumber, validateText } from '../../utils/validation';
 import { ExercisePicker } from './ExercisePicker';
 
 const emptySet = (prev) => ({ reps: prev?.reps ?? '10', weight: prev?.weight ?? '', rpe: '' });
@@ -83,22 +84,31 @@ export default function WorkoutFormScreen() {
     router.push({ pathname: '/coach/[rule]', params: { rule: rule.id, name: exercise.name, sets: String(exercise.sets.length), ...target, request } });
   };
 
+  // Reps y RPE enteros; kilos con hasta dos decimales (discos de 1,25 kg).
+  const SET_INPUT = { reps: digits(4), weight: decimal(4, 2), rpe: digits(2) };
   const updateSet = (exIndex, setIndex, key, value) => {
-    updateExercise(exIndex, (e) => ({ sets: e.sets.map((s, i) => (i === setIndex ? { ...s, [key]: value } : s)) }));
+    const clean = SET_INPUT[key](value);
+    updateExercise(exIndex, (e) => ({ sets: e.sets.map((s, i) => (i === setIndex ? { ...s, [key]: clean } : s)) }));
     setErrors((e) => ({ ...e, [`${exIndex}.${setIndex}`]: undefined }));
   };
 
   const validate = () => {
     const found = {};
-    if (title.trim().length < 2) found.title = 'Poné un título (ej. "Pecho y tríceps")';
+    const titleError = validateText(title, { min: 2, max: 120, label: 'un título (ej. "Pecho y tríceps")' });
+    if (titleError) found.title = titleError;
+    const notesError = validateText(notes, { max: 1000 });
+    if (notesError) found.notes = notesError;
     if (!exercises.length) found.exercises = 'Agregá al menos un ejercicio';
+    if (exercises.length > 30) found.exercises = 'Como máximo 30 ejercicios por sesión';
     exercises.forEach((e, i) =>
       e.sets.forEach((s, j) => {
         const reps = toNumber(s.reps);
         const weight = toNumber(s.weight);
         const rpe = toNumber(s.rpe);
-        if (reps === undefined || Number.isNaN(reps) || reps < 0 || !Number.isInteger(reps)) found[`${i}.${j}`] = 'Reps inválidas';
-        else if (weight !== undefined && (Number.isNaN(weight) || weight < 0)) found[`${i}.${j}`] = 'Peso inválido';
+        // Mismos límites que el servidor (workouts.schemas.js).
+        if (reps === undefined || Number.isNaN(reps)) found[`${i}.${j}`] = 'Completá las repeticiones';
+        else if (reps < 1 || reps > 1000) found[`${i}.${j}`] = 'Repeticiones entre 1 y 1000';
+        else if (weight !== undefined && (Number.isNaN(weight) || weight > 2000)) found[`${i}.${j}`] = 'Peso entre 0 y 2000 kg';
         else if (rpe !== undefined && (Number.isNaN(rpe) || rpe < 1 || rpe > 10)) found[`${i}.${j}`] = 'RPE entre 1 y 10';
       }),
     );
@@ -173,8 +183,9 @@ export default function WorkoutFormScreen() {
         }}
         error={errors.title}
         placeholder="Ej. Pierna pesada"
+        maxLength={120}
       />
-      <TextField label="Notas (opcional)" value={notes} onChangeText={setNotes} multiline />
+      <TextField label="Notas (opcional)" value={notes} onChangeText={setNotes} error={errors.notes} multiline maxLength={1000} />
 
       {exercises.map((exercise, i) => {
         const rule = canCount ? ruleFor(exercise.name) : null;

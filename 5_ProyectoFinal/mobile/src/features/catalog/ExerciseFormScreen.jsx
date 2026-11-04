@@ -5,6 +5,7 @@ import { exercisesApi } from '../../api/endpoints';
 import { Button, Chips, ErrorState, FormError, Loading, Screen, TextField } from '../../components';
 import { colors, createStyles, font, spacing, useTheme } from '../../theme';
 import { confirm } from '../../utils/confirm';
+import { validateText, validateUrl } from '../../utils/validation';
 
 const DEFAULT_GROUPS = ['Pecho', 'Espalda', 'Piernas', 'Hombros', 'Biceps', 'Triceps', 'Core'];
 
@@ -42,9 +43,14 @@ export default function ExerciseFormScreen() {
 
   const save = async () => {
     const found = {};
-    if (form.name.trim().length < 2) found.name = 'Ingresá un nombre';
-    if (form.muscleGroup.trim().length < 2) found.muscleGroup = 'Elegí o escribí el grupo muscular';
-    if (form.imageUrl && !/^https?:\/\//.test(form.imageUrl)) found.imageUrl = 'Debe empezar con http:// o https://';
+    // Mismos topes que el servidor (exercises.routes.js).
+    const checks = {
+      name: validateText(form.name, { min: 2, max: 120, label: 'el nombre' }),
+      muscleGroup: validateText(form.muscleGroup, { min: 2, max: 40, label: 'el grupo muscular' }),
+      equipment: validateText(form.equipment, { max: 60 }),
+      imageUrl: validateUrl(form.imageUrl),
+    };
+    for (const [k, v] of Object.entries(checks)) if (v) found[k] = v;
     setErrors(found);
     setFormError(null);
     if (Object.keys(found).length) return;
@@ -91,13 +97,13 @@ export default function ExerciseFormScreen() {
     >
       <Stack.Screen options={{ title: id ? 'Editar ejercicio' : 'Nuevo ejercicio' }} />
       <FormError message={formError} />
-      <TextField label="Nombre" value={form.name} onChangeText={set('name')} error={errors.name} />
+      <TextField label="Nombre" value={form.name} onChangeText={set('name')} error={errors.name} maxLength={120} />
       <View style={{ gap: spacing.sm }}>
         <Text style={styles.label}>Grupo muscular</Text>
         <Chips options={groups.map((g) => ({ value: g, label: g }))} value={form.muscleGroup} onChange={set('muscleGroup')} />
-        <TextField value={form.muscleGroup} onChangeText={set('muscleGroup')} error={errors.muscleGroup} placeholder="u otro…" />
+        <TextField value={form.muscleGroup} onChangeText={set('muscleGroup')} error={errors.muscleGroup} placeholder="u otro…" maxLength={40} />
       </View>
-      <TextField label="Equipamiento (opcional)" value={form.equipment} onChangeText={set('equipment')} placeholder="Barra, máquina…" />
+      <TextField label="Equipamiento (opcional)" value={form.equipment} onChangeText={set('equipment')} error={errors.equipment} placeholder="Barra, máquina…" maxLength={60} />
       <TextField
         label="URL de imagen (opcional)"
         value={form.imageUrl}
@@ -105,6 +111,7 @@ export default function ExerciseFormScreen() {
         error={errors.imageUrl}
         autoCapitalize="none"
         keyboardType="url"
+        maxLength={500}
       />
     </Screen>
   );
