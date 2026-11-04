@@ -10,6 +10,8 @@ import {
   validateLogin,
   validateName,
   validatePassword,
+  validateBirthDate,
+  validateBody,
   validateRegister,
 } from '../src/utils/validation.js';
 
@@ -324,5 +326,41 @@ describe('validateRegister: dominio del email', () => {
     assert.deepEqual(validateRegister({ ...validRegister(), email: 'yo@pepito.com' }), {
       email: 'Usá un email de Gmail, Outlook/Hotmail, Yahoo, iCloud o Proton',
     });
+  });
+});
+
+describe('validateBody: datos corporales', () => {
+  const today = new Date(2026, 10, 4); // 4 nov 2026
+  const ok = { sex: 'male', birthDate: '1996-05-10', heightCm: '180', weightKg: '80,5', bodyFatPct: '', activityLevel: 'moderate', goal: 'cut' };
+
+  test('datos válidos → sin errores', () => {
+    assert.deepEqual(validateBody(ok, today), {});
+  });
+
+  test('edad: 101 años sí, 102 no; 14 sí, 13 no', () => {
+    assert.equal(validateBirthDate('1925-11-04', today), null);
+    assert.match(validateBirthDate('1924-11-04', today), /entre 14 y 101/);
+    assert.equal(validateBirthDate('2012-11-04', today), null);
+    assert.match(validateBirthDate('2012-11-05', today), /entre 14 y 101/);
+  });
+
+  test('fecha: formato, que exista y que no sea futura', () => {
+    assert.match(validateBirthDate('10/05/1996', today), /AAAA-MM-DD/);
+    assert.equal(validateBirthDate('2001-02-30', today), 'Esa fecha no existe');
+    assert.match(validateBirthDate('2027-01-01', today), /futura/);
+    assert.equal(validateBirthDate('', today), 'Ingresá la fecha de nacimiento');
+  });
+
+  test('altura, peso y % de grasa: rangos y un decimal', () => {
+    assert.deepEqual(validateBody({ ...ok, heightCm: '99' }, today), { heightCm: 'Mínimo 100 cm' });
+    assert.deepEqual(validateBody({ ...ok, heightCm: '251' }, today), { heightCm: 'Máximo 250 cm' });
+    assert.deepEqual(validateBody({ ...ok, weightKg: '80,55' }, today), { weightKg: 'Usá como máximo un decimal' });
+    assert.deepEqual(validateBody({ ...ok, weightKg: '80kg' }, today), { weightKg: 'Ingresá solo números' });
+    assert.deepEqual(validateBody({ ...ok, weightKg: '351' }, today), { weightKg: 'Máximo 350 kg' });
+    assert.deepEqual(validateBody({ ...ok, bodyFatPct: '70' }, today), { bodyFatPct: 'Máximo 60 %' });
+  });
+
+  test('faltan selecciones', () => {
+    assert.deepEqual(Object.keys(validateBody({ ...ok, sex: null, activityLevel: null, goal: null }, today)).sort(), ['activityLevel', 'goal', 'sex']);
   });
 });

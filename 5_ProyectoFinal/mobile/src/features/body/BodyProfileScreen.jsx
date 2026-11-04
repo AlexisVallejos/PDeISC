@@ -7,6 +7,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useResource } from '../../hooks/useResource';
 import { colors, continuous, createStyles, font, radius, spacing, useTheme } from '../../theme';
 import { fmt } from '../../utils/format';
+import { BODY_LIMITS, validateBody, validateMeasure } from '../../utils/validation';
 
 const SEX = [
   { value: 'male', label: 'Hombre' },
@@ -21,8 +22,18 @@ const EMPTY = { sex: null, birthDate: '', heightCm: '', weightKg: '', bodyFatPct
 
 const toNumber = (v) => (v === '' || v == null ? null : Number(String(v).replace(',', '.')));
 
-/** Lo que manda el formulario al servidor; null si todavía falta algo obligatorio. */
+/** Altura, peso y % de grasa: solo números y una coma o punto con un decimal. */
+const onlyDecimal = (text) => text.replace(/[^\d.,]/g, '').replace(/^([^.,]*[.,]\d?).*$/, '$1').slice(0, 5);
+
+/** Fecha: solo dígitos y se agregan los guiones solos (19980421 → 1998-04-21). */
+function asDate(text) {
+  const digits = text.replace(/\D/g, '').slice(0, 8);
+  return [digits.slice(0, 4), digits.slice(4, 6), digits.slice(6, 8)].filter(Boolean).join('-');
+}
+
+/** Lo que manda el formulario al servidor; null si algún dato falta o es inválido. */
 function toPayload(form) {
+  if (Object.keys(validateBody(form)).length) return null;
   const payload = {
     sex: form.sex,
     birthDate: form.birthDate.trim(),
@@ -33,8 +44,7 @@ function toPayload(form) {
     goal: form.goal,
     pace: form.pace,
   };
-  const complete = payload.sex && /^\d{4}-\d{2}-\d{2}$/.test(payload.birthDate) && payload.heightCm && payload.weightKg && payload.activityLevel && payload.goal;
-  return complete ? payload : null;
+  return payload;
 }
 
 /**
@@ -58,7 +68,8 @@ function BodyForm({ body, options, reload }) {
   const router = useRouter();
   const { refreshUser } = useAuth();
   const [form, setForm] = useState(() => initialForm(body.profile));
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({}); // los que devuelve el servidor
+  const [submitted, setSubmitted] = useState(false);
   const [plan, setPlan] = useState(body.plan);
   const [formError, setFormError] = useState(null);
   const [saving, setSaving] = useState(false);
@@ -82,14 +93,25 @@ function BodyForm({ body, options, reload }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
+  // Errores del cliente: un campo con algo escrito se valida en el momento; los vacíos, al guardar.
+  const clientErrors = validateBody(form);
+  const shown = { ...errors };
+  for (const [field, message] of Object.entries(clientErrors)) {
+    const typed = form[field] !== '' && form[field] != null;
+    if (submitted || (typed && ['birthDate', 'heightCm', 'weightKg', 'bodyFatPct'].includes(field) && String(form[field]).length >= (field === 'birthDate' ? 10 : 2))) {
+      shown[field] = message;
+    }
+  }
+
   const set = (field) => (value) => {
     setForm((f) => ({ ...f, [field]: value }));
     setErrors((e) => ({ ...e, [field]: undefined }));
   };
 
   const save = async () => {
+    setSubmitted(true);
     if (!payload) {
-      setFormError('Completá sexo, fecha de nacimiento, altura, peso, actividad y objetivo.');
+      setFormError('Revisá los datos marcados en rojo.');
       return;
     }
     setSaving(true);
@@ -106,9 +128,10 @@ function BodyForm({ body, options, reload }) {
     }
   };
 
+  const weightError = weight ? validateMeasure(weight, BODY_LIMITS.weightKg, 'kg') : null;
   const logWeight = async () => {
+    if (!weight || weightError) return;
     const kg = toNumber(weight);
-    if (!kg) return;
     setFormError(null);
     try {
       await bodyApi.logWeight({ weightKg: kg });
@@ -126,13 +149,14 @@ function BodyForm({ body, options, reload }) {
       <Card title="Tus datos">
         <Text style={styles.label}>Sexo biológico</Text>
         <Chips options={SEX} value={form.sex} onChange={set('sex')} scroll={false} />
+        {shown.sex ? <Text style={styles.error}>{shown.sex}</Text> : null}
         <FieldRow>
-          <TextField label="Fecha de nacimiento" value={form.birthDate} onChangeText={set('birthDate')} error={errors.birthDate} placeholder="AAAA-MM-DD" hint="Ej.: 1998-04-21" />
-          <TextField label="Altura (cm)" value={form.heightCm} onChangeText={set('heightCm')} error={errors.heightCm} keyboardType="decimal-pad" placeholder="175" />
+          <TextField label="Fecha de nacimiento" value={form.birthDate} onChangeText={(t) => set('birthDate')(asDate(t))} error={shown.birthDate} placeholder="AAAA-MM-DD" hint={`Ej.: 1998-04-21 · edad entre ${BODY_LIMITS.age.min} y ${BODY_LIMITS.age.max} años`} keyboardType="number-pad" maxLength={10} />
+          <TextField label="Altura (cm)" value={form.heightCm} onChangeText={(t) => set('heightCm')(onlyDecimal(t))} error={shown.heightCm} keyboardType="decimal-pad" placeholder="175" hint={`Entre ${BODY_LIMITS.heightCm.min} y ${BODY_LIMITS.heightCm.max} cm`} />
         </FieldRow>
         <FieldRow>
-          <TextField label="Peso (kg)" value={form.weightKg} onChangeText={set('weightKg')} error={errors.weightKg} keyboardType="decimal-pad" placeholder="72,5" />
-          <TextField label="% de grasa (opcional)" value={form.bodyFatPct} onChangeText={set('bodyFatPct')} error={errors.bodyFatPct} keyboardType="decimal-pad" placeholder="18" hint="Si lo sabés, el cálculo es más preciso" />
+          <TextField label="Peso (kg)" value={form.weightKg} onChangeText={(t) => set('weightKg')(onlyDecimal(t))} error={shown.weightKg} keyboardType="decimal-pad" placeholder="72,5" hint={`Entre ${BODY_LIMITS.weightKg.min} y ${BODY_LIMITS.weightKg.max} kg`} />
+          <TextField label="% de grasa (opcional)" value={form.bodyFatPct} onChangeText={(t) => set('bodyFatPct')(onlyDecimal(t))} error={shown.bodyFatPct} keyboardType="decimal-pad" placeholder="18" hint="Si lo sabés, el cálculo es más preciso" />
         </FieldRow>
       </Card>
 
@@ -140,12 +164,14 @@ function BodyForm({ body, options, reload }) {
         {options.activity.map((a) => (
           <Option key={a.value} selected={form.activityLevel === a.value} title={a.label} detail={`${a.detail} · ×${a.factor}`} onPress={() => set('activityLevel')(a.value)} />
         ))}
+        {shown.activityLevel ? <Text style={styles.error}>{shown.activityLevel}</Text> : null}
       </Card>
 
       <Card title="Objetivo">
         {options.goals.map((g) => (
           <Option key={g.value} selected={form.goal === g.value} title={g.label} onPress={() => set('goal')(g.value)} />
         ))}
+        {shown.goal ? <Text style={styles.error}>{shown.goal}</Text> : null}
         {goal?.hasPace ? (
           <>
             <Text style={styles.label}>Ritmo</Text>
@@ -202,9 +228,9 @@ function BodyForm({ body, options, reload }) {
       {body?.profile ? (
         <Card title="Registrar peso">
           <FieldRow>
-            <TextField label="Peso de hoy (kg)" value={weight} onChangeText={setWeight} keyboardType="decimal-pad" placeholder={String(body.profile.weightKg)} />
+            <TextField label="Peso de hoy (kg)" value={weight} onChangeText={(t) => setWeight(onlyDecimal(t))} error={weightError} keyboardType="decimal-pad" placeholder={String(body.profile.weightKg)} />
           </FieldRow>
-          <Button title="Guardar peso" icon="scale-outline" variant="tinted" onPress={logWeight} />
+          <Button title="Guardar peso" icon="scale-outline" variant="tinted" onPress={logWeight} disabled={!weight || Boolean(weightError)} />
           {body.weights.slice(-6).reverse().map((w) => (
             <Row key={w.date} label={w.date} value={`${fmt(w.weightKg)} kg`} />
           ))}
@@ -256,6 +282,7 @@ function Row({ label, value }) {
 const styles = createStyles(() => StyleSheet.create({
   label: { color: colors.muted, fontSize: font.sm, fontWeight: '600' },
   muted: { color: colors.muted, fontSize: font.sm },
+  error: { color: colors.danger, fontSize: font.sm },
   warning: { color: colors.warning, fontSize: font.sm, fontWeight: '600' },
   option: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border },
   optionSelected: { borderColor: colors.primary, backgroundColor: colors.primarySoft },

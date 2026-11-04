@@ -95,3 +95,61 @@ export function validateNumbers(values, fields, { required = fields, positive = 
 }
 
 export const toNumber = (v) => (v === '' || v === undefined || v === null ? undefined : Number(String(v).replace(',', '.')));
+
+// --- Datos corporales: mismos límites que el servidor (backend/src/modules/body/body.schemas.js) ---
+export const BODY_LIMITS = {
+  age: { min: 14, max: 101 },
+  heightCm: { min: 100, max: 250 },
+  weightKg: { min: 30, max: 350 },
+  bodyFatPct: { min: 3, max: 60 },
+};
+
+/** Años cumplidos a `today` (AAAA-MM-DD). */
+export function yearsSince(isoDate, today = new Date()) {
+  const [y, m, d] = isoDate.split('-').map(Number);
+  const tm = today.getMonth() + 1;
+  return today.getFullYear() - y - (tm < m || (tm === m && today.getDate() < d) ? 1 : 0);
+}
+
+export function validateBirthDate(value, today = new Date()) {
+  const v = String(value ?? '').trim();
+  if (!v) return 'Ingresá la fecha de nacimiento';
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return 'Usá el formato AAAA-MM-DD (ej.: 1998-04-21)';
+  const [y, m, d] = v.split('-').map(Number);
+  const date = new Date(Date.UTC(y, m - 1, d));
+  if (date.getUTCMonth() !== m - 1 || date.getUTCDate() !== d) return 'Esa fecha no existe';
+  if (date.getTime() > today.getTime()) return 'La fecha de nacimiento no puede ser futura';
+  const age = yearsSince(v, today);
+  if (age < BODY_LIMITS.age.min || age > BODY_LIMITS.age.max) {
+    return `La edad tiene que estar entre ${BODY_LIMITS.age.min} y ${BODY_LIMITS.age.max} años`;
+  }
+  return null;
+}
+
+/** Número con coma o punto, dentro del rango y con un decimal como máximo. */
+export function validateMeasure(raw, { min, max }, unit, { required = true, name = 'el valor' } = {}) {
+  const text = String(raw ?? '').trim().replace(',', '.');
+  if (!text) return required ? `Ingresá ${name}` : null;
+  if (!/^\d+(\.\d?)?$/.test(text)) return /^\d+\.\d{2,}$/.test(text) ? 'Usá como máximo un decimal' : 'Ingresá solo números';
+  const n = Number(text);
+  if (n < min) return `Mínimo ${min} ${unit}`;
+  if (n > max) return `Máximo ${max} ${unit}`;
+  return null;
+}
+
+/** Errores del formulario de datos corporales ({} si está todo bien). */
+export function validateBody(form, today = new Date()) {
+  const errors = {};
+  if (!form.sex) errors.sex = 'Elegí el sexo biológico';
+  const birth = validateBirthDate(form.birthDate, today);
+  if (birth) errors.birthDate = birth;
+  const height = validateMeasure(form.heightCm, BODY_LIMITS.heightCm, 'cm', { name: 'la altura' });
+  if (height) errors.heightCm = height;
+  const weight = validateMeasure(form.weightKg, BODY_LIMITS.weightKg, 'kg', { name: 'el peso' });
+  if (weight) errors.weightKg = weight;
+  const fat = validateMeasure(form.bodyFatPct, BODY_LIMITS.bodyFatPct, '%', { required: false });
+  if (fat) errors.bodyFatPct = fat;
+  if (!form.activityLevel) errors.activityLevel = 'Elegí el nivel de actividad';
+  if (!form.goal) errors.goal = 'Elegí un objetivo';
+  return errors;
+}

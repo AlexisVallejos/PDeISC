@@ -1053,3 +1053,41 @@ describe('datos corporales y plan de calorías', () => {
     assert.equal((await request(app).get('/api/body?userId=3').set(auth('other'))).status, 403);
   });
 });
+
+describe('datos corporales: validaciones', () => {
+  const ok = { sex: 'female', birthDate: '2000-03-15', heightCm: 165, weightKg: 62, activityLevel: 'light', goal: 'maintain' };
+  const fields = (res) => res.body.error?.details?.map((d) => d.field) ?? [];
+  const preview = (body) => request(app).post('/api/body/preview').set(auth('athlete')).send(body);
+  const yearsAgo = (n, extraDays = 0) => {
+    const d = new Date();
+    d.setFullYear(d.getFullYear() - n);
+    d.setDate(d.getDate() + extraDays);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
+  test('edad entre 14 y 101 años, fecha real y no futura', async () => {
+    assert.equal((await preview({ ...ok, birthDate: yearsAgo(101) })).status, 200);
+    assert.equal((await preview({ ...ok, birthDate: yearsAgo(14) })).status, 200);
+    for (const birthDate of [yearsAgo(102), yearsAgo(14, 1), '2999-01-01', '2001-02-30', '15/03/2000', '']) {
+      const res = await preview({ ...ok, birthDate });
+      assert.equal(res.status, 400, birthDate);
+      assert.deepEqual(fields(res), ['birthDate'], birthDate);
+    }
+  });
+
+  test('altura, peso y % de grasa con rango y un decimal como máximo', async () => {
+    assert.equal((await preview({ ...ok, heightCm: 100, weightKg: 30, bodyFatPct: 3 })).status, 200);
+    assert.equal((await preview({ ...ok, heightCm: 250, weightKg: 350, bodyFatPct: 60 })).status, 200);
+    for (const [field, value] of [['heightCm', 99.9], ['heightCm', 251], ['heightCm', 170.25], ['heightCm', 'abc'], ['weightKg', 29.9], ['weightKg', 351], ['weightKg', 70.55], ['bodyFatPct', 2], ['bodyFatPct', 61]]) {
+      const res = await preview({ ...ok, [field]: value });
+      assert.equal(res.status, 400, `${field}=${value}`);
+      assert.deepEqual(fields(res), [field], `${field}=${value}`);
+    }
+  });
+
+  test('pesada: rango y fecha no futura', async () => {
+    const log = (body) => request(app).post('/api/body/weight').set(auth('athlete')).send(body);
+    assert.equal((await log({ weightKg: 400 })).status, 400);
+    assert.equal((await log({ weightKg: 70, date: '2999-01-01' })).status, 400);
+  });
+});

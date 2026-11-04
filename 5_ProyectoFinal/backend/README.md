@@ -515,7 +515,9 @@ Con la clave gratuita de FatSecret no existe `foods.search.v5`: la API busca con
 ### 5.12 Datos corporales y plan de calorías
 
 Con sexo, fecha de nacimiento, altura, peso, % de grasa (opcional), nivel de actividad y objetivo
-se calcula el plan (`src/modules/body/energy.js`):
+se calcula el plan (`src/modules/body/energy.js`). Validación (servidor y app): edad de 14 a 101 años,
+fecha real y no futura, altura 100–250 cm, peso 30–350 kg, % de grasa 3–60, un decimal como máximo.
+
 
 - **Metabolismo basal:** Mifflin-St Jeor; con % de grasa, Katch-McArdle sobre la masa magra.
 - **Gasto diario:** basal × factor de actividad (1,2 sedentario a 1,9 muy activo).
@@ -541,16 +543,16 @@ se calcula el plan (`src/modules/body/energy.js`):
 | `npm run db:init` | Crea la base, aplica `database/schema.sql` y carga los datos demo (**borra todo**) |
 | `npm run db:seed` | Recarga solo los datos demo |
 | `npm run dev:memory` | API + MySQL temporal descargado automáticamente (no hace falta instalar MySQL) |
-| `npm test` | 200 pruebas (integración + cálculo energético) contra un MySQL real temporal (no toca tu base) |
+| `npm test` | 203 pruebas (integración + cálculo energético) contra un MySQL real temporal (no toca tu base) |
 
 | Archivo | Pruebas | Qué cubre |
 |---|---|---|
-| `test/api.test.js` | 72 | Rotación y reutilización de tokens, el flujo OAuth completo con un proveedor simulado, los permisos de cada rol, el CRUD de todos los recursos, las validaciones y, con `EXPLAIN`, que las consultas principales usen sus índices |
+| `test/api.test.js` | 75 | Rotación y reutilización de tokens, el flujo OAuth completo con un proveedor simulado, los permisos de cada rol, el CRUD de todos los recursos, las validaciones y, con `EXPLAIN`, que las consultas principales usen sus índices |
 | `test/auth.test.js` | 100 | Registro con código por email, recuperación de contraseña, login, refresh, logout, cambio de contraseña y `/auth/me`: límites exactos de cada campo, normalización del email, mensajes de error, tokens con otro algoritmo, body de más de 100 kB e intentos de saltear la validación (también en el alta de usuarios por un admin) |
 | `test/energy.test.js` | 9 | Cálculo de basal, gasto, déficit/volumen y macros con valores de referencia |
 | `test/ai.test.js` | 19 | Asistente con IA con OpenAI simulado (nunca se llama de verdad): `/ai/status`, validación de mensajes (largo, cantidad, último mensaje), reintentos y la traducción de los errores de OpenAI (`AI_NOT_CONFIGURED`, `AI_INVALID_KEY`, `AI_QUOTA`, `AI_RATE_LIMIT`, `AI_UNAVAILABLE`, `AI_MODEL_NOT_FOUND`, `AI_UNREACHABLE`, `AI_TIMEOUT`) |
 
-Resultado actual: **200/200** ✅.
+Resultado actual: **203/203** ✅.
 
 Ejemplo rápido con `curl`:
 
