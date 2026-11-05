@@ -69,7 +69,7 @@ export async function verifyEmail({ email, code }) {
 export async function resendCode({ email, purpose }) {
   const row = await findByEmail(email);
   if (!row || !row.is_active) return;
-  if (purpose === 'verify' && (row.email_verified_at || !row.password_hash)) return;
+  if (purpose === 'verify' && row.email_verified_at) return;
   await sendCode(row, purpose);
 }
 
@@ -187,8 +187,9 @@ function linkInTransaction(provider, profile) {
     }
     if (!id) {
       const [created] = await conn.query(
-        'INSERT INTO users (name, email, email_verified_at, avatar_url, role) VALUES (?, ?, IF(?, NOW(), NULL), ?, ?)',
-        [socialName(profile.name), profile.email, Boolean(profile.email && profile.emailVerified), profile.avatarUrl, 'athlete'],
+        // La cuenta nueva queda sin confirmar: se activa con el código que llega al email (ver socialLoginStep).
+        'INSERT INTO users (name, email, avatar_url, role) VALUES (?, ?, ?, ?)',
+        [socialName(profile.name), profile.email, profile.avatarUrl, 'athlete'],
       );
       id = created.insertId;
     }
@@ -201,8 +202,30 @@ function linkInTransaction(provider, profile) {
   });
 }
 
+/**
+ * Después del login social: si la cuenta tiene un email sin confirmar, se manda el código y la app
+ * pide ingresarlo (devuelve { verifyEmail }). Publicado sin servidor de correo, se confirma directo
+ * (igual que el registro). Sin email (GitHub privado, Facebook sin email) no hay nada que confirmar.
+ */
+export async function socialLoginStep(userId) {
+  const row = await findUserById(userId);
+  if (!row.email || row.email_verified_at) return {};
+  if (env.nodeEnv === 'production' && !mailConfigured()) {
+    await query('UPDATE users SET email_verified_at = NOW() WHERE id = ?', [userId]);
+    return {};
+  }
+  await sendCode(row, 'verify').catch((err) => {
+    if (err.code !== 'CODE_RECENTLY_SENT') throw err;
+  });
+  return { verifyEmail: row.email };
+}
+
 export async function sessionForUser(userId) {
-  return session(await findUserById(userId));
+  const row = await findUserById(userId);
+  if (row.email && !row.email_verified_at) {
+    throw new HttpError(403, 'EMAIL_NOT_VERIFIED', 'Confirmá tu email: te mandamos un código para activar la cuenta.');
+  }
+  return session(row);
 }
 
 export async function changePassword(userId, { currentPassword, newPassword }) {

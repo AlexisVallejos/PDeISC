@@ -23,7 +23,11 @@ export default function OAuthCallback() {
     started.current = true;
     finishWebSocialLogin(params)
       .then(() => router.replace('/'))
-      .catch(setError);
+      .catch((err) => {
+        // Cuenta nueva: se activa con el código que llegó al email.
+        if (err.code === 'EMAIL_NOT_VERIFIED') router.replace({ pathname: '/verify-email', params: { email: err.details[0].message } });
+        else setError(err);
+      });
   }, [finishWebSocialLogin, params, router]);
 
   if (Platform.OS !== 'web') return <Redirect href="/" />;

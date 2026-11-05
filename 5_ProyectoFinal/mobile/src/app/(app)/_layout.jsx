@@ -1,5 +1,6 @@
 import { Stack } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
+import { HelpButton, HelpProvider } from '../../features/help/HelpContext';
 import { colors, useTheme } from '../../theme';
 
 /**
@@ -17,6 +18,7 @@ export default function AppLayout() {
   const isStaff = role === 'coach' || role === 'admin';
 
   return (
+    <HelpProvider>
     <Stack
       screenOptions={{
         // Barra de navegación de iOS: fondo del sistema, sin sombra, botón atrás en verde
@@ -26,6 +28,8 @@ export default function AppLayout() {
         headerTitleStyle: { fontWeight: '600', color: colors.text },
         headerBackButtonDisplayMode: 'minimal',
         contentStyle: { backgroundColor: colors.background },
+        // "?" en cada pantalla: cómo usarla.
+        headerRight: () => <HelpButton />,
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -62,5 +66,6 @@ export default function AppLayout() {
         <Stack.Screen name="user-form" options={{ title: 'Usuario' }} />
       </Stack.Protected>
     </Stack>
+    </HelpProvider>
   );
 }

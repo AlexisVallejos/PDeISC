@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 import { fetchProviders } from '../../api/socialLogin';
@@ -15,6 +16,7 @@ const PROVIDERS = [
 export function SocialButtons({ onError, disabled }) {
   useTheme();
   const { socialLogin } = useAuth();
+  const router = useRouter();
   const [configured, setConfigured] = useState(null); // null = sin info (el servidor no respondió)
   const [busy, setBusy] = useState(null);
 
@@ -34,7 +36,9 @@ export function SocialButtons({ onError, disabled }) {
     try {
       await socialLogin(provider.id);
     } catch (err) {
-      if (err.code !== 'CANCELLED') onError(err.message);
+      // Cuenta nueva: se activa con el código que llegó al email.
+      if (err.code === 'EMAIL_NOT_VERIFIED') router.push({ pathname: '/verify-email', params: { email: err.details[0].message } });
+      else if (err.code !== 'CANCELLED') onError(err.message);
     } finally {
       setBusy(null);
     }

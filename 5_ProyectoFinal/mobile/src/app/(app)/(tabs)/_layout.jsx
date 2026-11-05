@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router/js-tabs';
 import { Platform, StyleSheet } from 'react-native';
 import { useAuth } from '../../../context/AuthContext';
+import { HelpButton } from '../../../features/help/HelpContext';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { colors, createStyles, font, MAX_CONTENT_WIDTH, spacing, tracking, useTheme } from '../../../theme';
 
@@ -48,6 +49,9 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: colors.muted,
         tabBarActiveBackgroundColor: wide ? colors.primarySoft : undefined,
         sceneStyle: { backgroundColor: colors.background },
+        // "?" arriba a la derecha: cómo usar la pantalla.
+        headerRight: () => <HelpButton />,
+        headerRightContainerStyle: { paddingRight: spacing.sm + titleInset },
       }}
     >
       <Tabs.Screen name="index" options={{ title: homeTitle, tabBarIcon: icon(homeIcon) }} />

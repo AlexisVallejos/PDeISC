@@ -72,7 +72,7 @@ export async function socialLogin(provider) {
 export function completeWebSocialLogin(queryParams) {
   const verifier = globalThis.sessionStorage.getItem(VERIFIER_KEY);
   globalThis.sessionStorage.removeItem(VERIFIER_KEY);
-  if (!verifier && !queryParams.error) {
+  if (!verifier && !queryParams.error && !queryParams.verify) {
     return Promise.reject(new ApiError('El inicio de sesión venció: probá de nuevo', { code: 'CANCELLED' }));
   }
   return exchange(queryParams, verifier);
@@ -86,6 +86,13 @@ const SOCIAL_ERRORS = {
 };
 
 async function exchange(queryParams, verifier) {
+  // Cuenta nueva con email: primero hay que confirmar el código que llegó al correo.
+  if (queryParams.verify) {
+    throw new ApiError('Te mandamos un código a tu email para activar la cuenta.', {
+      code: 'EMAIL_NOT_VERIFIED',
+      details: [{ field: 'email', message: String(queryParams.verify) }],
+    });
+  }
   if (queryParams.error || !queryParams.code) {
     const code = String(queryParams.error || 'SOCIAL_LOGIN_FAILED');
     throw new ApiError(SOCIAL_ERRORS[code] ?? 'No se pudo iniciar sesión con la red social. Probá de nuevo.', { code });

@@ -71,7 +71,7 @@ export default function AthleteHome() {
             <KcalBarChart daily={progress.daily} goal={progress.goals.kcal} height={130} />
             <Text style={styles.sub}>
               {progress.summary.daysOnTarget} de {progress.summary.loggedDays} días en objetivo ·{' '}
-              {progress.summary.totalWorkouts} sesiones
+              {progress.summary.totalWorkouts} {progress.summary.totalWorkouts === 1 ? 'sesión' : 'sesiones'}
             </Text>
           </Card>
         </Grid>

@@ -183,7 +183,9 @@ describe('login social (flujo OAuth con proveedor simulado)', () => {
     socialProviders.github.fetchProfile = async (code) =>
       code === 'existente'
         ? { providerUserId: 'gh-1', email: 'atleta@macroentreno.com', emailVerified: true, name: 'Alexis GH', avatarUrl: null }
-        : { providerUserId: 'gh-2', email: null, emailVerified: false, name: 'Sin Email', avatarUrl: 'https://example.com/a.png' };
+        : code === 'conemail'
+          ? { providerUserId: 'gh-3', email: 'social.nuevo@gmail.com', emailVerified: true, name: 'Con Email', avatarUrl: null }
+          : { providerUserId: 'gh-2', email: null, emailVerified: false, name: 'Sin Email', avatarUrl: 'https://example.com/a.png' };
     restore = () => {
       socialProviders.github.fetchProfile = original;
       env.social.githubClientId = '';
@@ -261,6 +263,23 @@ describe('login social (flujo OAuth con proveedor simulado)', () => {
       .post('/api/auth/oauth/exchange')
       .send({ code: second.searchParams.get('code'), codeVerifier: verifier });
     assert.equal(again.body.data.user.id, res.body.data.user.id);
+  });
+
+  test('cuenta social nueva con email: pide el código del email antes de abrir la sesión', async () => {
+    {
+      const back = await runFlow('conemail');
+      assert.equal(back.searchParams.get('code'), null);
+      assert.equal(back.searchParams.get('verify'), 'social.nuevo@gmail.com');
+      const code = sentCodes.get('social.nuevo@gmail.com');
+
+      const ok = await request(app).post('/api/auth/verify-email').send({ email: 'social.nuevo@gmail.com', code });
+      assert.equal(ok.status, 200, ok.text);
+      assert.equal(ok.body.data.user.emailVerified, true);
+
+      // Ya confirmada, el siguiente login social entra directo.
+      const again = await runFlow('conemail');
+      assert.ok(again.searchParams.get('code'));
+    }
   });
 
   test('cancelación en el proveedor vuelve a la app con error', async () => {

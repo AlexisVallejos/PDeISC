@@ -91,6 +91,9 @@ router.get('/oauth/:provider/callback', validate({ params: schemas.oauthParams }
     const provider = oauth.getProvider(name);
     const profile = await provider.fetchProfile(String(req.query.code), oauth.callbackUrl(req, name));
     const userId = await service.linkSocialAccount(name, profile);
+    // Cuenta nueva (o sin confirmar): primero el código que llega al email, después la sesión.
+    const { verifyEmail } = await service.socialLoginStep(userId);
+    if (verifyEmail) return res.redirect(oauth.appRedirect(state.appRedirectUri, { verify: verifyEmail }));
     const code = await oauth.createLoginCode(userId, state.challenge);
     return res.redirect(oauth.appRedirect(state.appRedirectUri, { code }));
   } catch (err) {

@@ -10,6 +10,7 @@ import { useResource } from '../../hooks/useResource';
 import { colors, continuous, createStyles, font, MAX_CONTENT_WIDTH, radius, spacing, useTheme } from '../../theme';
 import { confirm } from '../../utils/confirm';
 import { pickImage } from '../../utils/media';
+import { HelpButton } from '../help/HelpContext';
 import { AssistantSetup, SETUP_CODES } from './AssistantSetup';
 import { playSpeech, stopSpeech, useVoiceRecorder } from './voice';
 
@@ -187,6 +188,7 @@ export default function AssistantScreen() {
           title: 'Asistente',
           headerRight: () => (
             <View style={styles.headerActions}>
+              <HelpButton />
               {messages.length > 0 && !busy ? (
                 <Pressable onPress={clearChat} hitSlop={10} accessibilityRole="button" accessibilityLabel="Borrar la conversación" style={styles.headerButton}>
                   <Ionicons name="trash-outline" size={21} color={colors.primary} />
@@ -314,6 +316,13 @@ export default function AssistantScreen() {
               editable={!recording}
               accessibilityLabel="Mensaje para el asistente"
               onSubmitEditing={() => send()}
+              // En la compu: Enter envía y Shift+Enter baja de renglón (si no, Enter solo agregaba un salto de línea).
+              onKeyPress={(e) => {
+                if (Platform.OS === 'web' && e.nativeEvent.key === 'Enter' && !e.nativeEvent.shiftKey) {
+                  e.preventDefault();
+                  send();
+                }
+              }}
               blurOnSubmit={false}
             />
             {canSend ? (
