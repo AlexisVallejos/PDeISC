@@ -63,7 +63,9 @@
         {
           "microphonePermission": "MacroEntreno usa el micrófono para que le hables al asistente."
         }
-      ]
+      ],
+      "expo-asset",
+      "expo-sharing"
     ],
     "extra": {
       "router": {
