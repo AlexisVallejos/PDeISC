@@ -72,6 +72,8 @@ export const env = {
     // Se recorta por si se pegó con espacios o un salto de línea de Windows.
     apiKey: (process.env.OPENAI_API_KEY || '').trim(),
     model: process.env.OPENAI_MODEL || 'gpt-6.1-sol',
+    // Razonamiento del chat: "low" contesta en la mitad de tiempo y alcanza para esta app.
+    reasoning: process.env.OPENAI_REASONING || 'low',
     transcribeModel: process.env.OPENAI_TRANSCRIBE_MODEL || 'gpt-transcribe',
     ttsModel: process.env.OPENAI_TTS_MODEL || 'gpt-4o-mini-tts',
     ttsVoice: process.env.OPENAI_TTS_VOICE || 'coral',

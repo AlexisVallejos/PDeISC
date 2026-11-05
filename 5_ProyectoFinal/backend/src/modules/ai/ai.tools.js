@@ -175,7 +175,9 @@ const HANDLERS = {
       const entry = await diary.createEntry(user, body);
       saved.push({ id: entry.id, nombre: entry.name, gramos: Number(entry.grams), kcal: Number(entry.kcal) });
     }
-    return { ok: true, registrados: saved, action: { type: 'diary', date: fecha || today(), label: `${saved.length} ${saved.length === 1 ? 'comida registrada' : 'comidas registradas'} en ${comida}` } };
+    // Se devuelven los totales del día para que el modelo no tenga que pedir el resumen aparte.
+    const day = await diary.getDay(user.id, fecha || today());
+    return { ok: true, registrados: saved, totalesDelDia: day.totals, objetivos: day.goals, action: { type: 'diary', date: fecha || today(), label: `${saved.length} ${saved.length === 1 ? 'comida registrada' : 'comidas registradas'} en ${comida}` } };
   },
 
   async crear_alimento(user, args) {

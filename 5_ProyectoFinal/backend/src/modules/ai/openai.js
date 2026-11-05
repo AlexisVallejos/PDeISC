@@ -94,7 +94,7 @@ async function call(path, { json, form, binary = false, timeoutMs = TIMEOUT_MS }
  * Una vuelta de la Responses API. `previousResponseId` encadena la respuesta anterior (con sus
  * llamadas a herramientas y razonamiento) para devolverle solo los resultados.
  */
-export function createResponse({ instructions, input, tools, previousResponseId, schema, timeoutMs }) {
+export function createResponse({ instructions, input, tools, previousResponseId, schema, timeoutMs, fast = false }) {
   return call('/responses', {
     timeoutMs,
     json: {
@@ -104,6 +104,8 @@ export function createResponse({ instructions, input, tools, previousResponseId,
       ...(tools?.length ? { tools } : {}),
       ...(previousResponseId ? { previous_response_id: previousResponseId } : {}),
       ...(schema ? { text: { format: { type: 'json_schema', name: schema.name, schema: schema.schema, strict: true } } } : {}),
+      // Chat: poco razonamiento y respuestas cortas, para que conteste rápido.
+      ...(fast ? { reasoning: { effort: env.openai.reasoning }, text: { verbosity: 'low' } } : {}),
     },
   });
 }

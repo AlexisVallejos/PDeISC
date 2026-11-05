@@ -10,7 +10,6 @@ import { confirm } from '../../utils/confirm';
 import { round1 } from '../../utils/format';
 import { decimal } from '../../utils/inputs';
 import { toNumber, validateMacroConsistency, validateNumbers, validateText } from '../../utils/validation';
-import { BarcodeScanner } from './BarcodeScanner';
 import { FoodPhotoCard } from './FoodPhotoCard';
 
 /** Bases gratuitas: se busca al confirmar (no letra por letra) para respetar sus límites de uso. */
@@ -64,8 +63,6 @@ export default function DiaryEntryScreen() {
   const [entryFoodId, setEntryFoodId] = useState(null);
   const [importing, setImporting] = useState(null);
   const [original, setOriginal] = useState(null);
-  const [scannerOpen, setScannerOpen] = useState(false);
-  const [lookingUp, setLookingUp] = useState(false);
 
   // Edición: se busca el registro dentro del día.
   useEffect(() => {
@@ -154,28 +151,6 @@ export default function DiaryEntryScreen() {
       setFormError(err.message);
     } finally {
       setImporting(null);
-    }
-  };
-
-  /** Código leído: catálogo → Open Food Facts. Si no aparece, se ofrece la carga manual. */
-  const onScanned = async (code) => {
-    setScannerOpen(false);
-    setLookingUp(true);
-    setFormError(null);
-    try {
-      const res = await foodsApi.barcode(code);
-      if (res.found) {
-        setMode('catalog');
-        setFood(res.food);
-        setForm((f) => ({ ...f, grams: String(res.food.portionGrams) }));
-      } else {
-        setMode('manual');
-        setFormError(`No encontramos el código ${code}. Cargalo a mano con los datos de la etiqueta.`);
-      }
-    } catch (err) {
-      setFormError(err.message);
-    } finally {
-      setLookingUp(false);
     }
   };
 
@@ -301,12 +276,10 @@ export default function DiaryEntryScreen() {
 
       {!editingId ? (
         <View style={styles.quickRow}>
-          <QuickTile icon="barcode-outline" title="Escanear" subtitle="Código de barras" onPress={() => setScannerOpen(true)} />
           <QuickTile icon="camera-outline" title="Foto con IA" subtitle="Analiza tu plato" active={mode === 'photo'} onPress={() => changeMode('photo')} />
           <QuickTile icon="sparkles-outline" title="Asistente" subtitle="Contale qué comiste" onPress={() => router.push('/assistant')} />
         </View>
       ) : null}
-      {lookingUp ? <Loading label="Buscando el producto…" /> : null}
 
       {!editingId && mode !== 'photo' ? (
         <View style={styles.section}>
@@ -434,7 +407,6 @@ export default function DiaryEntryScreen() {
           </FieldRow>
         </Card>
       )}
-      {!editingId ? <BarcodeScanner visible={scannerOpen} onClose={() => setScannerOpen(false)} onScanned={onScanned} /> : null}
     </Screen>
   );
 }

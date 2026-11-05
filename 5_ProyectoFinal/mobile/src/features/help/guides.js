@@ -51,7 +51,7 @@ export const GUIDES = {
   ]),
   'diary-entry': guide('diary-entry', 'Registrar una comida', 'Hay varias formas de cargar lo que comiste.', [
     step('search-outline', 'Buscá en el catálogo', 'Escribí (ej. "milanesa"), tocá el alimento y poné los gramos: los macros se calculan solos.'),
-    step('barcode-outline', 'Escaneá el envase', 'Leé el código de barras con la cámara o escribilo.'),
+    step('sparkles-outline', 'Contale al asistente', 'Escribí "comí 2 empanadas de carne" y la IA lo registra por vos.'),
     step('camera-outline', 'Foto con IA', 'Sacale una foto al plato: estima gramos y macros, y vos los ajustás.'),
     step('create-outline', 'Carga manual', 'Si no aparece, cargá nombre, gramos y macros de la etiqueta.'),
   ]),

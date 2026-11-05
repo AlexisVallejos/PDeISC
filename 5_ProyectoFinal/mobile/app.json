@@ -40,7 +40,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "MacroEntreno usa la cámara para escanear el código de barras de los alimentos y sacar fotos de tus comidas.",
+          "cameraPermission": "MacroEntreno usa la cámara para sacar fotos de tus comidas.",
           "recordAudioAndroid": false
         }
       ],
