@@ -56,7 +56,10 @@ export function MacroSummary({ totals, goals }) {
           color={remaining < 0 ? colors.danger : colors.kcal}
           accessibilityLabel={`${fmt(kcal)} de ${fmt(goal)} kilocalorías`}
         >
-          <Text style={styles.kcalValue}>{fmt(kcal)}</Text>
+          {/* Las kcal van enteras y con una fuente más chica si el número es largo, para que no toque el anillo. */}
+          <Text style={[styles.kcalValue, String(Math.round(kcal)).length > 4 && { fontSize: 28 }]} numberOfLines={1} adjustsFontSizeToFit>
+            {fmt(Math.round(kcal))}
+          </Text>
           <Text style={styles.kcalLabel}>de {fmt(goal)} kcal</Text>
         </ProgressRing>
         <Text style={[styles.remaining, remaining < 0 && { color: colors.danger }]}>

@@ -34,7 +34,7 @@ export function WeeklyReview({ userId, onSelectDate }) {
         <Text style={styles.text}>{data.assessment}</Text>
         <Text style={styles.muted}>{data.summary.sessions} vs. {data.previous.summary.sessions} sesiones · {fmt(data.summary.volume)} vs. {fmt(data.previous.summary.volume)} kg de volumen</Text>
         <Text style={styles.muted}>Días con comidas: {data.summary.loggedDays} vs. {data.previous.summary.loggedDays}. Más volumen no demuestra por sí solo progreso físico.</Text>
-        {data.exercises.map((e, i) => <ListItem key={`${e.name}-${i}`} title={e.name} subtitle={`${fmt(e.bestWeight)} kg máximos · ${e.deltaWeight == null ? 'Sin comparación previa' : `${e.deltaWeight > 0 ? '+' : ''}${fmt(e.deltaWeight)} kg respecto a la semana anterior`}`} />)}
+        {data.exercises.map((e, i) => <ListItem key={`${e.name}-${i}`} title={e.name} subtitle={`${Number(e.bestWeight) > 0 ? `${fmt(e.bestWeight)} kg máximos` : 'Peso corporal'} · ${e.deltaWeight == null ? 'Sin comparación previa' : `${e.deltaWeight > 0 ? '+' : ''}${fmt(e.deltaWeight)} kg respecto a la semana anterior`}`} />)}
       </Card>
       <Card title="Detalle por día">
         {data.daily.map((d) => <ListItem key={d.date} title={formatDayLabel(d.date)}

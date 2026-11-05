@@ -29,7 +29,11 @@ export function ExercisePicker({ visible, onClose, onPick }) {
   }, [visible, exercises]);
 
   const groups = useMemo(() => ['Todos', ...new Set((exercises || []).map((e) => e.muscleGroup))], [exercises]);
-  const filtered = (exercises || []).filter((e) => group === 'Todos' || e.muscleGroup === group);
+  // El mismo campo sirve para buscar en el catálogo y, si no aparece, para agregarlo como nuevo.
+  const text = custom.trim().toLowerCase();
+  const filtered = (exercises || []).filter(
+    (e) => (group === 'Todos' || e.muscleGroup === group) && (!text || e.name.toLowerCase().includes(text)),
+  );
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose} presentationStyle="pageSheet">
@@ -42,7 +46,7 @@ export function ExercisePicker({ visible, onClose, onPick }) {
             </Pressable>
           </View>
           <View style={styles.custom}>
-            <TextField style={{ flex: 1 }} placeholder="O escribí uno nuevo…" value={custom} onChangeText={setCustom} maxLength={120} />
+            <TextField style={{ flex: 1 }} placeholder="Buscá o escribí uno nuevo…" value={custom} onChangeText={setCustom} maxLength={120} />
             <Button
               icon="add"
               disabled={custom.trim().length < 2}
@@ -59,6 +63,7 @@ export function ExercisePicker({ visible, onClose, onPick }) {
             <Loading />
           ) : (
             <ScrollView contentContainerStyle={{ paddingBottom: spacing.xxl }}>
+              {!filtered.length ? <Text style={styles.empty}>No está en el catálogo: tocá + para agregarlo como nuevo.</Text> : null}
               {filtered.map((e) => (
                 <ListItem
                   key={e.id}
@@ -78,6 +83,7 @@ export function ExercisePicker({ visible, onClose, onPick }) {
 
 const styles = createStyles(() => StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.background },
+  empty: { color: colors.muted, fontSize: font.sm, padding: spacing.md },
   inner: { flex: 1, width: '100%', maxWidth: MAX_CONTENT_WIDTH, alignSelf: 'center', padding: spacing.lg, gap: spacing.md },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   title: { color: colors.text, fontSize: font.xl, fontWeight: '800' },
