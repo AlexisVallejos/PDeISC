@@ -94,6 +94,8 @@ Cada ruta sigue el mismo orden: **limitador → `validate(esquema)` → llamada 
 ### `resendCode({ email, purpose })`
 Si la cuenta no existe, está desactivada o (en el caso de `verify`) ya está verificada, **no hace nada y responde igual**. Si no, manda un código nuevo.
 
+Con el propósito `reset` también se oculta el aviso "esperá un minuto" (`CODE_RECENTLY_SENT`): si no, al pedirlo dos veces seguidas se sabría qué emails tienen cuenta.
+
 ### `forgotPassword({ email })`
 Igual que el anterior, pero con el propósito `reset`. El error "ya te mandé un código hace menos de un minuto" se oculta, porque revelaría que la cuenta existe.
 
@@ -141,7 +143,8 @@ Devuelve la sesión de un usuario por su id. Se usa en el canje del login social
 ### `changePassword(userId, { currentPassword, newPassword })`
 1. Busca el hash actual.
 2. Si la cuenta tiene contraseña, exige la actual y la compara. Si no coincide, responde 400.
-3. Guarda el hash nuevo y cierra todas las sesiones.
+3. Si la nueva es igual a la actual, responde 400 `SAME_PASSWORD`.
+4. Guarda el hash nuevo y cierra todas las sesiones.
 
 ---
 

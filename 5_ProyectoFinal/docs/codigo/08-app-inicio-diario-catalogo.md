@@ -91,10 +91,6 @@
 **Funciones**
 - `searchExternal()`: Open Food Facts y USDA **buscan solo al tocar "Buscar"**, para respetar los límites de uso de esas bases.
 - `pickExternal(item)` / `pickFatSecret(item)`: **importan** el alimento al catálogo, lo dejan elegido y completan los gramos con la porción del envase o con 100. Mientras importa, la fila muestra una ruedita.
-- `onScanned(code)`:
-  1. Cierra el escáner y busca el código en el servidor (primero en el catálogo, después en Open Food Facts).
-  2. Si lo encuentra, lo deja elegido.
-  3. Si no, pasa a la carga manual y le pide al usuario que la complete con los datos de la etiqueta.
 - `changeMode(next)`: limpia los resultados y el alimento elegido, y cambia de modo.
 - `NUMERIC` + `set(key)`: cada campo numérico pasa por el filtro `decimal()`, que **no deja tipear** letras ni un segundo decimal. Al escribir, se borra el error de ese campo.
 - `visible`: en FatSecret, con menos de 2 letras, no se muestran resultados viejos.
@@ -107,7 +103,7 @@
      - manda solo `foodId` + `grams`, porque **los macros los calcula el servidor**.
   2. **Si es carga manual**:
      - valida los números: los gramos y las kcal son obligatorios; los máximos son 5000 g y 10000 kcal;
-     - si los números están bien, controla la **coherencia** entre los macros y las calorías (`validateMacroConsistency`);
+     - si los números están bien, controla la **coherencia** entre los macros y las calorías (`validateMacroConsistency`). **Excepción:** al editar un registro que viene del catálogo no se controla, porque si solo cambiaste los gramos el servidor recalcula los macros;
      - valida el nombre (de 2 a 150 caracteres);
      - si hay errores, los muestra y no envía nada.
   3. **Si se está editando**: manda **solo lo que cambió**. Si cambiaron únicamente los gramos, el servidor recalcula los macros.
@@ -117,23 +113,13 @@
 **Qué se dibuja**
 - Un pie fijo con los botones "Eliminar" y "Agregar" (o "Guardar cambios").
 - El selector de comida (`Chips`).
-- Tres accesos rápidos (`QuickTile`): **Escanear**, **Foto con IA** y **Asistente**.
+- Dos accesos rápidos (`QuickTile`): **Foto con IA** y **Asistente**. (El escáner de código de barras se quitó: solo servía para productos envasados y no para comidas.)
 - El selector "Buscar en": Mi catálogo, Open Food Facts, USDA, FatSecret o Carga manual.
 - Según el modo:
   - la tarjeta de la foto (`FoodPhotoCard`);
   - el buscador con sus resultados, o la tarjeta del alimento elegido con la cantidad y la vista previa de los macros;
   - el formulario manual.
 - Si el catálogo no encuentra nada, ofrece **buscar lo mismo en FatSecret**.
-- El escáner de códigos de barras, que es un modal.
-
-### `BarcodeScanner.jsx` — escáner de código de barras
-- `BARCODE_TYPES`: los formatos que lee: EAN-13, EAN-8, UPC e ITF-14. `isBarcode`: comprueba que el código tenga de 6 a 14 dígitos.
-- `useCameraPermissions()`: el estado del permiso de la cámara.
-- `handled` (`useRef`): evita procesar el mismo código varias veces, porque la cámara lo detecta muchas veces por segundo.
-- Al abrirse (`onShow`), reinicia todo.
-- **Con permiso**: muestra la cámara trasera (`CameraView`) y un marco verde. Cuando lee un código válido, llama a `finish`.
-- **Sin permiso**: muestra un botón para pedirlo o, si está bloqueado, explica cómo activarlo en los ajustes.
-- **Carga a mano**: un campo que solo acepta dígitos (hasta 14). Valida el código y lo busca.
 
 ### `FoodPhotoCard.jsx` — foto del plato con IA
 - `CONFIDENCE`: el texto que se muestra según la confianza del análisis.

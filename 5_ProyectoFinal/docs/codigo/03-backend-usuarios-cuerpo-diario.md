@@ -81,15 +81,16 @@
      - nunca más del 20 % por encima del gasto.
 
      Cada vez que se aplica un límite, se agrega una nota que lo explica.
-  7. **Peso de referencia para la proteína**: con masa magra, masa magra / 0,85; con obesidad (IMC ≥ 30), el peso que correspondería a un IMC de 25; en los demás casos, el peso real.
+  7. **Peso de referencia para la proteína**: con masa magra, masa magra / 0,85 **sin pasar del peso real** (`Math.min`); con obesidad (IMC ≥ 30), el peso que correspondería a un IMC de 25; en los demás casos, el peso real.
   8. **Proteína** = g/kg del objetivo (+0,2 g si es un déficit rápido) × peso de referencia.
   9. **Grasa**: entre el 25 % y el 35 % de las kcal, y como mínimo 0,8 g/kg.
   10. **Carbohidratos** = (kcal − proteína·4 − grasa·9) / 4. Son lo que queda.
   11. **Avisos**: IMC bajo con déficit, menor de 18 años, IMC ≥ 30 sin % de grasa.
-  12. Devuelve la edad, el IMC y su categoría, el método usado, el BMR, el TDEE, el cambio semanal en kg, las metas, la proteína por kg, el agua (35 ml/kg) y la fibra (14 g cada 1000 kcal).
+  12. Devuelve la edad, el IMC y su categoría, el método usado, el BMR, el TDEE, el cambio semanal en kg (**calculado con las kcal finales**, después de los límites de seguridad: `(kcal − TDEE) · 7 / 7700`), las metas, la proteína por kg, el agua (35 ml/kg) y la fibra (14 g cada 1000 kcal).
 
 ### `body.schemas.js`
 - **`BODY_LIMITS`**: edad 14-101, altura 100-250 cm, peso 30-350 kg, grasa 3-60 %. La app usa exactamente los mismos.
+- **`realisticBmi`**: altura y peso se validan por separado, pero juntos tienen que dar un **IMC entre 12 y 70**. Así no pasa, por ejemplo, 160 cm con 350 kg (daba 13 860 kcal). Si alguno de los dos ya tiene su propio error, no suma otro.
 - **`yearsSince(fecha)`**: la edad a hoy.
 - **`birthDateError(value)`**: devuelve **un solo mensaje**, en este orden:
   1. el formato no es `AAAA-MM-DD`;
@@ -185,5 +186,11 @@
   1. Comprueba que el registro sea suyo.
   2. Renombra `date` a `entry_date` (la columna).
   3. Si cambiaron los gramos de un alimento del catálogo y no mandó macros, los recalcula.
-  4. Actualiza solo los campos presentes.
+  4. Si es una edición a mano, junta lo nuevo con lo guardado y llama a **`assertMacros`** (de `utils/validation.js`): los macros tienen que seguir cerrando con las calorías aunque solo se haya mandado un campo.
+  5. Actualiza solo los campos presentes.
 - **`deleteEntry`**: comprueba que el registro sea suyo y lo borra.
+
+
+### Metas manuales (`users/users.schemas.js`)
+- `goal(label, min, max)` arma cada meta con mensajes en español ("Las calorías tienen que ser al menos 800").
+- Si llegan las cuatro metas juntas, un `refine` controla que **proteínas·4 + carbohidratos·4 + grasas·9** no se aleje más de un 15 % de las kcal.

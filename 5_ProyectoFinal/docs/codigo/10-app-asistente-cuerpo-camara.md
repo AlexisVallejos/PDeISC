@@ -217,3 +217,23 @@ Funciona **en el navegador** con **MediaPipe Pose**, un modelo de Google que enc
 - **Al terminar**:
   - si la cámara la abrió el formulario de una sesión, `resolveCoach` le devuelve las series y vuelve atrás;
   - si no, ofrece guardarla como una sesión nueva en Entrenos.
+
+---
+
+## Ayuda por pantalla (`features/help/`)
+
+### `guides.js` — el contenido
+- `img`: las capturas reales de cada pantalla (`mobile/assets/help/*.jpg`), cargadas con `require` para que Expo las incluya en la app.
+- `guide(key, title, intro, steps)` y `step(icon, title, text)`: arman cada guía con su título, una frase y los pasos con su ícono.
+- `GUIDES`: 17 guías (inicio de cada rol, diario, registrar comida, entrenos, progreso, perfil, datos corporales, asistente, planes, informes, cámara, catálogo, usuarios y reportes).
+- **`guideFor(pathname, role)`**: elige la guía según la ruta. En `/` depende del rol (`home-athlete`, `home-coach`, `home-admin`); en las demás usa el primer tramo de la ruta (`/diary-entry` → `diary-entry`).
+
+### `HelpContext.jsx` — cuándo se abre
+- `store`: en la web usa `localStorage`; en el celular, `SecureStore`.
+- **`HelpProvider`** (envuelve todas las pantallas en `app/(app)/_layout.jsx`):
+  1. Con `usePathname` sabe en qué pantalla está y busca su guía.
+  2. Arma la clave `macroentreno.help.<idUsuario>.<pantalla>`.
+  3. Si esa clave no existe (primera visita de **ese** usuario a **esa** pantalla), abre la guía y guarda la clave. Así aparece una sola vez.
+  4. `cancelled` evita abrirla si el usuario ya se fue a otra pantalla mientras se leía el almacenamiento.
+- **`HelpButton`**: el ícono **?** del encabezado. Solo aparece si la pantalla tiene guía y la vuelve a abrir.
+- **`HelpModal`**: la ventana con la captura, los pasos y el botón "Entendido". En la PC (760 px o más) pone la imagen a la izquierda y el texto a la derecha.

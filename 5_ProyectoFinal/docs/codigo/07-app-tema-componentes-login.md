@@ -49,7 +49,7 @@
 | **`MicroList`** | Una barra por micronutriente contra su valor diario (ver los colores abajo). En la PC, si `wide`, va en dos columnas. Avisa cuando faltan datos de algunos alimentos. |
 | **`ProgressRing`** | Un anillo hecho con SVG. Dibuja dos círculos: el fondo, atenuado, y el progreso, con `strokeDasharray` y `strokeDashoffset` (el largo del trazo = la circunferencia × el %). Está rotado −90° para que empiece arriba. |
 | **`RoleBadge`** | Una etiqueta de color con el rol: Admin en rojo, Entrenador en naranja y Atleta en verde. |
-| **`Screen`** | El contenedor de **todas** las pantallas. Tiene scroll, la opción de tirar hacia abajo para recargar (`RefreshControl`), el ancho máximo centrado y un pie fijo opcional (`footer`), por ejemplo para el botón de guardar. |
+| **`Screen`** | El contenedor de **todas** las pantallas. Tiene scroll, la opción de tirar hacia abajo para recargar (`RefreshControl`), el ancho máximo centrado y un pie fijo opcional (`footer`), por ejemplo para el botón de guardar. **Volver arriba:** en `onScroll` mira si se bajó más de 400 px (`SHOW_TOP_AFTER`); si es así, aparece un botón verde con una flecha. Entra y sale con un fundido (`Animated.timing` sobre `fade`, guardado en `useState` para que no se recree). Al tocarlo, `scrollTo({ y: 0, animated })` sube con animación suave, salvo que el usuario tenga activado "reducir movimiento". |
 | **`StatTile`** | Una tarjeta con un dato destacado: ícono y etiqueta de color arriba y el valor grande abajo. |
 | **`Loading`** | Una ruedita de carga con texto. |
 | **`ErrorState`** | Un ícono que distingue si hay **"Sin conexión"** o si "Algo salió mal", con un botón para reintentar. |

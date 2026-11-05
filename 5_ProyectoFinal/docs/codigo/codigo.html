@@ -22,7 +22,7 @@ table{border-collapse:collapse;width:100%;display:block;overflow-x:auto}td,th{bo
 #top-btn:hover{transform:translateY(-2px)}
 @media (max-width:800px){.layout{grid-template-columns:1fr}nav{position:static;max-height:none}section{padding:4px 16px 16px}}
 </style></head>
-<body id="top"><div class="layout"><nav><a href="#doc-readme">MacroEntreno: el código explicado, archivo por archivo</a><a href="#doc-01-backend-base">Backend: arranque, configuración, middlewares y utilidades</a><a href="#doc-02-backend-auth">Backend: autenticación (modules/auth)</a><a href="#doc-03-backend-usuarios-cuerpo-diario">Backend: usuarios, admin, datos corporales, planes del coach y diario</a><a href="#doc-04-backend-alimentos-entrenamientos">Backend: alimentos, fuentes externas, micronutrientes, ejercicios y entrenamientos</a><a href="#doc-05-backend-progreso-informes-ia">Backend: progreso, informes y PDF, asistente con IA y publicación en Vercel</a><a href="#doc-06-app-base-navegacion-sesion">App (React Native + Expo): conexión con la API, sesión, navegación y utilidades</a><a href="#doc-07-app-tema-componentes-login">App: tema visual, componentes reutilizables y pantallas de acceso</a><a href="#doc-08-app-inicio-diario-catalogo">App: pantallas de inicio, diario de comidas y catálogo</a><a href="#doc-09-app-entrenos-usuarios-planes-informes">App: entrenamientos, usuarios, planes de alimentación, perfil, progreso e informes</a><a href="#doc-10-app-asistente-cuerpo-camara">App: asistente con IA, datos corporales y entrenador con cámara</a></nav><main><section id="doc-readme"><h1>MacroEntreno: el código explicado, archivo por archivo</h1>
+<body id="top"><div class="layout"><nav><a href="#doc-readme">MacroEntreno: el código explicado, archivo por archivo</a><a href="#doc-00-guia-de-estudio">Guía de estudio: dónde está cada cosa</a><a href="#doc-01-backend-base">Backend: arranque, configuración, middlewares y utilidades</a><a href="#doc-02-backend-auth">Backend: autenticación (modules/auth)</a><a href="#doc-03-backend-usuarios-cuerpo-diario">Backend: usuarios, admin, datos corporales, planes del coach y diario</a><a href="#doc-04-backend-alimentos-entrenamientos">Backend: alimentos, fuentes externas, micronutrientes, ejercicios y entrenamientos</a><a href="#doc-05-backend-progreso-informes-ia">Backend: progreso, informes y PDF, asistente con IA y publicación en Vercel</a><a href="#doc-06-app-base-navegacion-sesion">App (React Native + Expo): conexión con la API, sesión, navegación y utilidades</a><a href="#doc-07-app-tema-componentes-login">App: tema visual, componentes reutilizables y pantallas de acceso</a><a href="#doc-08-app-inicio-diario-catalogo">App: pantallas de inicio, diario de comidas y catálogo</a><a href="#doc-09-app-entrenos-usuarios-planes-informes">App: entrenamientos, usuarios, planes de alimentación, perfil, progreso e informes</a><a href="#doc-10-app-asistente-cuerpo-camara">App: asistente con IA, datos corporales y entrenador con cámara</a></nav><main><section id="doc-readme"><h1>MacroEntreno: el código explicado, archivo por archivo</h1>
 <p>Guía para exponer el proyecto. Explica qué hace cada archivo y cada función, paso a paso y en el orden en que se ejecuta. Los números entre paréntesis son líneas del archivo.</p>
 <h2>Índice</h2>
 <table>
@@ -34,6 +34,11 @@ table{border-collapse:collapse;width:100%;display:block;overflow-x:auto}td,th{bo
 </tr>
 </thead>
 <tbody><tr>
+<td>★</td>
+<td><a href="#doc-00-guia-de-estudio">Guía de estudio: dónde está cada cosa</a></td>
+<td>Mapa función → archivo, recorridos para la defensa y preguntas típicas</td>
+</tr>
+<tr>
 <td>1</td>
 <td><a href="#doc-01-backend-base">Backend: base</a></td>
 <td><code>server.js</code>, <code>app.js</code>, configuración, base de datos, migraciones, middlewares y utilidades</td>
@@ -71,7 +76,7 @@ table{border-collapse:collapse;width:100%;display:block;overflow-x:auto}td,th{bo
 <tr>
 <td>8</td>
 <td><a href="#doc-08-app-inicio-diario-catalogo">App: inicio, diario y catálogo</a></td>
-<td>Inicio de cada rol, registrar comidas (escáner, foto con IA) y catálogo</td>
+<td>Inicio de cada rol, registrar comidas (catálogo, foto con IA, asistente) y catálogo</td>
 </tr>
 <tr>
 <td>9</td>
@@ -119,6 +124,493 @@ table{border-collapse:collapse;width:100%;display:block;overflow-x:auto}td,th{bo
 <li><strong>Patrón del backend</strong>: routes, después service y después MySQL. Los errores se convierten en un JSON uniforme en <code>errorHandler</code>.</li>
 <li><strong>Una sola app para todas las plataformas</strong>: Android, iOS y la web salen del mismo código. Algunos archivos tienen una versión <code>.web.js</code> que Expo usa automáticamente en el navegador.</li>
 </ul>
+<a class="up" href="#top">↑ Volver arriba</a></section>
+<section id="doc-00-guia-de-estudio"><h1>Guía de estudio: dónde está cada cosa</h1>
+<p>Esta guía es un mapa: te dice <strong>qué archivo abrir</strong> para cada función de la app y qué decir cuando lo expliques. El detalle línea por línea está en los documentos 01 a 10.</p>
+<blockquote>
+<p>Rutas: <code>backend/src/...</code> es el servidor (Node + Express + MySQL). <code>mobile/src/...</code> es la app (Expo + React Native; la misma sirve para Android, iPhone y web).</p>
+</blockquote>
+<hr>
+<h2>1. La idea en 30 segundos</h2>
+<p>MacroEntreno es una app de <strong>nutrición y gimnasio</strong> con tres roles:</p>
+<ul>
+<li><strong>Atleta</strong>: registra comidas y entrenamientos, ve su progreso y usa el asistente con IA.</li>
+<li><strong>Entrenador (coach)</strong>: sigue a sus atletas y les asigna rutinas y planes de alimentación.</li>
+<li><strong>Administrador</strong>: gestiona usuarios, entrenadores, el catálogo y los reportes.</li>
+</ul>
+<p>Arquitectura: <strong>app → API REST → base MySQL</strong>. La app nunca toca la base; todo pasa por la API, que valida y controla permisos.</p>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Tecnología</th>
+<th>Dónde está publicada</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>App</td>
+<td>Expo SDK 58, Expo Router, React Native</td>
+<td>Web en Vercel + APK con EAS</td>
+</tr>
+<tr>
+<td>API</td>
+<td>Node.js, Express 5, zod, JWT</td>
+<td>Vercel (función serverless <code>api/index.mjs</code>)</td>
+</tr>
+<tr>
+<td>Base de datos</td>
+<td>MySQL</td>
+<td>EasyPanel</td>
+</tr>
+<tr>
+<td>IA</td>
+<td>OpenAI (Responses API, voz y transcripción)</td>
+<td>Desde la API</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>2. Mapa: función → archivos</h2>
+<h3>Arranque y estructura</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Backend</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Punto de entrada</td>
+<td><code>server.js</code> (levanta el servidor), <code>app.js</code> (arma Express: CORS, seguridad, rutas)</td>
+<td><code>app/_layout.jsx</code> (proveedores y navegación raíz)</td>
+</tr>
+<tr>
+<td>Configuración y <code>.env</code></td>
+<td><code>config/env.js</code></td>
+<td><code>app.json</code>, <code>eas.json</code> (URL de la API del APK)</td>
+</tr>
+<tr>
+<td>Base de datos</td>
+<td><code>config/db.js</code> (conexión), <code>config/migrations.js</code>, <code>database/schema.sql</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Errores en JSON uniforme</td>
+<td><code>middlewares/errorHandler.js</code>, <code>utils/httpError.js</code></td>
+<td><code>api/client.js</code> los convierte en mensajes</td>
+</tr>
+<tr>
+<td>Publicación en Vercel</td>
+<td><code>api/index.mjs</code>, <code>vercel.json</code> (rutas, cabeceras, cron)</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<h3>Registro, login y seguridad</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Backend</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Registro con código por email</td>
+<td><code>modules/auth/auth.service.js</code> (<code>register</code>), <code>emailCodes.js</code>, <code>utils/mailer.js</code> (Gmail SMTP)</td>
+<td><code>features/auth/RegisterScreen.jsx</code>, <code>VerifyEmailScreen.jsx</code></td>
+</tr>
+<tr>
+<td>Login y tokens (JWT)</td>
+<td><code>auth.service.js</code> (<code>login</code>), <code>tokens.js</code> (access + refresh rotativo)</td>
+<td><code>context/AuthContext.jsx</code>, <code>storage/tokenStorage.js</code></td>
+</tr>
+<tr>
+<td>Proteger rutas</td>
+<td><code>middlewares/auth.js</code> (<code>authenticate</code>, <code>authorize</code>)</td>
+<td><code>app/(app)/_layout.jsx</code> y <code>(tabs)/_layout.jsx</code> con <code>Stack.Protected</code> / <code>Tabs.Protected</code></td>
+</tr>
+<tr>
+<td>Login con Google, Facebook, GitHub</td>
+<td><code>oauth.js</code> (PKCE + state firmado), <code>socialProviders.js</code>, <code>auth.routes.js</code> (callback)</td>
+<td><code>api/socialLogin.js</code>, <code>features/auth/SocialButtons.jsx</code>, <code>app/oauth-callback.jsx</code></td>
+</tr>
+<tr>
+<td>Verificar el email en login social</td>
+<td><code>auth.service.js</code> (<code>socialLoginStep</code>, <code>sessionForUser</code>)</td>
+<td>redirige a <code>/verify-email</code></td>
+</tr>
+<tr>
+<td>Olvidé / cambiar contraseña</td>
+<td><code>auth.service.js</code> (<code>forgotPassword</code>, <code>resetPassword</code>, <code>changePassword</code>)</td>
+<td><code>ForgotPasswordScreen.jsx</code>, <code>features/profile/ChangePasswordScreen.jsx</code></td>
+</tr>
+<tr>
+<td>Quién puede ver a quién</td>
+<td><code>utils/access.js</code> (<code>resolveTargetUser</code>)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Validaciones</td>
+<td><code>utils/validation.js</code> (zod: <code>passwordField</code>, <code>checkMacros</code>, <code>assertMacros</code>) + cada <code>*.schemas.js</code></td>
+<td><code>utils/validation.js</code> (las mismas reglas)</td>
+</tr>
+</tbody></table>
+<h3>Asistente con IA (lo que más te van a preguntar)</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Archivo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Conexión con OpenAI, reintentos, errores en español</td>
+<td><code>backend/src/modules/ai/openai.js</code></td>
+</tr>
+<tr>
+<td><strong>Instrucciones y restricciones</strong> (solo salud y entrenamiento)</td>
+<td><code>backend/src/modules/ai/ai.service.js</code> → función <code>instructions</code> (bloque &quot;Alcance&quot;)</td>
+</tr>
+<tr>
+<td>Bucle de herramientas (el modelo pide acciones y la API las ejecuta)</td>
+<td><code>ai.service.js</code> → función <code>chat</code></td>
+</tr>
+<tr>
+<td><strong>Qué puede hacer la IA</strong> (registrar comida, crear rutina, buscar alimentos…)</td>
+<td><code>backend/src/modules/ai/ai.tools.js</code> (<code>TOOLS</code> y <code>HANDLERS</code>)</td>
+</tr>
+<tr>
+<td>Analizar la foto de un plato</td>
+<td><code>ai.service.js</code> → <code>analyzeFoodPhoto</code> (con <code>FOOD_PHOTO_SCHEMA</code>)</td>
+</tr>
+<tr>
+<td>Rutas, límite de uso, tamaños</td>
+<td><code>backend/src/modules/ai/ai.routes.js</code></td>
+</tr>
+<tr>
+<td>Velocidad (razonamiento bajo)</td>
+<td><code>openai.js</code> → <code>createResponse({ fast: true })</code>; <code>env.js</code> → <code>OPENAI_REASONING</code></td>
+</tr>
+<tr>
+<td>Pantalla del chat (Enter envía, micrófono, fotos)</td>
+<td><code>mobile/src/features/assistant/AssistantScreen.jsx</code></td>
+</tr>
+<tr>
+<td>Voz (grabar y escuchar)</td>
+<td><code>features/assistant/voice.js</code> (celular) y <code>voice.web.js</code> (navegador)</td>
+</tr>
+<tr>
+<td>Foto del plato en el diario</td>
+<td><code>features/diary/FoodPhotoCard.jsx</code></td>
+</tr>
+</tbody></table>
+<p><strong>Cómo explicarlo:</strong> &quot;El modelo no toca la base. Cuando el usuario dice <em>anotá 2 huevos</em>, el modelo pide la herramienta <code>registrar_comida</code>; la API la ejecuta con <strong>los mismos permisos y validaciones</strong> que si el usuario lo hiciera a mano, y le devuelve el resultado. La clave de OpenAI vive solo en el servidor.&quot;</p>
+<p><strong>Restricción de temas:</strong> si le piden una página web, código, tareas o chistes, contesta siempre la misma frase y no da información. Está en el bloque <em>Alcance</em> de <code>instructions</code>.</p>
+<h3>Diario de comidas</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Backend</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Día con totales y metas</td>
+<td><code>modules/diary/diary.service.js</code> (<code>getDay</code>)</td>
+<td><code>features/diary/DiaryScreen.jsx</code>, <code>DiaryDay.jsx</code></td>
+</tr>
+<tr>
+<td>Registrar / editar comida</td>
+<td><code>diary.service.js</code> (<code>createEntry</code>, <code>updateEntry</code>, <code>scaleFood</code>)</td>
+<td><code>features/diary/DiaryEntryScreen.jsx</code></td>
+</tr>
+<tr>
+<td>Micronutrientes</td>
+<td><code>modules/nutrition/micros.js</code></td>
+<td><code>components/Micros.jsx</code></td>
+</tr>
+<tr>
+<td>Anillos de calorías y macros</td>
+<td>—</td>
+<td><code>components/Macros.jsx</code>, <code>ProgressRing.jsx</code></td>
+</tr>
+</tbody></table>
+<h3>Alimentos y catálogo</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Archivo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CRUD de alimentos</td>
+<td><code>backend/src/modules/foods/foods.service.js</code>, <code>foods.routes.js</code>, <code>foods.schemas.js</code></td>
+</tr>
+<tr>
+<td>Bases externas</td>
+<td><code>foods/fatsecret.js</code>, <code>openfoodfacts.js</code>, <code>usda.js</code></td>
+</tr>
+<tr>
+<td>Pantallas</td>
+<td><code>mobile/src/features/catalog/</code> (<code>FoodsScreen</code>, <code>FoodList</code>, <code>FoodFormScreen</code>, <code>ExerciseList</code>, <code>ExerciseFormScreen</code>)</td>
+</tr>
+</tbody></table>
+<h3>Entrenamientos</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Backend</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sesiones (crear, editar, completar)</td>
+<td><code>modules/workouts/workouts.service.js</code>, <code>workouts.routes.js</code></td>
+<td><code>features/workouts/WorkoutsScreen.jsx</code>, <code>WorkoutFormScreen.jsx</code>, <code>WorkoutCard.jsx</code></td>
+</tr>
+<tr>
+<td>Catálogo de ejercicios</td>
+<td><code>modules/exercises/exercises.routes.js</code></td>
+<td><code>features/workouts/ExercisePicker.jsx</code> (con buscador)</td>
+</tr>
+<tr>
+<td>Entrenador con cámara (cuenta repeticiones)</td>
+<td>—</td>
+<td><code>features/coach/</code> (<code>pose/engine.js</code> cuenta, <code>pose/rules.js</code> reglas por ejercicio, <code>landmarker.web.js</code> MediaPipe)</td>
+</tr>
+</tbody></table>
+<h3>Datos corporales y metas (cálculo nutricional)</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Archivo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Fórmulas</strong> (Mifflin-St Jeor, Katch-McArdle, TDEE, macros)</td>
+<td><code>backend/src/modules/body/energy.js</code></td>
+</tr>
+<tr>
+<td>Validación (rangos e IMC posible)</td>
+<td><code>body/body.schemas.js</code></td>
+</tr>
+<tr>
+<td>Guardar y pasar las metas al diario</td>
+<td><code>body/body.service.js</code></td>
+</tr>
+<tr>
+<td>Pantalla</td>
+<td><code>mobile/src/features/body/BodyProfileScreen.jsx</code></td>
+</tr>
+<tr>
+<td>Metas manuales</td>
+<td><code>users/users.schemas.js</code> (<code>goals</code>), app: <code>features/users/GoalsForm.jsx</code></td>
+</tr>
+</tbody></table>
+<h3>Entrenador (coach)</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Backend</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Inicio con sus atletas</td>
+<td><code>modules/coaching/coaching.routes.js</code> (<code>dashboard</code>)</td>
+<td><code>features/home/CoachHome.jsx</code></td>
+</tr>
+<tr>
+<td>Ficha del atleta</td>
+<td><code>users/users.routes.js</code></td>
+<td><code>features/users/AthleteDetailScreen.jsx</code></td>
+</tr>
+<tr>
+<td>Planes de alimentación</td>
+<td><code>coaching/nutrition.service.js</code></td>
+<td><code>features/nutrition/NutritionPlansScreen.jsx</code>, <code>NutritionPlanFormScreen.jsx</code></td>
+</tr>
+</tbody></table>
+<h3>Administrador</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Backend</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Estadísticas</td>
+<td><code>modules/admin/admin.routes.js</code></td>
+<td><code>features/home/AdminHome.jsx</code></td>
+</tr>
+<tr>
+<td>Usuarios y roles</td>
+<td><code>modules/users/users.service.js</code>, <code>users.routes.js</code></td>
+<td><code>features/users/UsersScreen.jsx</code>, <code>UserFormScreen.jsx</code></td>
+</tr>
+<tr>
+<td>Reporte mensual de entrenadores (PDF)</td>
+<td><code>modules/reports/reports.service.js</code> (<code>monthlyCoaches</code>), <code>reports.pdf.js</code></td>
+<td><code>features/reports/CoachReportsScreen.jsx</code></td>
+</tr>
+</tbody></table>
+<h3>Progreso e informes</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Backend</th>
+<th>App</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Progreso 7/14/30 días y fuerza</td>
+<td><code>modules/progress/progress.routes.js</code></td>
+<td><code>features/progress/ProgressScreen.jsx</code>, <code>ProgressView.jsx</code></td>
+</tr>
+<tr>
+<td>Informe semanal (cada lunes) + PDF</td>
+<td><code>reports/reports.service.js</code> (<code>weeklySnapshot</code>, <code>generateDueWeeklyReports</code>), <code>reports.pdf.js</code></td>
+<td><code>features/reports/WeeklyReportsScreen.jsx</code>, <code>WeeklyReview.jsx</code></td>
+</tr>
+<tr>
+<td>Fechas en hora argentina</td>
+<td><code>reports/periods.js</code>, <code>utils/dates.js</code></td>
+<td><code>utils/dates.js</code></td>
+</tr>
+</tbody></table>
+<h3>Interfaz común</h3>
+<table>
+<thead>
+<tr>
+<th>Qué</th>
+<th>Archivo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tema claro / oscuro y colores</td>
+<td><code>mobile/src/theme/index.js</code>, <code>components/ThemeSwitch.jsx</code></td>
+</tr>
+<tr>
+<td>Contenedor de pantalla + <strong>botón volver arriba</strong></td>
+<td><code>components/Screen.jsx</code></td>
+</tr>
+<tr>
+<td><strong>Ayuda la primera vez + botón ?</strong></td>
+<td><code>features/help/HelpContext.jsx</code>, <code>features/help/guides.js</code>, capturas en <code>mobile/assets/help/</code></td>
+</tr>
+<tr>
+<td>Botones, tarjetas, campos</td>
+<td><code>components/Button.jsx</code>, <code>Card.jsx</code>, <code>TextField.jsx</code>, <code>Chips.jsx</code></td>
+</tr>
+<tr>
+<td>Cargar datos de una pantalla</td>
+<td><code>hooks/useResource.js</code></td>
+</tr>
+<tr>
+<td>Llamadas a la API</td>
+<td><code>api/client.js</code> (renueva el token solo), <code>api/endpoints.js</code> (todas las rutas)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>3. Tres recorridos para contar en la defensa</h2>
+<p><strong>A. Registrarse y entrar</strong>
+<code>RegisterScreen</code> valida → <code>AuthContext.register</code> → <code>POST /api/auth/register</code> → zod valida de nuevo → bcrypt guarda el hash → <code>emailCodes</code> manda el código por Gmail → <code>VerifyEmailScreen</code> → <code>verifyEmail</code> → <code>tokens.js</code> crea JWT y refresh → la app guarda los tokens y <code>Stack.Protected</code> muestra las pestañas del rol.</p>
+<p><strong>B. Pedirle algo a la IA</strong>
+<code>AssistantScreen</code> envía el historial → <code>POST /api/ai/chat</code> → <code>chat()</code> arma las instrucciones (con las restricciones) → OpenAI decide usar <code>registrar_comida</code> → <code>ai.tools.js</code> valida con el mismo esquema del diario y guarda → devuelve los totales → el modelo responde corto → la app muestra la respuesta y un aviso &quot;1 comida registrada&quot; que lleva al diario.</p>
+<p><strong>C. Calcular las metas</strong>
+<code>BodyProfileScreen</code> → <code>POST /api/body</code> → <code>body.schemas.js</code> valida rangos e IMC → <code>energy.js</code>: BMR (Mifflin o Katch) × actividad = TDEE → ajuste según objetivo con límites de seguridad (máx. 25 % de déficit, nunca bajo el basal) → proteína por kg → grasas 25-35 % → carbohidratos el resto → se guardan como metas del diario.</p>
+<hr>
+<h2>4. Preguntas típicas y dónde está la respuesta</h2>
+<table>
+<thead>
+<tr>
+<th>Pregunta</th>
+<th>Respuesta corta</th>
+<th>Archivo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>¿Cómo guardan las contraseñas?</td>
+<td>Hash con bcrypt, nunca en texto.</td>
+<td><code>auth.service.js</code></td>
+</tr>
+<tr>
+<td>¿Qué pasa si roban un token?</td>
+<td>El access dura 15 min; el refresh rota y si se reutiliza se cierran todas las sesiones.</td>
+<td><code>tokens.js</code></td>
+</tr>
+<tr>
+<td>¿Cómo evitan inyección SQL?</td>
+<td>Consultas parametrizadas (<code>?</code>).</td>
+<td><code>config/db.js</code>, cualquier <code>*.service.js</code></td>
+</tr>
+<tr>
+<td>¿Por qué validan dos veces?</td>
+<td>La app valida para dar respuesta rápida; el servidor porque es lo único confiable.</td>
+<td><code>utils/validation.js</code> (ambos lados)</td>
+</tr>
+<tr>
+<td>¿Un atleta puede ver datos de otro?</td>
+<td>No: <code>resolveTargetUser</code> devuelve 403.</td>
+<td><code>utils/access.js</code></td>
+</tr>
+<tr>
+<td>¿La IA puede hacer cualquier cosa?</td>
+<td>No: solo sus 7 herramientas, con los permisos del usuario, y solo temas de salud.</td>
+<td><code>ai.tools.js</code>, <code>ai.service.js</code></td>
+</tr>
+<tr>
+<td>¿Por qué la IA responde rápido?</td>
+<td>Razonamiento bajo, respuestas cortas y herramientas en paralelo.</td>
+<td><code>openai.js</code>, <code>ai.service.js</code></td>
+</tr>
+<tr>
+<td>¿Cómo calculan las calorías?</td>
+<td>Mifflin-St Jeor (o Katch-McArdle con % de grasa) × actividad, más el objetivo.</td>
+<td><code>energy.js</code></td>
+</tr>
+<tr>
+<td>¿Cómo funciona el login con Google?</td>
+<td>OAuth con PKCE y <code>state</code> firmado; si el email es nuevo, se verifica con código.</td>
+<td><code>oauth.js</code>, <code>socialLogin.js</code></td>
+</tr>
+<tr>
+<td>¿Cómo es una sola app para todo?</td>
+<td>Expo/React Native; los archivos <code>.web.js</code> se usan solo en el navegador.</td>
+<td><code>features/coach/*.web.*</code>, <code>utils/savePdf.web.js</code></td>
+</tr>
+<tr>
+<td>¿Cómo se prueban?</td>
+<td>209 tests del backend (<code>node:test</code> + supertest) y 64 de la app.</td>
+<td><code>backend/test/</code>, <code>mobile/test/</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>5. Comandos útiles</h2>
+<pre><code class="language-bash"># API local con base en memoria (usuarios demo, contraseña Demo1234)
+cd backend &amp;&amp; npm run dev:memory
+
+# App en el navegador
+cd mobile &amp;&amp; npx expo start --web
+
+# Tests
+cd backend &amp;&amp; npm test
+cd mobile &amp;&amp; npm test
+
+# Publicar la web y la API
+cd 5_ProyectoFinal &amp;&amp; npx vercel --prod
+
+# Generar el APK
+cd mobile &amp;&amp; npx eas-cli build -p android --profile preview
+</code></pre>
 <a class="up" href="#top">↑ Volver arriba</a></section>
 <section id="doc-01-backend-base"><h1>1. Backend: arranque, configuración, middlewares y utilidades</h1>
 <blockquote>
@@ -534,6 +1026,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 </ol>
 <h3><code>resendCode({ email, purpose })</code></h3>
 <p>Si la cuenta no existe, está desactivada o (en el caso de <code>verify</code>) ya está verificada, <strong>no hace nada y responde igual</strong>. Si no, manda un código nuevo.</p>
+<p>Con el propósito <code>reset</code> también se oculta el aviso &quot;esperá un minuto&quot; (<code>CODE_RECENTLY_SENT</code>): si no, al pedirlo dos veces seguidas se sabría qué emails tienen cuenta.</p>
 <h3><code>forgotPassword({ email })</code></h3>
 <p>Igual que el anterior, pero con el propósito <code>reset</code>. El error &quot;ya te mandé un código hace menos de un minuto&quot; se oculta, porque revelaría que la cuenta existe.</p>
 <h3><code>resetPassword({ email, code, newPassword })</code></h3>
@@ -583,6 +1076,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 <ol>
 <li>Busca el hash actual.</li>
 <li>Si la cuenta tiene contraseña, exige la actual y la compara. Si no coincide, responde 400.</li>
+<li>Si la nueva es igual a la actual, responde 400 <code>SAME_PASSWORD</code>.</li>
 <li>Guarda el hash nuevo y cierra todas las sesiones.</li>
 </ol>
 <hr>
@@ -835,7 +1329,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 </ul>
 <p>Cada vez que se aplica un límite, se agrega una nota que lo explica.</p>
 </li>
-<li><p><strong>Peso de referencia para la proteína</strong>: con masa magra, masa magra / 0,85; con obesidad (IMC ≥ 30), el peso que correspondería a un IMC de 25; en los demás casos, el peso real.</p>
+<li><p><strong>Peso de referencia para la proteína</strong>: con masa magra, masa magra / 0,85 <strong>sin pasar del peso real</strong> (<code>Math.min</code>); con obesidad (IMC ≥ 30), el peso que correspondería a un IMC de 25; en los demás casos, el peso real.</p>
 </li>
 <li><p><strong>Proteína</strong> = g/kg del objetivo (+0,2 g si es un déficit rápido) × peso de referencia.</p>
 </li>
@@ -845,7 +1339,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 </li>
 <li><p><strong>Avisos</strong>: IMC bajo con déficit, menor de 18 años, IMC ≥ 30 sin % de grasa.</p>
 </li>
-<li><p>Devuelve la edad, el IMC y su categoría, el método usado, el BMR, el TDEE, el cambio semanal en kg, las metas, la proteína por kg, el agua (35 ml/kg) y la fibra (14 g cada 1000 kcal).</p>
+<li><p>Devuelve la edad, el IMC y su categoría, el método usado, el BMR, el TDEE, el cambio semanal en kg (<strong>calculado con las kcal finales</strong>, después de los límites de seguridad: <code>(kcal − TDEE) · 7 / 7700</code>), las metas, la proteína por kg, el agua (35 ml/kg) y la fibra (14 g cada 1000 kcal).</p>
 </li>
 </ol>
 </li>
@@ -853,6 +1347,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 <h3><code>body.schemas.js</code></h3>
 <ul>
 <li><strong><code>BODY_LIMITS</code></strong>: edad 14-101, altura 100-250 cm, peso 30-350 kg, grasa 3-60 %. La app usa exactamente los mismos.</li>
+<li><strong><code>realisticBmi</code></strong>: altura y peso se validan por separado, pero juntos tienen que dar un <strong>IMC entre 12 y 70</strong>. Así no pasa, por ejemplo, 160 cm con 350 kg (daba 13 860 kcal). Si alguno de los dos ya tiene su propio error, no suma otro.</li>
 <li><strong><code>yearsSince(fecha)</code></strong>: la edad a hoy.</li>
 <li><strong><code>birthDateError(value)</code></strong>: devuelve <strong>un solo mensaje</strong>, en este orden:<ol>
 <li>el formato no es <code>AAAA-MM-DD</code>;</li>
@@ -967,10 +1462,16 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 <li>Comprueba que el registro sea suyo.</li>
 <li>Renombra <code>date</code> a <code>entry_date</code> (la columna).</li>
 <li>Si cambiaron los gramos de un alimento del catálogo y no mandó macros, los recalcula.</li>
+<li>Si es una edición a mano, junta lo nuevo con lo guardado y llama a <strong><code>assertMacros</code></strong> (de <code>utils/validation.js</code>): los macros tienen que seguir cerrando con las calorías aunque solo se haya mandado un campo.</li>
 <li>Actualiza solo los campos presentes.</li>
 </ol>
 </li>
 <li><strong><code>deleteEntry</code></strong>: comprueba que el registro sea suyo y lo borra.</li>
+</ul>
+<h3>Metas manuales (<code>users/users.schemas.js</code>)</h3>
+<ul>
+<li><code>goal(label, min, max)</code> arma cada meta con mensajes en español (&quot;Las calorías tienen que ser al menos 800&quot;).</li>
+<li>Si llegan las cuatro metas juntas, un <code>refine</code> controla que <strong>proteínas·4 + carbohidratos·4 + grasas·9</strong> no se aleje más de un 15 % de las kcal.</li>
 </ul>
 <a class="up" href="#top">↑ Volver arriba</a></section>
 <section id="doc-04-backend-alimentos-entrenamientos"><h1>4. Backend: alimentos, fuentes externas, micronutrientes, ejercicios y entrenamientos</h1>
@@ -1049,7 +1550,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 </tr>
 <tr>
 <td><code>GET /barcode/:code</code></td>
-<td>Busca un producto por su código de barras.</td>
+<td>Busca un producto por su código de barras. <strong>La app ya no lo usa</strong> (se quitó el escáner porque no servía para comidas caseras); queda en la API.</td>
 </tr>
 <tr>
 <td><code>GET /:id</code>, <code>POST /</code>, <code>PUT /:id</code>, <code>DELETE /:id</code></td>
@@ -1081,7 +1582,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 <li>Inserta solo las columnas que llegaron.</li>
 </ol>
 </li>
-<li><strong><code>updateFood</code> / <code>deleteFood</code></strong>: buscan el alimento, comprueban el permiso y lo modifican o lo borran.</li>
+<li><strong><code>updateFood</code> / <code>deleteFood</code></strong>: buscan el alimento, comprueban el permiso y lo modifican o lo borran. Si la edición toca porción, kcal o macros, <code>updateFood</code> junta lo nuevo con lo guardado y llama a <code>assertMacros</code>, así una edición parcial no deja un alimento con 50 kcal y 500 g de proteína.</li>
 <li><strong><code>saveExternalFood(user, source, food)</code></strong>:<ol>
 <li>Recorta el nombre y la marca al largo de las columnas.</li>
 <li>Hace un <code>INSERT ... ON DUPLICATE KEY UPDATE</code>: si ese alimento externo ya se había importado (la clave única es fuente + id externo), <strong>actualiza sus valores en vez de duplicarlo</strong>.</li>
@@ -1215,6 +1716,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 </li>
 <li><code>PUT /:id</code>:<ol>
 <li>Solo <strong>el propio atleta</strong> puede cambiar el estado: confirma que la hizo.</li>
+<li>Si el atleta ya la marcó como realizada, <strong>nadie más la puede modificar</strong> (el coach recibe 400).</li>
 <li>No se puede marcar como completada una sesión futura.</li>
 </ol>
 </li>
@@ -1252,6 +1754,10 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 </ol>
 </li>
 <li><strong><code>deleteWorkout(id)</code></strong>: borra la sesión. Sus ejercicios y series se borran en cascada.</li>
+</ul>
+<h3>Búsqueda de ejercicios (<code>exercises/exercises.routes.js</code>)</h3>
+<ul>
+<li><code>search</code> usa <code>LIKE ? ESCAPE &#39;\\&#39;</code> y escapa <code>%</code>, <code>_</code> y <code>\</code> del texto. Sin eso, buscar <code>%</code> devolvía todo el catálogo.</li>
 </ul>
 <a class="up" href="#top">↑ Volver arriba</a></section>
 <section id="doc-05-backend-progreso-informes-ia"><h1>5. Backend: progreso, informes y PDF, asistente con IA y publicación en Vercel</h1>
@@ -1442,7 +1948,8 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 <li>Si OpenAI respondió con un error que se puede reintentar, reintenta una vez. Si no, registra el detalle en el log (sin la clave) y lanza el error traducido.</li>
 </ol>
 </li>
-<li><strong><code>createResponse({ instructions, input, tools, previousResponseId, schema })</code></strong>: una llamada a la Responses API.<ul>
+<li><strong><code>createResponse({ instructions, input, tools, previousResponseId, schema, fast })</code></strong>: una llamada a la Responses API.<ul>
+<li><code>fast: true</code> (lo usa el chat): manda <code>reasoning: { effort: &#39;low&#39; }</code> y <code>text: { verbosity: &#39;low&#39; }</code>. <strong>Esto bajó la respuesta de ~8 s a ~3 s.</strong> El nivel se cambia con <code>OPENAI_REASONING</code> en el <code>.env</code>.</li>
 <li><code>tools</code>: las herramientas que el modelo puede usar.</li>
 <li><code>previous_response_id</code>: encadena con la respuesta anterior, así solo se mandan los resultados nuevos.</li>
 <li><code>schema</code>: obliga al modelo a responder un JSON con una forma exacta.</li>
@@ -1461,7 +1968,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 <li><strong><code>compactFood(f)</code></strong>: un alimento resumido, para no gastar tokens.</li>
 <li><strong><code>HANDLERS</code></strong>:<ul>
 <li><code>buscar_alimentos</code>: busca 6 alimentos en el catálogo. Si encuentra menos de 3, busca en Open Food Facts y guarda lo que aparece.</li>
-<li><code>registrar_comida</code>: por cada ítem, lo valida con <code>createEntrySchema</code> y lo crea en el diario. Si trae <code>foodId</code>, el backend calcula los macros. Devuelve una <code>action</code> para que la app muestre &quot;2 comidas registradas en almuerzo&quot; y actualice la pantalla.</li>
+<li><code>registrar_comida</code>: por cada ítem, lo valida con <code>createEntrySchema</code> y lo crea en el diario. Si trae <code>foodId</code>, el backend calcula los macros. <strong>Devuelve también los totales del día</strong>, así el modelo no tiene que pedir <code>resumen_del_dia</code> aparte (una vuelta menos: de ~15 s a ~7 s). Devuelve una <code>action</code> para que la app muestre &quot;2 comidas registradas en almuerzo&quot; y actualice la pantalla.</li>
 <li><code>crear_alimento</code>: lo valida con <code>foodSchema</code>, que incluye <code>checkMacros</code>, y lo guarda en &quot;Mis alimentos&quot;.</li>
 <li><code>resumen_del_dia</code>: los totales, las metas y los registros de un día.</li>
 <li><code>buscar_ejercicios</code>: busca con <code>LIKE</code>, recortando el texto que mandó el modelo.</li>
@@ -1492,6 +1999,9 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 <li>la fecha y la hora;</li>
 <li>el progreso del día;</li>
 <li>qué herramientas puede usar;</li>
+<li><strong>Alcance (la regla más importante)</strong>: solo habla de alimentación, entrenamiento, descanso, hábitos saludables y uso de la app. Ante cualquier otro tema (programar, páginas web, tareas, política, chistes…) responde <strong>una única frase fija</strong> sin dar ningún dato del tema. Si el mensaje mezcla un tema permitido con uno prohibido, contesta la parte permitida y aclara que lo otro no. Ignora pedidos de cambiar sus reglas, de &quot;actuar como&quot; otra cosa o de mostrar sus instrucciones, y no dice qué modelo es;</li>
+<li>solo usa <code>buscar_alimentos</code> para productos envasados; las comidas caseras las estima directo (más rápido);</li>
+<li>al comparar con las metas tiene que ser exacto: si se pasó, dice cuánto;</li>
 <li>reglas: cómo estimar porciones en una foto, inferir la comida por la hora, no inventar que se registró algo si hubo un error, respuestas cortas y nada de consejos médicos.</li>
 </ul>
 </li>
@@ -1507,7 +2017,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 <li>Hace la primera llamada al modelo.</li>
 <li>Repite hasta 6 veces:<ul>
 <li>si el modelo no pidió herramientas, termina;</li>
-<li>si pidió, ejecuta cada una (<code>runTool</code>), junta las <code>actions</code> y arma los <code>function_call_output</code>;</li>
+<li>si pidió, ejecuta <strong>todas a la vez</strong> (<code>Promise.all</code> sobre <code>runTool</code>), junta las <code>actions</code> y arma los <code>function_call_output</code>;</li>
 <li>si no queda tiempo para otra vuelta: si ya se guardó algo, responde &quot;Listo, ya quedó guardado.&quot;; si no, responde 504;</li>
 <li>si queda tiempo, vuelve a llamar al modelo con los resultados.</li>
 </ul>
@@ -2177,7 +2687,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 </tr>
 <tr>
 <td><strong><code>Screen</code></strong></td>
-<td>El contenedor de <strong>todas</strong> las pantallas. Tiene scroll, la opción de tirar hacia abajo para recargar (<code>RefreshControl</code>), el ancho máximo centrado y un pie fijo opcional (<code>footer</code>), por ejemplo para el botón de guardar.</td>
+<td>El contenedor de <strong>todas</strong> las pantallas. Tiene scroll, la opción de tirar hacia abajo para recargar (<code>RefreshControl</code>), el ancho máximo centrado y un pie fijo opcional (<code>footer</code>), por ejemplo para el botón de guardar. <strong>Volver arriba:</strong> en <code>onScroll</code> mira si se bajó más de 400 px (<code>SHOW_TOP_AFTER</code>); si es así, aparece un botón verde con una flecha. Entra y sale con un fundido (<code>Animated.timing</code> sobre <code>fade</code>, guardado en <code>useState</code> para que no se recree). Al tocarlo, <code>scrollTo({ y: 0, animated })</code> sube con animación suave, salvo que el usuario tenga activado &quot;reducir movimiento&quot;.</td>
 </tr>
 <tr>
 <td><strong><code>StatTile</code></strong></td>
@@ -2431,12 +2941,6 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 <ul>
 <li><code>searchExternal()</code>: Open Food Facts y USDA <strong>buscan solo al tocar &quot;Buscar&quot;</strong>, para respetar los límites de uso de esas bases.</li>
 <li><code>pickExternal(item)</code> / <code>pickFatSecret(item)</code>: <strong>importan</strong> el alimento al catálogo, lo dejan elegido y completan los gramos con la porción del envase o con 100. Mientras importa, la fila muestra una ruedita.</li>
-<li><code>onScanned(code)</code>:<ol>
-<li>Cierra el escáner y busca el código en el servidor (primero en el catálogo, después en Open Food Facts).</li>
-<li>Si lo encuentra, lo deja elegido.</li>
-<li>Si no, pasa a la carga manual y le pide al usuario que la complete con los datos de la etiqueta.</li>
-</ol>
-</li>
 <li><code>changeMode(next)</code>: limpia los resultados y el alimento elegido, y cambia de modo.</li>
 <li><code>NUMERIC</code> + <code>set(key)</code>: cada campo numérico pasa por el filtro <code>decimal()</code>, que <strong>no deja tipear</strong> letras ni un segundo decimal. Al escribir, se borra el error de ese campo.</li>
 <li><code>visible</code>: en FatSecret, con menos de 2 letras, no se muestran resultados viejos.</li>
@@ -2451,7 +2955,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 </li>
 <li><strong>Si es carga manual</strong>:<ul>
 <li>valida los números: los gramos y las kcal son obligatorios; los máximos son 5000 g y 10000 kcal;</li>
-<li>si los números están bien, controla la <strong>coherencia</strong> entre los macros y las calorías (<code>validateMacroConsistency</code>);</li>
+<li>si los números están bien, controla la <strong>coherencia</strong> entre los macros y las calorías (<code>validateMacroConsistency</code>). <strong>Excepción:</strong> al editar un registro que viene del catálogo no se controla, porque si solo cambiaste los gramos el servidor recalcula los macros;</li>
 <li>valida el nombre (de 2 a 150 caracteres);</li>
 <li>si hay errores, los muestra y no envía nada.</li>
 </ul>
@@ -2466,7 +2970,7 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 <ul>
 <li>Un pie fijo con los botones &quot;Eliminar&quot; y &quot;Agregar&quot; (o &quot;Guardar cambios&quot;).</li>
 <li>El selector de comida (<code>Chips</code>).</li>
-<li>Tres accesos rápidos (<code>QuickTile</code>): <strong>Escanear</strong>, <strong>Foto con IA</strong> y <strong>Asistente</strong>.</li>
+<li>Dos accesos rápidos (<code>QuickTile</code>): <strong>Foto con IA</strong> y <strong>Asistente</strong>. (El escáner de código de barras se quitó: solo servía para productos envasados y no para comidas.)</li>
 <li>El selector &quot;Buscar en&quot;: Mi catálogo, Open Food Facts, USDA, FatSecret o Carga manual.</li>
 <li>Según el modo:<ul>
 <li>la tarjeta de la foto (<code>FoodPhotoCard</code>);</li>
@@ -2475,17 +2979,6 @@ Patrón general de la API: <strong>routes</strong> (URL + permisos + validación
 </ul>
 </li>
 <li>Si el catálogo no encuentra nada, ofrece <strong>buscar lo mismo en FatSecret</strong>.</li>
-<li>El escáner de códigos de barras, que es un modal.</li>
-</ul>
-<h3><code>BarcodeScanner.jsx</code> — escáner de código de barras</h3>
-<ul>
-<li><code>BARCODE_TYPES</code>: los formatos que lee: EAN-13, EAN-8, UPC e ITF-14. <code>isBarcode</code>: comprueba que el código tenga de 6 a 14 dígitos.</li>
-<li><code>useCameraPermissions()</code>: el estado del permiso de la cámara.</li>
-<li><code>handled</code> (<code>useRef</code>): evita procesar el mismo código varias veces, porque la cámara lo detecta muchas veces por segundo.</li>
-<li>Al abrirse (<code>onShow</code>), reinicia todo.</li>
-<li><strong>Con permiso</strong>: muestra la cámara trasera (<code>CameraView</code>) y un marco verde. Cuando lee un código válido, llama a <code>finish</code>.</li>
-<li><strong>Sin permiso</strong>: muestra un botón para pedirlo o, si está bloqueado, explica cómo activarlo en los ajustes.</li>
-<li><strong>Carga a mano</strong>: un campo que solo acepta dígitos (hasta 14). Valida el código y lo busca.</li>
 </ul>
 <h3><code>FoodPhotoCard.jsx</code> — foto del plato con IA</h3>
 <ul>
@@ -3203,6 +3696,28 @@ Si el usuario ya tiene datos guardados, los pasa a texto para mostrarlos en los 
 <li>si no, ofrece guardarla como una sesión nueva en Entrenos.</li>
 </ul>
 </li>
+</ul>
+<hr>
+<h2>Ayuda por pantalla (<code>features/help/</code>)</h2>
+<h3><code>guides.js</code> — el contenido</h3>
+<ul>
+<li><code>img</code>: las capturas reales de cada pantalla (<code>mobile/assets/help/*.jpg</code>), cargadas con <code>require</code> para que Expo las incluya en la app.</li>
+<li><code>guide(key, title, intro, steps)</code> y <code>step(icon, title, text)</code>: arman cada guía con su título, una frase y los pasos con su ícono.</li>
+<li><code>GUIDES</code>: 17 guías (inicio de cada rol, diario, registrar comida, entrenos, progreso, perfil, datos corporales, asistente, planes, informes, cámara, catálogo, usuarios y reportes).</li>
+<li><strong><code>guideFor(pathname, role)</code></strong>: elige la guía según la ruta. En <code>/</code> depende del rol (<code>home-athlete</code>, <code>home-coach</code>, <code>home-admin</code>); en las demás usa el primer tramo de la ruta (<code>/diary-entry</code> → <code>diary-entry</code>).</li>
+</ul>
+<h3><code>HelpContext.jsx</code> — cuándo se abre</h3>
+<ul>
+<li><code>store</code>: en la web usa <code>localStorage</code>; en el celular, <code>SecureStore</code>.</li>
+<li><strong><code>HelpProvider</code></strong> (envuelve todas las pantallas en <code>app/(app)/_layout.jsx</code>):<ol>
+<li>Con <code>usePathname</code> sabe en qué pantalla está y busca su guía.</li>
+<li>Arma la clave <code>macroentreno.help.&lt;idUsuario&gt;.&lt;pantalla&gt;</code>.</li>
+<li>Si esa clave no existe (primera visita de <strong>ese</strong> usuario a <strong>esa</strong> pantalla), abre la guía y guarda la clave. Así aparece una sola vez.</li>
+<li><code>cancelled</code> evita abrirla si el usuario ya se fue a otra pantalla mientras se leía el almacenamiento.</li>
+</ol>
+</li>
+<li><strong><code>HelpButton</code></strong>: el ícono <strong>?</strong> del encabezado. Solo aparece si la pantalla tiene guía y la vuelve a abrir.</li>
+<li><strong><code>HelpModal</code></strong>: la ventana con la captura, los pasos y el botón &quot;Entendido&quot;. En la PC (760 px o más) pone la imagen a la izquierda y el texto a la derecha.</li>
 </ul>
 <a class="up" href="#top">↑ Volver arriba</a></section></main></div>
 <button id="top-btn" aria-label="Volver arriba" title="Volver arriba">↑</button>

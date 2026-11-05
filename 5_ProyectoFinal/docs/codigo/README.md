@@ -6,6 +6,7 @@ Guía para exponer el proyecto. Explica qué hace cada archivo y cada función, 
 
 | # | Documento | Qué cubre |
 |---|---|---|
+| ★ | [Guía de estudio: dónde está cada cosa](00-GUIA-DE-ESTUDIO.md) | Mapa función → archivo, recorridos para la defensa y preguntas típicas |
 | 1 | [Backend: base](01-backend-base.md) | `server.js`, `app.js`, configuración, base de datos, migraciones, middlewares y utilidades |
 | 2 | [Backend: autenticación](02-backend-auth.md) | Registro con código, login, contraseña, JWT, login social con PKCE |
 | 3 | [Backend: usuarios, cuerpo y diario](03-backend-usuarios-cuerpo-diario.md) | Usuarios y roles, panel del admin, **cálculo nutricional**, planes del coach y diario |
@@ -13,7 +14,7 @@ Guía para exponer el proyecto. Explica qué hace cada archivo y cada función, 
 | 5 | [Backend: progreso, informes e IA](05-backend-progreso-informes-ia.md) | Progreso, informes semanales y mensuales en PDF, asistente con OpenAI y Vercel |
 | 6 | [App: base y navegación](06-app-base-navegacion-sesion.md) | Cliente HTTP, sesión, login social, rutas protegidas por rol y validaciones |
 | 7 | [App: tema y componentes](07-app-tema-componentes-login.md) | Tema claro/oscuro, componentes reutilizables y pantallas de acceso |
-| 8 | [App: inicio, diario y catálogo](08-app-inicio-diario-catalogo.md) | Inicio de cada rol, registrar comidas (escáner, foto con IA) y catálogo |
+| 8 | [App: inicio, diario y catálogo](08-app-inicio-diario-catalogo.md) | Inicio de cada rol, registrar comidas (catálogo, foto con IA, asistente) y catálogo |
 | 9 | [App: entrenos, usuarios e informes](09-app-entrenos-usuarios-planes-informes.md) | Sesiones, gestión de usuarios, planes, perfil, progreso e informes |
 | 10 | [App: asistente, cuerpo y cámara](10-app-asistente-cuerpo-camara.md) | Chat con voz, datos corporales y entrenador con cámara (MediaPipe) |
 

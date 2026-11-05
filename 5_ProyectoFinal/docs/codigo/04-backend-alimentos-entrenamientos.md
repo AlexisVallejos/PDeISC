@@ -43,7 +43,7 @@
 | `GET /categories` | Lista las categorías del catálogo global. |
 | `GET /fatsecret/search` y `POST /fatsecret/import` | Buscan en FatSecret e importan un alimento. |
 | `GET /external/search` y `POST /external/import` | Buscan en Open Food Facts o USDA e importan un alimento. |
-| `GET /barcode/:code` | Busca un producto por su código de barras. |
+| `GET /barcode/:code` | Busca un producto por su código de barras. **La app ya no lo usa** (se quitó el escáner porque no servía para comidas caseras); queda en la API. |
 | `GET /:id`, `POST /`, `PUT /:id`, `DELETE /:id` | El CRUD de alimentos. |
 
 ## `foods/foods.service.js`
@@ -64,7 +64,7 @@
   1. Un atleta no puede crear alimentos globales.
   2. El dueño queda en `null` si el alimento es global, o es el propio usuario si es personal.
   3. Inserta solo las columnas que llegaron.
-- **`updateFood` / `deleteFood`**: buscan el alimento, comprueban el permiso y lo modifican o lo borran.
+- **`updateFood` / `deleteFood`**: buscan el alimento, comprueban el permiso y lo modifican o lo borran. Si la edición toca porción, kcal o macros, `updateFood` junta lo nuevo con lo guardado y llama a `assertMacros`, así una edición parcial no deja un alimento con 50 kcal y 500 g de proteína.
 - **`saveExternalFood(user, source, food)`**:
   1. Recorta el nombre y la marca al largo de las columnas.
   2. Hace un `INSERT ... ON DUPLICATE KEY UPDATE`: si ese alimento externo ya se había importado (la clave única es fuente + id externo), **actualiza sus valores en vez de duplicarlo**.
@@ -167,7 +167,8 @@
   2. Si un atleta carga una sesión para una fecha futura, se guarda como **planificada**.
 - `PUT /:id`:
   1. Solo **el propio atleta** puede cambiar el estado: confirma que la hizo.
-  2. No se puede marcar como completada una sesión futura.
+  2. Si el atleta ya la marcó como realizada, **nadie más la puede modificar** (el coach recibe 400).
+  3. No se puede marcar como completada una sesión futura.
 - `DELETE /:id`: comprueba el permiso y la borra.
 
 ## `workouts/workouts.service.js`
@@ -193,3 +194,7 @@
   2. Borra los ejercicios: las series se borran solas, en cascada.
   3. Vuelve a insertar todo.
 - **`deleteWorkout(id)`**: borra la sesión. Sus ejercicios y series se borran en cascada.
+
+
+### Búsqueda de ejercicios (`exercises/exercises.routes.js`)
+- `search` usa `LIKE ? ESCAPE '\\'` y escapa `%`, `_` y `\` del texto. Sin eso, buscar `%` devolvía todo el catálogo.
