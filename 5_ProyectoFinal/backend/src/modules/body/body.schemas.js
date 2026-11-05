@@ -52,7 +52,7 @@ const measure = (name, unit, { min, max }) =>
   });
 
 /** Datos que hacen falta para calcular el plan. */
-export const bodyProfileSchema = z.object({
+const bodyProfileBase = z.object({
   sex: z.enum(['male', 'female'], { message: 'Elegí el sexo biológico' }),
   birthDate,
   heightCm: measure('la altura', 'cm', BODY_LIMITS.heightCm),
@@ -63,8 +63,21 @@ export const bodyProfileSchema = z.object({
   pace: z.enum(['slow', 'moderate', 'fast']).nullable().optional(),
 });
 
+/** Altura y peso se validan por separado; juntos tienen que dar un IMC posible. */
+const inRange = (v, { min, max }) => typeof v === 'number' && v >= min && v <= max;
+const realisticBmi = (data, ctx) => {
+  // Si altura o peso ya tienen su propio error, no se suma este.
+  if (!inRange(data.heightCm, BODY_LIMITS.heightCm) || !inRange(data.weightKg, BODY_LIMITS.weightKg)) return;
+  const bmi = data.weightKg / (data.heightCm / 100) ** 2;
+  if (bmi < 12 || bmi > 70) {
+    ctx.addIssue({ code: 'custom', path: ['weightKg'], message: 'Revisá la altura y el peso: juntos no dan una combinación posible' });
+  }
+};
+
+export const bodyProfileSchema = bodyProfileBase.superRefine(realisticBmi);
+
 /** Guardar: además, si se aplican las metas calculadas al diario. */
-export const saveBodySchema = bodyProfileSchema.extend({ applyGoals: z.boolean().default(true) });
+export const saveBodySchema = bodyProfileBase.extend({ applyGoals: z.boolean().default(true) }).superRefine(realisticBmi);
 
 export const weightLogSchema = z.object({
   weightKg: measure('el peso', 'kg', BODY_LIMITS.weightKg),

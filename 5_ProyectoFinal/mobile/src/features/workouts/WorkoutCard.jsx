@@ -34,7 +34,7 @@ export function WorkoutCard({ workout, onPress }) {
           <Text style={styles.exName} numberOfLines={1}>
             {e.name}
           </Text>
-          <Text style={styles.sets}>{e.sets.map((s) => `${s.reps}×${fmt(s.weight)}`).join('  ')}</Text>
+          <Text style={styles.sets}>{e.sets.map((s) => `${s.reps}×${String(Number(s.weight)).replace('.', ',')}`).join('  ')}</Text>
         </View>
       ))}
       {workout.notes ? <Text style={styles.notes}>{workout.notes}</Text> : null}

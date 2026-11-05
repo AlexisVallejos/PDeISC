@@ -205,7 +205,8 @@ export default function DiaryEntryScreen() {
         positive: ['grams'],
         max: { grams: 5000, kcal: 10000, protein: 5000, carbs: 5000, fat: 5000 },
       });
-      if (!Object.keys(found).length) Object.assign(found, validateMacroConsistency(form));
+      // Registro del catálogo: los macros los recalcula el servidor según los gramos nuevos.
+      if (!Object.keys(found).length && !(editingId && entryFoodId)) Object.assign(found, validateMacroConsistency(form));
       const name = validateText(form.name, { min: 2, max: 150, label: 'el nombre' });
       if (name) found.name = name;
       setErrors(found);

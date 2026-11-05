@@ -34,6 +34,8 @@ router.put('/:id', validate({ params: idParam, body: schemas.workoutSchema }), a
   await resolveTargetUser(req, row.user_id, { coachCan: true });
   const body = req.valid.body;
   if (body.status && body.status !== row.status && req.user.id !== row.user_id) throw badRequest('El atleta debe confirmar su entrenamiento realizado');
+  // Lo que el atleta ya confirmó como realizado no lo puede reescribir otra persona.
+  if (row.status === 'completed' && req.user.id !== row.user_id) throw badRequest('El atleta ya marcó esta sesión como realizada: no se puede modificar');
   if ((body.status ?? row.status) === 'completed' && body.date > today()) throw badRequest('No se puede completar una sesión futura');
   res.json({ data: await service.replaceWorkout(row.id, body) });
 });

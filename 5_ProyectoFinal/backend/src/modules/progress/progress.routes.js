@@ -13,8 +13,8 @@ router.use(authenticate);
 
 const progressQuery = z.object({
   to: isoDate.optional(), // la app manda su fecha local para evitar desfasajes de zona horaria
-  days: z.coerce.number().int().min(1).max(90).default(7),
-  exerciseDays: z.coerce.number().int().min(7).max(180).default(30),
+  days: z.coerce.number().int('Los días tienen que ser un número entero').min(1, 'Elegí al menos 1 día').max(90, 'El rango máximo es de 90 días').default(7),
+  exerciseDays: z.coerce.number().int('Los días tienen que ser un número entero').min(7, 'Elegí al menos 7 días').max(180, 'El rango máximo es de 180 días').default(30),
   userId: z.coerce.number().int().positive().optional(),
 });
 

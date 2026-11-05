@@ -74,7 +74,7 @@ export function energyPlan(p, today) {
   if (target > tdee * 1.2) target = tdee * 1.2;
 
   // Con obesidad, la proteína se calcula sobre un peso de referencia (IMC 25) o sobre la masa magra.
-  const refWeight = leanMass != null ? leanMass / 0.85 : bmi >= 30 ? 25 * heightM * heightM : p.weightKg;
+  const refWeight = leanMass != null ? Math.min(p.weightKg, leanMass / 0.85) : bmi >= 30 ? 25 * heightM * heightM : p.weightKg;
   const proteinPerKg = goal.protein + (p.goal === 'cut' && pace === 'fast' ? 0.2 : 0);
   const protein = proteinPerKg * refWeight;
   const fat = Math.min(Math.max(0.25 * target / 9, 0.8 * refWeight), 0.35 * target / 9);
@@ -99,7 +99,8 @@ export function energyPlan(p, today) {
     tdee: round(tdee),
     goal: p.goal,
     pace,
-    weeklyChangeKg: round((weeklyPct / 100) * p.weightKg, 0.05),
+    // Cambio real según las kcal finales (después de los topes de seguridad), no según el ritmo pedido.
+    weeklyChangeKg: goal.pace ? round(((target - tdee) * 7) / KCAL_PER_KG, 0.05) : 0,
     goals: {
       kcal: round(target, 10),
       protein: round(protein),

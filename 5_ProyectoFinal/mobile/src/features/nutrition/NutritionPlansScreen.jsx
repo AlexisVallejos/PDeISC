@@ -20,7 +20,9 @@ export default function NutritionPlansScreen() {
   const userId = param ? Number(param) : undefined;
   const staff = user.role !== 'athlete';
   const [date, setDate] = useState(today());
-  const { data, error, reload, refreshing } = useResource(() => coachingApi.plans(userId), [userId]);
+  // El staff ve los planes de un atleta: sin atleta elegido no se pide nada.
+  const needsAthlete = staff && !userId;
+  const { data, error, reload, refreshing } = useResource(() => (needsAthlete ? Promise.resolve([]) : coachingApi.plans(userId)), [userId, needsAthlete]);
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState(null);
   const weekday = new Date(`${date}T12:00:00Z`).getUTCDay() || 7;
@@ -35,9 +37,12 @@ export default function NutritionPlansScreen() {
       notify('Plan de alimentación', result.alreadyApplied ? 'Este plan ya estaba agregado para esa fecha.' : `${result.added} comidas agregadas a tu diario.`);
     });
   };
+  if (needsAthlete) {
+    return <Screen><EmptyState title="Elegí un atleta" message="Los planes de alimentación se crean y se ven desde la ficha de cada atleta, en Inicio." /></Screen>;
+  }
   return <Screen onRefresh={reload} refreshing={refreshing}>
-    <Text style={styles.muted}>Consultá las indicaciones y descargá tu plan en PDF. Las comidas se registran cuando confirmás que las consumiste.</Text>
-    {staff && <Button title="Crear plan de alimentación" icon="add" onPress={() => router.push({ pathname: '/nutrition-plan-form', params: { userId: String(userId) } })} />}
+    <Text style={styles.muted}>{staff ? 'Creá planes con alimentos, cantidades e indicaciones. El atleta los ve en su app y registra las comidas cuando las consume.' : 'Consultá las indicaciones y descargá tu plan en PDF. Las comidas se registran cuando confirmás que las consumiste.'}</Text>
+    {staff && !error && <Button title="Crear plan de alimentación" icon="add" onPress={() => router.push({ pathname: '/nutrition-plan-form', params: { userId: String(userId) } })} />}
     <DateSwitcher date={date} onChange={setDate} />
     <FormError message={actionError} />
     {error ? <ErrorState error={error} onRetry={reload} /> : !data ? <Loading /> : !data.length ? <EmptyState title="Sin planes de alimentación" message={staff ? 'Creá un plan con alimentos, cantidades e indicaciones.' : 'Tu entrenador podrá asignarte un plan que verás acá.'} /> : data.map((p) => {

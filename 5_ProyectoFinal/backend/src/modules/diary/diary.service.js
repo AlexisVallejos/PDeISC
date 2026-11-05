@@ -3,6 +3,7 @@ import { forbidden, notFound } from '../../utils/httpError.js';
 import { getFood } from '../foods/foods.service.js';
 import { MICRO_COLUMNS, microsOf, noMicros, scaleMicros, summarizeMicros } from '../nutrition/micros.js';
 import { MEALS } from './diary.schemas.js';
+import { assertMacros } from '../../utils/validation.js';
 
 const round = (n) => Math.round(n * 10) / 10;
 
@@ -97,6 +98,10 @@ export async function updateEntry(user, id, data) {
   if (data.grams !== undefined && row.food_id && !macrosGiven) {
     const [food] = await query('SELECT * FROM foods WHERE id = ?', [row.food_id]);
     if (food) Object.assign(next, scaleFood(food, data.grams));
+  } else if (macrosGiven || data.grams !== undefined) {
+    // Edición parcial a mano: lo nuevo junto con lo guardado tiene que seguir cerrando.
+    const pick = (k) => (data[k] !== undefined ? data[k] : row[k]);
+    assertMacros({ grams: pick('grams'), kcal: pick('kcal'), protein: pick('protein'), carbs: pick('carbs'), fat: pick('fat') });
   }
 
   const keys = Object.keys(next).filter((k) => next[k] !== undefined);

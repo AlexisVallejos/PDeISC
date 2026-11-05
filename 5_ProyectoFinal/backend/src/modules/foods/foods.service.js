@@ -1,6 +1,6 @@
 import { query } from '../../config/db.js';
 import { forbidden, notFound } from '../../utils/httpError.js';
-import { paginationMeta } from '../../utils/validation.js';
+import { assertMacros, paginationMeta } from '../../utils/validation.js';
 import { MICRO_COLUMNS, microsOf } from '../nutrition/micros.js';
 import { getFoodDetail } from './fatsecret.js';
 import * as openFoodFacts from './openfoodfacts.js';
@@ -140,6 +140,9 @@ export async function updateFood(user, id, data) {
   const row = await getFood(user, id);
   assertCanEdit(user, row);
   const keys = Object.keys(COLUMNS).filter((k) => data[k] !== undefined);
+  const current = toFood(row);
+  const pick = (k) => (data[k] !== undefined ? data[k] : current[k]);
+  if (['portionGrams', 'kcal', 'protein', 'carbs', 'fat'].some((k) => data[k] !== undefined)) assertMacros({ portionGrams: pick('portionGrams'), kcal: pick('kcal'), protein: pick('protein'), carbs: pick('carbs'), fat: pick('fat') }, 'portionGrams');
   if (keys.length) {
     await query(`UPDATE foods SET ${keys.map((k) => `${COLUMNS[k]} = ?`).join(', ')} WHERE id = ?`, [
       ...keys.map((k) => data[k]),

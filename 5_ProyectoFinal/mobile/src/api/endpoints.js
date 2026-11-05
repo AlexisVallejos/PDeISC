@@ -48,8 +48,6 @@ export const foodsApi = {
   // Bases gratuitas: Open Food Facts (envasados) y USDA (genéricos, en inglés)
   searchExternal: (source, search) => data(api('/foods/external/search', { query: { source, search, limit: 20 }, timeout: 25000 })),
   importExternal: (source, externalId) => data(api('/foods/external/import', { method: 'POST', body: { source, externalId }, timeout: 25000 })),
-  // Escáner: { found, source, food } o { found: false, barcode }
-  barcode: (code) => data(api(`/foods/barcode/${encodeURIComponent(code)}`, { timeout: 25000 })),
 };
 
 /** Asistente con IA (OpenAI, desde el servidor). Las respuestas pueden tardar: timeouts más largos. */

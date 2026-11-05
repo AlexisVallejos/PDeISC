@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 import { env } from '../../config/env.js';
 import { authenticate } from '../../middlewares/auth.js';
 import { validate } from '../../middlewares/validate.js';
-import { badRequest } from '../../utils/httpError.js';
+import { HttpError, badRequest } from '../../utils/httpError.js';
 import { toPublicUser } from '../users/users.mapper.js';
 import * as schemas from './auth.schemas.js';
 import * as service from './auth.service.js';
@@ -99,7 +99,9 @@ router.get('/oauth/:provider/callback', validate({ params: schemas.oauthParams }
   } catch (err) {
     // El usuario está en el navegador: se vuelve a la app con el mensaje de error.
     return res.redirect(
-      oauth.appRedirect(state.appRedirectUri, { error: err.code || 'SOCIAL_LOGIN_FAILED', message: err.message }),
+      oauth.appRedirect(state.appRedirectUri, err instanceof HttpError
+        ? { error: err.code, message: err.message }
+        : { error: 'SOCIAL_LOGIN_FAILED', message: 'No se pudo iniciar sesión, probá de nuevo' }),
     );
   }
 });

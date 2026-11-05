@@ -70,7 +70,12 @@ export async function resendCode({ email, purpose }) {
   const row = await findByEmail(email);
   if (!row || !row.is_active) return;
   if (purpose === 'verify' && row.email_verified_at) return;
-  await sendCode(row, purpose);
+  try {
+    await sendCode(row, purpose);
+  } catch (err) {
+    // En "olvidé mi contraseña" el aviso de espera revelaría que la cuenta existe.
+    if (purpose !== 'reset' || err.code !== 'CODE_RECENTLY_SENT') throw err;
+  }
 }
 
 /** "Olvidé mi contraseña": manda un código si la cuenta existe; la respuesta es siempre la misma. */
@@ -234,6 +239,9 @@ export async function changePassword(userId, { currentPassword, newPassword }) {
   if (row.password_hash) {
     if (!currentPassword || !(await bcrypt.compare(currentPassword, row.password_hash))) {
       throw new HttpError(400, 'INVALID_PASSWORD', 'La contraseña actual no es correcta');
+    }
+    if (await bcrypt.compare(newPassword, row.password_hash)) {
+      throw new HttpError(400, 'SAME_PASSWORD', 'La contraseña nueva tiene que ser distinta de la actual');
     }
   }
   const hash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);

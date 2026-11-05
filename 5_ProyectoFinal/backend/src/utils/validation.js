@@ -88,3 +88,12 @@ export function checkMacros(v, ctx, gramsKey = 'grams') {
     ctx.addIssue({ code: 'custom', path: ['kcal'], message: `No coincide con los macros: deberían ser unas ${Math.round(fromMacros)} kcal` });
   }
 }
+
+/**
+ * Para ediciones parciales: se combinan los valores guardados con los nuevos y se vuelven a controlar
+ * los macros. Si no cierran, lanza el mismo error de validación que el resto de los formularios.
+ */
+export function assertMacros(values, gramsKey = 'grams') {
+  const nums = Object.fromEntries(Object.entries(values).map(([k, v]) => [k, v == null ? v : Number(v)]));
+  z.any().superRefine((v, ctx) => checkMacros(v, ctx, gramsKey)).parse(nums);
+}

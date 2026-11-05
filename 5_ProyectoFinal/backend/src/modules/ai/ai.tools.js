@@ -251,7 +251,7 @@ const HANDLERS = {
     return {
       ok: true,
       workoutId: workout.id,
-      action: { type: 'workout', id: workout.id, label: `Entrenamiento guardado: ${workout.title} (${workout.exercises.length} ejercicios)` },
+      action: { type: 'workout', id: workout.id, label: /ejercicio/i.test(workout.title) ? `Entrenamiento guardado: ${workout.title}` : `Entrenamiento guardado: ${workout.title} (${workout.exercises.length} ejercicios)` },
     };
   },
 };

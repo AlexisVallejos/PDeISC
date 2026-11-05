@@ -47,8 +47,8 @@ router.get('/', validate({ query: listQuery }), async (req, res) => {
     params.push(muscleGroup);
   }
   if (search) {
-    where.push('name LIKE ?');
-    params.push(`%${search}%`);
+    where.push("name LIKE ? ESCAPE '\\\\'");
+    params.push(`%${search.replace(/[\\%_]/g, '\\$&')}%`);
   }
   const rows = await query(
     `SELECT * FROM exercises ${where.length ? `WHERE ${where.join(' AND ')}` : ''} ORDER BY muscle_group, name`,
