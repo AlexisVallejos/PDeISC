@@ -82,8 +82,22 @@ router.get(
 
 router.get('/oauth/:provider/callback', validate({ params: schemas.oauthParams }), async (req, res) => {
   const { provider: name } = req.valid.params;
-  const state = oauth.verifyState(String(req.query.state || ''));
-  if (state.provider !== name) throw badRequest('El proveedor no coincide con el inicio de sesión');
+  let state;
+  try {
+    state = oauth.verifyState(String(req.query.state || ''));
+    if (state.provider !== name) throw badRequest('El proveedor no coincide con el inicio de sesión');
+  } catch {
+    // Sin un "state" válido no se sabe a qué app volver: se muestra una página simple, no JSON crudo
+    // (suele verse dentro de la ventana emergente del login).
+    return res
+      .status(400)
+      .type('html')
+      .send(
+        '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MacroEntreno</title>' +
+          '<body style="font-family:system-ui,sans-serif;text-align:center;padding:48px 24px">' +
+          '<h2>El inicio de sesión venció</h2><p>Cerrá esta ventana y volvé a intentarlo desde MacroEntreno.</p></body>',
+      );
+  }
   try {
     if (req.query.error || !req.query.code) {
       return res.redirect(oauth.appRedirect(state.appRedirectUri, { error: 'cancelled' }));

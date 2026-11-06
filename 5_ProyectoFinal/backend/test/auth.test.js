@@ -350,7 +350,7 @@ describe('login: credenciales incorrectas', () => {
     const res = await login(email, 'Cualquiera1');
     assert.equal(res.status, 401, res.text);
     assert.equal(res.body.error.code, 'SOCIAL_ACCOUNT');
-    assert.match(res.body.error.message, /red social/);
+    assert.match(res.body.error.message, /contraseña/);
   });
 
   test('cuenta social puede definir contraseña sin la actual y luego entrar con email', async () => {
@@ -889,17 +889,114 @@ describe('seguridad: intentos de saltear la validación', () => {
     assert.equal(second, first);
   });
 
-  test('login social no toma cuentas con contraseña, de staff ni con email sin verificar', async () => {
+  test('Google se vincula a la cuenta común confirmada: misma cuenta, entra con contraseña o con Google', async () => {
+    const { email, password, body } = await registerUser();
+    const userId = await authService.linkSocialAccount('google', {
+      providerUserId: `g-comun-${Date.now()}`,
+      email,
+      emailVerified: true,
+      name: 'Otro Nombre',
+      avatarUrl: 'https://foto/x.png',
+    });
+    assert.equal(userId, body.user.id);
+    const res = await login(email, password);
+    assert.equal(res.status, 200, res.text);
+    assert.deepEqual(res.body.data.user.socialProviders, ['google']);
+    assert.equal(res.body.data.user.name, 'Usuario Prueba'); // no pisa el nombre que eligió
+    // Staff confirmado también puede vincular su Google.
+    const [[coach]] = await pool.query("SELECT id FROM users WHERE email = 'coach@macroentreno.com'");
+    const coachId = await authService.linkSocialAccount('google', {
+      providerUserId: `g-coach-${Date.now()}`, email: 'coach@macroentreno.com', emailVerified: true, name: 'C', avatarUrl: null,
+    });
+    assert.equal(coachId, coach.id);
+  });
+
+  test('Google sobre un registro sin confirmar: se queda la cuenta y borra la contraseña ajena', async () => {
+    const email = uniqueEmail('a-medias');
+    await registerOnly({ name: 'Intruso', email, password: 'Clave1234' });
+    const userId = await authService.linkSocialAccount('google', {
+      providerUserId: `g-medias-${Date.now()}`, email, emailVerified: true, name: 'Dueño', avatarUrl: null,
+    });
+    const row = await authService.findUserById(userId);
+    assert.equal(row.password_hash, null);
+    assert.ok(row.email_verified_at);
+    assert.equal((await login(email, 'Clave1234')).body.error.code, 'SOCIAL_ACCOUNT');
+  });
+
+  test('cuenta nueva con email verificado por Google entra sin pedir código', async () => {
+    const email = uniqueEmail('google-nuevo');
+    const userId = await authService.linkSocialAccount('google', {
+      providerUserId: `g-nuevo-${Date.now()}`, email, emailVerified: true, name: 'Nuevo', avatarUrl: null,
+    });
+    assert.deepEqual(await authService.socialLoginStep(userId), {});
+    assert.ok((await authService.sessionForUser(userId)).tokens.accessToken);
+  });
+
+  test('Facebook crea la cuenta con un email ajeno y después el dueño entra con Google: Facebook queda afuera', async () => {
+    const email = uniqueEmail('fb-ajeno');
+    const fb = { providerUserId: `fb-ajeno-${Date.now()}`, email, emailVerified: false, name: 'Atacante', avatarUrl: null };
+    const attackerId = await authService.linkSocialAccount('facebook', fb);
+    const ownerId = await authService.linkSocialAccount('google', {
+      providerUserId: `g-dueno-${Date.now()}`, email, emailVerified: true, name: 'Dueño', avatarUrl: null,
+    });
+    assert.equal(ownerId, attackerId);
+    const [links] = await pool.query('SELECT provider FROM social_accounts WHERE user_id = ?', [ownerId]);
+    assert.deepEqual(links.map((l) => l.provider), ['google']);
+    // El Facebook del atacante ahora crea una cuenta aparte... pero choca con el email, que ya es del dueño.
+    await assert.rejects(authService.linkSocialAccount('facebook', fb), { status: 409 });
+  });
+
+  test('cuenta confirmada sola (servidor sin correo) no cuenta como probada: Google borra esa contraseña', async () => {
+    const email = uniqueEmail('sin-correo');
+    const hash = '$2a$10$abcdefghijklmnopqrstuuJ8m3uYc7mQvYp1Kc1oQ3YxZbqfGq0bG';
+    const [r] = await pool.query(
+      'INSERT INTO users (name, email, password_hash, email_verified_at, email_proven, role) VALUES (?, ?, ?, NOW(), 0, ?)',
+      ['Intruso', email, hash, 'athlete'],
+    );
+    const id = await authService.linkSocialAccount('google', {
+      providerUserId: `g-sin-correo-${Date.now()}`, email, emailVerified: true, name: 'Dueño', avatarUrl: null,
+    });
+    assert.equal(id, r.insertId);
+    const row = await authService.findUserById(id);
+    assert.equal(row.password_hash, null);
+    assert.equal(row.email_proven, 1);
+  });
+
+  test('cuenta desactivada: el login social la rechaza sin modificarla', async () => {
+    const email = uniqueEmail('desactivada-social');
+    await registerOnly({ name: 'Inactiva', email, password: 'Clave1234' });
+    await pool.query('UPDATE users SET is_active = 0 WHERE email = ?', [email]);
+    await assert.rejects(
+      authService.linkSocialAccount('google', { providerUserId: `g-inact-${Date.now()}`, email, emailVerified: true, name: 'X', avatarUrl: null }),
+      { status: 403 },
+    );
+    const [[row]] = await pool.query('SELECT password_hash, email_verified_at FROM users WHERE email = ?', [email]);
+    assert.ok(row.password_hash);
+    assert.equal(row.email_verified_at, null);
+  });
+
+  test('Facebook (email sin verificar) no toma una cuenta existente', async () => {
     const { email } = await registerUser();
-    const link = (data) =>
-      authService.linkSocialAccount(data.provider ?? 'google', { providerUserId: `x-${Math.random()}`, name: 'X', avatarUrl: null, ...data });
-    // Alguien registró el email con su contraseña: la víctima que entra con Google no queda en esa cuenta.
-    await assert.rejects(link({ email, emailVerified: true }), { status: 409 });
-    await assert.rejects(link({ email: 'coach@macroentreno.com', emailVerified: true }), { status: 409 });
-    // Facebook no informa si el email está verificado.
-    const socialEmail = `fb${Date.now()}@test.com`;
-    await link({ provider: 'github', email: socialEmail, emailVerified: true });
-    await assert.rejects(link({ provider: 'facebook', email: socialEmail, emailVerified: false }), { status: 409 });
+    await assert.rejects(
+      authService.linkSocialAccount('facebook', { providerUserId: `fb-${Date.now()}`, email, emailVerified: false, name: 'X', avatarUrl: null }),
+      { status: 409 },
+    );
+  });
+
+  test('olvidé mi contraseña en una cuenta de Google: le crea una y después entra de las dos formas', async () => {
+    const email = uniqueEmail('google-olvido');
+    const providerUserId = `g-olvido-${Date.now()}`;
+    const userId = await authService.linkSocialAccount('google', { providerUserId, email, emailVerified: true, name: 'G', avatarUrl: null });
+    const blocked = await login(email, 'NuevaClave1');
+    assert.equal(blocked.body.error.code, 'SOCIAL_ACCOUNT');
+    assert.match(blocked.body.error.message, /Google/);
+
+    assert.equal((await request(app).post('/api/auth/forgot-password').send({ email })).status, 204);
+    const reset = await request(app).post('/api/auth/reset-password').send({ email, code: codeFor(email), newPassword: 'NuevaClave1' });
+    assert.equal(reset.status, 200, reset.text);
+    assert.equal((await login(email, 'NuevaClave1')).status, 200);
+    // Google sigue entrando a la misma cuenta.
+    assert.equal(await authService.linkSocialAccount('google', { providerUserId, email, emailVerified: true, name: 'G', avatarUrl: null }), userId);
   });
 
   test('el nombre social se recorta sin partir emojis', async () => {

@@ -131,10 +131,15 @@ Recorta el nombre a 100 caracteres sin partir emojis (`Array.from` separa por ca
 
 ### `linkInTransaction(provider, profile)` (dentro de una transacción)
 1. ¿Ya existe el vínculo proveedor + id en `social_accounts`? Entonces devuelve ese usuario.
-2. Si hay email, busca una cuenta con ese email:
-   - Solo la vincula si el proveedor **verificó** el email y la cuenta es un atleta **sin contraseña**.
-   - En cualquier otro caso responde 409: "Iniciá sesión con tu email y contraseña". Esto evita el robo de cuentas: alguien podría crear en Facebook una cuenta con un email ajeno sin verificarlo.
-3. Si no encontró ninguna cuenta, crea un atleta con el nombre, el email (verificado solo si el proveedor lo confirmó) y el avatar.
+2. Si hay email, busca una cuenta con ese email (así cada persona tiene **una sola cuenta** y entra con Google o con su contraseña):
+   - Si el proveedor **no verificó** el email (Facebook), responde 409: "Iniciá sesión con tu email y contraseña". Alguien podría crear en Facebook una cuenta con un email ajeno sin verificarlo.
+   - Si la cuenta está desactivada, responde 403 sin tocar nada.
+   - Si el dueño ya **probó** su email (`email_proven`: lo confirmó con el código del correo, lo verificó un proveedor o lo dio de alta un admin): la vincula. Sigue teniendo su contraseña y ahora también entra con la red social.
+   - Si **nadie probó** el email (registro a medias, cuenta confirmada sola porque el servidor no tiene correo, o creada con Facebook): la vincula, pero **borra su contraseña, sus otras redes vinculadas y sus sesiones**, porque pudo ponerlas alguien que usó el email ajeno. El dueño real crea una contraseña desde Perfil.
+   - `email_verified_at` no alcanza para esto: en producción sin correo se marca solo. Por eso existe `email_proven` (migración `migrateEmailProven`).
+3. Si no encontró ninguna cuenta, crea un atleta con el nombre, el email y el avatar. Si el proveedor verificó el email, la cuenta queda confirmada y probada y entra sin pedir código.
+
+**¿Y si entré con Google y quiero entrar con contraseña?** En el login, "¿Olvidaste tu contraseña?" con el mismo Gmail: llega un código, se elige una contraseña y desde ahí entra de las dos formas. También desde Perfil → "Crear contraseña". Si intenta entrar con contraseña antes de tener una, `login` responde `SOCIAL_ACCOUNT` diciendo con qué red se creó la cuenta.
 4. Registra el vínculo en `social_accounts` y devuelve el id.
 
 ### `sessionForUser(userId)`

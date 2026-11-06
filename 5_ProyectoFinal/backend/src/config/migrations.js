@@ -9,6 +9,20 @@ export async function runMigrations(conn) {
   await migrateEmailVerification(conn);
   await migrateTypicalFoods(conn);
   await migrateBodyProfile(conn);
+  await migrateEmailProven(conn);
+}
+
+/**
+ * email_proven: el dueño del email lo probó (código que llegó al correo o proveedor que lo verificó).
+ * No alcanza con email_verified_at, que también se marca solo cuando el servidor no tiene correo.
+ * Solo una cuenta con el email probado se vincula sin más a un login social con ese email.
+ * Las cuentas que ya existían quedan sin probar: si entran con Google, se les pide crear la contraseña de nuevo.
+ */
+async function migrateEmailProven(conn) {
+  const [column] = await conn.query("SHOW COLUMNS FROM users LIKE 'email_proven'");
+  if (!column.length) {
+    await conn.query('ALTER TABLE users ADD COLUMN email_proven TINYINT(1) NOT NULL DEFAULT 0 AFTER email_verified_at');
+  }
 }
 
 /** Datos corporales para calcular calorías y macros, e historial de peso. */

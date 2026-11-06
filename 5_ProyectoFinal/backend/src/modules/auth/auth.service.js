@@ -9,6 +9,9 @@ import { consumeCode, sendCode } from './emailCodes.js';
 import { consumeRefreshToken, issueTokens, revokeAllForUser, revokeRefreshToken } from './tokens.js';
 
 const BCRYPT_ROUNDS = 10;
+// Errores de envío que no se informan cuando revelarían si la cuenta existe.
+const SILENT_MAIL_ERRORS = ['CODE_RECENTLY_SENT', 'EMAIL_NOT_CONFIGURED'];
+const socialLabels = { google: 'Google', facebook: 'Facebook', github: 'GitHub' };
 // Hash de relleno: si el email no existe igual se compara, así el tiempo de respuesta no revela qué cuentas hay.
 const DUMMY_HASH = bcrypt.hashSync('macroentreno-relleno', BCRYPT_ROUNDS);
 
@@ -61,7 +64,7 @@ export async function verifyEmail({ email, code }) {
   const row = await findByEmail(email);
   if (!row) throw new HttpError(400, 'INVALID_CODE', 'El código es incorrecto o venció. Pedí uno nuevo.');
   await consumeCode(row.id, 'verify', code);
-  await query('UPDATE users SET email_verified_at = COALESCE(email_verified_at, NOW()) WHERE id = ?', [row.id]);
+  await query('UPDATE users SET email_verified_at = COALESCE(email_verified_at, NOW()), email_proven = 1 WHERE id = ?', [row.id]);
   return session(await findUserById(row.id));
 }
 
@@ -73,8 +76,8 @@ export async function resendCode({ email, purpose }) {
   try {
     await sendCode(row, purpose);
   } catch (err) {
-    // En "olvidé mi contraseña" el aviso de espera revelaría que la cuenta existe.
-    if (purpose !== 'reset' || err.code !== 'CODE_RECENTLY_SENT') throw err;
+    // En "olvidé mi contraseña" el aviso de espera (o la falta de correo) revelaría que la cuenta existe.
+    if (purpose !== 'reset' || !SILENT_MAIL_ERRORS.includes(err.code)) throw err;
   }
 }
 
@@ -85,7 +88,7 @@ export async function forgotPassword({ email }) {
   try {
     await sendCode(row, 'reset');
   } catch (err) {
-    if (err.code !== 'CODE_RECENTLY_SENT') throw err; // el aviso de espera revelaría que la cuenta existe
+    if (!SILENT_MAIL_ERRORS.includes(err.code)) throw err; // responder distinto revelaría que la cuenta existe
   }
 }
 
@@ -95,11 +98,13 @@ export async function resetPassword({ email, code, newPassword }) {
   if (!row) throw new HttpError(400, 'INVALID_CODE', 'El código es incorrecto o venció. Pedí uno nuevo.');
   await consumeCode(row.id, 'reset', code);
   const hash = await bcrypt.hash(newPassword, BCRYPT_ROUNDS);
+  // Si el email nunca se había probado, las redes vinculadas pudo agregarlas otra persona: se quitan.
+  if (!row.email_proven) await query('DELETE FROM social_accounts WHERE user_id = ?', [row.id]);
   // Recibir el código también prueba que el email es suyo.
-  await query('UPDATE users SET password_hash = ?, email_verified_at = COALESCE(email_verified_at, NOW()) WHERE id = ?', [
-    hash,
-    row.id,
-  ]);
+  await query(
+    'UPDATE users SET password_hash = ?, email_verified_at = COALESCE(email_verified_at, NOW()), email_proven = 1 WHERE id = ?',
+    [hash, row.id],
+  );
   await revokeAllForUser(row.id);
   return session(await findUserById(row.id));
 }
@@ -114,10 +119,15 @@ export async function login({ email, password }) {
   }
   if (!row.password_hash) {
     await bcrypt.compare(password, DUMMY_HASH);
+    const providers = String(row.social_providers || '')
+      .split(',')
+      .filter(Boolean)
+      .map((p) => socialLabels[p] ?? p);
+    const via = providers.length ? providers.join(' o ') : 'una red social';
     throw new HttpError(
       401,
       'SOCIAL_ACCOUNT',
-      'Esta cuenta se creó con una red social. Iniciá sesión con Google, Facebook o GitHub.',
+      `Esta cuenta se creó con ${via} y todavía no tiene contraseña. Entrá con ${providers.length ? via : 'esa red social'} y creala desde Perfil, o pedí un código para crearla.`,
     );
   }
   if (!(await bcrypt.compare(password, row.password_hash))) throw invalid;
@@ -147,10 +157,11 @@ export async function logout(refreshToken, { allDevices = false, userId } = {}) 
 const socialName = (name) => Array.from(String(name || '').trim()).slice(0, 100).join('').trim() || 'Usuario';
 
 /**
- * Login social: busca la cuenta vinculada; si no existe, crea un atleta nuevo.
- * Solo se vincula sola a una cuenta existente con el mismo email si el proveedor lo verificó
- * y esa cuenta es un atleta sin contraseña (creado por otro login social). Si no, alguien que
- * registrara el email ajeno con su contraseña se quedaría con la cuenta de la víctima.
+ * Login social: busca la cuenta vinculada; si no existe, la vincula a la cuenta con el mismo email
+ * o crea un atleta nuevo. Así una persona tiene UNA sola cuenta y entra con Google o con su contraseña.
+ * Solo se vincula a una cuenta existente si el proveedor verificó el email (Google y GitHub sí,
+ * Facebook no). Si el dueño de esa cuenta nunca probó su email (email_proven), su contraseña y sus
+ * redes vinculadas se borran: pudo ponerlas alguien que registró el email ajeno para quedarse con la cuenta.
  */
 export async function linkSocialAccount(provider, profile, { retried = false } = {}) {
   if (!profile.providerUserId) throw badRequest('El proveedor no devolvió un identificador de usuario');
@@ -163,7 +174,8 @@ export async function linkSocialAccount(provider, profile, { retried = false } =
     userId = await linkInTransaction(provider, profile);
   } catch (err) {
     // Dos callbacks a la vez para el mismo usuario: el segundo choca con la clave única y reintenta.
-    if (err.code === 'ER_DUP_ENTRY' && !retried) return linkSocialAccount(provider, profile, { retried: true });
+    // Con dos altas simultáneas MySQL también puede cortar una por interbloqueo: se reintenta igual.
+    if (['ER_DUP_ENTRY', 'ER_LOCK_DEADLOCK'].includes(err.code) && !retried) return linkSocialAccount(provider, profile, { retried: true });
     throw err;
   }
 
@@ -182,19 +194,35 @@ function linkInTransaction(provider, profile) {
 
     let id;
     if (profile.email) {
-      const [[byEmail]] = await conn.query('SELECT id, role, password_hash FROM users WHERE email = ?', [profile.email]);
+      const [[byEmail]] = await conn.query('SELECT id, email_proven, is_active FROM users WHERE email = ? FOR UPDATE', [profile.email]);
       if (byEmail) {
-        if (!profile.emailVerified || byEmail.password_hash || byEmail.role !== 'athlete') {
-          throw conflict('Ya existe una cuenta con ese email. Iniciá sesión con tu email y contraseña.');
+        // Sin email verificado por el proveedor (Facebook) no hay prueba de que sea la misma persona.
+        if (!profile.emailVerified) {
+          throw conflict('Ya existe una cuenta con ese email. Iniciá sesión como lo hacés siempre (contraseña u otra red social).');
         }
+        // Desactivada: se rechaza antes de tocar nada.
+        if (!byEmail.is_active) throw forbidden('Tu cuenta está desactivada');
         id = byEmail.id;
+        if (byEmail.email_proven) {
+          // El dueño ya había probado el email (código o proveedor) y Google verifica el mismo: es la
+          // misma persona. Se vincula y desde ahora entra con la contraseña o con la red social.
+          if (profile.avatarUrl) await conn.query('UPDATE users SET avatar_url = COALESCE(avatar_url, ?) WHERE id = ?', [profile.avatarUrl, id]);
+        } else {
+          // Nadie probó ser dueño del email (registro a medias, confirmado solo por falta de correo en el
+          // servidor, o creado con Facebook): la contraseña y las redes vinculadas pudo ponerlas otra
+          // persona. Se borran y se cierran sus sesiones; el dueño real crea una contraseña desde Perfil.
+          await conn.query('UPDATE users SET password_hash = NULL, email_verified_at = COALESCE(email_verified_at, NOW()), email_proven = 1 WHERE id = ?', [id]);
+          await conn.query('DELETE FROM social_accounts WHERE user_id = ?', [id]);
+          await conn.query('DELETE FROM oauth_login_codes WHERE user_id = ?', [id]);
+          await conn.query('DELETE FROM refresh_tokens WHERE user_id = ?', [id]);
+        }
       }
     }
     if (!id) {
       const [created] = await conn.query(
-        // La cuenta nueva queda sin confirmar: se activa con el código que llega al email (ver socialLoginStep).
-        'INSERT INTO users (name, email, avatar_url, role) VALUES (?, ?, ?, ?)',
-        [socialName(profile.name), profile.email, profile.avatarUrl, 'athlete'],
+        // Si el proveedor ya verificó el email, la cuenta entra directo; si no, se confirma con el código (ver socialLoginStep).
+        'INSERT INTO users (name, email, avatar_url, role, email_verified_at, email_proven) VALUES (?, ?, ?, ?, IF(?, NOW(), NULL), ?)',
+        [socialName(profile.name), profile.email, profile.avatarUrl, 'athlete', ...Array(2).fill(Boolean(profile.email && profile.emailVerified))],
       );
       id = created.insertId;
     }

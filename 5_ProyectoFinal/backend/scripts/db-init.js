@@ -53,7 +53,7 @@ async function seed(conn) {
      (4, 'Martina Atleta', 'martina@macroentreno.com', ?, 'athlete', NULL, 2100, 130, 240, 70)`,
     [hash, hash, hash, hash],
   );
-  await conn.query('UPDATE users SET email_verified_at = NOW()');
+  await conn.query('UPDATE users SET email_verified_at = NOW(), email_proven = 1');
 
   // Los micronutrientes del seed (por porción) vienen de FatSecret: ver "microsFrom" en foods.json.
   const foods = await readJson('foods.json');

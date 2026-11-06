@@ -179,10 +179,12 @@ describe('login social (flujo OAuth con proveedor simulado)', () => {
     env.social.githubClientId = 'test-client';
     env.social.githubClientSecret = 'test-secret';
     // Simula a GitHub: "existente" trae el email del atleta demo (que tiene contraseña),
-    // "nuevo" a alguien sin email.
+    // "sinverificar" el mismo email sin verificar, "nuevo" a alguien sin email.
     socialProviders.github.fetchProfile = async (code) =>
       code === 'existente'
         ? { providerUserId: 'gh-1', email: 'atleta@macroentreno.com', emailVerified: true, name: 'Alexis GH', avatarUrl: null }
+        : code === 'sinverificar'
+          ? { providerUserId: 'gh-4', email: 'atleta@macroentreno.com', emailVerified: false, name: 'X', avatarUrl: null }
         : code === 'conemail'
           ? { providerUserId: 'gh-3', email: 'social.nuevo@gmail.com', emailVerified: true, name: 'Con Email', avatarUrl: null }
           : { providerUserId: 'gh-2', email: null, emailVerified: false, name: 'Sin Email', avatarUrl: 'https://example.com/a.png' };
@@ -222,11 +224,35 @@ describe('login social (flujo OAuth con proveedor simulado)', () => {
     assert.equal(res.status, 400);
   });
 
-  test('no se vincula sola a una cuenta existente con contraseña: vuelve a la app con error', async () => {
-    const back = await runFlow('existente');
+  test('con el email sin verificar no toma una cuenta existente: vuelve a la app con error', async () => {
+    const back = await runFlow('sinverificar');
     assert.equal(back.protocol, 'macroentreno:');
     assert.equal(back.searchParams.get('error'), 'CONFLICT');
     assert.equal(back.searchParams.get('code'), null);
+  });
+
+  test('con el email verificado se vincula a la cuenta común: misma cuenta y sigue entrando con contraseña', async () => {
+    const back = await runFlow('existente');
+    const res = await request(app).post('/api/auth/oauth/exchange').send({ code: back.searchParams.get('code'), codeVerifier: verifier });
+    assert.equal(res.status, 200, res.text);
+    assert.equal(res.body.data.user.email, 'atleta@macroentreno.com');
+    assert.ok(res.body.data.user.socialProviders.includes('github'));
+    assert.equal(res.body.data.user.hasPassword, true);
+    const login = await request(app).post('/api/auth/login').send({ email: 'atleta@macroentreno.com', password: 'Demo1234' });
+    assert.equal(login.status, 200, login.text);
+    assert.equal(login.body.data.user.id, res.body.data.user.id);
+  });
+
+  test('la ventana emergente de la web vuelve a su origen conservando ?popup=1', async () => {
+    const web = 'http://127.0.0.1';
+    const start = await request(app).get(
+      `/api/auth/oauth/github/start?redirect_uri=${encodeURIComponent(`${web}/oauth-callback?popup=1`)}&code_challenge=${challenge}`,
+    ).set('Host', '127.0.0.1');
+    assert.equal(start.status, 302, start.text);
+    const state = new URL(start.headers.location).searchParams.get('state');
+    const back = new URL((await request(app).get(`/api/auth/oauth/github/callback?code=nuevo&state=${state}`)).headers.location);
+    assert.equal(back.searchParams.get('popup'), '1');
+    assert.ok(back.searchParams.get('code'));
   });
 
   test('canjea el código con PKCE una sola vez', async () => {
@@ -265,21 +291,12 @@ describe('login social (flujo OAuth con proveedor simulado)', () => {
     assert.equal(again.body.data.user.id, res.body.data.user.id);
   });
 
-  test('cuenta social nueva con email: pide el código del email antes de abrir la sesión', async () => {
-    {
-      const back = await runFlow('conemail');
-      assert.equal(back.searchParams.get('code'), null);
-      assert.equal(back.searchParams.get('verify'), 'social.nuevo@gmail.com');
-      const code = sentCodes.get('social.nuevo@gmail.com');
-
-      const ok = await request(app).post('/api/auth/verify-email').send({ email: 'social.nuevo@gmail.com', code });
-      assert.equal(ok.status, 200, ok.text);
-      assert.equal(ok.body.data.user.emailVerified, true);
-
-      // Ya confirmada, el siguiente login social entra directo.
-      const again = await runFlow('conemail');
-      assert.ok(again.searchParams.get('code'));
-    }
+  test('cuenta social nueva con email verificado por el proveedor: entra directo, sin código', async () => {
+    const back = await runFlow('conemail');
+    assert.equal(back.searchParams.get('verify'), null);
+    const res = await request(app).post('/api/auth/oauth/exchange').send({ code: back.searchParams.get('code'), codeVerifier: verifier });
+    assert.equal(res.status, 200, res.text);
+    assert.equal(res.body.data.user.emailVerified, true);
   });
 
   test('cancelación en el proveedor vuelve a la app con error', async () => {

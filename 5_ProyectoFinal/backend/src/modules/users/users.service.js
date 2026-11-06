@@ -102,7 +102,8 @@ export async function createUser({ name, email, password, role, coachId }) {
   const id = await transaction(async (conn) => {
     const [result] = await conn.query(
       // Las cuentas que crea un admin no necesitan confirmar el email.
-      'INSERT INTO users (name, email, password_hash, email_verified_at, role, coach_id) VALUES (?, ?, ?, NOW(), ?, ?)',
+      // El admin da de alta la cuenta con ese email: cuenta como probado.
+      'INSERT INTO users (name, email, password_hash, email_verified_at, email_proven, role, coach_id) VALUES (?, ?, ?, NOW(), 1, ?, ?)',
       [name, email, hash, role, role === 'athlete' ? (coachId ?? null) : null]);
     if (role === 'athlete' && coachId) await conn.query(
       'INSERT INTO coach_assignments (athlete_id, coach_id) VALUES (?, ?)', [result.insertId, coachId]);
