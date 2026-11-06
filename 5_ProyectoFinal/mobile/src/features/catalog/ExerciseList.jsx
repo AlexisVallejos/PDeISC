@@ -26,6 +26,7 @@ export function ExerciseList() {
               <ListItem
                 key={e.id}
                 icon="barbell-outline"
+                image={e.imageUrl || undefined}
                 title={e.name}
                 subtitle={e.equipment || undefined}
                 onPress={() => router.push({ pathname: '/exercise-form', params: { id: String(e.id) } })}

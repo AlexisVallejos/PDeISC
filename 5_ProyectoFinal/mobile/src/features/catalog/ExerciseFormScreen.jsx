@@ -2,7 +2,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { exercisesApi } from '../../api/endpoints';
-import { Button, Chips, ErrorState, FormError, Loading, Screen, TextField } from '../../components';
+import { Button, Chips, ErrorState, FormError, ImageField, Loading, Screen, TextField } from '../../components';
 import { colors, createStyles, font, spacing, useTheme } from '../../theme';
 import { confirm } from '../../utils/confirm';
 import { validateText, validateUrl } from '../../utils/validation';
@@ -104,15 +104,7 @@ export default function ExerciseFormScreen() {
         <TextField value={form.muscleGroup} onChangeText={set('muscleGroup')} error={errors.muscleGroup} placeholder="u otro…" maxLength={40} />
       </View>
       <TextField label="Equipamiento (opcional)" value={form.equipment} onChangeText={set('equipment')} error={errors.equipment} placeholder="Barra, máquina…" maxLength={60} />
-      <TextField
-        label="URL de imagen (opcional)"
-        value={form.imageUrl}
-        onChangeText={set('imageUrl')}
-        error={errors.imageUrl}
-        autoCapitalize="none"
-        keyboardType="url"
-        maxLength={500}
-      />
+      <ImageField label="Imagen (opcional)" value={form.imageUrl || null} onChange={(url) => set('imageUrl')(url || '')} error={errors.imageUrl} />
     </Screen>
   );
 }

@@ -15,6 +15,7 @@ export { StatTile } from './StatTile';
 export { EmptyState, ErrorState, FormError, Loading } from './States';
 export { TextField } from './TextField';
 export { DateField } from './DateField';
+export { ImageField } from './ImageField';
 export { KeyboardAvoider, useScrollToFocusedInput } from './KeyboardAvoider';
 export { ThemeSwitch, ThemeToggleButton } from './ThemeSwitch';
 export { MicroList } from './Micros';

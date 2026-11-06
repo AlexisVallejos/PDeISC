@@ -5,6 +5,7 @@ import { authenticate, authorize } from '../../middlewares/auth.js';
 import { validate } from '../../middlewares/validate.js';
 import { notFound } from '../../utils/httpError.js';
 import { idParam } from '../../utils/validation.js';
+import { deleteUploadedImage } from '../uploads/uploads.routes.js';
 
 const router = Router();
 router.use(authenticate);
@@ -82,7 +83,7 @@ router.put(
   validate({ params: idParam, body: exerciseSchema.partial() }),
   async (req, res) => {
     const { id } = req.valid.params;
-    await getExercise(id);
+    const before = await getExercise(id);
     const keys = Object.keys(COLUMNS).filter((k) => req.valid.body[k] !== undefined);
     if (keys.length) {
       await query(`UPDATE exercises SET ${keys.map((k) => `${COLUMNS[k]} = ?`).join(', ')} WHERE id = ?`, [
@@ -90,14 +91,18 @@ router.put(
         id,
       ]);
     }
+    // Se cambió o quitó la foto: la subida anterior ya no se usa.
+    if (req.valid.body.imageUrl !== undefined && req.valid.body.imageUrl !== before.imageUrl) await deleteUploadedImage(before.imageUrl);
     res.json({ data: await getExercise(id) });
   },
 );
 
 // Borrar afecta el catálogo de todos los usuarios: solo un administrador.
 router.delete('/:id', authorize('admin'), validate({ params: idParam }), async (req, res) => {
+  const before = await getExercise(req.valid.params.id);
   const result = await query('DELETE FROM exercises WHERE id = ?', [req.valid.params.id]);
   if (!result.affectedRows) throw notFound('Ejercicio no encontrado');
+  await deleteUploadedImage(before.imageUrl);
   res.status(204).end();
 });
 

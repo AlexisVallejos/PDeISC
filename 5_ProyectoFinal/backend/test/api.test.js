@@ -535,6 +535,45 @@ describe('ejercicios y entrenamientos', () => {
   });
 });
 
+describe('subida de imágenes', () => {
+  // JPEG mínimo: alcanza con la firma FF D8 FF para que el servidor lo acepte como JPEG.
+  const jpeg = Buffer.concat([Buffer.from([0xff, 0xd8, 0xff, 0xe0]), Buffer.alloc(64, 1)]);
+  const dataUrl = `data:image/jpeg;base64,${jpeg.toString('base64')}`;
+  const upload = (role, body) => request(app).post('/api/uploads/images').set(auth(role)).send(body);
+
+  test('coach sube una foto, se puede ver sin sesión y queda en el ejercicio', async () => {
+    const res = await upload('coach', { dataUrl });
+    assert.equal(res.status, 201, res.text);
+    const path = new URL(res.body.data.url).pathname;
+    assert.match(path, /^\/api\/uploads\/images\/[a-f0-9]{32}$/);
+
+    const img = await request(app).get(path);
+    assert.equal(img.status, 200);
+    assert.equal(img.headers['content-type'], 'image/jpeg');
+    assert.ok(Buffer.from(img.body).equals(jpeg));
+
+    const created = await request(app).post('/api/exercises').set(auth('coach'))
+      .send({ name: `Con foto ${Date.now()}`, muscleGroup: 'Pecho', imageUrl: res.body.data.url });
+    assert.equal(created.status, 201, created.text);
+    assert.equal(created.body.data.imageUrl, res.body.data.url);
+
+    // Al quitar la foto, la imagen subida se borra.
+    const cleared = await request(app).put(`/api/exercises/${created.body.data.id}`).set(auth('coach')).send({ imageUrl: null });
+    assert.equal(cleared.status, 200, cleared.text);
+    assert.equal((await request(app).get(path)).status, 404);
+  });
+
+  test('rechaza lo que no es una imagen, tipos no permitidos y atletas', async () => {
+    assert.equal((await upload('coach', { dataUrl: `data:image/jpeg;base64,${Buffer.from('hola').toString('base64')}` })).status, 400);
+    assert.equal((await upload('coach', { dataUrl: `data:image/svg+xml;base64,${Buffer.from('<svg/>').toString('base64')}` })).status, 400);
+    assert.equal((await upload('coach', { dataUrl: 'https://example.com/x.jpg' })).status, 400);
+    assert.equal((await upload('athlete', { dataUrl })).status, 403);
+    assert.equal((await request(app).post('/api/uploads/images').send({ dataUrl })).status, 401);
+    assert.equal((await request(app).get('/api/uploads/images/../../x')).status, 404);
+    assert.equal((await request(app).get(`/api/uploads/images/${'0'.repeat(32)}`)).status, 404);
+  });
+});
+
 describe('progreso', () => {
   test('resumen semanal y comparación de ejercicios', async () => {
     const d = new Date();

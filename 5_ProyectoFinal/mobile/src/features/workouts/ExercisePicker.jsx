@@ -69,6 +69,7 @@ export function ExercisePicker({ visible, onClose, onPick }) {
                 <ListItem
                   key={e.id}
                   icon="barbell-outline"
+                  image={e.imageUrl || undefined}
                   title={e.name}
                   subtitle={e.muscleGroup}
                   onPress={() => onPick({ exerciseId: e.id, name: e.name })}

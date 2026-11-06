@@ -67,6 +67,11 @@ export const diaryApi = {
   remove: (id) => api(`/diary/${id}`, { method: 'DELETE' }),
 };
 
+/** Imágenes subidas (foto de un ejercicio): devuelve { id, url }. */
+export const uploadsApi = {
+  image: (dataUrl) => data(api('/uploads/images', { method: 'POST', body: { dataUrl }, timeout: 60000 })),
+};
+
 export const exercisesApi = {
   list: (query) => data(api('/exercises', { query })),
   muscleGroups: () => data(api('/exercises/muscle-groups')),

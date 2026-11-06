@@ -11,7 +11,22 @@ export async function runMigrations(conn) {
   await migrateTypicalFoods(conn);
   await migrateBodyProfile(conn);
   await migrateEmailProven(conn);
+  await migrateUploadedImages(conn);
   await once(conn, 'demo-staff-2026-11', ensureDemoStaff);
+}
+
+/** Imágenes subidas desde la app (en Vercel no hay disco que dure): ver modules/uploads. */
+async function migrateUploadedImages(conn) {
+  await conn.query(`CREATE TABLE IF NOT EXISTS uploaded_images (
+    id         CHAR(32) NOT NULL,
+    owner_id   INT UNSIGNED NULL,
+    mime       VARCHAR(20) NOT NULL,
+    data       MEDIUMBLOB NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_uploaded_images_owner (owner_id),
+    CONSTRAINT fk_uploaded_images_owner FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE SET NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
 }
 
 /** Pasos que corren UNA sola vez por base (quedan anotados en app_migrations). */

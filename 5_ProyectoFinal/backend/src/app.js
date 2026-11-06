@@ -10,6 +10,7 @@ import { query } from './config/db.js';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import adminRoutes from './modules/admin/admin.routes.js';
 import aiRoutes from './modules/ai/ai.routes.js';
+import uploadsRoutes from './modules/uploads/uploads.routes.js';
 import authRoutes from './modules/auth/auth.routes.js';
 import diaryRoutes from './modules/diary/diary.routes.js';
 import exercisesRoutes from './modules/exercises/exercises.routes.js';
@@ -27,6 +28,8 @@ export function createApp() {
   app.use(cors({ origin: env.corsOrigin === '*' ? true : env.corsOrigin.split(',').map((o) => o.trim()) }));
   // El asistente recibe fotos y audio: se monta antes del parser general, que limita a 100 kB.
   app.use('/api/ai', aiRoutes);
+  // Las imágenes subidas también traen su propio parser (hasta 3 MB en base64).
+  app.use('/api/uploads', uploadsRoutes);
   app.use(express.json({ limit: '100kb' }));
   if (env.nodeEnv !== 'test') app.use(morgan('dev'));
 
