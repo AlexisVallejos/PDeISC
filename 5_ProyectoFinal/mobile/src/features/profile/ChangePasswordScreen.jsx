@@ -31,7 +31,7 @@ export default function ChangePasswordScreen() {
     setSaving(true);
     try {
       await changePassword(form.current || undefined, form.next);
-      notify('Listo', 'Tu contraseña se actualizó. Se cerró la sesión en tus otros dispositivos.');
+      notify('Contraseña actualizada', 'Se cerró la sesión en tus otros dispositivos.', { icon: 'key-outline' });
       router.back();
     } catch (err) {
       setFormError(err.message);

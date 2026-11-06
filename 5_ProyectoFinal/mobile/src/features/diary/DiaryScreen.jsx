@@ -18,7 +18,7 @@ export default function DiaryScreen() {
       await diaryApi.remove(entry.id);
       reload();
     } catch (err) {
-      notify('No se pudo eliminar', err.message);
+      notify('No se pudo eliminar', err.message, { error: true });
     }
   };
 

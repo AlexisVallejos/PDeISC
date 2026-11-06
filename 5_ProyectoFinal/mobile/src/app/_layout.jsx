@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Loading } from '../components';
+import { DialogHost } from '../components/DialogHost';
 import { AuthProvider, useAuth } from '../context/AuthContext';
 import { colors, ThemeProvider, useTheme } from '../theme';
 
@@ -52,6 +53,7 @@ export default function RootLayout() {
         <AuthProvider>
           <ThemedStatusBar />
           <RootNavigator />
+          <DialogHost />
         </AuthProvider>
       </ThemeProvider>
     </SafeAreaProvider>

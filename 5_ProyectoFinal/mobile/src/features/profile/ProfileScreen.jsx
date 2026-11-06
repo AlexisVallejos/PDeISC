@@ -35,7 +35,7 @@ export default function ProfileScreen() {
   };
 
   const handleLogout = async () => {
-    if (await confirm('Cerrar sesión', '¿Querés salir de tu cuenta?', { confirmText: 'Salir' })) logout();
+    if (await confirm('Cerrar sesión', '¿Querés salir de tu cuenta?', { confirmText: 'Salir', icon: 'log-out-outline' })) logout();
   };
 
   return (
