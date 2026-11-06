@@ -1,10 +1,10 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Stack, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Image, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { aiApi } from '../../api/endpoints';
-import { Button } from '../../components';
+import { Button, KeyboardAvoider } from '../../components';
 import { useAuth } from '../../context/AuthContext';
 import { useResource } from '../../hooks/useResource';
 import { colors, continuous, createStyles, font, MAX_CONTENT_WIDTH, radius, spacing, useTheme } from '../../theme';
@@ -182,7 +182,7 @@ export default function AssistantScreen() {
   const suggestions = SUGGESTIONS[user?.role] ?? SUGGESTIONS.athlete;
 
   return (
-    <KeyboardAvoidingView style={styles.root} behavior={Platform.OS === 'ios' ? 'padding' : undefined} keyboardVerticalOffset={insets.top + 44}>
+    <KeyboardAvoider style={styles.root}>
       <Stack.Screen
         options={{
           title: 'Asistente',
@@ -338,7 +338,7 @@ export default function AssistantScreen() {
           ) : null}
         </View>
       )}
-    </KeyboardAvoidingView>
+    </KeyboardAvoider>
   );
 }
 

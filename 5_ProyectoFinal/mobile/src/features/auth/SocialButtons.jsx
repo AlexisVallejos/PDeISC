@@ -1,8 +1,8 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
-import { fetchProviders } from '../../api/socialLogin';
+import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
+import { cancelSocialLogin, fetchProviders } from '../../api/socialLogin';
 import { useAuth } from '../../context/AuthContext';
 import { colors, continuous, createStyles, font, radius, spacing, useTheme } from '../../theme';
 
@@ -12,8 +12,12 @@ const PROVIDERS = [
   { id: 'github', label: 'GitHub', icon: 'logo-github', color: null },
 ];
 
-/** Botones de inicio de sesión con redes sociales. Se desactivan los que el servidor no tiene configurados. */
-export function SocialButtons({ onError, disabled }) {
+/**
+ * Botones de inicio de sesión con redes sociales. Se desactivan los que el servidor no tiene configurados.
+ * El login se abre en una ventana emergente encima de la app (ver api/socialLogin.js).
+ * `remember`: lo marcado en "Recordarme" (en el registro no hay casilla: se usa la preferencia guardada).
+ */
+export function SocialButtons({ onError, disabled, remember }) {
   useTheme();
   const { socialLogin } = useAuth();
   const router = useRouter();
@@ -34,7 +38,8 @@ export function SocialButtons({ onError, disabled }) {
     onError(null);
     setBusy(provider.id);
     try {
-      await socialLogin(provider.id);
+      // Sin awaits antes: la ventana emergente tiene que abrirse en el mismo toque (si no, el navegador la bloquea).
+      await socialLogin(provider.id, { remember });
     } catch (err) {
       // Cuenta nueva: se activa con el código que llegó al email.
       if (err.code === 'EMAIL_NOT_VERIFIED') router.push({ pathname: '/verify-email', params: { email: err.details[0].message } });
@@ -69,6 +74,14 @@ export function SocialButtons({ onError, disabled }) {
           );
         })}
       </View>
+      {busy && Platform.OS === 'web' ? (
+        <View style={styles.waiting}>
+          <Text style={styles.or}>Completá el inicio de sesión en la ventana emergente.</Text>
+          <Pressable onPress={cancelSocialLogin} accessibilityRole="button" hitSlop={8}>
+            <Text style={styles.cancel}>Cancelar</Text>
+          </Pressable>
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -92,4 +105,6 @@ const styles = createStyles(() => StyleSheet.create({
   },
   pressed: { opacity: 0.7, transform: [{ scale: 0.97 }] },
   label: { color: colors.text, fontWeight: '600', fontSize: font.sm },
+  waiting: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: spacing.sm },
+  cancel: { color: colors.primary, fontWeight: '600', fontSize: font.sm },
 }));

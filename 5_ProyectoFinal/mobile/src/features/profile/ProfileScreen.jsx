@@ -9,6 +9,8 @@ import { confirm } from '../../utils/confirm';
 import { validateName } from '../../utils/validation';
 import { GoalsForm } from '../users/GoalsForm';
 
+const SOCIAL_LABELS = { google: 'Google', facebook: 'Facebook', github: 'GitHub' };
+
 export default function ProfileScreen() {
   useTheme();
   const router = useRouter();
@@ -90,6 +92,13 @@ export default function ProfileScreen() {
       <Card>
         {user.role === 'athlete' ? (
           <ListItem icon="nutrition-outline" title="Mis alimentos" subtitle="Creá y editá tus alimentos personalizados" onPress={() => router.push('/foods')} />
+        ) : null}
+        {user.socialProviders?.length ? (
+          <ListItem
+            icon="link-outline"
+            title="Cuentas vinculadas"
+            subtitle={`Entrás con ${user.socialProviders.map((p) => SOCIAL_LABELS[p] ?? p).join(', ')}${user.hasPassword ? ' o con tu contraseña' : ''}`}
+          />
         ) : null}
         <ListItem
           icon="key-outline"

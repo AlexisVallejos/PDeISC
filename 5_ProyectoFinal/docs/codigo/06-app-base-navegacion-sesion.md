@@ -93,18 +93,19 @@ Una petición sin token. Se usa para el login y el registro.
    - en Expo Go es `exp://…`.
 3. Si la API es relativa (`/api`, en la web), le agrega el origen para formar la URL completa.
 4. Arma `startUrl` con la `redirect_uri` y el `code_challenge`.
-5. **En la web**:
-   - guarda el verifier en `sessionStorage`;
-   - lleva **la misma pestaña** al proveedor (`location.assign`), así no se abren ventanas emergentes;
-   - devuelve una promesa que nunca termina, porque la página se va.
+5. **En la web** (`webPopupLogin`):
+   - abre una **ventana emergente** chica y centrada en el mismo toque (antes de cualquier `await`, si no el navegador la bloquea) y después la lleva al login del proveedor;
+   - cada intento tiene un id: la ventana vuelve a `/oauth-callback?popup=<id>`, que le pasa el resultado a la pestaña de la app por `BroadcastChannel` (o `localStorage`) con `relayPopupResult` y se cierra sola. Solo lo acepta el intento con ese id, así otra pestaña de la app no gasta el código;
+   - no usa `window.opener` ni `popup.closed`: Google corta el vínculo entre ventanas por seguridad (Cross-Origin-Opener-Policy) y la ventana "parece" cerrada aunque siga abierta. Por eso espera hasta el resultado, hasta que vence (10 min) o hasta que el usuario toca **Cancelar** (`cancelSocialLogin`);
+   - si el navegador **bloquea** la ventana emergente, hace el login en la misma pestaña como antes (verifier en `sessionStorage`).
 6. **En el celular**:
-   - abre un navegador seguro dentro de la app (`openAuthSessionAsync`) y espera la vuelta;
+   - abre el login en una ventana del sistema **encima de la app** (`openAuthSessionAsync`): en Android una Custom Tab dentro de la propia app (`createTask: false`, sin otra entrada en recientes) y en iOS la hoja de inicio de sesión del sistema. Google no permite iniciar sesión dentro de un WebView propio;
    - si el usuario cancela, lanza un error;
    - si vuelve bien, lee los parámetros y llama a `exchange`.
 
 ### `completeWebSocialLogin(queryParams)`
 
-Cuando la pestaña vuelve a `/oauth-callback`, recupera el verifier de `sessionStorage` y lo borra. Si no lo encuentra, el intento venció. Si lo encuentra, hace el canje.
+Solo cuando la ventana emergente estaba bloqueada: la pestaña vuelve a `/oauth-callback`, recupera el verifier de `sessionStorage` y lo borra. Si no lo encuentra, el intento venció. Si lo encuentra, hace el canje.
 
 ### `SOCIAL_ERRORS` y `exchange(queryParams, verifier)`
 
@@ -162,9 +163,14 @@ Hook para usar el contexto. Lanza un error si se usa fuera del `AuthProvider`.
 
 - En el celular usa `expo-secure-store`, que guarda los datos **cifrados** en el Keychain (iOS) o el Keystore (Android). En la web usa `localStorage`.
 - `read(key)`: lee la clave y convierte el valor desde JSON. Si falla, devuelve `null`.
-- `loadSession` / `saveSession`: leen y guardan los tokens.
-- `loadCachedUser` / `saveCachedUser`: leen y guardan la copia del usuario para el modo sin conexión.
-- `clearSession()`: borra las dos cosas.
+- `loadSession` / `saveSession`: leen y guardan los tokens. `saveSession(tokens, { remember })`:
+  - con **"Recordarme"** marcado los guarda en el almacenamiento persistente (la sesión sobrevive a cerrar la app);
+  - desmarcado no los guarda en el disco: en el celular quedan solo en memoria y en la web en `sessionStorage` (dura lo que la pestaña).
+- `loadCachedUser` / `saveCachedUser`: leen y guardan la copia del usuario para el modo sin conexión (solo si se recuerda la sesión).
+- `loadLoginPrefs` / `saveLoginPrefs`: si "Recordarme" está marcado y el último email usado, para completarlo en el login.
+- `clearSession()`: borra tokens y usuario.
+
+`api/client.js` recuerda la elección (`remember`) para que, al renovar los tokens, se guarden en el mismo lugar.
 
 ---
 

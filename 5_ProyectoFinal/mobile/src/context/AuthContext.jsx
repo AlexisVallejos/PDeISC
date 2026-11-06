@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer } from 'react';
-import { getRefreshToken, restoreSessionTokens, setOnSessionExpired, setSessionTokens } from '../api/client';
+import { getRefreshToken, isSessionRemembered, restoreSessionTokens, setOnSessionExpired, setSessionTokens } from '../api/client';
 import { authApi, usersApi } from '../api/endpoints';
 import { completeWebSocialLogin, socialLogin as runSocialLogin } from '../api/socialLogin';
-import { loadCachedUser, saveCachedUser } from '../storage/tokenStorage';
+import { loadCachedUser, loadLoginPrefs, saveCachedUser } from '../storage/tokenStorage';
 
 /**
  * Estado global de autenticación (Context API + useReducer).
@@ -38,27 +38,35 @@ export function AuthProvider({ children }) {
       if (!tokens?.refreshToken) return dispatch({ type: 'SIGN_OUT' });
       try {
         const user = await authApi.me(); // si el access token venció, el cliente lo renueva solo
-        await saveCachedUser(user);
+        await saveCachedUser(user, { remember: isSessionRemembered() });
         dispatch({ type: 'SIGN_IN', user });
       } catch (err) {
         // Sin conexión: se entra con el último usuario conocido.
         const cached = await loadCachedUser();
-        if (cached && ['NETWORK_ERROR', 'TIMEOUT'].includes(err.code)) dispatch({ type: 'SIGN_IN', user: cached });
-        else {
-          await setSessionTokens(null);
-          dispatch({ type: 'SIGN_OUT' });
-        }
+        if (cached && ['NETWORK_ERROR', 'TIMEOUT'].includes(err.code)) return dispatch({ type: 'SIGN_IN', user: cached });
+        // Solo se borran los tokens si el servidor dijo que no sirven; ante un corte o un 500 se conservan.
+        if (err.status === 401 || err.code === 'SESSION_EXPIRED') await setSessionTokens(null);
+        dispatch({ type: 'SIGN_OUT' });
       }
     })();
   }, []);
 
-  const startSession = useCallback(async ({ user, tokens }) => {
-    await setSessionTokens(tokens);
-    await saveCachedUser(user);
+  /**
+   * Abre la sesión. `remember` ("Recordarme"): si es false, la sesión no se guarda en el disco y al
+   * cerrar la app (o la pestaña, en la web) hay que volver a entrar. Si no se indica, se usa la
+   * preferencia guardada en el login.
+   */
+  const startSession = useCallback(async ({ user, tokens }, { remember } = {}) => {
+    const keep = remember ?? (await loadLoginPrefs()).remember;
+    await setSessionTokens(tokens, { remember: keep });
+    await saveCachedUser(user, { remember: keep });
     dispatch({ type: 'SIGN_IN', user });
   }, []);
 
-  const login = useCallback(async (email, password) => startSession(await authApi.login({ email, password })), [startSession]);
+  const login = useCallback(
+    async (email, password, { remember } = {}) => startSession(await authApi.login({ email, password }), { remember }),
+    [startSession],
+  );
 
   // El registro no abre sesión: llega un código al email y la sesión empieza en verifyEmail.
   // Si el servidor no tiene correo configurado, devuelve la sesión directamente.
@@ -81,7 +89,10 @@ export function AuthProvider({ children }) {
     [startSession],
   );
 
-  const socialLogin = useCallback(async (provider) => startSession(await runSocialLogin(provider)), [startSession]);
+  const socialLogin = useCallback(
+    async (provider, { remember } = {}) => startSession(await runSocialLogin(provider), { remember }),
+    [startSession],
+  );
 
   const finishWebSocialLogin = useCallback(
     async (queryParams) => startSession(await completeWebSocialLogin(queryParams)),
@@ -96,7 +107,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   const setUser = useCallback(async (user) => {
-    await saveCachedUser(user);
+    await saveCachedUser(user, { remember: isSessionRemembered() });
     dispatch({ type: 'UPDATE_USER', user });
   }, []);
 

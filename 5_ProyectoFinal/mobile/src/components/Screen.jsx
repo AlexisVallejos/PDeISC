@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { AccessibilityInfo, Animated, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { colors, createStyles, MAX_CONTENT_WIDTH, spacing, useTheme } from '../theme';
+import { KeyboardAvoider, useScrollToFocusedInput } from './KeyboardAvoider';
 
 /** A partir de cuánto scroll aparece el botón para volver arriba. */
 const SHOW_TOP_AFTER = 400;
@@ -10,12 +11,14 @@ const SHOW_TOP_AFTER = 400;
  * Contenedor base de cada pantalla: scroll, pull-to-refresh y ancho máximo
  * centrado para que en tablets u horizontal el contenido no se estire.
  * Al bajar bastante aparece un botón que vuelve arriba con una animación suave.
+ * Con el teclado abierto la pantalla se achica y el campo que se está escribiendo queda a la vista.
  */
 export function Screen({ children, onRefresh, refreshing = false, scroll = true, style, footer }) {
   useTheme();
   const scrollRef = useRef(null);
   const [showTop, setShowTop] = useState(false);
   const [fade] = useState(() => new Animated.Value(0));
+  const trackScroll = useScrollToFocusedInput(scrollRef);
 
   // El botón entra y sale con un fundido y un leve desplazamiento hacia arriba.
   useEffect(() => {
@@ -29,7 +32,7 @@ export function Screen({ children, onRefresh, refreshing = false, scroll = true,
 
   const content = <View style={[styles.inner, style]}>{children}</View>;
   return (
-    <View style={styles.root}>
+    <KeyboardAvoider style={styles.root}>
       {scroll ? (
         <View style={styles.body}>
           <ScrollView
@@ -39,6 +42,7 @@ export function Screen({ children, onRefresh, refreshing = false, scroll = true,
             contentInsetAdjustmentBehavior="automatic"
             scrollEventThrottle={32}
             onScroll={(e) => {
+              trackScroll(e);
               const down = e.nativeEvent.contentOffset.y > SHOW_TOP_AFTER;
               if (down !== showTop) setShowTop(down);
             }}
@@ -68,7 +72,7 @@ export function Screen({ children, onRefresh, refreshing = false, scroll = true,
         content
       )}
       {footer ? <View style={styles.footer}>{footer}</View> : null}
-    </View>
+    </KeyboardAvoider>
   );
 }
 

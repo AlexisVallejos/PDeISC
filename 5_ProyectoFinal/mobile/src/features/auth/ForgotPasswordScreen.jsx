@@ -8,12 +8,17 @@ import { colors, createStyles, font, spacing, useTheme } from '../../theme';
 import { validateCode, validateEmail, validatePassword } from '../../utils/validation';
 import { AuthLayout } from './AuthLayout';
 
-/** "Olvidé mi contraseña": 1) pedir el código al email, 2) código + contraseña nueva. */
+/**
+ * "Olvidé mi contraseña": 1) pedir el código al email, 2) código + contraseña nueva.
+ * También sirve para las cuentas creadas con Google/Facebook/GitHub: así le crean una contraseña
+ * y después entran de las dos formas (es la misma cuenta).
+ */
 export default function ForgotPasswordScreen() {
   useTheme();
   const params = useLocalSearchParams();
   const { resetPassword } = useAuth();
   const [step, setStep] = useState('email');
+  const creating = params.create === '1'; // viene de una cuenta social sin contraseña
   const [form, setForm] = useState({ email: String(params.email ?? ''), code: '', password: '', confirm: '' });
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState(null);
@@ -62,8 +67,14 @@ export default function ForgotPasswordScreen() {
 
   return (
     <AuthLayout
-      title="Recuperá tu contraseña"
-      subtitle={step === 'email' ? 'Te mandamos un código a tu email para elegir una contraseña nueva.' : `Si ${form.email.trim()} tiene cuenta, ya te llegó un código de 6 números.`}
+      title={creating ? 'Creá tu contraseña' : 'Recuperá tu contraseña'}
+      subtitle={
+        step === 'email'
+          ? creating
+            ? 'Tu cuenta entra con una red social. Te mandamos un código a ese email para crearle una contraseña: después vas a poder entrar de las dos formas.'
+            : 'Te mandamos un código a tu email para elegir una contraseña nueva. Si entrás con Google, usá ese mismo Gmail.'
+          : `Si ${form.email.trim()} tiene cuenta, ya te llegó un código de 6 números.`
+      }
     >
       <FormError message={formError} />
       {step === 'email' ? (
@@ -111,7 +122,7 @@ export default function ForgotPasswordScreen() {
             secureTextEntry
             onSubmitEditing={submit}
           />
-          <Button title="Cambiar contraseña y entrar" block onPress={submit} loading={loading} />
+          <Button title={creating ? 'Guardar contraseña y entrar' : 'Cambiar contraseña y entrar'} block onPress={submit} loading={loading} />
           <Button title="Reenviar código" block variant="secondary" onPress={sendCode} disabled={loading} />
         </>
       )}

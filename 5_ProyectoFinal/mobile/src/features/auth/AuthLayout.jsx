@@ -1,16 +1,25 @@
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRef } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Logo, ThemeToggleButton } from '../../components';
+import { KeyboardAvoider, Logo, ThemeToggleButton, useScrollToFocusedInput } from '../../components';
 import { colors, createStyles, font, spacing, tracking, useTheme } from '../../theme';
 
 /** Marco común de login y registro: centrado y con ancho máximo (sirve en tablet y horizontal). */
 export function AuthLayout({ title, subtitle, children }) {
   useTheme();
+  const scrollRef = useRef(null);
+  const trackScroll = useScrollToFocusedInput(scrollRef);
   return (
     <SafeAreaView style={styles.root}>
       <ThemeToggleButton style={styles.toggle} />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+      <KeyboardAvoider style={{ flex: 1 }}>
+        <ScrollView
+          ref={scrollRef}
+          contentContainerStyle={styles.scroll}
+          keyboardShouldPersistTaps="handled"
+          onScroll={trackScroll}
+          scrollEventThrottle={32}
+        >
           <View style={styles.card}>
             <View style={styles.brand}>
               <Logo size={120} />
@@ -23,7 +32,7 @@ export function AuthLayout({ title, subtitle, children }) {
             {children}
           </View>
         </ScrollView>
-      </KeyboardAvoidingView>
+      </KeyboardAvoider>
     </SafeAreaView>
   );
 }

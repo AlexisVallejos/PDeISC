@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { exercisesApi } from '../../api/endpoints';
-import { Button, Chips, ErrorState, ListItem, Loading, TextField } from '../../components';
+import { Button, Chips, ErrorState, KeyboardAvoider, ListItem, Loading, TextField } from '../../components';
 import { colors, createStyles, font, MAX_CONTENT_WIDTH, spacing, useTheme } from '../../theme';
 
 /** Modal para elegir un ejercicio del catálogo (filtrando por grupo muscular) o escribir uno libre. */
@@ -38,6 +38,7 @@ export function ExercisePicker({ visible, onClose, onPick }) {
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose} presentationStyle="pageSheet">
       <SafeAreaView style={styles.root}>
+        <KeyboardAvoider style={{ flex: 1 }}>
         <View style={styles.inner}>
           <View style={styles.header}>
             <Text style={styles.title}>Elegí un ejercicio</Text>
@@ -76,6 +77,7 @@ export function ExercisePicker({ visible, onClose, onPick }) {
             </ScrollView>
           )}
         </View>
+        </KeyboardAvoider>
       </SafeAreaView>
     </Modal>
   );

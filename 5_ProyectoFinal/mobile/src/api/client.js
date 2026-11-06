@@ -20,19 +20,25 @@ export class ApiError extends Error {
   }
 }
 
-// --- Tokens en memoria (la copia persistente vive en SecureStore) ---
+// --- Tokens en memoria (la copia persistente vive en SecureStore si se eligió "Recordarme") ---
 let session = null; // { accessToken, refreshToken }
+let remember = true; // al renovar los tokens se guardan donde se guardó la sesión original
 let onSessionExpired = () => {};
 let refreshing = null;
 
-export function setSessionTokens(tokens) {
+/** Guarda (o borra, con null) los tokens. `options.remember` se fija al iniciar sesión. */
+export function setSessionTokens(tokens, options = {}) {
+  if (options.remember !== undefined) remember = options.remember;
   session = tokens ? { accessToken: tokens.accessToken, refreshToken: tokens.refreshToken } : null;
-  return session ? saveSession(session) : clearSession();
+  return session ? saveSession(session, { remember }) : clearSession();
 }
 export async function restoreSessionTokens() {
-  session = await loadSession();
+  const saved = await loadSession();
+  session = saved?.tokens ?? null;
+  remember = saved?.remember ?? true;
   return session;
 }
+export const isSessionRemembered = () => remember;
 export const getRefreshToken = () => session?.refreshToken;
 export const setOnSessionExpired = (fn) => {
   onSessionExpired = fn;
@@ -86,7 +92,8 @@ function refreshTokens() {
   if (!refreshing) {
     refreshing = rawRequest('/auth/refresh', { method: 'POST', body: { refreshToken: session?.refreshToken } })
       .then(async (json) => {
-        await setSessionTokens(json.data.tokens);
+        // Si se cerró la sesión mientras tanto, los tokens nuevos no se guardan.
+        if (session) await setSessionTokens(json.data.tokens);
         return json.data;
       })
       .finally(() => {
