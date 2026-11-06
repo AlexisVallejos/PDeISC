@@ -32,6 +32,21 @@ export function formatDayLabel(iso) {
   return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]}`;
 }
 
+const LONG_MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+/** "21 de abril de 1998". */
+export function formatLongDate(iso) {
+  const d = parseIsoDate(iso);
+  return `${d.getDate()} de ${LONG_MONTHS[d.getMonth()]} de ${d.getFullYear()}`;
+}
+
+/** La misma fecha de hoy, `years` años atrás (AAAA-MM-DD). */
+export function yearsAgo(years) {
+  const d = new Date();
+  d.setFullYear(d.getFullYear() - years);
+  return toIsoDate(d);
+}
+
 export const shortWeekday = (iso) => DAYS[parseIsoDate(iso).getDay()];
 
 /** Lunes de la semana de `iso`. */

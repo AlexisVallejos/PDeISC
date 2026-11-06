@@ -2,13 +2,13 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { coachingApi, foodsApi } from '../../api/endpoints';
-import { Button, Card, Chips, EmptyState, ErrorState, FormError, ListItem, Loading, Screen, TextField } from '../../components';
+import { Button, Card, Chips, DateField, EmptyState, ErrorState, FormError, ListItem, Loading, Screen, TextField } from '../../components';
 import { useResource } from '../../hooks/useResource';
 import { colors, createStyles, font, spacing, useTheme } from '../../theme';
 import { MEALS, mealLabel } from '../../utils/constants';
 import { addDays, today } from '../../utils/dates';
 import { fmt } from '../../utils/format';
-import { dateMask, decimal } from '../../utils/inputs';
+import { decimal } from '../../utils/inputs';
 import { validateDateRange, validateNumbers, validateText } from '../../utils/validation';
 import { WEEKDAYS } from './NutritionPlansScreen';
 
@@ -68,8 +68,8 @@ export default function NutritionPlanFormScreen() {
       <TextField label="Título" value={title} onChangeText={setTitle} error={errors.title} maxLength={120} placeholder="Ej. Plan semanal de entrenamiento" />
       <TextField label="Indicaciones para el atleta" value={notes} onChangeText={setNotes} error={errors.notes} maxLength={3000} multiline hint={`${notes.length}/3000`} />
       <View style={styles.row}>
-        <TextField label="Inicio (AAAA-MM-DD)" value={startDate} onChangeText={(t) => setStartDate(dateMask(t))} error={errors.startDate} keyboardType="number-pad" maxLength={10} style={{ flex: 1, minWidth: 160 }} />
-        <TextField label="Fin (AAAA-MM-DD)" value={endDate} onChangeText={(t) => setEndDate(dateMask(t))} error={errors.endDate} hint="Hasta un año de vigencia" keyboardType="number-pad" maxLength={10} style={{ flex: 1, minWidth: 160 }} />
+        <DateField label="Inicio" value={startDate} onChange={setStartDate} error={errors.startDate} style={{ flex: 1, minWidth: 160 }} />
+        <DateField label="Fin" value={endDate} onChange={setEndDate} error={errors.endDate} hint="Hasta un año de vigencia" minimumDate={startDate || undefined} maximumDate={startDate ? addDays(startDate, 366) : undefined} style={{ flex: 1, minWidth: 160 }} />
       </View>
     </Card>
     <Card title="Agregar alimentos al menú">

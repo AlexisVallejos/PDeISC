@@ -2,10 +2,11 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { bodyApi } from '../../api/endpoints';
-import { Button, Card, Chips, Columns, ErrorState, FieldRow, FormError, Loading, Screen, TextField } from '../../components';
+import { Button, Card, Chips, Columns, DateField, ErrorState, FieldRow, FormError, Loading, Screen, TextField } from '../../components';
 import { useAuth } from '../../context/AuthContext';
 import { useResource } from '../../hooks/useResource';
 import { colors, continuous, createStyles, font, radius, spacing, useTheme } from '../../theme';
+import { addDays, yearsAgo } from '../../utils/dates';
 import { fmt } from '../../utils/format';
 import { BODY_LIMITS, validateBody, validateMeasure } from '../../utils/validation';
 
@@ -24,12 +25,6 @@ const toNumber = (v) => (v === '' || v == null ? null : Number(String(v).replace
 
 /** Altura, peso y % de grasa: solo números y una coma o punto con un decimal. */
 const onlyDecimal = (text) => text.replace(/[^\d.,]/g, '').replace(/^([^.,]*[.,]\d?).*$/, '$1').slice(0, 5);
-
-/** Fecha: solo dígitos y se agregan los guiones solos (19980421 → 1998-04-21). */
-function asDate(text) {
-  const digits = text.replace(/\D/g, '').slice(0, 8);
-  return [digits.slice(0, 4), digits.slice(4, 6), digits.slice(6, 8)].filter(Boolean).join('-');
-}
 
 /** Lo que manda el formulario al servidor; null si algún dato falta o es inválido. */
 function toPayload(form) {
@@ -151,7 +146,16 @@ function BodyForm({ body, options, reload }) {
         <Chips options={SEX} value={form.sex} onChange={set('sex')} scroll={false} />
         {shown.sex ? <Text style={styles.error}>{shown.sex}</Text> : null}
         <FieldRow>
-          <TextField label="Fecha de nacimiento" value={form.birthDate} onChangeText={(t) => set('birthDate')(asDate(t))} error={shown.birthDate} placeholder="AAAA-MM-DD" hint={`Ej.: 1998-04-21 · edad entre ${BODY_LIMITS.age.min} y ${BODY_LIMITS.age.max} años`} keyboardType="number-pad" maxLength={10} />
+          <DateField
+            label="Fecha de nacimiento"
+            value={form.birthDate}
+            onChange={set('birthDate')}
+            error={shown.birthDate}
+            hint={`Tocá para elegirla en el calendario · edad entre ${BODY_LIMITS.age.min} y ${BODY_LIMITS.age.max} años`}
+            minimumDate={addDays(yearsAgo(BODY_LIMITS.age.max + 1), 1)}
+            maximumDate={yearsAgo(BODY_LIMITS.age.min)}
+            initialDate={yearsAgo(25)}
+          />
           <TextField label="Altura (cm)" value={form.heightCm} onChangeText={(t) => set('heightCm')(onlyDecimal(t))} error={shown.heightCm} keyboardType="decimal-pad" placeholder="175" hint={`Entre ${BODY_LIMITS.heightCm.min} y ${BODY_LIMITS.heightCm.max} cm`} />
         </FieldRow>
         <FieldRow>
