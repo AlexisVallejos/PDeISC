@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import bcrypt from 'bcryptjs';
 import { MICRO_COLUMNS, MICROS } from '../modules/nutrition/micros.js';
 
 /** Todas las migraciones aditivas, en orden. Se pueden correr varias veces. */
@@ -10,6 +11,41 @@ export async function runMigrations(conn) {
   await migrateTypicalFoods(conn);
   await migrateBodyProfile(conn);
   await migrateEmailProven(conn);
+  await once(conn, 'demo-staff-2026-11', ensureDemoStaff);
+}
+
+/** Pasos que corren UNA sola vez por base (quedan anotados en app_migrations). */
+async function once(conn, name, step) {
+  await conn.query(`CREATE TABLE IF NOT EXISTS app_migrations (
+    name   VARCHAR(100) NOT NULL PRIMARY KEY,
+    ran_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`);
+  const [[done]] = await conn.query('SELECT 1 AS yes FROM app_migrations WHERE name = ?', [name]);
+  if (done) return;
+  await step(conn);
+  await conn.query('INSERT IGNORE INTO app_migrations (name) VALUES (?)', [name]);
+}
+
+/**
+ * Cuentas de admin y coach para probar la app publicada (contraseña Demo1234).
+ * Si ya existían, se reactivan y se les vuelve a poner esa contraseña. Corre una sola vez:
+ * si después se cambia la contraseña desde la app, no se pisa.
+ */
+async function ensureDemoStaff(conn) {
+  const hash = await bcrypt.hash('Demo1234', 10);
+  const staff = [
+    ['Admin MacroEntreno', 'admin@macroentreno.com', 'admin'],
+    ['Coach Laura', 'coach@macroentreno.com', 'coach'],
+  ];
+  for (const [name, email, role] of staff) {
+    await conn.query(
+      `INSERT INTO users (name, email, password_hash, role, email_verified_at, email_proven, is_active)
+       VALUES (?, ?, ?, ?, NOW(), 1, 1)
+       ON DUPLICATE KEY UPDATE password_hash = VALUES(password_hash), role = VALUES(role),
+         email_verified_at = COALESCE(email_verified_at, NOW()), email_proven = 1, is_active = 1`,
+      [name, email, hash, role],
+    );
+  }
 }
 
 /**
